@@ -1,19 +1,43 @@
-# 📈 Repos trending
+# Repos trending — Gaming AI
 
-> Última actualización: 2026-07-02
+> Señales automáticas del pipeline + análisis manual. Última actualización: 2026-07-02
 
-| Nombre | Licencia | Descripción | Stars |
-|--------|----------|-------------|-------|
-| [stride](https://github.com/stride3d/stride) | MIT | Stride (formerly Xenko), a free and open-source cross-platform C# game engine. | 7.7k |
-| [WorldOS](https://github.com/electricsheephq/WorldOS) | NOASSERTION | WorldOS - Simulate worlds. Evolve games. Free for personal/non-commercial use. | 2 |
-| [Saturn-Engine](https://github.com/0xsmft/Saturn-Engine) | MIT | A C++ vulkan game engine | 75 |
-| [janusweb](https://github.com/jbaicoianu/janusweb) | MIT | An in-browser implementation of JanusVR | 201 |
-| [Oxylus](https://github.com/oxylusengine/Oxylus) | Apache-2.0 | A powerful data-driven game engine built in C++ | 263 |
-| [name-name](https://github.com/kako-jun/name-name) | ? | Visual novel authoring and runtime engine: write scripts in Markdown, play with  | 1 |
-| [SparkLabs](https://github.com/Screwtopped-annapavlova802/SparkLabs) | MIT | Build an AI-native game engine for procedural content, smart NPCs, adaptive rend | 0 |
-| [openage](https://github.com/marciunyielding712/openage) | AGPL-3.0 | Estimate biological age from blood biomarkers with open-source models built for  | 0 |
-| [autoevolve](https://github.com/devinaexcogitative908/autoevolve) | ? | Automate AI agent behavior tuning with human feedback, test small mutations, and | 0 |
-| [Aivill](https://github.com/SKYHUBDev/Aivill) | ? | Build adaptive game villains that learn player behavior and evolve strategies ac | 0 |
+## Trending con tracción real (verificado manualmente)
+
+| Repo | Licencia | Descripción | Stars | Señal |
+|------|----------|-------------|-------|-------|
+| [hi-godot/godot-ai](https://github.com/hi-godot/godot-ai) | MIT | MCP server para Godot. 120+ ops, 41 tools. Conecta Claude Code/Cursor al editor Godot en vivo. | 805 | Lanzado abr 2026, adopción masiva |
+| [leigest519/OpenGame](https://github.com/leigest519/OpenGame) | MIT | Framework agentico end-to-end para generar juegos web. Usa GameCoder-27B (LLM RL-entrenado). | ~500 | Primer framework de su tipo, abr 2026 |
+| [AlanLaboratory/UnrealMLAgents](https://github.com/AlanLaboratory/UnrealMLAgents) | Apache-2.0 | Port de Unity ML-Agents para Unreal Engine. Deep RL para juegos UE. v1.0 en 2025. | — | Comunidad Unreal adoptando RL |
+| [pamirtuna/gamestudio-subagents](https://github.com/pamirtuna/gamestudio-subagents) | MIT | Equipo de sub-agentes AI en terminal: dev, QA, artist, game designer. | — | Patrón "AI dev team" aplicado a gaming |
+| [Yuan-ManX/ai-game-devtools](https://github.com/Yuan-ManX/ai-game-devtools) | MIT | Hub curado: LLMs, world models, textures, shaders, 3D, audio, analytics para game dev. | — | Lista de referencia más completa del ecosistema |
+| [undreamai/LLMUnity](https://github.com/undreamai/LLMUnity) | Apache-2.0 | Personajes Unity con LLMs locales o cloud. | 1.7k | Creciendo en Unity ecosystem |
+| [NPC-Worldwide/npcpy](https://github.com/NPC-Worldwide/npcpy) | MIT | Librería Python para NPCs multimodales con LLMs. | 1.4k | Tracción en comunidad Python/AI |
+| [Yuan-ManX/AI-Native-Game](https://github.com/Yuan-ManX/AI-Native-Game) | MIT | Tracking de juegos donde la AI ES el juego (world models, generative environments). | — | Categoría emergente: AI-native games |
+| [stride3d/stride](https://github.com/stride3d/stride) | MIT | Engine C# cross-platform (ex-Xenko). Alternativa a Unity para devs .NET. | 7.7k | Engine maduro, alternativa Unity sin drama |
+| [SKYHUBDev/Aivill](https://github.com/SKYHUBDev/Aivill) | — | Villanos adaptativos que aprenden el comportamiento del jugador y evolucionan estrategias. | 0 | Concept muy relevante, observar |
+
+## Engines en radar
+
+| Repo | Licencia | Descripción | Stars | Por qué |
+|------|----------|-------------|-------|---------|
+| [oxylusengine/Oxylus](https://github.com/oxylusengine/Oxylus) | Apache-2.0 | Game engine C++ data-driven con Vulkan. | 263 | Moderno, base sólida para experimentación |
+| [electricsheephq/WorldOS](https://github.com/electricsheephq/WorldOS) | Custom | Simulación de mundos + evolución de juegos. | 2 | Concepto world model temprano |
+
+## Frameworks agenticos con adopción en gaming
+
+| Repo | URL | Licencia | Stars | Aplicación gaming |
+|------|-----|----------|-------|-------------------|
+| **LangChain** | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | MIT | ~100k | Orquestar LLMs con tools, memoria y RAG. Base para NPCs con contexto y chatbots de soporte. |
+| **LlamaIndex** | [run-llama/llama_index](https://github.com/run-llama/llama_index) | MIT | ~40k | RAG sobre datos propios. Para NPCs con conocimiento del lore del juego. |
+| **CrewAI** | [crewAIInc/crewAI](https://github.com/crewAIInc/crewAI) | MIT | ~30k | Multi-agente con roles. Para QA pipelines, PCG con agentes especializados. |
+
+## Señales de mercado a seguir
+
+- **Roblox OpenGameEval** (dic 2025): benchmark OSS para evaluar AI en juegos. 47 escenarios: code gen, tool use, 3D reasoning, multiplayer. Adoptado como estándar de evaluación.
+- **Unity AI Inference Engine**: permite correr LLMs/modelos ML directamente en el runtime Unity sin servidor. Tendencia hacia AI on-device.
+- **NVIDIA ACE SDK**: SDK para Unreal/Unity. NPCs con ASR + NLP + TTS + animación facial en tiempo real. Tracción en demos AAA.
+- **Gemma 3n on-device**: demostrado en Godot (code-forge-temple/local-llm-npc), posibilita NPCs offline-first.
 
 ---
-*Pipeline automático — se actualiza cada hora.*
+*Pipeline automático actualiza señales; análisis manual verifica relevancia. 2026-07-02*
