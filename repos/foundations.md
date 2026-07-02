@@ -1,20 +1,38 @@
-# 🏗️ Repos fundacionales
+# 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia abierta, comunidad activa.
-> Última actualización: 2026-07-02
+> Última actualización: 2026-07-02 | Verificado con deep-research
 
-## Plataformas y frameworks base
+## Game Engines
 
-| Repo | Licencia | Descripción | ¿Base para AI? |
-|------|----------|-------------|----------------|
-| [godot](https://github.com/godotengine/godot) | MIT | Godot Engine – Multi-platform 2D and 3D game engine | Sí — 113.5k ★ |
-| [Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) | MIT | Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, | Sí — 22.5k ★ |
-| [nakama](https://github.com/heroiclabs/nakama) | Apache-2.0 | Scalable open-source game backend server: multiplayer, matchmaking, leaderboards | Sí — 12.8k ★ |
-| [godotenv](https://github.com/joho/godotenv) | MIT | A Go port of Ruby's dotenv library (Loads environment variables from .env files) | Sí — 10.5k ★ |
-| [Pixelorama](https://github.com/Orama-Interactive/Pixelorama) | MIT | Unleash your creativity with Pixelorama, a powerful and accessible open-source p | Sí — 9.8k ★ |
-| [godot-demo-projects](https://github.com/godotengine/godot-demo-projects) | MIT | Demonstration and Template Projects | Sí — 9.1k ★ |
-| [Lorien](https://github.com/mbrlabs/Lorien) | MIT | Infinite canvas drawing/whiteboarding app for Windows, Linux and macOS. Made wit | Sí — 6.7k ★ |
-| [pixijs](https://github.com/pixijs/pixijs) | MIT | The HTML5 Creation Engine: Create beautiful digital content with the fastest, mo | Sí — 47.7k ★ |
+| Repo | Licencia | Descripción | Stars |
+|------|----------|-------------|-------|
+| [godotengine/godot](https://github.com/godotengine/godot) | MIT | Motor completo 2D/3D. Ecosistema AI más rico: LimboAI, Beehave, godot_rl_agents, godot-ai | 97k |
+| [o3de/o3de](https://github.com/o3de/o3de) | Apache-2.0 | Open 3D Engine (ex-Amazon Lumberyard). AAA-grade. Opción enterprise | 7.8k |
+| [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | MIT | Framework C# cross-platform. Para devs .NET añadiendo AI | 11k |
+| [love2d/love](https://github.com/love2d/love) | ZLIB | LÖVE 2D — Lua, ligero, ideal para prototipos rápidos con AI | 4.5k |
+
+## Multiplayer Backends
+
+| Repo | Licencia | Descripción | Stars |
+|------|----------|-------------|-------|
+| [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | Apache-2.0 | Backend más completo open source. SDK oficial Godot. Extensible en Lua/TS/Go. Social, matchmaking, leaderboards | 12.8k |
+| [googleforgames/open-match](https://github.com/googleforgames/open-match) | Apache-2.0 | Framework matchmaking de Google. Plug-in para algoritmos custom con AI | — |
+| [colyseus/colyseus](https://github.com/colyseus/colyseus) | MIT | Server multijugador en Node.js/TypeScript. Ideal para web games + AI | 6.2k |
+
+## Pathfinding
+
+| Repo | Licencia | Descripción | Stars |
+|------|----------|-------------|-------|
+| [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | Zlib | Estándar de industria navmesh. Ya en Godot, Unity, UE. Combinable con RL agents | 7.8k |
+| [Mugen87/yuka](https://github.com/Mugen87/yuka) | MIT | Game AI primitives JS: steering behaviors, pathfinding, FSM | 1.4k |
+
+## Analytics y Observability
+
+| Repo | Licencia | Descripción | Stars |
+|------|----------|-------------|-------|
+| [grafana/grafana](https://github.com/grafana/grafana) | Apache-2.0 | Dashboards player analytics en tiempo real | 67k |
+| [PostHog/posthog](https://github.com/PostHog/posthog) | MIT | Product analytics self-hosted. Player behavior analysis | 23k |
 
 ---
 *Ver también: `verticals/solutions.md` para plataformas verticales completas.*

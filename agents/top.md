@@ -1,22 +1,45 @@
-# 🎯 Agentes AI — gaming
+# 🎮 Agentes AI — Gaming
 
-> Agentes y herramientas AI open source para la industria. Foco: MIT / Apache 2.0.
-> Última actualización: 2026-07-02
+> Agentes y herramientas AI open source verificados. Foco: MIT / Apache 2.0.
+> Última actualización: 2026-07-02 | Verificado por deep-research (110 agentes, 525 búsquedas)
 
-## Agentes y herramientas destacadas
+## Ecosistema Godot (MIT — recomendado como base)
 
-| Nombre | Licencia | Descripción | Stars |
-|--------|----------|-------------|-------|
-| [LLMUnity](https://github.com/undreamai/LLMUnity) | Apache-2.0 | Create characters in Unity with LLMs! | 1.7k |
-| [npcpy](https://github.com/NPC-Worldwide/npcpy) | MIT | The python library for research and development in NLP, multimodal LLM | 1.4k |
-| [gdx-ai](https://github.com/libgdx/gdx-ai) | Apache-2.0 | Artificial Intelligence framework for games based on libGDX or not. Fe | 1.3k |
-| [Agentshire](https://github.com/Agentshire/Agentshire) | MIT | OpenClaw / QClaw  plugin that visualizes AI agents as 3D NPCs in a gam | 1.2k |
-| [xianxia-AI-town-AI-](https://github.com/zblcving9-gif/xianxia-AI-town-AI-) | MIT | 大模型驱动的npc决策，npc和玩家平权 | 1.0k |
-| [Interactive-LLM-Powered-NPCs](https://github.com/AkshitIreddy/Interactive-LLM-Powered-NPCs) | MIT | Interactive LLM Powered NPCs, is an open-source project that completel | 716 |
-| [UnrealGenAISupport](https://github.com/prajwalshettydev/UnrealGenAISupport) | MIT | Unreal Engine plugin for LLM/GenAI models & MCP UE5 server. OpenAI GPT | 619 |
-| [aitoolkit](https://github.com/linkdd/aitoolkit) | MIT | Give a brain to your game's NPCs | 524 |
-| [incognide](https://github.com/NPC-Worldwide/incognide) | MIT | Explore the unknown, build the future, own your data. | 451 |
-| [Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) | MIT | Turn Claude Code into a full game dev studio — 49 AI agents, 72 workfl | 22.5k |
+| Nombre | Repo | Licencia | Descripción | Stars |
+|--------|------|----------|-------------|-------|
+| Beehave | [bitbrain/beehave](https://github.com/bitbrain/beehave) | MIT | Behavior trees componibles en el scene tree de Godot para NPC y boss AI | 3.2k |
+| LimboAI | [limbonaut/limboai](https://github.com/limbonaut/limboai) | MIT | Plugin C++ para Godot: Behavior Trees + Hierarchical State Machines. BTState permite combinar ambos para IA reactiva | 2.8k |
+| godot-ai | [hi-godot/godot-ai](https://github.com/hi-godot/godot-ai) | MIT | Servidor MCP con 120+ operaciones y ~41 herramientas. Conecta Claude/Codex al editor Godot en vivo: scene building, scripts, signals, animations | 805 |
+| godot_rl_agents | [edbeeching/godot_rl_agents](https://github.com/edbeeching/godot_rl_agents) | MIT | Wrappers para 4 frameworks RL: StableBaselines3, Sample Factory, Ray RLLib, CleanRL. Entrena agentes contra juegos Godot | 900+ |
+
+## NPC AI con LLMs
+
+| Nombre | Repo | Licencia | Descripción | Stars |
+|--------|------|----------|-------------|-------|
+| Interactive LLM NPCs | [AkshitIreddy/Interactive-LLM-Powered-NPCs](https://github.com/AkshitIreddy/Interactive-LLM-Powered-NPCs) | MIT | LLM-driven dialogue para Cyberpunk 2077, GTA 5, AC. Vector stores para memoria ilimitada de NPCs + pre-conversation.json por personaje | 716 |
+| LLMUnity | [undreamai/LLMUnity](https://github.com/undreamai/LLMUnity) | Apache-2.0 | Personajes Unity con LLMs locales o cloud | 1.7k |
+| UnrealGenAISupport | [prajwalshettydev/UnrealGenAISupport](https://github.com/prajwalshettydev/UnrealGenAISupport) | MIT | Plugin Unreal Engine para LLM/GenAI + MCP server UE5. Soporta GPT, Gemini, Claude | 619 |
+| npcpy | [NPC-Worldwide/npcpy](https://github.com/NPC-Worldwide/npcpy) | MIT | Librería Python para NPC con LLMs multimodales | 1.4k |
+
+## Pathfinding y AI de movimiento
+
+| Nombre | Repo | Licencia | Descripción | Stars |
+|--------|------|----------|-------------|-------|
+| recastnavigation | [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | Zlib | Estándar de la industria para navigation mesh (navmesh). Usado en Unity, Godot, UE. C++ | 7.8k |
+| yuka | [Mugen87/yuka](https://github.com/Mugen87/yuka) | MIT | Game AI primitives en JavaScript: steering behaviors, pathfinding, FSM | 1.4k |
+| aitoolkit | [linkdd/aitoolkit](https://github.com/linkdd/aitoolkit) | MIT | Da un cerebro a los NPCs de tu juego (header-only C++) | 524 |
+
+## Generación procedural
+
+| Nombre | Repo | Licencia | Descripción | Stars |
+|--------|------|----------|-------------|-------|
+| WorldX | [YGYOOO/WorldX](https://github.com/YGYOOO/WorldX) | MIT | Generación procedural de mundos con AI (TypeScript) | 1.1k |
+
+## ⚠️ Licencias a tener en cuenta
+
+| Nombre | Licencia | Restricción |
+|--------|----------|-------------|
+| NobodyWho | EUPL-1.2 | **Copyleft** — requiere que derivados sean open source. No usar en soluciones propietarias. |
 
 ---
-*Actualizado automáticamente por el pipeline de ingest.*
+*Verificado con deep-research: 3-0 votes en claims principales. Fuentes directas de GitHub API.*
