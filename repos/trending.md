@@ -12,8 +12,8 @@
 | [name-name](https://github.com/kako-jun/name-name) | ? | Visual novel authoring and runtime engine: write scripts in Markdown, play with  | 1 |
 | [SparkLabs](https://github.com/Screwtopped-annapavlova802/SparkLabs) | MIT | Build an AI-native game engine for procedural content, smart NPCs, adaptive rend | 0 |
 | [openage](https://github.com/marciunyielding712/openage) | AGPL-3.0 | Estimate biological age from blood biomarkers with open-source models built for  | 0 |
-| [phase](https://github.com/phase-rs/phase) | Apache-2.0 | A rules engine and game client — Rust + WASM + React | 169 |
-| [KaplaStrike](https://github.com/Batisteblightywound507/KaplaStrike) | BSD-2-Clause | Load Cobalt Strike beacons stealthily using reflective loading, module overloadi | 2 |
+| [autoevolve](https://github.com/devinaexcogitative908/autoevolve) | ? | Automate AI agent behavior tuning with human feedback, test small mutations, and | 0 |
+| [Aivill](https://github.com/SKYHUBDev/Aivill) | ? | Build adaptive game villains that learn player behavior and evolve strategies ac | 0 |
 
 ---
 *Pipeline automático — se actualiza cada hora.*
