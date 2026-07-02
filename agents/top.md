@@ -1,16 +1,13 @@
-# 🎮 Agentes AI — Gaming
+# 🎯 Agentes AI — gaming
 
-> Agentes open source. Foco: MIT / Apache 2.0 / licencias permisivas.
+> Agentes y herramientas AI open source para la industria. Foco: MIT / Apache 2.0.
+> Última actualización: 2026-07-02
 
-## Criterios
+## Agentes y herramientas destacadas
 
-- Licencia MIT / Apache 2.0 / BSD
-- >500 stars en GitHub
-- Último commit <6 meses
-- Relevancia directa para Gaming
+| Nombre | Licencia | Descripción | Stars |
+|--------|----------|-------------|-------|
+| — | — | Sin resultados esta semana | — |
 
-## Agentes destacados
-
-| Nombre | Repo | Licencia | Descripción | Stars |
-|--------|------|----------|-------------|-------|
-| — | — | — | Por completar via ingest | — |
+---
+*Actualizado automáticamente por el pipeline de ingest.*

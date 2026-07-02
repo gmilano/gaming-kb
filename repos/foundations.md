@@ -1,16 +1,13 @@
-# 🏗️ Repos fundacionales — Gaming
+# 🏗️ Repos fundacionales
 
-> Bases para construir. Repos con trayectoria, comunidad y licencia abierta.
-> Pregunta guía: ¿podemos partir desde acá y añadir AI encima?
+> Bases sobre las cuales construir. Licencia abierta, comunidad activa.
+> Última actualización: 2026-07-02
 
-## Plataformas base
+## Plataformas y frameworks base
 
-| Repo | Licencia | Descripción | Por qué útil |
-|------|----------|-------------|--------------|
-| — | — | — | Por completar |
+| Repo | Licencia | Descripción | ¿Base para AI? |
+|------|----------|-------------|----------------|
+| — | — | Por completar | — |
 
-## Frameworks clave
-
-| Repo | Licencia | Descripción |
-|------|----------|-------------|
-| — | — | Por completar |
+---
+*Ver también: `verticals/solutions.md` para plataformas verticales completas.*

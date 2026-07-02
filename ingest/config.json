@@ -1,0 +1,16 @@
+{
+  "topics": ["game-engine", "game-ai", "procedural-generation", "godot", "game-development", "npc-ai", "roguelike"],
+  "agentKeywords": "AI NPC game agent dialogue procedural open source",
+  "repoKeywords": "game engine AI graphics multiplayer open source",
+  "verticalKeywords": "game server backend multiplayer open source",
+  "minStars": 200,
+  "licenses": ["MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause"],
+  "awesomeLists": [
+    "https://raw.githubusercontent.com/ellisonleao/magictools/master/README.md"
+  ],
+  "keywords": {
+    "agents": ["NPC AI", "game AI agent", "dialogue system", "behavior tree", "pathfinding AI", "game testing AI"],
+    "repos": ["Godot", "game engine", "procedural generation", "roguelike", "game server", "multiplayer"],
+    "verticals": ["Nakama", "Colyseus", "Open 3D Engine", "Godot", "MonoGame", "LÖVE"]
+  }
+}
