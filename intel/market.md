@@ -1,6 +1,6 @@
 # Mapa de mercado — Gaming AI
 
-> Players, tamaños, oportunidades. Foco LATAM + posicionamiento Globant.
+> Key players, opportunities, positioning. Focus by region: North America · EMEA · APAC · LATAM.
 > Última actualización: 2026-07-02
 
 ## Tamaño de mercado global
@@ -51,7 +51,21 @@
 
 ---
 
-## Mercado LATAM — Gaming + AI
+## Opportunities by region
+
+### North America
+
+- To research
+
+### EMEA
+
+- To research
+
+### APAC
+
+- To research
+
+### LATAM
 
 ### Tamaño y crecimiento
 - Mercado gaming LATAM: **$25.7B (2025)** → $28.04B (2026), CAGR 9.12%
@@ -77,7 +91,6 @@
 | **Exportación gaming LATAM** | Studios LATAM buscan diferenciarse en mercado global con AI. | Globant como acelerador de AI integration |
 
 ---
-
 ## Posicionamiento Globant AI Studios
 
 ### Propuesta de valor diferenciada
