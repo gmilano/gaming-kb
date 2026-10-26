@@ -1,3 +1,114 @@
+---
+industry: gaming
+region: Global
+updated: 2026-10-26
+---
+
+# Repos trending — Gaming AI
+
+> **Archivo APPEND-ONLY.** Cada pass agrega una sección fechada arriba y conserva
+> la historia completa debajo.
+
+---
+
+## 🆕 2026-10-26
+
+Primer pass desde el 2026-07-02. Verificación: `git ls-remote` + lectura del
+archivo de grant en `raw.githubusercontent.com/<slug>/HEAD/`, con control negativo
+en ambos sentidos. El `curl -sI` que prescribía el método anterior **devuelve 403
+para todo repo de GitHub, incluido uno fabricado**, así que no distingue vivos de
+muertos y no se usó.
+
+### 🟢 Trending verificado esta semana
+
+| Repo | Licencia (archivo, bytes) | ★ | Señal fechada |
+|------|--------------------------|---|---------------|
+| [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | raíz **MIT** (1118) / `Matrix-Game-4/` **Apache-2.0** (11357) | 2.8k | **v4.0 liberado el 15-oct-2026**; technical report el 16-oct (arXiv 2610.27999); inferencia optimizada para RTX 5080 / 5070 Ti el 16-oct. |
+| [WhiteTowerAI/ohmygame](https://github.com/WhiteTowerAI/ohmygame) | Apache-2.0 (11357) | 1.2k | **En el trending de GitHub del 2026-10-26** (release `daily-2026-10-26` de `raiscui/gh-trends`). Estudio de un solo dev con canvas de juego y BYO key. |
+| [lmgame-org/GamingAgent](https://github.com/lmgame-org/GamingAgent) | MIT (1065) | 998 | **ICLR 2026.** Benchmark + harness de agentes que juegan, con leaderboard público. |
+| [IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP) | Apache-2.0 (10197) | **4.5k** | El MCP de engine dominante. Faltaba por completo en esta KB. |
+| [microsoft/MineWorld](https://github.com/microsoft/MineWorld) | MIT (1141) | 493 | World model Minecraft en tiempo real, checkpoints 300M/700M/1200M. |
+| [tomyud1/godot-mcp](https://github.com/tomyud1/godot-mcp) | MIT (1071) | 444 | Segundo MCP real del ecosistema Godot. |
+| [rehan-remade/universal-modder](https://github.com/rehan-remade/universal-modder) | MIT (1096) | ~8.9k* | Modding asistido por AI. |
+
+### 🆕 Repos de infraestructura que faltaban en esta KB
+
+No son "trending" por estrellas; son piezas de stack que el pass anterior no tenía.
+
+| Repo | Licencia (archivo, bytes) | ★ | Qué resuelve |
+|------|--------------------------|---|--------------|
+| [TaloDev/backend](https://github.com/TaloDev/backend) | MIT (`LICENSE`, 1074) | 104 | Backend de juego self-hostable **MIT completo, sin tier cerrado**: auth, stats, leaderboards, saves, event tracking, exports CSV, canales realtime, live config, presencia, relaciones. Integra Steamworks / Google Play Games / Apple Game Center. Paquetes Godot y Unity. |
+| [pterodactyl/panel](https://github.com/pterodactyl/panel) | MIT (`LICENSE.md`, 1137) | — | El panel de game servers open source más usado. La capa de **ops** que no existía en esta KB. |
+| [contentauth/c2pa-python](https://github.com/contentauth/c2pa-python) | Apache-2.0 (`LICENSE-APACHE`, 11335) | — | Content Credentials en Python: es la pieza concreta para el marcado **machine-readable** que el Art. 50(2) del EU AI Act exige para el **2-dic-2026**. |
+| [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) | Apache-2.0 (`LICENSE-APACHE`, 11335) | — | SDK de referencia del mismo estándar. |
+| [Farama-Foundation/PettingZoo](https://github.com/Farama-Foundation/PettingZoo) | MIT (`LICENSE`, 1073) | 3.5k* | Equivalente multi-agente de Gymnasium: NPCs que compiten o cooperan. |
+
+### 🔴 Correcciones de licencia sobre filas que esta KB ya publicaba
+
+Cuatro grants estaban mal en los archivos de este repositorio. Todos releídos
+primera mano el 2026-10-26:
+
+| Repo | Esta KB publicaba | Grant real verificado | Consecuencia |
+|------|-------------------|----------------------|--------------|
+| [grafana/grafana](https://github.com/grafana/grafana) | **Apache-2.0** (`repos/foundations.md`) | **AGPL-3.0** (`LICENSE`, 34523 B) | Copyleft de red: un dashboard expuesto a terceros arrastra obligaciones. Alternativas: Apache Superset (Apache-2.0), Metabase. |
+| [code-forge-temple/local-llm-npc](https://github.com/code-forge-temple/local-llm-npc) | **MIT** (`verticals/solutions.md`, en la ruta recomendada) | **CC-BY-4.0** (`LICENSE`, 18655 B, "Attribution 4.0 International") | Licencia de contenido sobre software: sin grant de patente, sin distinción fuente/objeto. Baja de ruta recomendada a referencia de implementación. |
+| [SKYHUBDev/Aivill](https://github.com/SKYHUBDev/Aivill) | licencia `—`, "concepto a observar" | **Sin licencia y sin README en HEAD** | Repo vivo y vacío. Retirado del radar. |
+| [minetest/minetest](https://github.com/minetest/minetest) → [luanti-org/luanti](https://github.com/luanti-org/luanti) | LGPL-2.1, sin matices | **LGPL-2.1 el engine** (`doc/lgpl-2.1.txt`, 26406 B) + **CC-BY-SA 3.0/4.0 las texturas y sonidos** (`LICENSE.txt`, 8793 B) | El slug canónico cambió y el `LICENSE.txt` del repo **no** es el del código. |
+
+### 🧪 Defecto de instrumento encontrado dentro de este pass
+
+Se registra en lugar de corregirse en silencio, porque habría publicado cuatro
+filas con la licencia equivocada. Mi primer detector hacía `grep` de familias de
+licencia sobre **todo** el cuerpo del archivo con precedencia copyleft-primero. Eso
+misgradúa los **archivos de licencia agregados**, que en gaming son la norma porque
+el código y los assets casi nunca comparten grant:
+
+| Repo | Veredicto del grep | Grant real (leído de la cabecera) |
+|------|--------------------|----------------------------------|
+| `love2d/love` | Apache-2.0 | **zlib** para LÖVE; `license.txt` (74927 B) agrega ENet/FreeType/GLAD y texto LGPL/GPL de terceros |
+| `supertuxkart/stk-code` | AGPL-3.0 | **GPL-3.0-or-later** el código; data en mezcla GPL / CC-BY / CC-BY-SA / dominio público |
+| `0ad/0ad` | CC-family | **GPL-2.0** el código, **CC-BY-SA** la data |
+| `luanti-org/luanti` | Apache-2.0 | **LGPL-2.1** el engine; `LICENSE.txt` es sólo texturas y sonidos |
+
+Se detectó leyendo las primeras líneas de cada archivo a mano. **Regla derivada y
+reutilizable:** en gaming, antes de publicar una licencia hay que leer la cabecera
+del archivo y separar la capa de código de la capa de assets.
+
+Un segundo detalle del mismo tipo: `raw.githubusercontent.com` es
+**case-sensitive**. El grant de `recastnavigation` vive en **`License.txt`** (L
+mayúscula, t minúscula); una sonda que pida `LICENSE.txt` recibe 404 y publica la
+fila como "sin licencia".
+
+### ⛔ Descartados de la ruta construible
+
+| Repo | Motivo verificado |
+|------|------------------|
+| [pelican-dev/panel](https://github.com/pelican-dev/panel) | Fork de Pterodactyl citado en comparativas 2026. **Sin ningún archivo de licencia en HEAD.** Usar `pterodactyl/panel` (MIT). |
+| [namazustudios/elements](https://github.com/namazustudios/elements) | **AGPL-3.0** (`LICENSE.txt`, 16726 B): copyleft de red sobre el servidor de juego. |
+| [chongdashu/unreal-mcp](https://github.com/chongdashu/unreal-mcp) | Badge MIT en el README, **cero archivos de licencia en HEAD**, `Status: Experimental`. |
+| [Tencent-Hunyuan/Hunyuan-GameCraft-1.0](https://github.com/Tencent-Hunyuan/Hunyuan-GameCraft-1.0) | Licencia community de Tencent (16386 B), **no OSI**. |
+| `awesome-*` (3 listas) | [lappemic/awesome-ai-built-games](https://github.com/lappemic/awesome-ai-built-games), [SubmitGame/awesome-ai-game-dev-tools](https://github.com/SubmitGame/awesome-ai-game-dev-tools), [JonTelep/awesome-ai-game-generation](https://github.com/JonTelep/awesome-ai-game-generation). Vivas y útiles como **canal de descubrimiento**, pero bajo licencia de contenido (CC-BY family): no son código sobre el cual construir. |
+
+### 📋 Censo de verificación de este pass
+
+- **54 repos probados** con el procedimiento de dos etapas.
+- **52 vivos**, 2 inalcanzables (`Skywork-AI/Matrix-Game` — el slug correcto es
+  `SkyworkAI/Matrix-Game`; `TaloDev/talo` — el slug correcto es `TaloDev/backend`).
+- **1 control negativo fabricado**, correctamente inalcanzable.
+- **4 repos vivos sin ningún payload de licencia** en HEAD: `chongdashu/unreal-mcp`,
+  `pelican-dev/panel`, `SKYHUBDev/Aivill`, y `recastnavigation` sólo hasta corregir
+  la capitalización del nombre de archivo.
+- **Canales bloqueados:** `api.github.com/search/*` (rechazado por scoping de sesión)
+  y `huggingface.co` (DNS no resuelve).
+
+---
+
+# Historial
+
+Todo lo que sigue es el contenido de los passes anteriores, sin modificar.
+
+---
+
 # Repos trending — Gaming AI
 
 > Señales automáticas del pipeline + análisis manual. Última actualización: 2026-07-02
