@@ -1,17 +1,20 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-10-26
+updated: 2026-11-20
 ---
 
 # Verticales de partida — Gaming AI
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-10-26** (pass previo: 2026-07-02).
+> Última actualización: **2026-11-20** (passes previos: 2026-10-26, 2026-07-02).
 >
-> **Todas las licencias de esta página se releyeron primera mano el 2026-10-26.**
-> El pass anterior publicaba dos de ellas mal; las correcciones están marcadas 🔴.
+> **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
+> (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
+> de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
+> corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
+> de bytes** del archivo de licencia, documentado en `agents/top.md`.
 
 ## Stack recomendado: Godot + Nakama + MCP
 
@@ -22,14 +25,30 @@ la capa MCP que no existía en el pass anterior:
 Godot (MIT) — motor del juego
     + LimboAI (MIT) / Beehave (MIT)      — behavior trees de NPC
     + godot_rl_agents (MIT)              — entrenamiento RL / QA bots
-    + godot-ai (MIT, 3.2k★)              — MCP server: 46 tools, 120+ ops
+    + godot-ai (MIT, 3.627★)             — MCP server: 46 tools, 120+ ops
     ↕ nakama-godot SDK (Apache-2.0)
-Nakama (Apache-2.0, 13.6k★) — backend multiplayer
+Nakama (Apache-2.0, 13.757★) — backend multiplayer
     + hooks Go/TypeScript/Lua            — lógica server-side con AI
     + Open Match (Apache-2.0)            — matchmaking enchufable
-    + PostHog (MIT)                      — analytics de jugador
-    + Pterodactyl (MIT)                  — panel de ops de los game servers
+    + PostHog (MIT Expat + carve-out ee/) — analytics de jugador  🔴 ver nota
+    + Pterodactyl (MIT)                  — panel de ops (bare-metal/Docker)
+    + Agones (Apache-2.0, 7.106★)        — 🆕 ops sobre Kubernetes
 ```
+
+🔴 **Corrección sobre el diagrama: PostHog no es "MIT" a secas.** Su `LICENSE`
+(1563 B) dice *"All content that resides under the `ee/` directory … is licensed
+under the license defined in `ee/LICENSE`"* (PostHog Enterprise License, 2176 B);
+el resto es MIT Expat. El self-host del core sigue siendo viable y la receta no
+cambia, pero **la entrada de inventario sí**, y es el mismo patrón literal que
+Onyx en la KB de enterprise. Si el cliente exige "todo MIT" por política, hay que
+decir que PostHog es *mixto, ver archivo*, no MIT.
+
+🆕 **La capa de ops estaba incompleta.** `Pterodactyl` es un panel para servidores
+en bare-metal/Docker. Para capacidad elástica, lo que el mercado usa es
+**[agones-dev/agones](https://github.com/agones-dev/agones)** (Apache-2.0,
+7.106★): `Fleet`, `GameServer` y `FleetAutoscaler` como CRDs de Kubernetes.
+**Faltaba desde el primer pass de esta KB.** ⚠️ Y su slug cambió: el
+`googleforgames/agones` de toda la documentación **ya no es el canónico**.
 
 **Alternativa más permisiva y más chica:** reemplazar Nakama por **Talo**
 (`TaloDev/backend`, MIT). Trae auth, stats, leaderboards, saves, event tracking,
@@ -44,21 +63,23 @@ cliente de Godot y Unity. MIT completo, sin tier cerrado.
 | Plataforma | Licencia (verificada 2026-10-26) | URL | Stack | Caso de uso |
 |------------|----------------------------------|-----|-------|-------------|
 | **Godot Engine** | MIT (`LICENSE.txt`, 1149 B) | [godotengine/godot](https://github.com/godotengine/godot) | C++/GDScript/C# | Engine 2D/3D completo. El ecosistema AI open source más rico: LimboAI, Beehave, godot_rl_agents, godot-ai, godot-mcp. |
-| **Open 3D Engine** | Apache-2.0 (`LICENSE.txt`, 1475 B) | [o3de/o3de](https://github.com/o3de/o3de) | C++ | Engine AAA, sponsors AWS/Intel. Enterprise sin royalties de engine. |
+| **Open 3D Engine** | 🔴 **Apache-2.0 *o* MIT a elección** (`LICENSE.txt`, 1475 B — es un **puntero**, no el texto de Apache) | [o3de/o3de](https://github.com/o3de/o3de) | C++ | Engine AAA, sponsors AWS/Intel. **Más permisivo de lo que decíamos** (el cliente puede elegir MIT), **pero el propio `LICENSE.txt` advierte componentes copyleft, incluido Qt bajo LGPL-3.0**: "sin royalties" ≠ "sin obligaciones". Distribuir el **editor** modificado exige resolver Qt; distribuir sólo el **runtime**, normalmente no. ⚠️ rama default `development`. 9.894★ |
 | **Nakama** | Apache-2.0 (`LICENSE`, 11358 B) | [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | Go + SDKs | Backend de juego completo: matchmaking, leaderboards, chat, social. 13.6k★. Heroic Cloud managed desde ~$600/mes. |
 | 🆕 **Talo** | MIT (`LICENSE`, 1074 B) | [TaloDev/backend](https://github.com/TaloDev/backend) | Node/TS + Docker | Backend self-hostable MIT con imágenes Docker públicas de front y back. La opción cuando el cliente no acepta Apache-2.0 ni un tier managed. |
 | **Colyseus** | MIT (`LICENSE`, 1075 B) | [colyseus/colyseus](https://github.com/colyseus/colyseus) | Node.js/TypeScript | Servidor multiplayer web. Browser games y webapps. |
-| **MonoGame** | MIT (`LICENSE.txt`, 3882 B) | [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | C# | Framework C# cross-platform para equipos .NET. |
+| **MonoGame** | 🔴 **Ms-PL** (`LICENSE.txt`, 3882 B) — **no MIT** | [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | C# | Framework C# cross-platform para equipos .NET. **Corrección de este pass.** Ms-PL §3(D): cualquier porción distribuida **en código fuente sólo puede ir bajo Ms-PL** — un entregable de fuente a cliente **no se puede relicenciar** a MIT/Apache. Para un juego compilado es indistinto. ⚠️ rama default `develop`. 14.663★ |
 | **Stride** | MIT (`LICENSE.md`, 1304 B) | [stride3d/stride](https://github.com/stride3d/stride) | C# | Engine .NET maduro, alternativa a Unity. |
-| **Supabase** | Apache-2.0 (`LICENSE`, 11338 B) | [supabase/supabase](https://github.com/supabase/supabase) | PostgreSQL + APIs | BaaS para juegos asíncronos: profiles, inventarios, leaderboards, UGC. `pgvector` para RAG sin servicio externo. |
-| 🆕 **Pterodactyl** | MIT (`LICENSE.md`, 1137 B) | [pterodactyl/panel](https://github.com/pterodactyl/panel) | PHP/Laravel + Docker | El panel de game servers open source más usado. Capa de operación: deploy, consola, recursos, usuarios por servidor. |
+| **Supabase** | Apache-2.0 (`LICENSE`, 11338 B) | [supabase/supabase](https://github.com/supabase/supabase) | PostgreSQL + APIs | BaaS para juegos asíncronos: profiles, inventarios, leaderboards, UGC. `pgvector` para RAG sin servicio externo. 115.201★ |
+| 🟢 **Elements** (Namazu) | **MPL-2.0** (`LICENSE.txt`, 16726 B) — **no AGPL-3.0** | [NamazuStudios/elements](https://github.com/NamazuStudios/elements) | Java + REST/WebSockets | **Re-admitido este pass: estaba descartado por error.** Backend self-hosted con OAuth2/OIDC y Custom Elements. MPL-2.0 es copyleft **por archivo**: hostearlo **no** obliga a liberar tu código, sólo las modificaciones a archivos MPL. **Muy chico (22★)**: opción a considerar si el cliente rechaza Apache-2.0 y Talo le queda corto, nunca default frente a Nakama. |
+| **Pterodactyl** | MIT (`LICENSE.md`, 1137 B — verificado leyendo; el API dice `NOASSERTION` porque el texto va dentro de un *code fence* de Markdown) | [pterodactyl/panel](https://github.com/pterodactyl/panel) | PHP/Laravel + Docker | Panel de game servers más usado. Deploy, consola, recursos, usuarios por servidor. Bare-metal/Docker. ⚠️ rama default `1.0-develop`. 9.533★ |
+| 🆕 **Agones** | **Apache-2.0** | [agones-dev/agones](https://github.com/agones-dev/agones) | Go + Kubernetes CRDs | **La pieza que faltaba.** Orquestación y autoescalado de game servers dedicados sobre K8s (`Fleet`/`GameServer`/`FleetAutoscaler`). Complementa a Pterodactyl, no lo reemplaza: panel para operar hosts, Agones para capacidad elástica. 🔴 renombrado desde `googleforgames/agones`. 7.106★ |
 
 ### 🔴 Plataformas evaluadas y descartadas, con motivo
 
 | Plataforma | Problema verificado |
 |------------|--------------------|
-| [namazustudios/elements](https://github.com/namazustudios/elements) | **AGPL-3.0** (`LICENSE.txt`, 16726 B). Copyleft de red sobre el servidor de juego: hostearlo para jugadores puede arrastrar la obligación de liberar modificaciones. Fuera de la ruta permisiva. |
-| [pelican-dev/panel](https://github.com/pelican-dev/panel) | Fork de Pterodactyl, aparece en comparativas 2026. **Sin ningún archivo de licencia en HEAD** (`LICENSE`, `LICENSE.md`, `LICENSE.txt`, `COPYING` → 404). Sin grant no hay permiso. Usar `pterodactyl/panel`. |
+| 🟢 ~~`namazustudios/elements`~~ | **FILA RETIRADA DE ESTA TABLA — el descarte era incorrecto.** Decía "AGPL-3.0 (`LICENSE.txt`, 16726 B), copyleft de red, fuera de la ruta permisiva". El archivo, con **esos mismos 16726 B**, dice *"Mozilla Public License Version 2.0"*. **AGPL-3.0 son ~34.500 B** — y este mismo KB anotaba 34523 B para la AGPL de Grafana, así que **el dato que refutaba la etiqueta ya estaba escrito al lado**. Movido a la tabla de plataformas base. Nuevo slug: `NamazuStudios/elements`. |
+| [pelican-dev/panel](https://github.com/pelican-dev/panel) | 🔴 **Agravado: el repo ya no existe.** En octubre era "vivo pero sin archivo de licencia"; hoy `repo:` → `NOT_FOUND` y `raw` → 404. Usar `pterodactyl/panel`. |
 | [grafana/grafana](https://github.com/grafana/grafana) | 🔴 **AGPL-3.0** (`LICENSE`, 34523 B), **no Apache-2.0** como publicaba este KB. Sigue siendo utilizable, pero como servicio expuesto a terceros arrastra obligaciones. Alternativas: Apache Superset (Apache-2.0), Metabase (AGPL-3.0 core + comercial). |
 
 ---
@@ -71,12 +92,21 @@ cada archivo. Forkear el repo y quedarse con los assets es el error caro.
 
 | Juego | Licencia del **código** | Licencia de los **assets** | Repo | Por qué útil |
 |-------|------------------------|---------------------------|------|--------------|
-| **Luanti** (ex-Minetest) | **LGPL-2.1** (`doc/lgpl-2.1.txt`, 26406 B) | **CC-BY-SA 3.0 / 4.0** (`LICENSE.txt`, 8793 B — cubre sólo texturas y sonidos) | [luanti-org/luanti](https://github.com/luanti-org/luanti) | Mundo voxel completo. Base ideal para PCG con AI y NPCs agénticos. El slug canónico cambió: `minetest/minetest` sigue resolviendo pero el proyecto se renombró. |
-| **0 A.D.** | **GPL-2.0** | **CC-BY-SA** (`LICENSE.txt`, 3049 B, agregado por directorio) | [0ad/0ad](https://github.com/0ad/0ad) | RTS completo. AI de unidades mejorable con ML. |
+| **Luanti** (ex-Minetest) | **LGPL-2.1** (`doc/lgpl-2.1.txt`, 26406 B) | **CC-BY-SA 3.0 / 4.0** (`LICENSE.txt`, 8793 B — cubre sólo texturas y sonidos) | [luanti-org/luanti](https://github.com/luanti-org/luanti) | Mundo voxel completo. Base ideal para PCG con AI y NPCs agénticos. 🔴 **Corrección 2026-11-20:** el pass anterior decía que `minetest/minetest` *"sigue resolviendo"*. Resuelve **por redirect**: `repo:minetest/minetest` → `NOT_FOUND` en la API, y `raw` del slug viejo da 200 en `HEAD`/`master` y **404 en `main`**. El único slug canónico es `luanti-org/luanti` (**13.882★, commit de hoy** — la más activa de las tres). |
+| **0 A.D.** | **GPL-2.0** | **CC-BY-SA** (`LICENSE.txt`, 3049 B, agregado por directorio) | 🔴 [0ad/0ad](https://github.com/0ad/0ad) — **ARCHIVADO** | RTS completo, AI de unidades mejorable con ML, **pero el repo de GitHub está `archived: true` y su propia descripción dice `[DEPRECATED] Git mirror … migrated to gitea.wildfiregames.com on August 20th 2024`.** Último commit 2024-08-17. **El juego está vivo; su presencia en GitHub está muerta.** Para forkear hay que ir al Gitea propio del proyecto, fuera de GitHub. 2.827★ |
 | **SuperTuxKart** | **GPL-3.0-or-later** (`COPYING`, 35245 B) | Mezcla **GPL / CC-BY / CC-BY-SA / dominio público** | [supertuxkart/stk-code](https://github.com/supertuxkart/stk-code) | Juego de carreras completo. AI de oponentes mejorable con RL. |
 
 Las tres son copyleft en el código: sirven como **banco de pruebas y demo**, no
 como base de un producto propietario. Para eso, Godot + assets propios.
+
+🆕 **Estado medido de las tres (2026-11-20):** `luanti-org/luanti` **13.882★,
+commit de hoy** — la única de las tres con desarrollo activo en GitHub y por tanto
+la mejor base de prueba; `supertuxkart/stk-code` 5.490★, commit del 3-nov-2026,
+activa; `0ad/0ad` **archivada** (arriba). ⚠️ **Lección de método que vale para
+toda la KB:** un repo puede estar muerto **mientras el proyecto está vivo**
+—migró de hosting— y ésa es la inversa del chequeo habitual. `archived` es un
+booleano que ni las ★ ni `pushed_at` revelan: 0 A.D. tiene 2.827★ y está
+archivado. Hay que pedir los tres datos.
 
 ---
 
@@ -122,8 +152,25 @@ Godot Engine (MIT)
     │       46 tools, 120+ operaciones: escenas, scripts, signals, animaciones
     └── godot_rl_agents (MIT) ──→ Stable-Baselines3 (MIT) → QA bots
 ```
-Para Unity el equivalente dominante es **[IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP)**
-(Apache-2.0, 4.5k★): cualquier método C# se convierte en tool con una línea.
+🔴 **Corrección de este pass sobre la elección de MCP.** Esta página decía que
+para Unity el dominante era `IvanMurzak/Unity-MCP` (Apache-2.0, 4.672★). **No lo
+es:** el líder real es
+**[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) (MIT, 16.087★)**,
+3,4× más grande **y con licencia más permisiva**. Estaba invisible para esta KB
+porque **fue renombrado** (`justinpbarnett/unity-mcp` → `CoplayDev/unity-mcp`) y
+las búsquedas seguían apuntando al slug viejo. ⚠️ Su rama default es **`beta`**:
+usar `HEAD` en `raw`, no `main`.
+
+- **Unity →** `CoplayDev/unity-mcp` (MIT, 16.087★). Si el cliente exige
+  Apache-2.0 por política, `IvanMurzak/Unity-MCP` sigue siendo la opción válida.
+- **Godot →** aquí hay un trade-off real que **hay que decirle al cliente**:
+  `Coding-Solo/godot-mcp` tiene la adopción (**6.713★, MIT**, 15× el
+  `tomyud1/godot-mcp` que esta KB listaba) pero **7 meses sin commits**;
+  `hi-godot/godot-ai` tiene la mitad (**3.627★**) y **commits de hoy**. Para
+  trabajo de cliente con soporte: **`godot-ai`**.
+- **Unreal →** `prajwalshettydev/UnrealGenAISupport` (MIT, 686★) es el único con
+  licencia limpia y volumen. `chongdashu/unreal-mcp` tiene 2.120★ **y ningún
+  archivo de licencia**: no usar.
 
 ---
 
@@ -207,14 +254,22 @@ Salida visual de alta fidelidad sin pipeline de arte
 | QA automatizado con RL | Godot + godot_rl_agents | SB3 + PPO | 2-4 semanas |
 | **Evaluación de agentes que juegan** | cualquier engine | **GamingAgent / LMGame Bench (MIT)** | **1-2 semanas** |
 | AI-assisted game dev (Godot) | Godot + godot-ai | Claude Code vía MCP | 1 día de setup |
-| AI-assisted game dev (Unity) | Unity + Unity-MCP | Claude Code vía MCP | 1 día de setup |
-| **Marcado de contenido AI (UE, Art. 50)** | catálogo existente | pipeline de metadata + C2PA | **3-5 semanas** |
+| AI-assisted game dev (Unity) | Unity + **CoplayDev/unity-mcp** (MIT) | Claude Code vía MCP | 1 día de setup |
+| 🆕 **Pipeline de estudio con agentes por rol** | cualquier engine | **Claude-Code-Game-Studios** (MIT, 40.377★): 49 agentes + 72 skills | **1-2 días de setup, semanas de calibración** |
+| 🆕 **Capacidad elástica de game servers** | Nakama/Talo sobre Kubernetes | **Agones** (Apache-2.0) + `FleetAutoscaler` | 2-3 semanas |
+| 🔴 **Marcado de contenido AI (UE, Art. 50)** | catálogo existente | pipeline de metadata + C2PA | **3-5 semanas — YA NO CABE ANTES DEL 2-DIC-2026 (quedan 12 días).** Ver `compose/patterns.md` → Receta 7, reencuadrada: inventario de exposición primero. |
 | Juego AAA con AI cloud | O3DE | AWS Bedrock / GameLift | meses (enterprise) |
 | **Prototipado con world model** | Godot/Unity + Matrix-Game 4.0 | rendering neural | 4-6 semanas |
 
 ---
-*Licencias verificadas el 2026-10-26 leyendo cada archivo de grant en
-`raw.githubusercontent.com/<slug>/HEAD/<archivo>`, con bytes anotados y control
-negativo. Correcciones de este pass: `local-llm-npc` (MIT → CC-BY-4.0) y
-`grafana` (Apache-2.0 → AGPL-3.0). Ver `agents/top.md` para el detalle del método
-y de los grants bloqueantes.*
+*Licencias verificadas el 2026-11-20 en **dos canales** (`gh api
+search/repositories` para SPDX/★/`archived`/`pushed_at`/rama default + lectura del
+grant en `raw.githubusercontent.com/<slug>/HEAD/<archivo>` con bytes anotados),
+con control negativo en ambos sentidos. **Correcciones de este pass:** `MonoGame`
+(MIT → **Ms-PL**), `PostHog` (MIT → **MIT Expat + carve-out `ee/`**), `o3de`
+(Apache-2.0 → **Apache-2.0 o MIT, con Qt LGPL-3.0**), `NamazuStudios/elements`
+(AGPL-3.0 → **MPL-2.0**, descarte revertido), `0ad/0ad` (**archivado**),
+`pelican-dev/panel` (**ya no existe**), y la elección de MCP para Unity y Godot.
+Revalidadas de octubre: `local-llm-npc` (CC-BY-4.0) y `grafana` (AGPL-3.0), ambas
+ahora confirmadas por el segundo canal. Ver `agents/top.md` para el método, el
+checksum de bytes y los grants bloqueantes.*

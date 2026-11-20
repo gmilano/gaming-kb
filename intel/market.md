@@ -1,18 +1,29 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-10-26
+updated: 2026-11-20
 ---
 
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-10-26** (pass previo: 2026-07-02).
+> Última actualización: **2026-11-20** (passes previos: 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🔴 Lo que cambió en 25 días — leer esto primero
+
+| Cambio | Dato | Consecuencia |
+|--------|------|--------------|
+| 🔴 **El deadline de EMEA está encima** | Art. 50(2) del EU AI Act: fin del período de gracia el **2-dic-2026**. Hoy es 2026-11-20: **quedan 12 días.** | En el pass anterior eran ~5 semanas y se vendía como "sprint". A 12 días **ya no es vendible como proyecto**: es triage. Ver nota de reencuadre en la sección EMEA. |
+| 🔴 **Steam cruzó el 50%** | **49,9% de los lanzamientos de octubre-2026** declararon contenido AI (censo ~63.600 releases). Contra-conteo independiente sobre SteamDB: **1.821 de 3.661 = 49,7%**. | La proyección de prensa de octubre ("más de la mitad para 2027-2028") se cumplió **más de un año antes**. El etiquetado dejó de ser señal diferencial: es el default. |
+| 🟢 **Primera cifra de producción real de NPCs con AI** | Tencent reporta, en *Game for Peace*, **110 M de usuarios acumulados** de features de NPC con AI y **17,7 M de DAU pico**. | Es, con diferencia, el despliegue de NPCs con AI más grande del que esta KB tenga medida. Mata el argumento "los NPCs con LLM no escalan": escalan, en APAC, hoy. |
+| 🔴 **Un AAA institucionalizó la AI el mismo día que despidió** | Ubisoft: **166 puestos** eliminados (Montreal y Quebec City, conocidos el **19-nov-2026**, día de su reporte semestral) y **1.100 en seis meses**; a la vez lanzó **Motherbrain**, subsidiaria dedicada a AI generativa para *gameplay* (NPCs con memoria y "AI game masters"). | Es el riesgo reputacional del pass hecho titular. Ningún producto de Motherbrain ha salido: son planes. Y GDC (nov-2026) mide que **54% de los despedidos sigue sin empleo** (era 48% en enero) **sin evidencia de que la AI cause los despidos**. La correlación es de calendario, no causal — pero el cliente la va a escuchar como causal. |
+
+---
 
 ## Tamaño de mercado — los estimados no coinciden, y la diferencia importa
 
@@ -65,7 +76,7 @@ contenido que ve el jugador.
 
 | Empresa | Tipo | Fortaleza AI | Debilidad | Modelo |
 |---------|------|-------------|-----------|--------|
-| **Unity Technologies** | Engine propietario | Unity AI 6.2 integrado (Assistant, Generators, Inference Engine). ml-agents (Apache-2.0). El ecosistema MCP más adoptado corre sobre Unity: `IvanMurzak/Unity-MCP` 4.5k ★. | Controversia de pricing 2023 aún en la memoria del mercado. | Revenue share + suscripción |
+| **Unity Technologies** | Engine propietario | Unity AI 6.2 integrado (Assistant, Generators, Inference Engine). ml-agents (Apache-2.0). El ecosistema MCP más adoptado corre sobre Unity: 🔴 **corregido este pass — el líder es `CoplayDev/unity-mcp` (MIT, 16.087★), no `IvanMurzak/Unity-MCP` (4.672★)**; el primero estaba invisible para esta KB por un rename. | Controversia de pricing 2023 aún en la memoria del mercado. | Revenue share + suscripción |
 | **Epic Games (Unreal)** | Engine propietario | MetaHuman AI. Aura agent. Plugin MCP first-party experimental reportado en UE 5.8. | Royalty 5% > $1M. **Tim Sweeney atacó públicamente la política de disclosure de AI de Steam** como "abhorrent" — Epic está posicionado contra el etiquetado, lo que es un riesgo de marca para un partner. | Royalty |
 | **Valve / Steam** | Distribución | **Es el regulador de facto del AI en juegos.** Política de disclosure desde 9-ene-2024, **reescrita el 17-ene-2026**. | No produce tooling AI. | Revenue share |
 | **NVIDIA** | GPU + SDK | ACE (ASR+NLP+TTS+animación NPC). **DLSS 5 presentado en GTC 2026 (mar-2026)**: modelo generativo capaz de transformar skins y modelos de personaje en juego. | Dependencia de hardware NVIDIA. | Hardware + SDK |
@@ -74,7 +85,7 @@ contenido que ve el jugador.
 | **Tencent** | Publisher + research (APAC) | Hunyuan-GameCraft: video de juego interactivo desde teclado y mouse. | 🔴 Licencia community propia, **no OSI**. No es base construible. | Propietario |
 | **Roblox** | Plataforma UGC | AI Studio con cliente MCP. CUBE 3D. OpenGameEval OSS. | Audiencia mayormente juvenil. | Revenue share |
 | **Google DeepMind** | Research + cloud | Concordia (Apache-2.0). Genie 2 / Genie 3. | 🔴 **La línea Genie no es abierta**: reports y blog posts, sin código. Todo lo jugable abierto es de Skywork, Microsoft o Tencent. | Cloud API |
-| **Heroic Labs** | Backend OSS | Nakama (Apache-2.0, **13.6k ★**). | Heroic Cloud desde ~$600/mes. | OSS + managed |
+| **Heroic Labs** | Backend OSS | Nakama (Apache-2.0, **13.757★**). | Heroic Cloud desde ~$600/mes. | OSS + managed |
 | **Inworld AI / Convai** | AI NPC (cerrado) | NPCs con voz, memoria, emoción. | Pricing por personaje o por llamada, cerrado. | SaaS |
 
 ---
@@ -93,9 +104,25 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
   GitHub Copilot) quedan **explícitamente exentas** de disclosure, y el **contenido
   generado por AI que se le entrega al jugador** debe declararse. Hay además un
   reporte in-game, pero sólo cubre contenido *live-generated*.
-- **Penetración real del etiquetado** (censo de ~53.600 releases): **10.9% (2024) →
-  19.9% (2025) → 30.8% (2026 hasta julio)**. Proyección de prensa: más de la mitad
-  de los lanzamientos llevarían disclosure para 2027-2028.
+- 🔴 **Penetración del etiquetado — serie actualizada y mucho más alta.** Censo
+  ampliado (~63.600 releases, el de octubre era ~53.600): **13,2% (2024) → 24%
+  (2025) → 40,1% (2026 hasta octubre)**, y **49,9% en el mes de octubre-2026**
+  solo. Contra-conteo independiente con datos de SteamDB: **1.821 de 3.661
+  releases = 49,7%** — dos métodos, misma conclusión. Hace un año el mismo mes
+  estaba en **26,4%**: el ritmo casi se duplicó en doce meses. **La proyección
+  "más de la mitad para 2027-2028" que este archivo citaba en octubre se cumplió
+  con más de un año de anticipación.**
+- 🟢 **Y la composición del etiquetado es la parte vendible:** de las
+  declaraciones, **63% es artwork**, **30% texto y traducciones**, **8% sólo
+  página de tienda** y **apenas 3% declara generación durante el gameplay**. O
+  sea: el mercado etiqueta *arte y texto de producción*, no AI en runtime. Quien
+  venda "AI en el juego" está en el 3%, no en el 50%.
+- 🟢 **El etiquetado es inversamente proporcional al tamaño del título:** **47%**
+  de los juegos con <10 reviews declaran AI, **27%** de los de 100-999 y sólo
+  **14%** de los de 1.000+. Los estudios grandes declaran menos — porque usan
+  menos, o porque tienen más que perder. Dato de negociación con un publisher.
+- ⚠️ **Una declaración no es una medida de uso**, y una ausencia de etiqueta no
+  prueba ausencia de AI. El 49,9% cuenta **declaraciones**.
 - ⚠️ **La cifra de ~36% que circula para Steam Next Fest NO es de Valve**: es un
   conteo de terceros (2.593 de 7.145 títulos filtrados por base de datos). Valve
   nunca publicó un conteo de disclosure para ninguna edición. No usarla como dato
@@ -107,6 +134,21 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
   fracción conocía operadores licenciados con políticas internas de AI responsable.
 - **Barrera citada por analistas de mercado:** el estatus de copyright del contenido
   generado por AI sigue sin resolverse, y eso frena el uso en assets publicables.
+- 🆕 **Reguladores de juego: actividad concentrada aquí y en Europa occidental**
+  (informe UNLV/KPMG). **Alberta** publicó en **enero de 2026** guías de detección
+  de bots y de ventaja desleal, y **Colorado** cambió reglas el mismo mes. Bélgica,
+  Finlandia e Italia, junto con varios estados y provincias de NA, **incentivan**
+  el monitoreo con AI para proteger al jugador. Pero los reguladores declaran
+  **visibilidad limitada** sobre cómo se despliega la AI y poca confianza en poder
+  supervisarla: hay mandato y no hay instrumento. Ése es el hueco de consultoría.
+- 🆕 **Adopción corporativa vs agéntica, medida aparte:** **>80%** de las empresas
+  del sector usan AI generativa para contenido e insights, mientras **la adopción
+  agéntica sigue siendo limitada**, frenada por compliance y seguridad del jugador.
+  La brecha entre "usamos genAI" y "tenemos agentes en producción" es el mercado.
+- 🔴 **Sentimiento del jugador, y es el número más duro de la región:** una encuesta
+  de Quantic Foundry sobre **~2 millones de jugadores** reporta **~85% con actitud
+  negativa** hacia la gen AI en juegos. Contrastar con LATAM (48,8% de aceptación)
+  más abajo: **no es el mismo mercado y no se le vende igual.**
 
 | Oportunidad NA | Driver | Fit Globant |
 |----------------|--------|-------------|
@@ -117,20 +159,56 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### EMEA
 
-**La única región con una fecha límite dura, y cae en 5 semanas.**
+🔴 **La única región con una fecha límite dura, y cae en 12 DÍAS.**
 
 - **EU AI Act, Artículo 50 (transparencia): aplicable desde el 2-ago-2026.** Quedó
   **fuera** del aplazamiento general, así que ya está vigente.
 - 🔴 **2 de diciembre de 2026: fin del período de gracia para el marcado
   *machine-readable* del Art. 50(2)** en sistemas ya puestos en el mercado. Hoy es
-  2026-10-26: **quedan ~5 semanas.**
+  **2026-11-20: quedan 12 días.**
+- 🔴 **REENCUADRE OBLIGATORIO DE LA OFERTA.** En octubre este archivo vendía un
+  "sprint de marcado" de 3-5 semanas contra este deadline. **A 12 días, ese
+  entregable ya no cabe y proponerlo es vender un incumplimiento.** Lo que sí cabe,
+  y es honesto: (a) **inventario de exposición** — qué SKUs del catálogo publicado
+  llevan contenido generado y qué metadata tienen hoy, entregable en días, no
+  semanas; (b) **marcado del subconjunto crítico** priorizado por riesgo y
+  visibilidad; (c) **plan fechado post-deadline** con la brecha documentada, que
+  es lo que un regulador y un auditor valoran frente a un cumplimiento fingido.
+  Decirle al cliente que llega completo al 2-dic es el error, no la oferta.
 - **Alto riesgo / Anexo III se movió a 2 de diciembre de 2027** (se esperaba
   2-ago-2027). Hay por tanto **dos relojes distintos** y confundirlos es el error
   que se ve en el mercado.
+- 🟢 **Corroboración cruzada entre KBs de esta familia:** el aplazamiento de alto
+  riesgo vía *Digital Omnibus* (a 2027 y 2028) aparece ahora en fuentes legales
+  independientes consultadas para gaming. La KB de **enterprise** registró el
+  2026-11-20 un conflicto no resuelto porque sus fuentes daban 2-ago-2026 para
+  alto riesgo; **las fuentes de gaming son consistentes con el calendario
+  post-enmienda** (Art. 50 vigente desde 2-ago-2026, alto riesgo a 2027/2028), que
+  es la lectura que esta KB ya sostenía. El conflicto de enterprise se explica por
+  fuentes pre-enmienda. ⚠️ **`eur-lex.europa.eu` sigue sin ser alcanzable desde
+  este entorno, así que el registro primario sigue SIN LEER en 5 passes y 2 KBs.**
+  No poner ninguna de las dos fechas en una propuesta sin verificar el texto oficial.
 - **Qué obliga concretamente en un juego:** disclosure al jugador cuando interactúa
   con un sistema de AI, salvo que sea obvio (Art. 50(1)); y marcadores **visibles y
   legibles por máquina** en copy de marketing, arte promocional e imágenes de juego
   generadas por AI.
+- 🆕 🔴 **HALLAZGO NUEVO Y MÁS GRAVE QUE LA TRANSPARENCIA: hay un caso de uso de
+  gaming en las prácticas PROHIBIDAS (Art. 5), no en alto riesgo.** La Comisión
+  Europea citó como ejemplo de práctica prohibida los **NPCs generados por AI
+  diseñados para empujar al jugador a gastar más dentro del juego**. Y comentario
+  legal sostiene que la **AI de optimización de engagement aplicada a jugadores
+  menores de edad** caería también en Art. 5. La diferencia de régimen es total:
+  **alto riesgo se gestiona con documentación; prohibido no se gestiona, se
+  cancela.** Si un cliente tiene un NPC conversacional conectado a la tienda o a la
+  economía del juego, ésa es la primera conversación, antes de cualquier marcado.
+- 🆕 **Y viene una segunda norma, específica de diseño de juego:** la Comisión
+  planea un borrador de **Digital Fairness Act para el Q4 de 2026**, apuntando a
+  **diseño adictivo y mecánicas aleatorizadas** (loot boxes) en productos
+  digitales, juegos incluidos. Para un publisher europeo, el monetization design
+  pasa a ser materia regulada, no sólo materia de ética.
+- 🆕 **iGaming EMEA:** la **Malta Gaming Authority** abrió consulta sobre una
+  **AI Gaming Charter voluntaria**; a septiembre de 2026 no había publicado guía
+  específica de AI. Voluntario hoy, piso de expectativa mañana.
 - ⚠️ **Desacuerdo no resuelto entre fuentes legales:** si la dificultad adaptativa,
   la reacción al comportamiento del jugador y las historias personalizadas caen en
   "alto riesgo". Una guía dice que las herramientas generales de generación de
@@ -154,7 +232,9 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 **Tres regímenes distintos en una región, y la oferta open source más fuerte del
 ciclo.**
 
-- **Corea del Sur — AI Basic Act en vigor desde enero de 2026.** Es el régimen más
+- **Corea del Sur — AI Basic Act en vigor desde el 22-ene-2026**, con aplicación
+  **extraterritorial** cuando el sistema afecta a usuarios coreanos (un estudio
+  LATAM o europeo que publique en Corea queda alcanzado). Es el régimen más
   completo de la región: los proveedores de AI generativa deben **notificar al
   usuario por adelantado y etiquetar la salida**. Techo de sanción modesto
   (KRW 30 millones) y período de gracia de al menos un año antes de multas.
@@ -162,9 +242,37 @@ ciclo.**
   separadas para algoritmos de recomendación, *deep synthesis*, AI generativa y
   etiquetado de contenido. Para un juego con contenido generado, el etiquetado es
   obligación directa.
-- **Japón — promoción sin sanciones.** Hay propuesta de divulgación **voluntaria**
+- **Japón — promoción sin sanciones.** La **AI Promotion Act** rige desde el
+  4-jun-2025 **sin penalidades directas**, y se reporta un **AI Basic Plan
+  adoptado en julio de 2026**. Hay propuesta de divulgación **voluntaria**
   de datos de entrenamiento que en práctica opera como obligatoria, porque el
   incumplidor queda nombrado públicamente.
+- 🆕 🟢 **LA CIFRA DE PRODUCCIÓN QUE FALTABA EN TODA ESTA KB.** Tencent reporta
+  para **Game for Peace** (la versión china de PUBG Mobile) **110 millones de
+  usuarios acumulados** de las features de NPC con AI y un **pico de 17,7 millones
+  de DAU**. Es el despliegue de NPCs con AI más grande del que esta KB tenga
+  medición, y por dos órdenes de magnitud. **Consecuencia directa para el pitch:**
+  la objeción "los NPCs con LLM no escalan / no son viables en producción" es
+  falsa y hay un número con el cual refutarla. Lo que no dice el dato: cuánto de
+  ese NPC es un LLM y cuánto es un sistema clásico con capa generativa — Tencent
+  no desglosa, y conviene no sobreafirmarlo.
+- 🆕 **NetEase — *Justice Mobile* tiene un personaje con AI movido por DeepSeek**,
+  que conversa y reacciona fuera del diálogo escrito. 🔴 **Y una corrección de
+  rumor:** circuló que NetEase había **prohibido** la AI generativa a sus
+  desarrolladores; **lo desmintió** y hay títulos suyos usándola. No repetir el
+  rumor en una sala.
+- 🆕 **Tencent mostró "LAP"**, herramienta de producción con AI para assets de
+  fondo y de personaje y para generación de animación. La AI de pipeline interno
+  en APAC no es piloto: es herramienta de casa de un publisher top-3 global.
+- 🆕 **El cuello de botella APAC no es técnico, es de aprobación:** la **NPPA**
+  china emitió ISBNs para **130 juegos domésticos** el 25-mar-2026, y
+  **Tencent y NetEase recibieron una aprobación doméstica cada uno en abril de
+  2026 tras dos meses de cero aprobaciones**. ⚠️ Las cifras de los lotes de
+  agosto/octubre-2026 (195 vs 215 títulos) **no concilian entre fuentes** y se
+  registran como no verificadas. Para un engagement: el riesgo de calendario en
+  China es regulatorio-administrativo, no de ingeniería, y **no hay evidencia de
+  un trámite de aprobación separado para NPCs con AI** dentro del régimen NPPA —
+  se buscó específicamente y no se encontró.
 - **Industria, y es una división abierta:**
   - **Krafton** empuja AI companions: el concepto *Co-Playable Character* iba a
     debutar como **"PUBG Ally"** en el modo arcade de PUBG en el **1er semestre de
@@ -212,6 +320,28 @@ ciclo.**
   precariedad laboral y los despidos**. Es la única región de este archivo con una
   medición de *aceptación del jugador*, y dice que casi la mitad del mercado no
   castiga el uso de AI mientras no implique despidos visibles.
+- 🆕 🟢 **LA DIVERGENCIA REGIONAL MÁS VENDIBLE DE ESTE ARCHIVO, ahora que hay con
+  qué contrastar.** El 48,8% de aceptación de LATAM (PGB Latam 2026) se lee contra
+  el **~85% de actitud negativa** que Quantic Foundry mide sobre ~2 millones de
+  jugadores a nivel global (muestra con fuerte peso NA). **Son dos mercados
+  distintos frente al mismo producto.** Consecuencia operativa concreta: una
+  feature con AI visible al jugador que sería un riesgo de marca en un lanzamiento
+  NA es **comercialmente viable en LATAM**, y por tanto **LATAM es el mercado de
+  primer lanzamiento racional para producto con AI de cara al jugador**, no el
+  último. Es el único argumento de esta KB en el que LATAM no es "más barato" sino
+  **estructuralmente mejor**. ⚠️ Honestidad metodológica: las dos encuestas no son
+  comparables cabeza a cabeza (distinta muestra, pregunta y escala); lo defendible
+  es **la dirección y el tamaño de la brecha**, no la resta de los porcentajes.
+- 🆕 **Ecosistema: hay más estudios de los que esta KB asumía.** Microsoft declara
+  haber trabajado con **más de 60 estudios** de México, Brasil, Argentina, Chile,
+  Colombia, Perú, Honduras y Uruguay vía **ID@Xbox**. **Gamescom Latam 2026** (São
+  Paulo, 30-abr a 3-may-2026) tuvo una delegación argentina de **más de 70 estudios
+  y empresas**. Estimación periodística, marcada como tal: **>70% de los estudios
+  indie de la región** se concentran en México, Argentina y Brasil (Infobae, 2025).
+- 🆕 **Lectura de Bain sobre la región:** la AI acelera prototipos, abarata la
+  iteración y mejora el conocimiento del jugador, y su impacto **depende de a quién
+  beneficie el uso** — que es exactamente el eje del 40,6% de preocupación laboral
+  de abajo. Las dos mitades del dato LATAM son una sola conversación.
 - **Mobile es la plataforma, no una plataforma:** **86.9% de los gamers en México
   usa el celular como pantalla principal**. México lidera el mercado gaming de LATAM.
 - **Adopción general de AI:** Brasil ~76% y México ~70%, de las más altas de la
@@ -233,7 +363,8 @@ ciclo.**
 | **Mobile-first analytics y retención** | 86.9% mobile en México; F2P donde retención > adquisición. | PostHog + GNNs para churn. Receta 5. |
 | **iGaming anti-fraude** | Brasil reguló iGaming; supervisión de compras in-game en aumento. | Detección conductual server-side sobre Nakama. Receta 3. |
 | **Compliance real: LGPD + derecho de autor** | No hay AI Act, **sí** hay LGPD y la reforma mexicana de derecho de autor de mayo-2026. | Reencuadrar la oferta de compliance; no vender AI Act. |
-| **Narrativa de "AI sin despidos"** | 40.6% de preocupación por precariedad es el riesgo de marca local. | Posicionar AI en pipeline interno y upskilling, no en reemplazo de artistas. |
+| **Narrativa de "AI sin despidos"** | 40.6% de preocupación por precariedad es el riesgo de marca local, y **Ubisoft acaba de darle titular** (166 despidos el 19-nov-2026 el mismo día que abrió una subsidiaria de AI generativa). | Posicionar AI en pipeline interno y upskilling, no en reemplazo de artistas. Llevar el dato de GDC: **54% de los despedidos sigue sin empleo y no hay evidencia de causalidad con la AI** — desactiva la objeción sin negarla. |
+| 🆕 **Mercado de primer lanzamiento para AI de cara al jugador** | 48,8% de aceptación LATAM vs ~85% de rechazo global. La feature que no se puede lanzar en NA **sí** se puede lanzar acá. | Diseñar el rollout regional: LATAM primero, telemetría de aceptación, y recién después NA/EMEA con evidencia propia en la mano. |
 | **Exportación con diferencial AI** | Estudios LATAM compitiendo globalmente sin oferta OSS local. | Globant como acelerador de integración AI. |
 
 ---
@@ -244,15 +375,28 @@ ciclo.**
 1. **Stack OSS end-to-end verificado**: Godot + Nakama/Talo + SB3 + LimboAI + MCP,
    con los grants leídos uno por uno (ver `agents/top.md`) — sin lock-in de
    plataforma cerrada y sin sorpresas de licencia.
-2. **Screening de licencias como entregable propio.** Este KB encontró, en un solo
-   pass: un badge MIT sin archivo de licencia, una fila publicada como MIT que es
-   CC-BY-4.0, Grafana publicada como Apache-2.0 cuando es AGPL-3.0, y un world model
-   cuyo grant cambia según el subdirectorio. Ese error es el default del mercado.
+2. **Screening de licencias como entregable propio, y ahora con método
+   reproducible.** Acumulado de dos passes sobre repos reales: un badge MIT sin
+   archivo de licencia (`chongdashu/unreal-mcp`, 2.120★), una fila MIT que es
+   CC-BY-4.0 (`local-llm-npc`), Grafana como Apache-2.0 cuando es AGPL-3.0, un
+   world model cuyo grant cambia según el subdirectorio (Matrix-Game), **MonoGame
+   publicado como MIT cuando es Ms-PL**, **PostHog como MIT cuando tiene carve-out
+   `ee/`**, **O3DE como Apache-2.0 cuando es dual Apache/MIT y arrastra Qt bajo
+   LGPL-3.0**, y **un backend descartado por AGPL-3.0 que en realidad es MPL-2.0**.
+   Lo diferencial no es la lista: es que el método es **mecánico y auditable** —
+   dos canales independientes más un **checksum de bytes** del texto de licencia
+   que, aplicado a las filas ya escritas de esta KB, marcó 4 y acertó 4 (ver
+   `agents/top.md`). Eso se le entrega a un cliente como procedimiento, no como
+   opinión.
 3. **Delivery LATAM** con costo y velocidad frente a los grandes integradores.
 4. **Patterns listos**: recipes de `compose/patterns.md` → PoC en 2-6 semanas.
 
 ### Cuentas objetivo (perfil)
-- Publishers con catálogo en la UE y **deadline del 2-dic-2026** sin resolver.
+- Publishers con catálogo en la UE y **deadline del 2-dic-2026 a 12 días** sin
+  resolver → entrada por inventario de exposición, no por "sprint de marcado".
+- 🆕 Publishers o estudios con **NPC conversacional conectado a la tienda o a la
+  economía del juego** y publicación en la UE: posible práctica **prohibida** por
+  Art. 5, no alto riesgo. Es la conversación más urgente del archivo.
 - Estudios AA/AAA que quieren AI en el pipeline interno sin exposición de disclosure
   en NA.
 - Operadores iGaming en Brasil/México con supervisión regulatoria creciente.
@@ -265,6 +409,24 @@ ciclo.**
 - **Estudios locales** (Aquiris Brasil, Luderia México): clientes, no competidores.
 
 ---
+*Fuentes añadidas 2026-11-20: análisis independiente del censo Steam (~63.600
+releases) y contra-conteo sobre SteamDB (49,9% / 49,7% en oct-2026, desglose por
+tipo y por tamaño de título); UNLV/KPMG (reguladores de juego NA, Alberta y
+Colorado ene-2026); Quantic Foundry (~2M jugadores, ~85% negativo); GDC nov-2026
+(54% de despedidos sin empleo); GamesRadar / Analytics Insight / gamedev.net
+(Ubisoft Motherbrain y 166 despidos, 19-nov-2026); Niko Partners y smartkarma
+(aprobaciones NPPA); BigGo Finance y webpronews (Tencent Game for Peace 110M
+usuarios de NPC con AI / 17,7M DAU pico, NetEase Justice Mobile con DeepSeek,
+Tencent LAP); FRVR (desmentido del supuesto veto de NetEase); WH Partners,
+DLA Piper, twobirds, gamingtechlaw (Art. 5 NPCs que empujan al gasto, Digital
+Fairness Act Q4-2026, Digital Omnibus); Malta Gaming Authority (AI Gaming
+Charter); xenoss / aimadetools (Corea AI Basic Act 22-ene-2026, Japón AI
+Promotion Act y AI Basic Plan jul-2026); Microsoft LATAM (ID@Xbox, 60+ estudios),
+Bain vía anda.cl, Gamescom Latam 2026 (delegación argentina 70+); Globant "Game
+On" (publicado 18-nov-2025, $189B de revenue global — **outlook de hace un año,
+probable nueva edición pendiente**). Repos verificados en dos canales
+(`gh api search/repositories` + lectura del grant en `raw.../HEAD/`).*
+
 *Fuentes consultadas 2026-10-26: Research and Markets, Market.us, The Business
 Research Company, Precedence Research, Technavio (tamaño de mercado, en conflicto);
 GDC 2026 survey vía ShaneTheGamer y Market.us; Sulka Haro (censo Steam ~53.600

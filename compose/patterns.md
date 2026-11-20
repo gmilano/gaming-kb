@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-10-26
+updated: 2026-11-20
 ---
 
 # Patrones de composición — Gaming AI
@@ -216,9 +216,27 @@ Godot 4 Editor (MIT)                   ← editor abierto
     └── Materials, animations, UI configurados
 ```
 
-**Repos**:
-- [hi-godot/godot-ai](https://github.com/hi-godot/godot-ai) — MIT, **3.2k** stars (releído 2026-10-26; eran 805 en julio). **46 tools** y 120+ operaciones.
+**Repos** (★ y `pushed_at` releídos 2026-11-20):
+- [hi-godot/godot-ai](https://github.com/hi-godot/godot-ai) — MIT, **3.627★**,
+  **commit de hoy**. 46 tools y 120+ operaciones. **Ésta es la recomendación para
+  trabajo de cliente**, por mantenimiento activo.
+- 🆕 [Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp) — MIT,
+  **6.713★**, el más adoptado del ecosistema Godot (**15×** el `tomyud1/godot-mcp`
+  que esta KB listaba como "segunda opción") ⚠️ **pero sin commits desde
+  2026-04-16, 7 meses.** Trade-off que hay que declarar al cliente: adopción vs
+  mantenimiento. Si pesa el ecosistema y los issues resueltos, éste; si pesa el
+  soporte, `godot-ai`.
 - [FlamxGames/godot-ai-assistant-hub](https://github.com/FlamxGames/godot-ai-assistant-hub) — MIT. Alternativa con Ollama/Gemini/OpenRouter.
+
+🔴 **Si el engine es Unity, corregido este pass:** usar
+**[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)** (**MIT,
+16.087★**, ⚠️ rama default `beta`), no `IvanMurzak/Unity-MCP` (Apache-2.0,
+4.672★) que esta KB recomendaba como "dominante". El líder era invisible por un
+rename (`justinpbarnett/unity-mcp` → `CoplayDev/unity-mcp`). `IvanMurzak` sigue
+siendo la opción correcta si el cliente **exige Apache-2.0** por política.
+Si el engine es Unreal: `prajwalshettydev/UnrealGenAISupport` (MIT, 686★) es el
+único con grant limpio y volumen — **no** `chongdashu/unreal-mcp`, que tiene
+2.120★ y **ningún archivo de licencia**.
 
 **Cómo configurar**:
 1. Instalar godot-ai desde Godot Asset Library o GitHub.
@@ -242,9 +260,37 @@ promocional, copy de marketing o imágenes de juego, y tiene que emitir marcador
 **Por qué ahora**: el Art. 50 del EU AI Act **está vigente desde el 2-ago-2026** (quedó
 fuera del aplazamiento general). Para sistemas **ya puestos en el mercado**, el
 período de gracia del marcado *machine-readable* del **Art. 50(2) termina el 2 de
-diciembre de 2026**. Hoy es 2026-10-26: **quedan unas 5 semanas**. El reloj de
-alto riesgo (Anexo III) es **otro** y vence el **2-dic-2027**: confundirlos es el
-error más común del mercado.
+diciembre de 2026**. El reloj de alto riesgo (Anexo III) es **otro** y vence el
+**2-dic-2027**: confundirlos es el error más común del mercado.
+
+---
+
+### 🔴 REENCUADRE OBLIGATORIO — actualizado 2026-11-20: quedan **12 DÍAS**
+
+Esta receta se escribió el 2026-10-26 como un **sprint de 3-5 semanas** contra el
+2-dic-2026. **Hoy es 2026-11-20 y ese entregable ya no cabe.** Proponerlo tal cual
+es vender un incumplimiento con fecha de entrega posterior a la obligación. La
+receta técnica de abajo **sigue siendo correcta y se conserva íntegra** — es lo que
+hay que construir —, pero **el encuadre comercial cambia**:
+
+| Fase | Alcance | Plazo real | Para qué sirve |
+|------|---------|-----------|----------------|
+| **A. Inventario de exposición** | Qué SKUs del catálogo publicado llevan contenido generado, y qué metadata tienen hoy. Nada de marcado todavía. | **Días, no semanas.** Cabe antes del 2-dic. | Es el entregable que convierte "no sabemos" en "sabemos y está acotado". Sin esto no hay priorización posible. |
+| **B. Marcado del subconjunto crítico** | Sólo lo de mayor riesgo y visibilidad: arte promocional y copy de marketing de los títulos activos. | Parcial al 2-dic. | Reduce exposición real donde más pega. |
+| **C. Plan fechado post-deadline** | El resto del catálogo, con fechas, responsables y la brecha **documentada**. | Posterior al 2-dic. | **Un plan con brecha declarada es lo que un regulador y un auditor valoran**; un cumplimiento fingido es lo que los hunde. |
+
+**La regla honesta:** decirle al cliente que llega completo al 2-dic es el error,
+no la oferta. Y si el cliente llega hoy con el catálogo sin inventariar, la
+conversación correcta empieza por A, no por C2PA.
+
+🔴 **Y antes de cualquier marcado, un chequeo que puede cambiar el proyecto
+entero:** la Comisión Europea citó como ejemplo de **práctica PROHIBIDA (Art. 5)**
+—no de alto riesgo— los **NPCs generados por AI diseñados para empujar al jugador
+a gastar más dentro del juego**, y comentario legal extiende el criterio a la
+optimización de engagement aplicada a **jugadores menores de edad**. Si el cliente
+tiene un NPC conversacional conectado a la tienda o a la economía del juego, **eso
+no se marca: se rediseña o se apaga.** Marcar un sistema prohibido no lo legaliza.
+Ésa es la primera pregunta de la reunión, antes del inventario.
 
 **Stack**:
 ```
@@ -424,32 +470,231 @@ repro automático.
 
 ---
 
+## 🆕 Receta 10: Auditoría de licencias de un stack de gaming — **método mecánico**
+
+**Caso de uso**: due diligence antes de adoptar OSS en un proyecto de cliente, o
+saneamiento de un inventario heredado. Es el entregable más vendible de esta KB
+porque **el error que corrige es el default del mercado** y porque el método es
+auditable en vez de opinable.
+
+**Por qué es una receta y no un consejo**: en dos passes, aplicado a repos reales,
+este procedimiento encontró 4 licencias mal clasificadas **en las propias tablas de
+esta KB**, un repo descartado por una licencia que no tiene, y un repo recomendado
+que estaba archivado. Ninguno era un repo oscuro: MonoGame tiene 14.663★, PostHog
+40.990★, O3DE 9.894★.
+
+**Stack** (sin dependencias, sólo dos canales y aritmética):
+```
+Para cada repo del inventario:
+
+CANAL 1 — gh api -X GET search/repositories -f q='repo:<slug>'
+    → existencia | SPDX | ★ | archived | pushed_at | default_branch
+    en UNA llamada
+
+CANAL 2 — curl -s raw.githubusercontent.com/<slug>/HEAD/<archivo>
+    → el texto del grant, con BYTES
+    (HEAD resuelve la rama default: NO hardcodear main/master)
+
+CHECKSUM — ¿los bytes caen en la banda canónica de la familia declarada?
+    MIT/Expat   ~1.050-1.150      Ms-PL      ~3.900
+    Apache-2.0  ~11.300-11.400    MPL-2.0    ~16.700
+    CC-BY-4.0   ~18.650           LGPL-2.1   ~26.400
+    AGPL-3.0    ~34.500           GPL-3.0    ~35.200
+
+DECISIÓN
+    bytes POR ENCIMA de la banda  → licencia compuesta o familia equivocada: LEER
+    bytes MUY POR DEBAJO          → archivo PUNTERO: seguir el puntero, NO "sin licencia"
+    SPDX = NOASSERTION            → NO es "sin licencia": es "no matcheó un SPDX único"
+                                    ⇒ detector de licencia compuesta: LEER SIEMPRE
+```
+
+**Los seis modos de fallo que este procedimiento caza, con el caso real de cada uno:**
+
+| Modo de fallo | Caso verificado | Qué canal lo detecta |
+|---------------|-----------------|---------------------|
+| **Badge sin grant** | `chongdashu/unreal-mcp`: README con badge "License: MIT", **ningún archivo de licencia**, 2.120★ | Canal 2 (404 en todas las rutas) + SPDX `NONE` |
+| **Familia equivocada** | `MonoGame`: publicado MIT, es **Ms-PL** (3882 B) | **Checksum** |
+| **Carve-out por directorio** | `PostHog`: MIT Expat **+ `ee/` bajo licencia enterprise** (1563 B) | **Checksum** + lectura |
+| **Grant que cambia por subdirectorio** | `Matrix-Game`: raíz **MIT** (1118 B), `Matrix-Game-4/` **Apache-2.0** (11357 B); el sidebar de GitHub muestra sólo MIT | Canal 2 sobre **rutas sondeadas**, no sobre la raíz |
+| **Archivo puntero / licencia dual** | `o3de`: 1475 B porque es un puntero a "**Apache-2.0 *o* MIT a elección**", y advierte **Qt bajo LGPL-3.0** | **Checksum** (muy por debajo de la banda) |
+| **Licencia agregada código+assets** | `love2d/love` (74927 B), `luanti`, `stk-code`, `0ad`: un solo archivo cubre engine y assets con grants distintos | Lectura de **cabecera**, nunca `grep` del cuerpo |
+
+**Pasos**:
+1. **Listar el inventario real** — lo que está en `package.json`, `.csproj`,
+   `addons/`, submódulos y plugins del editor. No lo que el equipo cree que usa.
+2. **Correr los dos canales** por cada slug. Guardar `(slug, SPDX, ★, archived, pushed_at, default_branch, archivo, bytes, primera línea)`.
+3. **Aplicar el checksum.** Toda fila marcada se lee a mano. **Anotar los bytes en
+   el entregable**: es lo que permite auditar la auditoría el mes siguiente.
+4. **Clasificar por consecuencia, no por nombre de licencia**, que es lo que el
+   cliente necesita decidir:
+   - **Permisivo limpio** (MIT, Apache-2.0, BSD, Zlib) → construible.
+   - **Permisivo con obligación** (Apache-2.0 ⇒ `NOTICE`; **Ms-PL ⇒ la fuente
+     redistribuida sigue siendo Ms-PL**) → construible **con tarea asignada**.
+   - **Copyleft por archivo** (MPL-2.0) → hostear no contamina; modificar el
+     archivo sí.
+   - **Copyleft de red / fuerte** (AGPL-3.0, GPL, LGPL) → decisión de arquitectura.
+   - **Carve-out** (`ee/`) → la feature que el cliente quiere puede estar
+     justamente del lado cerrado. **Verificar la feature, no el repo.**
+   - **No OSI / sin grant** → fuera, o licencia comercial.
+5. **Chequear vida, no sólo licencia:** `archived` es un booleano que ni ★ ni
+   `pushed_at` revelan — **`0ad/0ad` tiene 2.827★ y está archivado** desde 2024, y
+   el proyecto migró a un Gitea propio: **el repo está muerto y el juego vivo.**
+6. **Revalidar los rechazos, no sólo las recomendaciones.** Un descarte mal
+   fundado es peor que una recomendación floja: saca al candidato del campo de
+   visión y nadie vuelve a mirarlo. `NamazuStudios/elements` estuvo descartado un
+   mes por una AGPL-3.0 que no tiene.
+
+**Control negativo obligatorio**: probar un slug inexistente
+(`gmilano/this-repo-does-not-exist-control-xyz` → `NOT_FOUND`) y un slug conocido
+vivo. Sin los dos, no se sabe si el instrumento distingue algo. ⚠️ **`curl -sI
+https://github.com/<slug>` NO sirve como prueba de existencia** en este entorno:
+devuelve respuestas del proxy, no del repo.
+
+**Tiempo estimado**: 2-4 días para un stack de 30-50 dependencias, incluyendo la
+lectura a mano de lo que marque el checksum. **Entregable**: tabla por consecuencia
++ las filas marcadas con su texto citado + lista de tareas (NOTICE, atribuciones,
+decisiones de arquitectura) + las que requieren opinión legal.
+
+**Límite honesto que hay que declarar**: esto es una **auditoría de procedencia
+declarada**, no una opinión legal ni un escaneo de código copiado. Dice qué dicen
+los archivos de licencia; no dice si el repo respeta las licencias de *sus*
+dependencias, ni resuelve la pregunta de los **pesos de modelos**, que esta KB
+**nunca ha podido verificar** (`huggingface.co` no resuelve DNS aquí, 3 passes).
+
+---
+
+## 🆕 Receta 11: Pipeline de estudio con agentes por rol
+
+**Caso de uso**: estudio que ya usa un agente en el editor y quiere pasar de
+"acelerar tareas" a "cubrir roles del pipeline" — la demanda que el mercado está
+expresando con más fuerza que ninguna otra en este ciclo (ver `intel/trends.md` → 10).
+
+**Stack**:
+```
+Claude Code (u otro cliente de agentes)
+    ├── Donchitos/Claude-Code-Game-Studios (MIT, 40.377★)
+    │       49 agentes con rol + 72 skills de workflow
+    │       ↳ definiciones de agente y workflow: ES PROMPTS, no runtime
+    ├── MCP del engine  ← la capa que SÍ toca el proyecto
+    │       Unity  → CoplayDev/unity-mcp   (MIT, 16.087★, rama `beta`)
+    │       Godot  → hi-godot/godot-ai     (MIT, 3.627★, mantenido)
+    │       Unreal → UnrealGenAISupport    (MIT, 686★)
+    ├── EL4CTEO/blender-skills (MIT, 2.529★)   ← arte 3D, que el MCP de engine no cubre
+    └── godot_rl_agents (MIT) + SB3 (MIT)      ← QA, vía Receta 2
+            ↕
+      GamingAgent / LMGame Bench (MIT)         ← medición, vía Receta 9
+```
+
+**Cómo se arma**:
+1. **Empezar por el MCP del engine, no por la flota de agentes.** El MCP es lo que
+   da acceso real al proyecto; los 49 agentes son definiciones de rol que sin un
+   canal al editor no tocan nada.
+2. Instalar `Claude-Code-Game-Studios` y **desactivar todo menos 2-3 roles**
+   (p. ej. *level design*, *gameplay scripting*, *QA*). 49 agentes activos a la vez
+   es ruido, no pipeline.
+3. Añadir `blender-skills` sólo si hay pipeline de arte 3D propio.
+4. **Poner la puerta de calidad antes de ampliar:** Receta 9 (LMGame Bench) para
+   que "el agente ayuda" sea un número y no una impresión.
+5. Recién entonces activar más roles, de a uno, midiendo.
+
+**Lo que hay que decirle al cliente, y es la mitad del valor de esta receta**:
+- **40.377★ miden interés, no producción.** Es un repo de **prompts**: barato de
+  marcar como favorito, barato de publicar, y **sin evidencia pública de adopción
+  en estudios**. No presentarlo como estándar de industria.
+- **El cuello de botella no es el agente, es la revisión.** Un pipeline con 49
+  roles genera más output del que un equipo chico puede revisar, y output no
+  revisado en un proyecto de juego es deuda de arte y de código.
+- **El trabajo real es la calibración**, no la instalación: el setup es 1-2 días y
+  la calibración semanas. Vender el setup como el proyecto es el error.
+
+**Tiempo estimado**: 1-2 días de setup, **3-6 semanas de calibración** con la
+puerta de medición de la Receta 9 puesta desde el día uno.
+
+---
+
+## 🆕 Receta 12: Capacidad elástica de game servers — la capa de ops que faltaba
+
+**Caso de uso**: un juego multijugador de sesión que ya funciona y necesita escalar
+sin sobreaprovisionar, o que opera servidores a mano desde un panel.
+
+**Por qué está aquí**: esta KB tenía `Pterodactyl` (panel para hosts) y **nada para
+Kubernetes** desde su primer pass. Agones es el estándar del nicho y faltaba.
+
+**Stack**:
+```
+Nakama (Apache-2.0, 13.757★)  o  Talo (MIT, 105★)     ← backend de juego / meta
+        ↕
+agones-dev/agones (Apache-2.0, 7.106★)                 ← 🆕 orquestación en K8s
+    ├── GameServer       — un proceso de servidor = un recurso de K8s
+    ├── Fleet            — pool de servidores listos (warm capacity)
+    └── FleetAutoscaler  — escala por GameServers libres, NO por CPU
+        ↕
+googleforgames/open-match (Apache-2.0, 3.427★)         ← matchmaking enchufable
+        ↕
+PostHog (MIT Expat + carve-out ee/) + Grafana ⚠️ AGPL-3.0
+```
+
+**Pasos**:
+1. Empaquetar el binario de servidor con el **SDK de Agones** (`Ready()`,
+   `Health()`, `Shutdown()`): sin eso el ciclo de vida no es observable y el
+   autoscaler no puede decidir.
+2. Definir un `Fleet` con capacidad caliente mínima. **El autoscaler de Agones
+   escala por *GameServers libres*, no por CPU** — es la diferencia con un HPA
+   genérico y la razón de usarlo: un servidor de partida está ocupado aunque su CPU
+   esté baja.
+3. Conectar matchmaking: Open Match asigna, Agones provee la instancia.
+4. Capa AI, vía Receta 3: hooks de Nakama para scoring de matchmaking, detección
+   de botfarm en `after_authenticate`, anti-cheat conductual sobre el stream.
+5. Observabilidad: PostHog para producto. ⚠️ **Si el dashboard se expone a
+   terceros, Grafana es AGPL-3.0** — usar Apache Superset o mantenerlo interno.
+
+**Trampas verificadas**:
+- 🔴 **El slug cambió:** `googleforgames/agones` **ya no es canónico**
+  (`NOT_FOUND` en la API; el `raw` viejo responde 200 por redirect). Es
+  `agones-dev/agones`. Toda la documentación y los blogs siguen citando el viejo.
+- **Agones no reemplaza a Pterodactyl**: panel para operar hosts vs capacidad
+  elástica en K8s. Son capas distintas y un cliente con 3 servidores fijos **no
+  necesita Agones** — introducir Kubernetes donde no hay elasticidad que gestionar
+  es el anti-patrón de esta receta.
+
+**Tiempo estimado**: 2-3 semanas con K8s ya operativo; 5-7 si hay que montar el
+cluster y la observabilidad.
+
+---
+
 ## Tabla resumen
 
 | Patrón | Stack principal | Esfuerzo | ROI esperado |
 |--------|----------------|---------|--------------|
 | 1 · NPC con LLM | Godot + LimboAI (MIT) + Ollama/Claude | 2-3 semanas | +40% immersion (dato de industria, no medido aquí) |
 | 2 · QA automatizado con RL | Godot + godot_rl_agents + SB3 | 3-4 semanas | -60% QA manual (benchmark de industria) |
-| 3 · Multiplayer backend inteligente | Nakama (13.6k★) o **Talo (MIT)** + Open Match + PostHog | 3-4 semanas | Mejor matchmaking → retención |
+| 3 · Multiplayer backend inteligente | Nakama (13.757★) o **Talo (MIT)** + Open Match + PostHog | 3-4 semanas | Mejor matchmaking → retención |
 | 4 · Mundo procedural | Godot + WFC + LLM + Concordia | 4-8 semanas | Contenido infinito, replayability |
 | 5 · Game Support Agent | LlamaIndex (MIT) + FastAPI + Godot UI | 1-2 semanas | -70% tickets de soporte |
-| 6 · AI dev tooling | **godot-ai (3.2k★) / Unity-MCP (4.5k★)** + Claude Code | 1 día de setup | 2-3x velocidad de desarrollo |
-| 🆕 7 · **Marcado Art. 50(2) EU AI Act** | c2pa-python (Apache-2.0) + inventario de procedencia | **3-5 semanas** | 🔴 **Deadline externo: 2-dic-2026** |
+| 6 · AI dev tooling | 🔴 **corregido:** godot-ai (3.627★) / **CoplayDev/unity-mcp (MIT, 16.087★)** + Claude Code | 1 día de setup | 2-3x velocidad de desarrollo |
+| 7 · **Marcado Art. 50(2) EU AI Act** | c2pa-python (Apache-2.0) + inventario de procedencia | 🔴 **reencuadrada: inventario en días, marcado parcial, plan fechado** | 🔴 **Deadline externo a 12 DÍAS: 2-dic-2026** |
 | 🆕 8 · World model sobre engine | Godot/Unity + Matrix-Game 4.0 (Apache-2.0 en v4) | 4-6 semanas | Prototipo visual sin pipeline de arte |
-| 🆕 9 · **QA con agentes, medido** | GamingAgent/LMGame Bench (MIT) + MCP | 1-4 semanas | QA con número defendible, no anécdota |
+| 9 · **QA con agentes, medido** | GamingAgent/LMGame Bench (MIT, ⚠️ congelado hace 1 año) + MCP | 1-4 semanas | QA con número defendible, no anécdota |
+| 🆕 10 · **Auditoría de licencias** | 2 canales + checksum de bytes (sin dependencias) | **2-4 días** | 🟢 **4/4 de acierto sobre las tablas de esta KB.** Entregable propio y auditable |
+| 🆕 11 · **Pipeline de estudio con agentes** | Claude-Code-Game-Studios (MIT, 40.377★) + MCP de engine + blender-skills | 1-2 días setup, **3-6 sem de calibración** | Cubrir roles, no acelerar tareas |
+| 🆕 12 · **Capacidad elástica de game servers** | Agones (Apache-2.0, 7.106★) + Nakama/Talo + Open Match | 2-3 semanas (K8s listo) | Escalar sin sobreaprovisionar |
 
 ### Cuál proponer según la región del engagement
 
 | Región | Receta de entrada | Por qué |
 |--------|-------------------|---------|
-| **EMEA** | **7**, luego 6 | Es la única región con una fecha legal dura (2-dic-2026) y un segundo reloj en 2-dic-2027. |
-| **North America** | **6** y **9**, luego 2 | La reescritura de Steam del 17-ene-2026 exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 52% de los devs ve la gen AI como daño. |
-| **APAC** | **8**, luego 7 adaptada | Los dos world models abiertos punteros son de APAC (Skywork, Tencent), y Corea/China ya obligan etiquetado. |
-| **LATAM** | **1**, **3** y **5** | No hay AI Act que vender; sí hay 48.8% de jugadores que compraría juegos hechos con AI, 86.9% de mobile en México y operadores iGaming con supervisión creciente. |
+| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 7 reencuadrada (inventario), luego 10** | Fecha legal dura **a 12 días** y un segundo reloj en 2-dic-2027. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
+| **North America** | **6** y **9**, luego 2 y **10** | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 52% de los devs ve la gen AI como daño (y ~85% de los jugadores la rechaza). **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". |
+| **APAC** | **8** y **11**, luego 7 adaptada y **10** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; HY-World 2.0 no publica licencia). |
+| **LATAM** | **1**, **3**, **5** y **12** | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad, y Ubisoft acaba de ponerle titular. |
 
 ---
-*Repos y licencias verificados el 2026-10-26 con `git ls-remote` + lectura del
-archivo de grant en HEAD, con control negativo en ambos sentidos. Cifras de ★ de
-`godot-ai`, `Unity-MCP`, `limboai`, `nakama`, `GamingAgent`, `Matrix-Game`,
-`MineWorld` y `TaloDev/backend` leídas de la página del repo el 2026-10-26; el
-resto se hereda del pass 2026-07-02 sin reverificar.*
+*Repos y licencias verificados el **2026-11-20 en dos canales**
+(`gh api search/repositories` con qualifier `repo:` exacto → existencia + SPDX + ★
++ `archived` + `pushed_at` + rama default; `raw.../HEAD/<archivo>` → texto del
+grant con bytes), con control negativo en ambos sentidos. **Todas las ★ de este
+archivo son del 2026-11-20**: no queda ninguna heredada sin verificar. Recetas
+nuevas de este pass: **10** (auditoría de licencias con checksum de bytes),
+**11** (pipeline de estudio con agentes por rol), **12** (capacidad elástica con
+Agones). Receta **7 reencuadrada** porque su deadline pasó de 5 semanas a 12 días.
+Receta **6 corregida** en la elección de MCP para Unity y Godot.*

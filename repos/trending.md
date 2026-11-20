@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-10-26
+updated: 2026-11-20
 ---
 
 # Repos trending — Gaming AI
@@ -11,7 +11,89 @@ updated: 2026-10-26
 
 ---
 
-## 🆕 2026-10-26
+## 🆕 2026-11-20
+
+25 días desde el pass anterior. **Canal recuperado:** el pass de octubre registró
+`api.github.com/search/*` como bloqueado ("sessions are bound to their configured
+repositories"); **no lo está** con `gh api -X GET search/repositories -f
+q='repo:<slug>'`. Eso da ★ + SPDX + `archived` + `pushed_at` + rama default en una
+llamada, y es lo que permitió releer **el 100% de las ★ de esta KB** (el pass
+anterior tuvo que dejar ~20 filas con `*` heredado de julio).
+
+### 🟢 Trending verificado este pass
+
+| Repo | Licencia | ★ | Señal fechada |
+|------|----------|---|---------------|
+| [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) | **MIT** (`LICENSE`, 1066) | **40.377** | **Repo nº1 de game-development del trending de GitHub** a principios de nov-2026. 49 agentes con rol + 72 skills de workflow. Trayectoria medida: 34,7k (3-nov) → 40,2k (lista mensual) → **40.377 (hoy)**. |
+| [horizon-rust/horizon](https://github.com/horizon-rust/horizon) | 🔴 **LGPL-3.0** | **11.515** | Reescritura de Minecraft Java Edition en Rust. Commit de hoy. **Está en las listas de trending de game-dev y NO es permisivo** — registrado aquí precisamente para que un pass futuro no lo adopte por aparecer en una lista. |
+| [a16z-infra/ai-town](https://github.com/a16z-infra/ai-town) | **MIT** | **10.835** | Starter kit desplegable de pueblo de agentes. Commit de hoy. **Hueco histórico de esta KB**, que tenía el paper de Stanford (parado 27 meses) pero no la versión que se despliega. |
+| [rehan-remade/universal-modder](https://github.com/rehan-remade/universal-modder) | **MIT** | **9.809** | ★ **ahora verificada** (en octubre era `~8,9k*` sin verificar). Commit de hoy. |
+| [agones-dev/agones](https://github.com/agones-dev/agones) | **Apache-2.0** | **7.106** | Orquestación de game servers dedicados sobre **Kubernetes** (`Fleet`/`GameServer`/`FleetAutoscaler` como CRDs). Commit de hoy. **Ausente de esta KB desde el primer pass**, que sólo tenía panel bare-metal. 🔴 **Renombrado:** `googleforgames/agones` ya no es canónico. |
+| [Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp) | **MIT** | **6.713** | **15× el godot-mcp que esta KB listaba.** ⚠️ **7 meses sin commits** (2026-04-16): líder por adopción, dormido por mantenimiento. |
+| [EL4CTEO/blender-skills](https://github.com/EL4CTEO/blender-skills) | **MIT** | 2.529 | Workflows de Blender empaquetados como **skills de agente**. Cubre el hueco de arte 3D. |
+| [WhiteTowerAI/ohmygame](https://github.com/WhiteTowerAI/ohmygame) | **Apache-2.0** (`LICENSE`, 11357) | **2.486** | **+107% en 25 días** (1,2k → 2.486), el mayor crecimiento relativo del pass. Commit de hoy. |
+| [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0) | 🔴 **ningún archivo de licencia** | 2.891 | World model 3D multimodal de Tencent. Se autodenomina "open-source SOTA" y **no publica grant** (`LICENSE`/`.txt`/`.md` → 404). Sin commits desde 2026-08-12. |
+| [genex-games/genex-desktop](https://github.com/genex-games/genex-desktop) | **MIT** | 900 | Desktop app para hacer juegos con AI sobre Unreal/Unity/Godot/browser. ⚠️ rama default **`dev`**. Commit de hoy. |
+
+### 🔴 Correcciones de licencia sobre repos fundacionales ya listados
+
+El checksum de bytes (ver `agents/top.md`) marcó 4 filas de esta KB y **las 4
+estaban mal, sin una sola falsa alarma.** Dos son fundacionales:
+
+| Repo | Decía la KB | Es | ★ |
+|------|-------------|-----|---|
+| [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | MIT (`LICENSE.txt`, 3882) | **Ms-PL** — §3(D) obliga a que **la distribución en fuente vaya bajo Ms-PL**; no relicenciable a MIT/Apache | 14.663 |
+| [PostHog/posthog](https://github.com/PostHog/posthog) | MIT (`LICENSE`, 1563) | **MIT Expat + carve-out `ee/`** (PostHog Enterprise License, 2176 B) — mismo patrón literal que Onyx en la KB de enterprise | 40.990 |
+| [o3de/o3de](https://github.com/o3de/o3de) | Apache-2.0 (`LICENSE.txt`, 1475) | **Apache-2.0 *o* MIT a elección** (más permisivo de lo que decíamos) **pero con Qt bajo LGPL-3.0** entre sus componentes, que no mencionábamos | 9.894 |
+| [NamazuStudios/elements](https://github.com/NamazuStudios/elements) | AGPL-3.0 (`LICENSE.txt`, 16726) → **rechazado** | **MPL-2.0** — copyleft por archivo. **El rechazo era incorrecto.** | 22 |
+
+### 📈 Las ★ que el canal recuperado destrabó
+
+Filas congeladas con `*` desde julio, ahora medidas:
+
+| Repo | Anotado | Real 2026-11-20 | Δ |
+|------|---------|-----------------|---|
+| [godotengine/godot](https://github.com/godotengine/godot) | 97k* | **120.483** | +24% |
+| [supabase/supabase](https://github.com/supabase/supabase) | 80k* | **115.201** | +44% |
+| [PostHog/posthog](https://github.com/PostHog/posthog) | 23k* | **40.990** | +78% |
+| [grafana/grafana](https://github.com/grafana/grafana) | 67k* | **78.014** | +16% |
+| [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | 11k* | **14.663** | +33% |
+| [love2d/love](https://github.com/love2d/love) | 4,5k* | **8.981** | +100% |
+| [edbeeching/godot_rl_agents](https://github.com/edbeeching/godot_rl_agents) | 900+* | **1.639** | +82% |
+| [o3de/o3de](https://github.com/o3de/o3de) | 7,8k* | **9.894** | +27% |
+| [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | 7,8k* | **8.203** | +5% |
+| [luanti-org/luanti](https://github.com/luanti-org/luanti) | — | **13.882** | commit de hoy |
+
+### 🔴 Repos que murieron o se congelaron — medido, no supuesto
+
+`pushed_at` es el dato que esta KB no estaba usando y que cambia recomendaciones:
+
+| Repo | ★ | Último commit | Lectura |
+|------|---|---------------|---------|
+| [0ad/0ad](https://github.com/0ad/0ad) | 2.827 | 2024-08-17 | 🔴 **`archived: true`.** Descripción propia: *"[DEPRECATED] Git mirror of the 0 A.D. SVN source code (migrated to gitea.wildfiregames.com on August 20th 2024)"*. Esta KB lo listaba como base para fork+AI. **El juego está vivo; su presencia en GitHub está muerta.** |
+| [joonspk-research/generative_agents](https://github.com/joonspk-research/generative_agents) | 22.399 | 2024-08-05 | 27 meses. Artefacto de paper, no base mantenida. |
+| [lmgame-org/GamingAgent](https://github.com/lmgame-org/GamingAgent) | 1.006 | 2025-11-16 | **Un año exacto.** Único benchmark publicado del nicho, pero congelado. |
+| [linkdd/aitoolkit](https://github.com/linkdd/aitoolkit) | 533 | 2024-05-08 | 2,5 años. Sin mantenimiento. |
+| [chongdashu/unreal-mcp](https://github.com/chongdashu/unreal-mcp) | 2.120 | 2025-04-22 | 19 meses **y sin archivo de licencia**. |
+| [Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp) | 6.713 | 2026-04-16 | 7 meses. Líder de adopción, dormido. |
+| [pelican-dev/panel](https://github.com/pelican-dev/panel) | — | — | **Ya no existe**: `NOT_FOUND` + `raw` 404. |
+
+> **Regla derivada para la rotación:** una fila de KB necesita **tres** datos, no
+> uno. ★ mide interés acumulado (es un **stock**, nunca baja y no caduca),
+> `pushed_at` mide si el proyecto está vivo (es un **flujo**), y `archived` es un
+> booleano que los dos anteriores no revelan: **`0ad/0ad` tiene 2.827★ y está
+> archivado**. Recomendar por ★ sin `pushed_at` es recomendar el pasado.
+
+### 🟢 Infra de descubrimiento
+
+| Repo | Licencia | ★ | Nota |
+|------|----------|---|------|
+| [raiscui/gh-trends](https://github.com/raiscui/gh-trends) | MIT | **0** | El feed de trending que esta KB usa para fechar señales (releases diarios, commit de hoy). **Citarlo no es avalarlo:** 0★, es un scraper personal. Útil como instrumento, no como autoridad. |
+| [NeuraLiying/Awesome-World-Models](https://github.com/NeuraLiying/Awesome-World-Models) | CC-BY-family | — | 340+ papers de world models. Canal de descubrimiento para la tier de world models; licencia de contenido, no código. |
+
+---
+
+## 2026-10-26
 
 Primer pass desde el 2026-07-02. Verificación: `git ls-remote` + lectura del
 archivo de grant en `raw.githubusercontent.com/<slug>/HEAD/`, con control negativo

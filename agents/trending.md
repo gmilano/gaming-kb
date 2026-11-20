@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-10-26
+updated: 2026-11-20
 ---
 
 # Agentes trending — Gaming AI
@@ -12,7 +12,107 @@ updated: 2026-10-26
 
 ---
 
-## 🆕 2026-10-26
+## 🆕 2026-11-20
+
+25 días desde el pass anterior. **Este pass recuperó un canal que el anterior
+daba por bloqueado** (`gh api search/repositories -f q='repo:<slug>'`), y con él
+★ + SPDX + `archived` + `pushed_at` + rama default en una sola llamada. Todas las
+★ de abajo son de hoy, no heredadas.
+
+### 🔴 La corrección que manda: el líder de MCP para Unity no era el que decíamos
+
+El pass del 2026-10-26 escribió que `IvanMurzak/Unity-MCP` era "el MCP de engine
+**más adoptado**". Medido hoy, es el **nº2 por un factor de 3,4**.
+
+| Repo | ★ 2026-11-20 | Licencia | Señal |
+|------|--------------|----------|-------|
+| **[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)** | **16.087** | **MIT** (`LICENSE`, 1066) | **El líder real.** Invisible para este KB porque **fue renombrado**: `justinpbarnett/unity-mcp` → `CoplayDev/unity-mcp`. ⚠️ rama default **`beta`**. |
+| [IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP) | 4.672 | Apache-2.0 | Nº2. Sigue siendo la opción si el cliente exige Apache-2.0. |
+| [CoderGamester/mcp-unity](https://github.com/CoderGamester/mcp-unity) | 2.018 | MIT | Nº3 con tracción propia. |
+
+Y en Godot el mismo error: este KB listaba `tomyud1/godot-mcp` (455★) como "la
+segunda opción real del ecosistema" sin haber visto a
+**[Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp) (6.713★, MIT)**,
+que es **15×** más grande. Con un matiz que cambia la recomendación:
+`Coding-Solo` **no tiene commits desde 2026-04-16** (7 meses), mientras
+`hi-godot/godot-ai` (3.627★) comiteó **hoy**.
+
+> **Modo de fallo nombrado: *el ascenso del subcampeón*.** Un rename vuelve
+> invisible al líder en toda búsqueda por nombre, y el nº2 hereda el título de
+> "dominante" sin comparación. Inverso del *name-collision cluster* de la KB de
+> enterprise: allí los resultados eran falsos, **aquí todos son reales** y el
+> error está en cuál se elige. Discriminador: comparar **≥3 candidatos por ★**
+> antes de escribir "dominante"; si el nº1 esperado no aparece, probar `raw` del
+> slug viejo para detectar el redirect.
+
+### 🟢 Categoría nueva: orquestación de agentes para game dev
+
+Más grande, en estrellas, que toda la tier de tooling MCP que abrimos en octubre.
+
+| Repo | Licencia | ★ | Señal fechada |
+|------|----------|---|---------------|
+| [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) | **MIT** (`LICENSE`, 1066) | **40.377** | **49 agentes con rol + 72 skills de workflow.** Repo nº1 de game-development en el trending de GitHub a principios de nov-2026 (34,7k el 3-nov → 40,2k en la lista mensual → **40.377 hoy**). |
+| [EL4CTEO/blender-skills](https://github.com/EL4CTEO/blender-skills) | **MIT** | 2.529 | Workflows de Blender **como skills de agente**. Cubre *arte 3D*, que el tooling de engine no toca. |
+| [genex-games/genex-desktop](https://github.com/genex-games/genex-desktop) | **MIT** | 900 | Desktop app para hacer juegos con AI sobre Unreal/Unity/Godot/browser. ⚠️ rama default **`dev`**. Commit de hoy. |
+
+**Lectura honesta:** 40.377★ en un repo de **prompts y definiciones de agente**
+—sin engine, sin runtime, sin modelo— contra 16.087★ del plugin de editor más
+usado. Las estrellas miden **interés**, no producción, y un repo de prompts es
+barato de marcar. Pero el orden de magnitud dice qué está pidiendo el mercado:
+**un pipeline de estudio con roles**, no un agente en el editor.
+
+### 🟢 Hueco histórico cerrado: la contraparte viva de `generative_agents`
+
+| Repo | Licencia | ★ | Señal |
+|------|----------|---|-------|
+| [a16z-infra/ai-town](https://github.com/a16z-infra/ai-town) | **MIT** | **10.835** | Starter kit **desplegable** de un pueblo de agentes. **Faltaba desde el primer pass.** Esta KB tenía `joonspk-research/generative_agents` (22.399★, Apache-2.0) como "la arquitectura de referencia" sin decir que **no tiene commits desde 2024-08-05 (27 meses)**. `ai-town` comiteó **hoy**: el patrón es el destino, éste es el vehículo. |
+
+### 📈 Crecimiento medido sobre filas ya existentes (25 días)
+
+| Repo | ★ 2026-10-26 | ★ 2026-11-20 | Δ |
+|------|--------------|--------------|---|
+| [WhiteTowerAI/ohmygame](https://github.com/WhiteTowerAI/ohmygame) | 1,2k | **2.486** | **+107%** — el mayor crecimiento relativo del pass. Commit de hoy. |
+| [rehan-remade/universal-modder](https://github.com/rehan-remade/universal-modder) | ~8,9k* (sin verificar) | **9.809** | ★ ahora **verificada**; MIT confirmado. Commit de hoy. |
+| [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | 2,8k | 2.944 | +5%. El pico del release del 15-oct ya pasó. |
+| [hi-godot/godot-ai](https://github.com/hi-godot/godot-ai) | 3,2k | 3.627 | +13%. Commit de hoy. |
+| [IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP) | 4,5k | 4.672 | +4%. |
+| [lmgame-org/GamingAgent](https://github.com/lmgame-org/GamingAgent) | 998 | 1.006 | +1%. ⚠️ **un año exacto sin commits** (2025-11-16). |
+| [IvanMurzak/Unreal-MCP](https://github.com/IvanMurzak/Unreal-MCP) | 51 | 64 | Sigue temprano. |
+| [IvanMurzak/GameDev-MCP-Server](https://github.com/IvanMurzak/GameDev-MCP-Server) | 16 | 21 | Infra, adopción mínima. Confirma la lectura de octubre: la adopción está en el plugin, no en el backend compartido. |
+
+### 🔴 Señales negativas de esta semana
+
+| Repo | Qué cambió |
+|------|-----------|
+| [pelican-dev/panel](https://github.com/pelican-dev/panel) | **Desapareció.** En octubre: "vivo, sin archivo de licencia". Hoy: `repo:` → `NOT_FOUND`, `raw` → 404. Un repo sin grant **también puede dejar de existir**; el rechazo de octubre se confirma por la vía más dura. |
+| [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0) | 2.891★, se autodenomina "open-source SOTA world model" y **no publica ningún archivo de licencia** (`LICENSE`, `.txt`, `.md` → 404). Mismo patrón que `chongdashu/unreal-mcp` (2.120★, sin grant, parado desde abr-2025). |
+| [horizon-rust/horizon](https://github.com/horizon-rust/horizon) | 11.515★ y en listas de trending de game-dev: es **LGPL-3.0**. Reescritura de Minecraft Java en Rust. Aparecerá como "repo de gaming trending"; **no es permisivo**. |
+| [SKYHUBDev/Aivill](https://github.com/SKYHUBDev/Aivill) | **0★**, sin licencia y sin README, segundo pass consecutivo. Cerrado definitivamente. |
+
+### 🟢 Un rechazo revertido — los descartes también caducan
+
+[NamazuStudios/elements](https://github.com/NamazuStudios/elements) fue descartado
+en octubre como **AGPL-3.0** ("copyleft de red, fuera de la ruta permisiva"). Es
+**MPL-2.0**: copyleft **por archivo**, hostearlo **no** obliga a liberar tu
+código. El archivo tiene **los mismos 16726 B** que anotó el pass anterior, y
+AGPL-3.0 son ~34.500 B — **el dato que refutaba la etiqueta estaba al lado de la
+etiqueta**. Sigue siendo chico (22★) y no desplaza a Nakama ni Talo, pero no
+estaba descalificado. **Regla nueva: revalidar los rechazos, no sólo las
+recomendaciones.** Un descarte mal fundado es peor que una recomendación floja,
+porque saca al candidato del campo de visión y nadie vuelve a mirarlo.
+
+### Método y control negativo
+
+38 repos verificados en **dos canales** (`gh api search/repositories` con
+qualifier `repo:` exacto + lectura del grant en `raw.../HEAD/`). Control negativo
+`gmilano/this-repo-does-not-exist-control-xyz` → `NOT_FOUND` ✅. **7 repos con
+rama default ≠ `main`/`master`** detectados (`beta`, `dev`, `develop`,
+`development`, `godot-4.x`, `1.0-develop`, `master`): usar `HEAD` en `raw`, que
+resuelve la rama default solo.
+
+---
+
+## 2026-10-26
 
 Primer pass sobre esta KB desde el 2026-07-02 (116 días). Todo lo de abajo se
 verificó primera mano: `git ls-remote` para existencia y lectura del archivo de
