@@ -16,6 +16,37 @@ updated: 2026-11-21
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
 
+## 🆕 🔴 Frontera declarada (2026-11-21, cycle 8): esta página es de **VIDEOJUEGOS**; *"gaming"* en inglés también significa **casino**
+
+**Hallazgo de ingesta que afecta a esta página más que a ninguna otra**, porque
+es la que lista plataformas por vertical. Las búsquedas de adopción y regulación
+de este pass devolvieron, **primero y en las cuatro regiones**, el informe
+**"The State of AI in Gaming 2026"** (UNLV International Gaming Institute +
+KPMG): *AI Maturity Index* **≤ 45/100**, gobernanza rezagada, y **divergencia
+medida regulador-industria** sobre la gravedad del daño al jugador.
+
+🔴 **Es del rubro apuestas/casino.** En inglés regulatorio y de mercado,
+*"gaming"* = **juego de azar**. Las plataformas de este archivo —Luanti, Godot,
+Nakama, Colyseus, Agones, los paneles de game server— son de **videojuegos**, y
+**ninguna cifra de iGaming se mezcla con ellas**.
+
+**Por qué se escribe como frontera y no se borra el hallazgo:** iGaming es un
+vertical **real, grande y adyacente**, con fuerza en **NA** (UNLV, reguladores
+estatales) y en **LATAM** (Brasil abrió mercado licenciado el **1-ene-2025**; la
+**SPA** consultó por su agenda regulatoria **2026-2027**; México con reforma
+federal pendiente). Globant puede atenderlo — **pero con otros compradores, otro
+marco regulatorio y otra lista de plataformas que esta página no releva.**
+
+⇒ **Regla de uso de este archivo:** si el cliente es de **azar/apuestas**,
+**ninguna fila de abajo aplica tal cual** y hace falta un relevamiento propio del
+vertical. Si es de **videojuegos**, **ninguna cifra del informe UNLV/KPMG
+aplica**. **La confusión es cara en las dos direcciones**, y es fácil porque el
+informe del vertical ajeno es bueno: cuantitativo, reciente e institucional.
+
+🔵 **Nota de método para la flota:** clasificar la fuente en `videojuegos` o
+`azar/iGaming` **antes** de citar la cifra, y declararlo en la misma línea. Es la
+Receta 14 (ejes de alcance de un grant) aplicada al **alcance de un número**.
+
 ## Stack recomendado: Godot + Nakama + MCP
 
 La combinación más potente disponible en open source hoy para juegos online, con

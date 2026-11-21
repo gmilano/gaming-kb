@@ -11,6 +11,70 @@ updated: 2026-11-21
 
 ---
 
+## 🆕 2026-11-21 — pass cycle 8
+
+> Sin deltas de ★ (cuarto pass del día; una hora no mueve una estrella). Lo que
+> cambia este pass **no es el tamaño del universo medido sino la confiabilidad
+> del dato de licencia sobre el universo ya medido**.
+
+### 🔴 El evento del pass: un `LICENSE` que es **un fragmento de diff**
+
+`Farama-Foundation/Minigrid` (2.543 ★, push 2026-11-14) — benchmark RL estándar,
+no un repo marginal:
+
+- `LICENSE` raíz: **2.507 B**, íncipit *"Apache License, Version 2.0"*, **sólo
+  §§ 1 y 9**, **faltan §§ 2-8 (grant de copyright, de patente, redistribución)**,
+  y un **`@@ -154,49 +194,23 @@`** literal en la línea 18.
+- `pyproject.toml`: **MIT**.
+- Badge: `NOASSERTION` — **acertado, y por dos causas a la vez** (archivo dañado
+  **y** repo compuesto). Primer caso así en esta KB+energy+enterprise.
+- **`docs/LICENSE` (12.201 B): MIT + Apache-2.0 completos** ⇒ 🟢 **permisivo**.
+
+**Lo que esto le hace al checksum de bytes, la técnica estrella de la casa:**
+2.507 B con íncipit Apache **encaja en la categoría *"Apache sin apéndice"*** que
+esta misma página usa para `libgdx` (10.174 B). El checksum sabe decir *"no es
+canónico"*; **no sabe decir *"no es un documento"***. Un recorte deliberado y un
+archivo roto son **indistinguibles por tamaño**. Chequeo nuevo (Receta 21):
+
+```bash
+grep -cE '^\s*(@@|<<<<<<<|=======|>>>>>>>|\+\+\+|---)' LICENSE   # 0 esperado
+grep -cE '^ *[0-9]+\. ' LICENSE                                  # Apache-2.0 → 9
+```
+
+Hermanos **sanos**: `Gymnasium` 1.104 B, `PettingZoo` 1.073 B, 0 artefactos.
+
+### 🔴 El rechazo del pass: `MineDojo/NitroGen` (2.251 ★, CVPR 2026)
+
+**NVIDIA License, 4.729 B**: § 3.3 **no comercial** (*"or intended for use"*),
+§ 3.2 **viral**, § 3.7 arrastra el **Meta OPT-IML 175B License Agreement**,
+§ 3.4 terminación por patente. ⛔ **Inusable en entregables, PoC pago incluido.**
+El abstract dice *"we open-source the dataset, simulator, and pre-trained
+weights"*. **"Open-source" en un paper de CVPR no es un grant.**
+
+### 🆕 Trending real, filtrado por licencia (todo byte-read)
+
+| Repo | ★ | Licencia (bytes) | Por qué entra |
+|------|---|------------------|---------------|
+| [opendilab/LightZero](https://github.com/opendilab/LightZero) | 1.663 | **Apache-2.0** (11357) | **MCTS + AlphaZero/MuZero**: la capa de **planificación** que faltaba junto a PPO. Push 2026-11-19 |
+| [opendilab/DI-engine](https://github.com/opendilab/DI-engine) | 3.645 | **Apache-2.0** (11342) | Plataforma RL amplia; LightZero es su módulo de búsqueda. ⚠️ push 2025-12-07 |
+| [Farama-Foundation/Minigrid](https://github.com/Farama-Foundation/Minigrid) | 2.543 | 🟡 **MIT + Apache-2.0** (`docs/LICENSE`, 12201) | Prototipado de agentes sin engine 3D; mismo API que Gymnasium |
+| [Farama-Foundation/MicroRTS-Py](https://github.com/Farama-Foundation/MicroRTS-Py) | 295 | **MIT** (1117) | El caso **RTS** a escala de laboratorio. Señal, no base |
+| [MineDojo/MineDojo](https://github.com/MineDojo/MineDojo) | 2.285 | **MIT** (1070) | El entorno detrás de `Voyager`. 🔴 push 2024-03-18 |
+| ⛔ [MineDojo/NitroGen](https://github.com/MineDojo/NitroGen) | 2.251 | ⛔ **NVIDIA License** (4729) | **Rechazado**: no comercial y viral |
+| ⛔ [openai/gym](https://github.com/openai/gym) | 37.237 | — | 🔴 **ARCHIVADO**. Se lista para que **nadie lo proponga** |
+
+### Censo de salud del inventario (2026-11-21, cycle 8)
+
+**139 slugs** re-verificados: **134 resuelven**, **5 no** — y **los 5 ya estaban
+documentados** (rename, fuera de índice, o muerto). 🟢 **0 filas vivas falsas.**
+Archivados en el inventario: **`0ad/0ad`** (ya anotado) y **`openai/gym`**
+(se incorpora ya marcado). Sin push desde antes de mayo-2026: **19 repos** — los
+más citados siguen siendo `MineDojo/Voyager` (2024-04-03),
+`joonspk-research/generative_agents` (2024-08-05) y `lmgame-org/GamingAgent`
+(2025-11-16), **los tres recomendados por roundups de 2026**.
+
+---
+
 ## 🆕 2026-11-21 — pass cycle 7
 
 > Sin deltas de ★ por la misma razón que en los cycles 5 y 6 (una hora no mueve

@@ -12,6 +12,108 @@ updated: 2026-11-21
 
 ---
 
+## 🆕 2026-11-21 — pass cycle 8
+
+> **Cuarto pass del día.** Igual que en los cycles 5, 6 y 7, **no se reportan
+> deltas de ★**: una hora no mueve una estrella de forma interpretable, y
+> ninguna cifra heredada se reescribe. Lo que aporta este pass no es crecimiento
+> ni cobertura de catálogo: es **integridad del dato de licencia** — el caso en
+> que el archivo que la casa lee **está roto**, y el caso en que el agente más
+> importante del nicho **hay que rechazarlo**.
+
+### 🔴 El evento del pass nº1: el archivo de licencia como artefacto dañado
+
+`Farama-Foundation/Minigrid` (2.543 ★) tiene un `LICENSE` de **2.507 B** que
+dice *"Apache License, Version 2.0"*, contiene **sólo las §§ 1 y 9**, le faltan
+**las §§ 2-8 — el grant de copyright, el de patente y la redistribución** — y
+trae un **hunk de diff literal (`@@ -154,49 +194,23 @@`)** en la línea 18.
+El `pyproject.toml` del mismo repo declara **MIT**. El badge dice `NOASSERTION`.
+El grant real está en **`docs/LICENSE` (12.201 B): composición MIT + Apache-2.0**,
+y **sólo la enumeración lo encuentra**.
+
+🟢 **Minigrid es permisivo y usable** — pero se cita `docs/LICENSE`, no `LICENSE`.
+
+Tres consecuencias de método, detalladas en `agents/top.md` y `repos/foundations.md`:
+
+1. **El checksum de bytes clasifica mal este caso en lugar de cazarlo**: 2.507 B
+   con íncipit Apache entra en la categoría ya bendecida *"Apache sin apéndice"*.
+   El tamaño distingue *recortado* de *canónico*; **no distingue *recortado* de
+   *roto***.
+2. **Manifiesto y `LICENSE` se contradicen en la familia de licencia**, y los dos
+   son artefactos del árbol, no anuncios ⇒ **regla nueva: esa contradicción es
+   una ambigüedad abierta, no un veredicto.**
+3. **La sonda no omitió el grant: lo sustituyó**, con `HTTP 200` y 2.507 B (por
+   encima del umbral de no-hallazgo de 50 B). Peor que el caso del cycle 6.
+
+Hermanos sanos: `Gymnasium` 1.104 B MIT, `PettingZoo` 1.073 B MIT, **0
+artefactos de diff**. El daño es del repo, no del org.
+
+### 🔴 El evento del pass nº2: `NitroGen` — el agente que hay que citar y no se puede usar
+
+`MineDojo/NitroGen` (**2.251 ★**, oral **CVPR 2026**, arXiv 2601.02427): 40.000 h
+de gameplay, **+1.000 juegos**, wrapper Gymnasium, pesos en Hugging Face.
+**No estaba en esta KB.** Encontrado, hay que **excluirlo**:
+`LICENSE` = **4.729 B, `NVIDIA License`**, § 3.3 **uso no comercial**
+(*"or intended for use"*), § 3.2 **viral** sobre derivados, § 3.7 arrastra el
+**Meta OPT-IML 175B License Agreement**, § 3.4 terminación por patente.
+
+⛔ **Fuera de todo entregable, PoC pago incluido.** 🔴 Y la regla que deja:
+el abstract dice *"we open-source the dataset, simulator, and pre-trained
+weights"* — **"open-source" en un paper revisado por pares no es un grant.**
+Un venue top **no audita licencias**; el abstract es el anuncio.
+
+🔵 El laboratorio estaba en esta KB **por su repo muerto** (`Voyager`, congelado
+2024-04-03) **y no por su repo vivo**. Lo encontró el censo plano de incumbentes,
+no una consulta con forma de problema.
+
+### 🟡 El evento del pass nº3: *"gaming"* es un homónimo y el informe-faro es del otro rubro
+
+Las búsquedas de adopción y regulación devolvieron, primero y en **las cuatro
+regiones**, *"The State of AI in Gaming 2026"* (UNLV International Gaming
+Institute + KPMG): *AI Maturity Index* **≤ 45/100**, gobernanza rezagada,
+divergencia medida regulador-industria. 🔴 **Es de casino/apuestas, no de
+videojuegos.** Ninguna de sus cifras entra al mercado ni a la adopción de esta
+KB. **Regla de ingesta: clasificar la fuente en `videojuegos` o `azar/iGaming`
+antes de citar el número, y decirlo en la misma línea.**
+
+### ⛔ Gap de canal declarado
+
+`www.dlapiper.com`, `chambers.com`, `www.unlv.edu` y `github.blog` **no
+resuelven** por el proxy (`ENOTFOUND`). Las fechas del Art. 50 de este pass son
+**secundarias**; coinciden con los cycles 5-7 ⇒ **4ª confirmación independiente
+del 2-dic-2026**, **no** verificación primaria. El informe UNLV se usa sólo para
+delimitar el homónimo. **Un gap escrito es información.**
+
+### Agentes y entornos nuevos (byte-read, 2026-11-21)
+
+| Nombre | Repo | Licencia (bytes) | Nota | ★ |
+|--------|------|------------------|------|---|
+| **LightZero** | [opendilab/LightZero](https://github.com/opendilab/LightZero) | **Apache-2.0** (11357) | MCTS + AlphaZero/MuZero: agentes que **planifican**, no reactivos. Push 2026-11-19 | 1.663 |
+| **DI-engine** | [opendilab/DI-engine](https://github.com/opendilab/DI-engine) | **Apache-2.0** (11342) | Plataforma RL del mismo lab. ⚠️ push 2025-12-07 | 3.645 |
+| **Minigrid** | [Farama-Foundation/Minigrid](https://github.com/Farama-Foundation/Minigrid) | 🟡 **MIT + Apache-2.0** — `docs/LICENSE` (12201) | Prototipado de lógica de agente sin engine 3D. `LICENSE` raíz **dañado** | 2.543 |
+| **MicroRTS-Py** | [Farama-Foundation/MicroRTS-Py](https://github.com/Farama-Foundation/MicroRTS-Py) | **MIT** (1117) | RTS en miniatura. ⚠️ push 2025-08-11 | 295 |
+| **MineDojo** | [MineDojo/MineDojo](https://github.com/MineDojo/MineDojo) | **MIT** (1070) | El entorno detrás de Voyager. 🔴 push 2024-03-18 | 2.285 |
+| ⛔ **NitroGen** | [MineDojo/NitroGen](https://github.com/MineDojo/NitroGen) | ⛔ **NVIDIA License** (4729) | **No comercial y viral.** Citar, no usar | 2.251 |
+| ⛔ **gym** | [openai/gym](https://github.com/openai/gym) | — | 🔴 **ARCHIVADO**; usar `Gymnasium` | 37.237 |
+
+### Verificación de este pass
+
+- **139 slugs de la KB re-verificados** por `search/repositories`: **134 vivos**,
+  **5 sin resolver** — y los 5 (`JonTelep/awesome-ai-game-generation`,
+  `kolbytn/mindcraft`, `minetest/minetest`, `pelican-dev/panel`,
+  `rivet-gg/toolchain`) **ya estaban documentados** como rename, fuera de índice
+  o muerto. 🟢 **0 filas vivas falsas** — la higiene de los cycles 4-7 aguanta.
+- **1 archivado** en todo el inventario (`0ad/0ad`, ya anotado) + `openai/gym`
+  (nuevo, se agrega ya marcado).
+- Licencias re-leídas en bytes y **confirmadas**: `ml-agents` Apache-2.0,
+  `c2pa-rs` MIT **o** Apache-2.0 (1083 + 11335, idénticos al cycle 7),
+  `cocos` MIT 1164, `panda3d` BSD 1569. **0 correcciones necesarias** a filas
+  heredadas: lo que el cycle 7 escribió se sostiene.
+- **1 contradicción interna corregida**: `compose/patterns.md` decía C2PA
+  "Apache-2.0" a secas contra el "MIT *o* Apache-2.0" de `agents/top.md`.
+
+---
+
 ## 🆕 2026-11-21 — pass cycle 7
 
 > Tercer pass del día. **Igual que en los cycles 5 y 6, no se reportan deltas de

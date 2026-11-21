@@ -33,6 +33,47 @@ updated: 2026-11-21
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
 
+## 🔴 El hallazgo del cycle 8 (2026-11-21): **un `LICENSE` puede ser un archivo DAÑADO**, y el manifiesto puede contradecirlo
+
+Esta página verifica grants en bytes desde el cycle 3. Todos sus canales dan por
+sentado algo que nunca se escribió: **que el archivo leído es una instancia bien
+formada de la licencia que declara en la primera línea.**
+`Farama-Foundation/Minigrid` (2.543 ★) es el contraejemplo.
+
+| Canal | Veredicto | Evidencia (2026-11-21) |
+|-------|-----------|------------------------|
+| Badge SPDX | `NOASSERTION` | sin veredicto |
+| `LICENSE` (raíz) | dice **"Apache License, Version 2.0"** | **2.507 B / 40 líneas.** Sólo §§ **1** y **9**. **Faltan las §§ 2-8: el grant de copyright (§ 2), el de patente (§ 3) y la redistribución (§ 4).** Línea 18: **`@@ -154,49 +194,23 @@`** — un **hunk de diff** commiteado dentro del archivo |
+| `pyproject.toml` | **MIT** | `license = { text = "MIT License" }` + classifier OSI MIT |
+| **`docs/LICENSE`** (sólo por enumeración) | 🟢 **MIT + Apache-2.0, composición completa** | **12.201 B**, con los dos textos íntegros y la atribución a la Farama Foundation |
+
+🟢 **Minigrid es usable y permisivo. El archivo a citar es `docs/LICENSE`.**
+
+**Tres reglas de esta página quedan tocadas:**
+
+1. **El checksum de bytes clasifica mal este caso en vez de cazarlo.** 2.507 B con
+   íncipit `Apache License` cae en la categoría *"Apache sin apéndice"* que esta
+   misma página usa para `libgdx` (10.174 B). **El tamaño distingue "recortado" de
+   "canónico"; no distingue "recortado" de "roto".**
+2. **Manifiesto y `LICENSE` se contradicen en la FAMILIA de licencia** (MIT vs
+   Apache-2.0) y **ninguno es un anuncio** — los dos están versionados en el
+   árbol. ⇒ **Regla nueva: manifiesto ≠ `LICENSE` en familia no es un veredicto,
+   es una ambigüedad abierta.** Se resuelve buscando el tercer documento, no
+   eligiendo entre los dos.
+3. **La sonda no omitió el grant real: lo sustituyó**, con `HTTP 200` y un tamaño
+   que no dispara la regla del no-hallazgo (< 50 B). Peor que el caso del cycle 6.
+
+**Los hermanos del org están sanos** — `Gymnasium` 1.104 B MIT y `PettingZoo`
+1.073 B MIT, **0 artefactos de diff en ambos**. El daño es del repo, no de la
+Farama Foundation.
+
+**Chequeo de integridad, mecánico (Receta 21):**
+
+```bash
+grep -cE '^\s*(@@|<<<<<<<|=======|>>>>>>>|\+\+\+|---)' LICENSE   # 0 esperado
+grep -cE '^ *[0-9]+\. ' LICENSE                                  # Apache-2.0 → 9
+```
+
 ## 🔴 El censo de inventario del cycle 7 (2026-11-21): **8 engines que esta página no tenía, 158.000 ★ en total**
 
 El cycle 6 cerró con la regla *"una sonda confirma lo que ya sospechabas; sólo la
@@ -278,6 +319,14 @@ de fallo de rename con mayor radio de daño.
 | 🆕 🟢 [google-deepmind/open_spiel](https://github.com/google-deepmind/open_spiel) | **Apache-2.0** (`LICENSE`, 11358 — canónico) | **El framework de referencia de RL y search/planning en juegos, y faltaba.** Juegos en C++ con wrapper Python; n-jugadores, suma cero, cooperativos y suma general; CFR, Q-learning, SARSA, regret matching, DQN, PPO, A2C. **Es la base correcta para información imperfecta** (póker, Guandan, negociación) donde PPO sobre Gymnasium no alcanza. v1.6.11 publicada 5-ene-2026, push 2026-11-14. ⚠️ default `master`. | 5.603 |
 | 🆕 [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) | **Apache-2.0** (`LICENSE`, 11358) | Motor de física para control y robótica, el estándar de los benchmarks de locomoción. En gaming sirve para **animación procedural y ragdoll/control físico aprendido**, no para gameplay. Commit de hoy. | 18.369 |
 
+| 🆕 🟢 [opendilab/LightZero](https://github.com/opendilab/LightZero) | **Apache-2.0** (`LICENSE`, 11357 — canónico) | **MCTS + familia AlphaZero/MuZero** (incl. sampled y stochastic) en un toolkit unificado. **La capa que faltaba:** PPO/SAC sobre Gymnasium dan políticas **reactivas**; esto hace **búsqueda con modelo aprendido** ⇒ base correcta para **juego de tablero/cartas, oponentes que planifican y dificultad calibrada**. Push 2026-11-19. | 1.663 |
+| 🆕 🟢 [opendilab/DI-engine](https://github.com/opendilab/DI-engine) | **Apache-2.0** (`LICENSE`, 11342) | Plataforma RL general del mismo laboratorio; el catálogo de algoritmos más amplio del inventario, con entornos de juego integrados. **LightZero es su módulo de búsqueda.** ⚠️ **push 2025-12-07 (~11,5 meses)**: vivo pero lento, verificar antes de ponerlo en un roadmap. | 3.645 |
+| 🆕 🟢 [Farama-Foundation/Minigrid](https://github.com/Farama-Foundation/Minigrid) | 🟡 **MIT + Apache-2.0 (composición)** — leer **`docs/LICENSE`** (12.201 B); **`LICENSE` (2.507 B) está DAÑADO**, ver el hallazgo de arriba | Entornos de grilla con llaves, puertas, objetivos y **misiones en lenguaje natural**. El camino barato: **probar la lógica del agente sin pagar un engine 3D**, y migrarlo después por el mismo API Gymnasium. Push 2026-11-14. | 2.543 |
+| 🆕 [Farama-Foundation/MicroRTS-Py](https://github.com/Farama-Foundation/MicroRTS-Py) | **MIT** (`LICENSE`, 1117) | RTS en miniatura para RL: **estrategia en tiempo real** (economía, build order, micro) a escala de laboratorio. ⚠️ push 2025-08-11 ⇒ señal, no base de producción. | 295 |
+| 🆕 ⚠️ [MineDojo/MineDojo](https://github.com/MineDojo/MineDojo) | **MIT** (`LICENSE`, 1070) | La suite de entornos y el benchmark de Minecraft sobre los que se construyó `Voyager`. Hueco histórico: la KB tenía el agente y no el entorno. 🔴 **push 2024-03-18** ⇒ benchmark de lectura, no base viva. | 2.285 |
+| 🆕 ⛔ [openai/gym](https://github.com/openai/gym) | — | 🔴 **ARCHIVADO.** Sucesor: `Farama-Foundation/Gymnasium` (arriba). Se lista **para que nadie lo proponga**: con 37 k ★ encabeza cualquier búsqueda de *"RL environments"*. | 37.237 |
+
+
 ## 🆕 Foundation models de agente de juego (nuevo en esta página, 2026-11-21 cycle 6)
 
 Categoría que esta página no tenía: **no un LLM con tools, un modelo de acción**.
@@ -290,6 +339,9 @@ listan porque son los únicos puntos de partida permisivos del nicho.
 | 🆕 [THUSI-Lab/GameScaling](https://github.com/THUSI-Lab/GameScaling) | **Apache-2.0** (11358) — 🟢 **y los pesos también** | *Continued pre-training* para agentes embodied en mundos virtuales diversos: 8 checkpoints 0,8B–27B desde Qwen3.5, evaluación en 4 benchmarks de juego. **El único modelo de esta KB con grant de pesos verificado.** ⚠️ sin código de entrenamiento. 35 forks. | 604 |
 | 🆕 [Calix-L/DanKS](https://github.com/Calix-L/DanKS) | **Apache-2.0** (11348) + `NOTICE` (453) | Agente de **Guandan** (掼蛋) por RL a escala chica. Patrón útil: **información imperfecta + juego por equipos**, el caso que los agentes LLM todavía no resuelven. 🔵 APAC. | 833 |
 | 🆕 [Station-Sciences/bot-crossing](https://github.com/Station-Sciences/bot-crossing) | **MIT** (`LICENSE`, 1069) | *"A video game for AI agents"*: **el juego como entorno de evaluación**, no el agente. 286 forks. La pieza viva que `lmgame-org/GamingAgent` (congelado desde 2025-11-16) dejó de ser. | 906 |
+
+| 🆕 ⛔ [MineDojo/NitroGen](https://github.com/MineDojo/NitroGen) | ⛔ **`NVIDIA License`** (`LICENSE`, **4729**) — **uso NO COMERCIAL (§ 3.3) y VIRAL (§ 3.2)** | Foundation model de agente **generalista** de NVIDIA: behaviour cloning sobre **40.000 h de gameplay en +1.000 juegos**, wrapper Gymnasium, pesos en HF (`nvidia/NitroGen`), **oral en CVPR 2026** (arXiv 2601.02427). § 3.3: *"only may be used or intended for use **non-commercially**… non-commercial research purposes only"*; § 3.2 obliga a arrastrar esa limitación a todo derivado; § 3.7 arrastra el **Meta OPT-IML 175B License Agreement**; § 3.4 termina el grant ante un reclamo de patente. ⛔ **Fuera para todo entregable, incluido un PoC pago.** 🔴 El paper dice *"we open-source the dataset, simulator, and pre-trained weights"*: **"open-source" en un abstract de CVPR no es un grant.** | 2.251 |
+
 
 ## Arquitecturas de agente de referencia
 

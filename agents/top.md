@@ -54,6 +54,205 @@ updated: 2026-11-21
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
 
+## 🔴 Lo más importante del pass 2026-11-21 (cycle 8): **un archivo de licencia puede estar ROTO**, y los dos canales en los que esta KB más confía **se contradicen entre sí**
+
+Siete passes construyeron un método para **leer** un grant: checksum de bytes
+(R10/R20), ejes de alcance (R14), enumeración en vez de sonda (R17), el íncipit
+como dictamen. Todos esos canales asumen lo mismo sin decirlo nunca:
+**que el archivo que vas a leer es una instancia bien formada de la licencia que
+declara.** Este pass encontró el caso donde no lo es — y, en el mismo repo, el
+caso donde **el manifiesto y el `LICENSE` dicen dos familias de licencia
+distintas**, sin que ninguno de los dos sea un anuncio de marketing.
+
+### 🔴 Hallazgo nº1: `Farama-Foundation/Minigrid` — el `LICENSE` es **un fragmento de diff**, y hay una contradicción a tres bandas
+
+`Minigrid` (2.543 ★, benchmark RL estándar, push 2026-11-14) devuelve
+`NOASSERTION` en el badge. Resuelto por byte-read en las dos direcciones, como
+manda T60, aparece esto:
+
+| Canal | Qué dice | Evidencia leída 2026-11-21 |
+|-------|----------|----------------------------|
+| 1. Badge SPDX (`search/repositories`) | **`NOASSERTION`** | sin veredicto |
+| 2. `LICENSE` (raíz) | **"Apache License, Version 2.0"** | **2.507 B / 40 líneas.** Contiene **sólo** la § 1 (Definitions, parcial) y la § 9. **Faltan las §§ 2 a 8** — es decir, falta el **grant mismo** (§ 2 Grant of Copyright License, § 3 Grant of Patent License, § 4 Redistribution). En la línea 18 hay un **encabezado de hunk de diff literal: `@@ -154,49 +194,23 @@`** |
+| 3. `pyproject.toml` (manifiesto) | **MIT** | `license = { text = "MIT License" }` + classifier `License :: OSI Approved :: MIT License` |
+| 4. `docs/LICENSE` ← **sólo visible por enumeración (R17)** | **Composición MIT + Apache-2.0, completa** | **12.201 B.** *"This repository is licensed as follows: All assets in this repository are the copyright of the Farama Foundation… Some code in this repository has been taken from other open source projects and was originally released under the MIT or Apache 2.0 licenses… The MIT and Apache 2.0 licenses are included below."* |
+
+**Veredicto: `Minigrid` ES PERMISIVO** (composición MIT + Apache-2.0) y se puede
+usar. **Pero el archivo que hay que citar es `docs/LICENSE`, no `LICENSE`.**
+
+**Por qué este caso importa más que la fila que corrige — rompe tres reglas de la casa:**
+
+1. **El checksum de bytes lo habría clasificado mal, no lo habría cazado.** 2.507 B
+   con íncipit `Apache License` encaja de taquito en la categoría que esta KB ya
+   tiene inventada y bendecida: *"Apache sin apéndice"* (`libgdx`, 10.174 B;
+   `Calix-L/DanKS`, 11.348 B). El checksum sabe decir *"no es el canónico"*;
+   **no sabe decir "no es un documento"**. Un archivo incompleto y un archivo
+   recortado a propósito son indistinguibles por tamaño.
+2. **La regla "leé el manifiesto, no el anuncio" (T63) aquí da MIT; el byte-read
+   del archivo da Apache-2.0.** Ninguno de los dos es prosa de blog: los dos son
+   artefactos versionados en el árbol. **Los dos canales primarios de la casa se
+   contradicen sobre la misma línea de la misma tabla.** La salida no es elegir
+   el que más gusta: es que **manifiesto ≠ `LICENSE` en la *familia* de licencia
+   no es un veredicto, es una ambigüedad abierta** — y se resuelve buscando el
+   tercer documento, no votando entre los dos primeros.
+3. **La enumeración (R17) no fue "un canal más": fue el único que encontró el
+   grant real.** Una sonda por `LICENSE` devuelve **el archivo equivocado** y lo
+   devuelve con `HTTP 200` y 2.507 B — ni 404 ni byte-count sospechoso de
+   no-hallazgo. El cycle 6 escribió *"una sonda confirma lo que ya sospechás;
+   sólo la enumeración te dice lo que te faltaba"*. **Caso nuevo y peor: la
+   sonda no omite el archivo, lo sustituye.**
+
+**🟢 `NOASSERTION` acertó, y por dos motivos independientes a la vez** (archivo
+dañado **y** repo genuinamente compuesto). Es el primer caso registrado en esta
+KB+energy+enterprise donde el badge es correcto **y** su causa es doble.
+
+**Los hermanos están sanos** ⇒ el daño es de `Minigrid`, no una práctica de la
+Farama Foundation: `Gymnasium` `LICENSE` 1.104 B MIT, 0 artefactos de diff;
+`PettingZoo` 1.073 B MIT, 0 artefactos. **No propagar la sospecha al org.**
+
+**Chequeo mecánico nuevo, de 2 líneas, que esto deja como regla (ver Receta 21):**
+
+```bash
+grep -cE '^\s*(@@|<<<<<<<|=======|>>>>>>>|\+\+\+|---)' LICENSE   # debe dar 0
+grep -cE '^ *[0-9]+\. ' LICENSE                                  # Apache-2.0 → 9
+```
+
+### 🔴 Hallazgo nº2: `MineDojo/NitroGen` — **"open foundation model" en el abstract, uso NO COMERCIAL VIRAL en el archivo**
+
+El modelo de agente de juego más visible del año **no estaba en esta KB** y, al
+encontrarlo, **hay que rechazarlo**. `MineDojo/NitroGen` (**2.251 ★**, push
+2026-01-25, **oral en CVPR 2026**, arXiv `2601.02427`): behaviour cloning sobre
+**40.000 horas de gameplay en más de 1.000 juegos**, wrapper compatible con
+Gymnasium, checkpoint en Hugging Face (`nvidia/NitroGen`).
+
+- Badge: `NOASSERTION`. **Byte-read: `LICENSE` = 4.729 B, `NVIDIA License`.**
+- **§ 3.3 Use Limitation:** *"The Work and any derivative works thereof only may
+  be used or intended for use **non-commercially**… **non-commercial research
+  purposes only**, and excludes any military, surveillance, service of nuclear
+  technology or biometric processing purposes."*
+- **§ 3.2 lo hace VIRAL:** podés poner tus propios términos a un derivado **sólo
+  si** tus términos **arrastran la limitación de uso de la § 3.3**.
+- **§ 3.7:** arrastra además componentes bajo *Other Licenses*, nombrando el
+  **Meta OPT-IML 175B License Agreement**.
+- **§ 3.4:** cláusula de **terminación por reclamo de patente**.
+
+⛔ **Exclusión dura para cualquier entregable de Globant**, incluido un PoC
+facturado: el límite es *"used **or intended for use** non-commercially"* — un
+piloto pago ya está fuera, y el derivado no se puede relicenciar.
+
+**La regla que deja, y que la flota venía necesitando:** el paper dice
+*"we open-source the NitroGen dataset, simulator, and pre-trained weights"* y la
+model card de Hugging Face dice *"Governing Terms: NVIDIA License"*.
+**La palabra "open-source" en un abstract revisado por pares no es un grant.**
+Ésta es la T63 (*"leé el manifiesto, no el anuncio"*) aplicada a un paper de
+CVPR: **un venue de primer nivel no audita licencias**, y el abstract es el
+anuncio. Es también el contrapunto exacto al hallazgo nº1 del cycle 7 sobre los
+pesos de `GameScaling`: ahí el grant de pesos resultó **mejor** de lo que el
+badge decía; acá, **mucho peor** de lo que dice el paper.
+
+🔵 **Nota de inventario:** esta KB tenía `MineDojo/Voyager` (7.339 ★, congelado
+desde 2024-04-03) y **no tenía ni `MineDojo/MineDojo` ni `MineDojo/NitroGen`** —
+el laboratorio estaba en la KB **por su repo muerto y no por su repo vivo**.
+Encontrado por el censo plano de incumbentes (regla T64), no por una consulta
+con forma de problema.
+
+### 🟡 Hallazgo nº3: **"gaming" es un homónimo, y el informe-faro de 2026 es del otro gaming**
+
+Las búsquedas de este pass sobre adopción y regulación devolvieron, en primer
+lugar y en las cuatro regiones, **"The State of AI in Gaming 2026"** (UNLV
+International Gaming Institute + KPMG, primer informe de referencia del rubro):
+*AI Maturity Index* que **no pasa de 45 sobre 100**, adopción amplia con
+gobernanza rezagada, y una **divergencia medida entre reguladores e industria**
+(los reguladores ponen el riesgo de juego problemático y de resultados injustos
+arriba; la industria, último).
+
+🔴 **Ese informe es de CASINO / APUESTAS, no de videojuegos.** En inglés
+*"gaming"* es, en contexto regulatorio y de mercado, **el rubro del juego de
+azar** — y por eso domina los resultados de cualquier búsqueda de
+*"AI gaming regulation 2026"*. **Una KB de videojuegos que ingiera esas cifras
+como propias se corrompe sola**, y el riesgo es alto justamente porque el
+informe es bueno, cuantitativo y reciente.
+
+**Regla de ingesta para toda la flota:** en gaming, **antes de citar una cifra
+hay que clasificar la fuente en `videojuegos` o `azar/iGaming`**, y decirlo en
+la misma línea. El mismo criterio que la R14 aplica al alcance de un grant,
+aplicado al alcance de un número. Las cifras de este pass quedan etiquetadas en
+`intel/market.md`. **Ninguna cifra de UNLV/KPMG se incorpora al tamaño de
+mercado ni a la adopción de esta KB.**
+
+### 🔧 Hallazgo nº4: contradicción **interna** corregida — C2PA en la Receta 7
+
+`agents/top.md` publica desde el cycle 7 que `contentauth/c2pa-rs` y
+`c2pa-python` son **MIT *o* Apache-2.0** a elección (`LICENSE-MIT` 1.083 B +
+`LICENSE-APACHE` 11.335 B; **re-verificado en bytes en este pass, idéntico**).
+`compose/patterns.md` seguía diciendo **"Apache-2.0"** a secas en el stack de la
+Receta 7 y en su lista de repos. **Corregido.**
+
+No es cosmético: **en un grant dual, el integrador elige**, y para un entregable
+de cliente **conviene elegir Apache-2.0 por el grant expreso de patente** (MIT
+no lo tiene) — justo en el componente que firma el marcado del Art. 50(2). Una
+fila que dice "Apache-2.0" pierde la elección; una que dice "MIT" pierde la
+patente. **Un hallazgo de licencia que no se propaga a la receta que lo usa es
+medio hallazgo**, y es el primer caso medido de deriva interna entre páginas de
+esta KB.
+
+### ⛔ Gap de canal declarado (no silenciado)
+
+Cuatro hosts **no resuelven** por el proxy de esta sesión (`ENOTFOUND`):
+**`www.dlapiper.com`, `chambers.com`, `www.unlv.edu`, `github.blog`.** En
+consecuencia, y a diferencia del cycle 7:
+
+- Las fechas del Art. 50 / Digital Omnibus de este pass son **secundarias**
+  (snippets de búsqueda), **no verificadas en la fuente**. Coinciden con lo que
+  los cycles 5-7 ya publicaron ⇒ cuentan como **4ª confirmación independiente
+  del 2-dic-2026**, **no** como verificación primaria. Nadie debe citar este
+  pass como lectura de fuente.
+- El informe UNLV/KPMG se cita **sólo** por snippet, y por eso se usa para
+  **delimitar el homónimo**, nunca como dato de mercado.
+
+Se suma a la lista de hosts muertos por política de la flota (`modelcontextprotocol.io`
+en enterprise, `arxiv` en energy). **Un gap escrito es información; el silencio
+se lee igual que la cobertura.**
+
+### 🔴 Defecto de instrumento: **`curl -sI https://github.com/<slug>` no verifica nada en esta sesión**
+
+El runbook de esta rotación prescribe *"verificá toda URL antes de escribirla
+(`curl -sI`)"*. **Medido en este pass, ese instrumento tiene poder
+discriminante CERO:**
+
+| Sonda | Repo real (`openai/gym`) | Repo inexistente (`gmilano/this-repo-does-not-exist-xyz123`) | ¿Discrimina? |
+|-------|--------------------------|--------------------------------------------------------------|--------------|
+| `curl -sI github.com/<slug>` | **403** | **403** | ⛔ **NO** |
+| `curl -sI raw.../<slug>/HEAD/LICENSE` | 404 | 404 | ⛔ **NO** (prueba el *archivo*, no el repo) |
+| `gh api search/repositories -f q='repo:<slug>'` | **`total_count: 1`** | **HTTP 422 Validation Failed** | 🟢 **SÍ** |
+
+El proxy devuelve **403 a todo HTML de `github.com`**. ⇒ Un pass que siga el
+runbook al pie de la letra **rechazaría el 100% de las filas verdaderas** y
+escribiría *"404, no es un hallazgo"* sobre repos vivos. Y al revés: un 403
+**nunca** es evidencia de que un repo no exista.
+
+🟢 **El único canal de existencia válido acá es `gh api search/repositories`**, y
+es el que se usó para **los 139 slugs del inventario y las 7 filas nuevas** de
+este pass. `raw` sirve para **leer el grant en bytes**, no para probar existencia.
+
+**La regla general, que ya tiene precedente en esta casa:** una sonda que
+devuelve **el mismo código para todo** está midiendo el proxy, no el objeto —
+igual que el trap de los 14 bytes del cycle 6 medía el cuerpo de un 404 y no una
+licencia. **Antes de confiar en un instrumento nuevo hay que correrlo contra un
+control negativo conocido.** Ningún pass anterior lo había hecho con esta sonda.
+
+### 🆕 Filas nuevas de este pass (todas byte-read, todas permisivas salvo la rechazada)
+
+| Nombre | Repo | Licencia (archivo, bytes) | Descripción | ★ |
+|--------|------|---------------------------|-------------|---|
+| 🆕 🟢 **LightZero** | [opendilab/LightZero](https://github.com/opendilab/LightZero) | **Apache-2.0** (`LICENSE`, 11357 — canónico) | **La pieza que el stack de decisión de esta KB no tenía: MCTS + la familia AlphaZero/MuZero** (incl. variantes sampled y stochastic) en un toolkit unificado. PPO sobre Gymnasium aprende **políticas reactivas**; esto hace **búsqueda con modelo aprendido** ⇒ es la base correcta para **IA de juego de tablero/carta, dificultad calibrada y oponentes que planifican**, no para locomoción. Push 2026-11-19. | 1.663 |
+| 🆕 🟢 **DI-engine** | [opendilab/DI-engine](https://github.com/opendilab/DI-engine) | **Apache-2.0** (`LICENSE`, 11342) | Plataforma RL general del mismo laboratorio (OpenDILab), con el catálogo de algoritmos más amplio del inventario y entornos de juego ya integrados. **Es el marco del que LightZero es el módulo de búsqueda** ⇒ se adoptan juntos o se adopta sólo LightZero. ⚠️ **push 2025-12-07: ~11,5 meses sin commit** — vivo pero lento; verificar antes de comprometerlo en un roadmap. | 3.645 |
+| 🆕 🟢 **Minigrid** | [Farama-Foundation/Minigrid](https://github.com/Farama-Foundation/Minigrid) | 🟡 **MIT + Apache-2.0 (composición)** — leer **`docs/LICENSE`** (12.201 B), **NO** `LICENSE` (2.507 B, **dañado**; ver hallazgo nº1) | Entornos de grilla minimalistas para RL con objetivos, llaves, puertas y **misiones en lenguaje natural**. En gaming sirve para lo más barato de todo: **prototipar y testear la lógica de un agente sin pagar el costo de un engine 3D**. Mismo API Gymnasium ⇒ el agente migra después. Push 2026-11-14. | 2.543 |
+| 🆕 **MicroRTS-Py** | [Farama-Foundation/MicroRTS-Py](https://github.com/Farama-Foundation/MicroRTS-Py) | **MIT** (`LICENSE`, 1117) | Entorno RTS en miniatura para RL: **el caso de estrategia en tiempo real** (economía, build order, micro) a escala de laboratorio. ⚠️ push 2025-08-11, 295 ★ ⇒ **señal, no base de producción.** | 295 |
+| 🆕 ⚠️ **MineDojo** | [MineDojo/MineDojo](https://github.com/MineDojo/MineDojo) | **MIT** (`LICENSE`, 1070) | La suite de entornos y benchmark de Minecraft sobre la que se construyó `Voyager`. Hueco histórico: la KB listaba el agente y no el entorno. 🔴 **push 2024-03-18 (2 años y 8 meses)** ⇒ 10º caso de *"congelado pero citado"*. **Leerlo como benchmark, no forkearlo como base viva.** | 2.285 |
+| 🆕 ⛔ **NitroGen** | [MineDojo/NitroGen](https://github.com/MineDojo/NitroGen) | ⛔ **`NVIDIA License`** (`LICENSE`, 4729) — **NO COMERCIAL y VIRAL** (§ 3.3 + § 3.2) | Foundation model de agente generalista de NVIDIA: 40.000 h de gameplay, +1.000 juegos, oral en CVPR 2026. **Técnicamente lo más relevante del nicho; legalmente inusable.** Ver hallazgo nº2. **Citar en una propuesta como estado del arte, nunca como componente.** | 2.251 |
+| 🆕 ⛔ **gym** (histórico) | [openai/gym](https://github.com/openai/gym) | — | 🔴 **ARCHIVADO** (`archived: true`, 37.237 ★). Sucesor mantenido: **`Farama-Foundation/Gymnasium`**, ya en esta KB. Se anota **para que nadie lo proponga**: 37 k ★ lo mantienen primero en cualquier búsqueda de "RL environments". 11º caso de *"muerto pero recomendado"*. | 37.237 |
+
 ## Lo más importante del pass 2026-11-21 (cycle 7): **la regla del pass anterior, aplicada un nivel más arriba**
 
 El pass cycle 6 cerró con la regla central de esta familia de KBs:

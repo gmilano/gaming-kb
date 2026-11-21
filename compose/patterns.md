@@ -342,7 +342,8 @@ Inventario de assets (fuente de verdad propia del estudio)
     ├── generado por AI sólo en desarrollo     ──→ fuera de alcance (ver nota Steam)
     └── creado por humano                      ──→ fuera de alcance
     ↓ para lo que está en alcance
-c2pa-rs (Apache-2.0)  /  c2pa-python (Apache-2.0)
+c2pa-rs (MIT *o* Apache-2.0)  /  c2pa-python (MIT *o* Apache-2.0)
+    ↑ grant DUAL: elegís. Para entregable de cliente -> Apache-2.0 (patente)
     ↓ firma Content Credentials sobre el asset
 Manifiesto C2PA embebido  ← la parte "machine-readable"
     +
@@ -352,11 +353,22 @@ Reporte de cobertura: assets en alcance / marcados / pendientes, con fecha
 ```
 
 **Repos**:
-- [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) — **Apache-2.0**
-  (`LICENSE-APACHE`, 11335 B). SDK de referencia de Content Credentials.
+- [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) — 🔧 **MIT *o*
+  Apache-2.0, a elección del integrador** (`LICENSE-MIT` 1083 B +
+  `LICENSE-APACHE` 11335 B; **re-verificado en bytes el 2026-11-21, cycle 8**).
+  SDK de referencia de Content Credentials. **Corregido el 2026-11-21 (cycle 8):**
+  esta página decía *"Apache-2.0"* a secas desde el cycle 7, contra el
+  *"MIT o Apache-2.0"* que `agents/top.md` ya publicaba — **primera deriva
+  interna medida entre páginas de esta KB**.
 - [contentauth/c2pa-python](https://github.com/contentauth/c2pa-python) —
-  **Apache-2.0** (`LICENSE-APACHE`, 11335 B). Binding Python: lo práctico para
-  correrlo sobre un pipeline de assets existente.
+  🔧 **MIT *o* Apache-2.0** (mismos dos archivos). Binding Python: lo práctico
+  para correrlo sobre un pipeline de assets existente.
+
+> 🟢 **Qué elegir, y por qué no es cosmético.** En un grant dual **elige quien
+> integra**. Para un entregable de cliente se elige **Apache-2.0 por su grant
+> expreso de patente** (MIT no lo tiene) — y es justamente el componente que
+> **firma** el marcado legible por máquina del Art. 50(2). Decir sólo
+> "Apache-2.0" **pierde la elección**; decir sólo "MIT" **pierde la patente**.
 
 **Cómo conectar**:
 1. **Inventariar por procedencia, no por tipo.** La pregunta que define el alcance
@@ -1302,7 +1314,7 @@ hay que enumerar por rama en más de 20 repos.
 | 4 · Mundo procedural | Godot + WFC + LLM + Concordia | 4-8 semanas | Contenido infinito, replayability |
 | 5 · Game Support Agent | LlamaIndex (MIT) + FastAPI + Godot UI | 1-2 semanas | -70% tickets de soporte |
 | 6 · AI dev tooling | 🔴 **corregido:** godot-ai (3.627★) / **CoplayDev/unity-mcp (MIT, 16.087★)** + Claude Code | 1 día de setup | 2-3x velocidad de desarrollo |
-| 7 · **Marcado Art. 50(2) EU AI Act** | c2pa-python (Apache-2.0) + inventario de procedencia | 🔴 **reencuadrada: inventario en días, marcado parcial, plan fechado** | 🔴 **Deadline externo a 12 DÍAS: 2-dic-2026** |
+| 7 · **Marcado Art. 50(2) EU AI Act** | c2pa-python (**MIT *o* Apache-2.0** — elegir Apache-2.0 por la patente) + inventario de procedencia | 🔴 **reencuadrada: inventario en días, marcado parcial, plan fechado** | 🔴 **Deadline externo a 12 DÍAS: 2-dic-2026** |
 | 🆕 8 · World model sobre engine | Godot/Unity + Matrix-Game 4.0 (Apache-2.0 en v4) | 4-6 semanas | Prototipo visual sin pipeline de arte |
 | 9 · **QA con agentes, medido** | GamingAgent/LMGame Bench (MIT, ⚠️ congelado hace 1 año) + MCP | 1-4 semanas | QA con número defendible, no anécdota |
 | 🆕 10 · **Auditoría de licencias** | 2 canales + checksum de bytes (sin dependencias) | **2-4 días** | 🟢 **4/4 de acierto sobre las tablas de esta KB.** Entregable propio y auditable |
@@ -1348,6 +1360,95 @@ incompleta sin la **16**. Secuencia recomendada: **18 → 7 → 10 → 14 → 17
 16**.*
 
 ---
+## 🆕 Receta 21: Verificación de **integridad** del archivo de licencia — el control que las Recetas 10, 14, 17 y 20 no tienen
+
+**Problema que resuelve.** Las cuatro recetas de auditoría de licencias de esta
+página responden *"¿qué dice el grant?"* (R10 checksum, R14 alcance, R17
+enumeración, R20 íncipit). **Ninguna responde antes: "¿es este archivo un
+documento completo y bien formado?"** — y si no lo es, las cuatro producen un
+veredicto con cara de válido. Caso real que lo motiva:
+`Farama-Foundation/Minigrid`, 2.543 ★, benchmark RL estándar (cycle 8).
+
+**Síntomas que el control existente NO caza:**
+
+- Un `LICENSE` de **2.507 B** cuyo íncipit es *"Apache License, Version 2.0"* ⇒
+  el **íncipit dicta Apache-2.0** (R20, correcto) y el **checksum lo ubica en
+  *"Apache sin apéndice"*** (R10, categoría real: `libgdx` tiene 10.174 B).
+  **Ambos controles pasan.** Pero el archivo contiene **sólo las §§ 1 y 9**:
+  faltan **§ 2 (Grant of Copyright License), § 3 (Grant of Patent License) y § 4
+  (Redistribution)** — es decir, **falta el grant**.
+- En la línea 18 hay **`@@ -154,49 +194,23 @@`**: un **hunk de diff** commiteado
+  dentro del archivo. El `LICENSE` es un **parche a medio aplicar**.
+
+### Fase 0 — Integridad (nueva; corre ANTES de cualquier interpretación)
+
+```bash
+S=owner/repo
+curl -sS -f "https://raw.githubusercontent.com/$S/HEAD/LICENSE" -o L.txt || echo "NO EXISTE"
+
+# 1. Artefactos de control de versiones dentro del archivo  →  debe dar 0
+grep -cE '^\s*(@@|<<<<<<<|=======|>>>>>>>|\+\+\+ |--- )' L.txt
+
+# 2. Cláusulas operativas presentes  →  Apache-2.0 debe dar 9
+grep -cE '^ *[0-9]+\. ' L.txt
+
+# 3. Para Apache-2.0, las tres que de verdad importan  →  deben estar las 3
+grep -cE '^ *(2|3|4)\. (Grant of Copyright|Grant of Patent|Redistribution)' L.txt
+
+# 4. Para MIT: los tres párrafos operativos
+grep -ciE 'Permission is hereby granted|above copyright notice.*shall be included|AS IS.*WITHOUT WARRANTY' L.txt
+```
+
+**Criterio de parada.** Si (1) ≠ 0 **o** (2) < 9 en un archivo que se
+auto-declara Apache-2.0 ⇒ **el archivo NO es el grant**. **No se interpreta: se
+enumera** (R17) y se busca el documento real:
+
+```bash
+gh api -X GET search/code -f q="repo:$S filename:LICENSE" --jq '.items[].path'
+# Minigrid → LICENSE  +  docs/LICENSE   ← el segundo es el verdadero (12.201 B)
+```
+
+### Fase 1 — Desempate manifiesto vs `LICENSE`
+
+Si el manifiesto (`pyproject.toml`, `package.json`, `Cargo.toml`, `*.csproj`,
+`pom.xml`) y el `LICENSE` **discrepan en la familia de licencia**, la T63
+(*"leé el manifiesto, no el anuncio"*) **no desempata**: ninguno de los dos es un
+anuncio, los dos están versionados.
+
+```bash
+curl -sS "https://raw.githubusercontent.com/$S/HEAD/pyproject.toml" | grep -iE '^license|License ::'
+# Minigrid → license = { text = "MIT License" }   vs   LICENSE → "Apache License 2.0"
+```
+
+⇒ **Regla: discrepancia de familia = ambigüedad abierta, NO veredicto.** Se
+resuelve con el tercer documento. En `Minigrid`, `docs/LICENSE` (12.201 B) dice
+que el repo es **composición MIT + Apache-2.0** y **explica** la discrepancia:
+hay código tomado de proyectos bajo ambas licencias, con los dos textos
+incluidos. 🟢 **Veredicto final: permisivo y usable, citando `docs/LICENSE`.**
+
+### Fase 2 — Control de vecindario (evita propagar la sospecha)
+
+Un repo dañado **no implica un org dañado**. Correr Fase 0 sobre 2-3 hermanos:
+
+```bash
+for S in Farama-Foundation/Gymnasium Farama-Foundation/PettingZoo; do
+  echo -n "$S: "; curl -sS "https://raw.githubusercontent.com/$S/HEAD/LICENSE" | wc -c
+done
+# Gymnasium 1104 B MIT, PettingZoo 1073 B MIT, 0 artefactos  →  org sano
+```
+
+### Qué entregar al cliente
+
+Una línea por dependencia: **`slug | archivo citado | bytes | familia | integridad
+(OK / DAÑADO→ruta real) | fuente del desempate`**. La columna de integridad es la
+que no existía, y es la que evita las dos fallas opuestas de este caso:
+**rechazar `Minigrid` por "le falta el grant"** (falso negativo: el grant existe
+en otra ruta) y **declararlo "Apache-2.0"** (falso positivo: es MIT + Apache-2.0
+compuesto, y el archivo citado estaría roto).
+
+**Costo real:** 4 comandos por dependencia, ~1 s cada uno. **Se corre sobre todo
+el `requirements.txt`, no sobre una muestra.**
+
 *Pass **2026-11-21 (cycle 5)**: recetas nuevas **13** (capa de disclosure por reloj de
 sesión para NPCs con LLM — la primera obligación de NA que toca el runtime),
 **14** (auditoría de **alcance** de licencias por 6 ejes, con repo testigo

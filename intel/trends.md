@@ -576,6 +576,102 @@ origen de los world models punteros. **Cero de medición, no de mercado.**
 
 ---
 
+### 23. 🆕 🔴 El archivo de licencia dejó de ser confiable **como documento**, no sólo como veredicto
+
+Las tendencias 9 y 19 de esta página describieron el riesgo de licencia como
+**sistemático** y después como **ausencia de grant**. Este pass agrega un tercer
+modo, y es peor que los dos anteriores porque **pasa los controles existentes**:
+**el archivo está dañado**.
+
+`Farama-Foundation/Minigrid` (2.543 ★, benchmark RL estándar) distribuye un
+`LICENSE` de **2.507 B** que dice *"Apache License, Version 2.0"*, contiene
+**sólo las §§ 1 y 9**, **le faltan las §§ 2-8 — el grant de copyright, el de
+patente y la redistribución** — y trae un **encabezado de hunk de diff literal
+(`@@ -154,49 +194,23 @@`)** en la línea 18. Su `pyproject.toml` declara **MIT**.
+El grant real está en **`docs/LICENSE` (12.201 B): MIT + Apache-2.0 completos**.
+
+**Por qué es una tendencia y no una anécdota:** los tres controles que esta KB
+construyó en siete passes **fallan cada uno a su manera** contra este caso.
+
+| Control | Qué hace con este archivo |
+|---------|---------------------------|
+| **Checksum de bytes** (R10/R20) | **Lo clasifica mal, no lo caza.** 2.507 B con íncipit Apache cae en la categoría ya bendecida *"Apache sin apéndice"* (`libgdx`, 10.174 B). El tamaño distingue *recortado* de *canónico*; **no distingue *recortado* de *roto*** |
+| **El íncipit dicta** (R20) | **Dice Apache-2.0** — y la línea 1 es correcta. El íncipit es válido; **el cuerpo no existe** |
+| **Sonda por nombre** | Devuelve **el archivo equivocado** con `HTTP 200` y 2.507 B ⇒ **ni 404 ni byte-count de no-hallazgo** (umbral 50 B). La sonda **no omite el grant: lo sustituye** |
+
+**Lo único que funcionó fue la enumeración (R17)**, y encontró el documento real
+en una ruta **no adivinable**. ⇒ **Regla nueva (Receta 21): verificar la
+INTEGRIDAD del archivo antes de interpretar su contenido** — ausencia de
+artefactos de VCS y presencia de las cláusulas operativas.
+
+**Y un corolario que vale para toda la flota:** cuando **el manifiesto y el
+`LICENSE` discrepan en la *familia* de licencia** —acá MIT vs Apache-2.0, los dos
+artefactos versionados, **ninguno un anuncio**— la T63 (*"leé el manifiesto, no
+el anuncio"*) **no alcanza para desempatar**, porque ninguno de los dos es el
+anuncio. **Esa discrepancia es una ambigüedad abierta, no un veredicto**, y se
+resuelve buscando el tercer documento. 🟢 En este caso se resolvió: **Minigrid es
+permisivo y usable, citando `docs/LICENSE`.** Hermanos sanos (`Gymnasium` 1.104 B,
+`PettingZoo` 1.073 B, 0 artefactos) ⇒ **el daño es del repo, no del org.**
+
+### 24. 🆕 🔴 *"Open-source"* en un paper revisado por pares **no es un grant** — y el mejor agente del nicho es inusable
+
+La tendencia 17 celebró que la licencia de los **pesos** dejó de ser incognoscible.
+Este pass encuentra el caso inverso y lo encuentra **en el tope técnico del
+nicho**.
+
+`MineDojo/NitroGen` (**2.251 ★**, **oral en CVPR 2026**, arXiv 2601.02427) es, por
+capacidad, lo más relevante que apareció en gaming este año: behaviour cloning
+sobre **40.000 horas de gameplay en más de 1.000 juegos**, wrapper compatible con
+Gymnasium, pesos publicados en Hugging Face. El abstract dice
+*"we **open-source** the NitroGen dataset, simulator, and pre-trained weights"*.
+
+El archivo dice otra cosa: **`NVIDIA License`, 4.729 B.**
+
+- **§ 3.3** — *"only may be used **or intended for use** non-commercially…
+  non-commercial research purposes only"* ⇒ **un PoC pago ya está fuera**.
+- **§ 3.2** — **viral**: ponerle tus términos a un derivado es legal **sólo si
+  arrastran la § 3.3**.
+- **§ 3.7** — arrastra componentes bajo otras licencias, nombrando el **Meta
+  OPT-IML 175B License Agreement**.
+- **§ 3.4** — **terminación del grant** ante un reclamo de patente.
+
+⛔ **Exclusión dura para cualquier entregable de Globant.**
+
+**La tendencia:** el canal por el que llega el estado del arte en agentes de
+juego es **el paper**, y **un venue de primer nivel no audita licencias**. El
+abstract **es el anuncio** en el sentido de la T63, aunque esté revisado por
+pares — y la *model card* de Hugging Face, que sí dice *"Governing Terms: NVIDIA
+License"*, es el manifiesto. ⇒ **Todo modelo que entre a esta KB por vía
+académica necesita byte-read del `LICENSE` antes de la fila**, sin importar el
+prestigio del venue. Es el espejo exacto del hallazgo del cycle 7 sobre
+`GameScaling`: ahí el grant de pesos resultó **mejor** que el badge; acá, **mucho
+peor** que el paper.
+
+### 25. 🆕 🟡 *"Gaming"* es un homónimo, y el informe-faro de 2026 es del otro rubro
+
+**Las cuatro búsquedas regionales de este pass devolvieron en primer lugar un
+informe de casino.** *"The State of AI in Gaming 2026"* (**UNLV International
+Gaming Institute + KPMG**) es el primer benchmark serio del rubro: *AI Maturity
+Index* **≤ 45/100**, gobernanza rezagada frente a la adopción, y **divergencia
+medida regulador-industria** (los reguladores ponen el juego problemático y los
+resultados injustos arriba; la industria, último). 🔴 **Es de apuestas, no de
+videojuegos.**
+
+**Por qué entra como tendencia y no como nota al pie:** en inglés regulatorio y
+de mercado *"gaming"* **significa juego de azar**, de modo que **toda búsqueda
+de la forma *"AI gaming <región> <año> regulation"* —exactamente la que esta
+rotación ejecuta cada pass— está sesgada hacia el rubro equivocado por
+construcción**. El riesgo no es un dato malo: es **un dato bueno del vertical
+ajeno**, cuantitativo y reciente, que se ingiere sin resistencia.
+
+⇒ **Regla de ingesta para la flota: clasificar la fuente en `videojuegos` o
+`azar/iGaming` ANTES de citar la cifra, y declararlo en la misma línea.** Es la
+R14 (ejes de alcance de un grant) aplicada al **alcance de un número**.
+🟢 **Y tiene su lado útil:** iGaming es un vertical real y grande —sobre todo en
+**NA** y en **LATAM**, donde Brasil abrió mercado licenciado el 1-ene-2025— con
+compradores y plataformas propias. **Se atiende como vertical separado**, con la
+frontera escrita en `verticals/solutions.md`, no mezclándolo con videojuegos.
+
 ## En el radar (emergente, 2026-2027)
 
 | Tendencia | Señal verificada | Estado |

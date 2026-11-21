@@ -194,6 +194,47 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+
+#### 🆕 2026-11-21 (cycle 8) — el informe-faro de "AI in gaming" de NA **es de casino**, y un incumbente muerto que sigue primero en las búsquedas
+
+🔴 **Hallazgo de ingesta, no de mercado.** Las cuatro búsquedas regionales de
+este pass devolvieron en primer lugar **"The State of AI in Gaming 2026"**
+(**UNLV International Gaming Institute + KPMG**, primer informe de referencia del
+rubro, con sede en Las Vegas): *AI Maturity Index* que **no pasa de 45 sobre
+100**, adopción amplia con **gobernanza rezagada**, y una **divergencia medida
+entre reguladores e industria** — los reguladores ubican el riesgo de **juego
+problemático** y de **resultados injustos para el jugador** entre los más altos;
+la industria, **al final de su propia lista**. El informe además expresa
+**escepticismo sobre la autorregulación** del sector.
+
+⛔ **Ese informe es del rubro APUESTAS/CASINO, no de videojuegos**, y por eso
+ninguna de sus cifras entra al tamaño de mercado ni a la adopción de esta KB.
+En inglés regulatorio y de mercado, *"gaming"* significa **juego de azar**; es la
+razón por la que domina cualquier búsqueda de *"AI gaming regulation 2026"*.
+**El riesgo es alto justamente porque el informe es bueno:** cuantitativo,
+reciente y de una institución seria. Una KB de videojuegos que lo ingiera como
+propio **se corrompe con material de primera calidad**.
+
+🟢 **Dónde sí sirve, dicho con su alcance:** si Globant atiende a un cliente de
+**iGaming/casino en NA** —un vertical real y grande en la región— esas tres
+cifras son el mejor artefacto de venta disponible, y la **brecha
+regulador-industria sobre quién considera grave el daño al jugador** es
+literalmente el riesgo que el cliente no está mirando. **Pero es otro vertical,
+con otros compradores y otra lista de plataformas** (ver la frontera declarada en
+`verticals/solutions.md`).
+
+🔵 **Nota de regulación, sin novedad respecto del cycle 7:** no apareció en este
+pass ninguna obligación **federal** nueva específica de AI en videojuegos. Lo que
+el cycle 5 documentó (obligación de *runtime*) y el cycle 7 (censo de Steam con
+su muestra) **sigue siendo la base**. **Un pass sin novedad regulatoria se
+escribe como tal**, no se rellena.
+
+⛔ **`openai/gym` está ARCHIVADO** (37.237 ★, el repo de RL más estrellado de
+origen NA). Sucesor mantenido: `Farama-Foundation/Gymnasium`, ya en la KB. Se
+anota **porque con 37 k ★ encabeza cualquier búsqueda de "RL environments"** y es
+la clase de propuesta que llega sola a una sala. **11º caso en esta KB de
+"muerto pero recomendado".**
+
 #### 🆕 2026-11-21 (cycle 7) — el censo de Steam se puede citar con su muestra, y el sentimiento del jugador entra en conflicto
 
 - 🟢 **El 49,9% de octubre ahora tiene censo detrás, con numerador y
@@ -374,6 +415,57 @@ declarado; usar con la regla de la muestra de arriba.
 | **Anti-fraude conductual** | Carril iGaming NA con supervisión activa. | GNNs sobre red de jugadores + detección server-side. |
 
 ### EMEA
+
+
+#### 🆕 2026-11-21 (cycle 8) — **4ª confirmación independiente del 2-dic-2026**, y el host primario **no resuelve**: lo que este pass puede y no puede afirmar
+
+⛔ **Gap de canal declarado antes del dato.** `www.dlapiper.com` y `chambers.com`
+—las dos fuentes de las que los cycles 5, 6 y 7 tomaron el andamiaje legal del
+Art. 50— **no resuelven por el proxy de esta sesión** (`ENOTFOUND`), igual que
+`www.unlv.edu` y `github.blog`. **Este pass no leyó ninguna fuente primaria de
+EMEA.**
+
+🟡 **Lo que sí vale, dicho con su límite.** Los snippets de búsqueda de este pass
+reproducen, de forma independiente de los tres passes anteriores:
+
+- **Art. 50 aplicable desde el 2-ago-2026.**
+- **Los sistemas ya en el mercado antes del 2-ago-2026 tienen hasta el
+  2-dic-2026** para el **marcado legible por máquina del Art. 50(2)**.
+- **Digital Omnibus** publicado el **24-jul-2026**, con parte de las
+  obligaciones corridas a **2027** y otra parte cayendo el 2-ago-2026.
+- **Guidelines del Art. 50 de la Comisión aprobadas el 20-jul-2026**, y la
+  lectura de que **para un single-player de audiencia adulta el diálogo con NPCs
+  puede quedar sin etiquetado adicional**.
+- **Digital Fairness Act**: propuesta formal prevista para **Q4-2026**.
+
+⇒ **Cuenta como la 4ª confirmación independiente del 2-dic-2026** (cycles 5, 6, 7
+y éste, con fuentes distintas cada vez). **No cuenta como verificación
+primaria**, y nadie debe citar este pass como lectura de fuente. **Quedan 11
+días** desde hoy. Las precisiones de alcance que ya tiene la KB —**Art. 111(4)**
+como base legal, el **2-dic-2026 cubre sólo el Art. 50(2) y sólo el catálogo
+pre-2-ago-2026**, el **Art. 50(1) vence para todos desde agosto**, y la
+**partición por edad de la audiencia** del cycle 6— **se sostienen sin cambios**.
+
+🔧 **Lo único que cambia de raíz en EMEA este pass es de licencia, y toca el
+componente que firma el marcado.** `compose/patterns.md` describía
+`contentauth/c2pa-rs` y `c2pa-python` como **"Apache-2.0"** a secas, mientras
+`agents/top.md` ya publicaba desde el cycle 7 —y este pass **re-verificó en
+bytes: `LICENSE-MIT` 1.083 B + `LICENSE-APACHE` 11.335 B, idénticos**— que son
+**MIT *o* Apache-2.0 a elección del integrador**. **Corregido.**
+
+**Por qué importa comercialmente y no es cosmético:** en un grant dual **elige
+quien integra**, y para un entregable de cliente **se elige Apache-2.0 por su
+grant expreso de patente** — MIT no lo tiene. Es decir: en el único componente
+que materialmente **firma** el marcado legible por máquina del Art. 50(2), la KB
+estaba publicando una licencia que **no permitía elegir la protección de
+patente**. Una fila que dice "Apache-2.0" **pierde la elección**; una que dice
+"MIT" **pierde la patente**.
+
+🔵 **Recordatorio de alcance que esta KB ya estableció y este pass no cambia:**
+el Acta **no nombra ninguna tecnología de marcado**. **C2PA es elección de
+ingeniería, no requisito legal**, y presentarlo como lo segundo es vender un
+substrato como un certificado — el mismo error que la KB de enterprise documentó
+con OSCAL y el Anexo IV.
 
 #### 🆕 2026-11-21 (cycle 7) — el deadline que esta KB vende tiene por fin su base legal, y un alcance mucho más chico
 
@@ -584,6 +676,58 @@ declarado; usar con la regla de la muestra de arriba.
 
 ### APAC
 
+
+#### 🆕 2026-11-21 (cycle 8) — Corea pone cifra a lo que pierde, y China deja de ser un caso de adopción para ser un caso de **certidumbre regulatoria**
+
+🔵 **Corea, dato nuevo y vendible por su signo:** la participación coreana en el
+mercado global de juegos **cayó a 7,2%, su nivel más bajo desde 2020**. Puesto
+junto a lo que esta KB ya tiene —**AI Basic Act con alcance extraterritorial
+desde el 22-ene-2026** (cycle 4) y la **excepción de TDM rechazada**— el perfil
+coreano es **el más difícil de la región: obligación nueva y presupuesto que se
+encoge**. ⇒ **No es el mercado de entrada de APAC.** Es, en cambio, donde la
+oferta que vende *cumplimiento a costo acotado* tiene el argumento más fuerte,
+porque el cliente **no puede** responder con más gasto.
+
+🔵 **China: el eje correcto no es la adopción, es la certidumbre.** Las fuentes
+de este pass coinciden en que la adopción **ya no se discute** —*"AI adoption is
+not much of a debate in China; it's already in use across much of the games
+industry"*— lo que **confirma** sin añadir el dato duro de Tencent que el cycle 4
+ya tiene (**110 M de usuarios acumulados de NPCs con AI / 17,7 M de DAU pico**,
+que sigue siendo la mejor refutación del *"los NPCs con LLM no escalan"*).
+
+Lo **nuevo** es el encuadre: el **etiquetado obligatorio de contenido generado
+por AI rige desde septiembre de 2025**, y el marco chino se describe como **el
+más completo y restrictivo de APAC** — pero las mismas fuentes señalan que eso
+**provee certidumbre regulatoria que muchas empresas valoran**. 🟢 **Consecuencia
+comercial, y es contraintuitiva:** China es la región donde **el requisito de
+etiquetado es más viejo y más claro**, así que es la única donde el trabajo de
+marcado se vende **como práctica establecida y no como preparación para una
+fecha**. Para un estudio de APAC que exporta a la UE, **el pipeline de marcado
+que China ya obliga es, en lo sustancial, el que el Art. 50(2) pide el
+2-dic-2026** ⇒ **un solo trabajo, dos jurisdicciones**. Es el argumento
+geográficamente más eficiente de esta página.
+
+🟡 **Japón: conflicto de fuentes, declarado y no resuelto.** Una fuente describe
+una **ley marco de 2025** que ordena la política nacional de AI; otra sostiene que
+Japón **prioriza el cumplimiento voluntario y los principios centrados en la
+persona** por sobre marcos obligatorios. **Las dos pueden ser ciertas a la vez**
+(ley marco sin obligaciones duras), pero este pass **no pudo verificarlo en
+fuente primaria** ⇒ se registra como **conflicto abierto**, no como hallazgo.
+El movimiento de plan de Estado que el cycle 6 documentó sigue siendo la
+anotación vigente.
+
+🔵 **Regulación de fondo pendiente en la región**, sin cambio este pass: el
+análisis sectorial de AI en gaming asiático sigue pidiendo **actualizar el marco
+de copyright para contenido generado por AI** y **definir umbrales de control
+creativo humano** en obras asistidas por AI — relevante porque **Asia domina
+mobile y online**, donde el volumen de assets generados es mayor.
+
+⚠️ **Barreras que las fuentes nombran y que afectan el tamaño del ticket:**
+costos de integración altos, **datos de jugador fragmentados entre plataformas**,
+y estudios chicos sin infraestructura ni expertise para desplegar AI a escala
+comercial. ⇒ **En APAC, la primera venta es la capa de datos**, no el agente.
+Es la misma conclusión que la KB de enterprise sacó para la región.
+
 #### 🆕 2026-11-21 (cycle 7) — Corea entra con cifra propia, y aparece la práctica de gobernanza que se puede vender
 
 - 🟢 **COREA TIENE SU PROPIA CIFRA Y ES ALTA: 77,5% de 120 empresas de juego
@@ -786,6 +930,62 @@ open source más fuerte del ciclo.**
 | **Analítica de esports** | Juegos Asiáticos 2026. | Anti-cheat conductual + analítica de broadcast. |
 
 ### LATAM
+
+
+#### 🆕 2026-11-21 (cycle 8) — la brecha de adopción de LATAM **por fin tiene su cifra**, y es una razón para vender, no una excusa
+
+🟢 **El dato más fuerte que esta página consiguió para LATAM, y es una brecha
+cuantificada.** Según el **PNUD/UNDP** (vía SiGMA), la AI podría agregar **5,4%
+al PIB regional de LATAM hacia 2030**, contra **14,5% en América del Norte** —
+atribuido a **baja inversión pública en ciencia y tecnología** y a **una economía
+informal grande**. ⇒ **Una brecha de 9,1 puntos.**
+
+**Cómo se usa, y cómo NO.** No es un argumento de *"LATAM está atrasada"*: es
+**el tamaño del excedente sin capturar**, y la razón por la que en LATAM el
+comprador correcto es el que **todavía no tiene pipeline**, mientras en NA es el
+que **ya tiene uno y necesita gobernarlo**. La misma oferta se vende con dos
+relatos distintos según el lado de esa brecha.
+
+🔵 **Estructura de mercado, con fuente y con conflicto declarado.** El informe
+**Xsolla + GamesBeat 2026** (previo a gamescom latam) da:
+**+335 M de jugadores** en la región; **Brasil** como el mercado más grande y
+maduro, con **penetración por encima del 70% de la población**; **México** como
+principal puerta comercial de entrada, con **72,6 M de jugadores**.
+
+⚠️ **Conflicto con el propio histórico de esta KB, y se deja a la vista:** el
+**cycle 1 (jul-2026) publicó "372 M de gamers"** en LATAM; este informe dice
+**+335 M**. **No se reescribe ninguna de las dos cifras** — son instrumentos
+distintos con metodologías que no publicamos, y la regla de la casa desde el
+cycle 5 es que **un número sin su muestra no es un número**. ⇒ En una propuesta
+se cita **335 M con fuente Xsolla/GamesBeat 2026** (la más reciente y la más
+atribuible) y **se evita el rango** salvo que el cliente pregunte, caso en el que
+la honestidad sobre la dispersión **es** el argumento de credibilidad.
+
+🟡 **Regulación: sin obligación de AI en videojuegos, y eso es el hallazgo.**
+Este pass buscó específicamente regulación de AI aplicada a videojuegos en
+Brasil y México y **no encontró ninguna**. Lo que hay es **regulación de
+apuestas**: Brasil terminó 80 años de prohibición federal y abrió mercado
+licenciado el **1-ene-2025**; a fines de 2025 la **SPA del Ministerio de
+Hacienda** abrió consulta pública por su **agenda regulatoria 2026-2027**; en
+México la reforma federal **sigue pendiente**. Una fuente de agencia comercial
+menciona un **decreto brasileño de video y entretenimiento del 14-oct-2026** cuyo
+contenido **no se pudo confirmar** (snippet truncado) ⇒ **se registra como pista,
+no como dato**.
+
+⇒ 🟢 **Consecuencia, y es la ventaja estructural de la región:** en LATAM **no
+hay deadline regulatorio que forzar**, así que la venta **no puede ser
+cumplimiento** — tiene que ser **producto**. Eso **coincide** con la única
+ventaja estructural (no de precio) que esta KB le encontró a LATAM y que sigue
+vigente desde el cycle 4: **48,8% de aceptación del jugador frente a ~85% de
+rechazo global** ⇒ **LATAM sigue siendo el primer mercado racional para lanzar AI
+de cara al jugador**. Y el contrapeso también sigue vigente: **Ubisoft, 166
+despidos + Motherbrain, 19-nov-2026**.
+
+🔵 **Medición de origen, repetida con el instrumento corto en español:** este
+pass volvió a buscar repos de agentes de gaming **con origen LATAM** y el
+resultado vuelve a ser **cero medido, no cero supuesto** — consistente con los
+cycles 4-7. **Es un cero informado y se escribe como tal**: la región consume y
+adapta, no publica base instalada en este nicho.
 
 #### 🆕 2026-11-21 (cycle 7) — el cero medido en adopción, y la estructura de mercado que sí se puede citar
 
