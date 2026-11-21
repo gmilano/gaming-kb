@@ -260,30 +260,63 @@ Si el engine es Unreal: `prajwalshettydev/UnrealGenAISupport` (MIT, 686★) es e
 
 ---
 
-## 🆕 Receta 7: Sprint de marcado Art. 50(2) del EU AI Act — **vence el 2-dic-2026**
+## 🆕 Receta 7: Sprint de marcado Art. 50(2) del EU AI Act — **vence el 2-dic-2026 (sólo para el catálogo pre-2-ago-2026)**
 
 **Caso de uso**: un publisher con catálogo en la UE que usó AI generativa en arte
 promocional, copy de marketing o imágenes de juego, y tiene que emitir marcadores
 **visibles y legibles por máquina** sobre contenido ya publicado.
 
 **Por qué ahora**: el Art. 50 del EU AI Act **está vigente desde el 2-ago-2026** (quedó
-fuera del aplazamiento general). Para sistemas **ya puestos en el mercado**, el
-período de gracia del marcado *machine-readable* del **Art. 50(2) termina el 2 de
-diciembre de 2026**. El reloj de alto riesgo (Anexo III) es **otro** y vence el
-**2-dic-2027**: confundirlos es el error más común del mercado.
+fuera del aplazamiento general). Para sistemas **ya puestos en el mercado antes de
+esa fecha**, el período de gracia del marcado *machine-readable* del
+**Art. 50(2) termina el 2 de diciembre de 2026**. El reloj de alto riesgo
+(Anexo III) es **otro** y vence el **2-dic-2027**: confundirlos es el error más
+común del mercado.
+
+🆕 **Base legal, resuelta el 2026-11-21 (cycle 7):** la transición del 2-dic-2026
+se apoya en el **Art. 111(4)**, según 4+ fuentes secundarias independientes y
+concordantes. 🔵 **La fuente primaria no se pudo leer** en esta sesión
+(`digital-strategy.ec.europa.eu` da ENOTFOUND) ⇒ **citar el Art. 111(4) como lo
+que las fuentes dicen y verificarlo contra el texto oficial antes de firmar un
+entregable.**
+
+🔴 **Y el alcance es mucho más chico de lo que esta receta sugería. Tres límites
+que cambian a quién se le vende qué:**
+
+| Límite | Qué significa |
+|--------|---------------|
+| **Sólo el Art. 50(2)** | La transición cubre **únicamente el marcado machine-readable**. **No extiende el Art. 50(1)** —el aviso al jugador de que interactúa con un sistema de AI—, que **vence para todos desde el 2-ago-2026**. Un cliente que creía tener hasta diciembre para su NPC conversacional **está mirando el deadline equivocado** |
+| **Sólo el catálogo pre-2-ago-2026** | Un título **puesto en el mercado después del 2-ago-2026 NUNCA tuvo gracia**: debía marcado **desde el día de su lanzamiento**. ⇒ para un lanzamiento reciente, "quedan 11 días" **oculta un incumplimiento que ya ocurrió** |
+| **Ninguna tecnología obligatoria** | El Acta **no nombra un estándar técnico de marcado**. ⇒ 🔴 **C2PA es una elección de ingeniería defendible, NO un requisito legal.** Se propone por auditabilidad e interoperabilidad y así hay que argumentarlo. Vía formal alternativa: el **Code of Practice on Transparency of AI-Generated Content**; quien no lo suscriba debe demostrar cumplimiento por *"alternative equivalently adequate means"* |
+
+🔴 **La columna que el inventario de la Fase A necesita y no tenía: FECHA DE
+PUESTA EN EL MERCADO.** Es la que decide, por SKU, si el cliente tiene 11 días o
+una brecha abierta desde agosto. Sin esa columna la priorización de la Fase B
+está mal ordenada.
+
+🟢 **Reductor de alcance que ahorra trabajo real:** las guías de la Comisión
+(**20-jul-2026**, **no vinculantes**) dan como ejemplo que la interacción con
+**NPCs de un juego single-player** puede alcanzar el umbral de **"obviedad"** y
+**no requerir disclosure adicional**. Combinado con la clasificación por edad de
+audiencia (Receta 18), el alcance del Art. 50(1) se decide por **modo de juego ×
+audiencia**, no por título.
+
+🔴 **La cifra que mueve la reunión al comité:** sanción de hasta **15 M€ o 3% de
+la facturación mundial anual**, el mayor de los dos.
 
 ---
 
 ### 🔴 REENCUADRE OBLIGATORIO — actualizado **2026-11-21: quedan 11 DÍAS**
 
 Esta receta se escribió el 2026-10-26 como un **sprint de 3-5 semanas** contra el
-2-dic-2026. **Hoy es 2026-11-20 y ese entregable ya no cabe.** Proponerlo tal cual
+2-dic-2026. **Hoy es 2026-11-21, quedan 11 días, y ese entregable ya no cabe.** Proponerlo tal cual
 es vender un incumplimiento con fecha de entrega posterior a la obligación. La
 receta técnica de abajo **sigue siendo correcta y se conserva íntegra** — es lo que
 hay que construir —, pero **el encuadre comercial cambia**:
 
 | Fase | Alcance | Plazo real | Para qué sirve |
 |------|---------|-----------|----------------|
+| 🆕 **0. Partición por fecha de puesta en el mercado** | Separar el catálogo en **pre-2-ago-2026** (tiene hasta el 2-dic) y **post-2-ago-2026** (**debía marcado desde el lanzamiento**). Una consulta a la propia base de releases del cliente. | **Horas.** | 🔴 **Es ahora el primer paso, antes del inventario de assets.** Decide si la conversación es "sprint contra el 2-dic" o "brecha abierta y plan de remediación". Proponer un sprint a un cliente del segundo grupo es diagnosticar mal. |
 | **A. Inventario de exposición** | Qué SKUs del catálogo publicado llevan contenido generado, y qué metadata tienen hoy. Nada de marcado todavía. | **Días, no semanas.** Cabe antes del 2-dic. | Es el entregable que convierte "no sabemos" en "sabemos y está acotado". Sin esto no hay priorización posible. |
 | **B. Marcado del subconjunto crítico** | Sólo lo de mayor riesgo y visibilidad: arte promocional y copy de marketing de los títulos activos. | Parcial al 2-dic. | Reduce exposición real donde más pega. |
 | **C. Plan fechado post-deadline** | El resto del catálogo, con fechas, responsables y la brecha **documentada**. | Posterior al 2-dic. | **Un plan con brecha declarada es lo que un regulador y un auditor valoran**; un cumplimiento fingido es lo que los hunde. |
@@ -1097,6 +1130,168 @@ libera semanas de ingeniería. **Encaja con:** va **antes** de la 7 y de la 13.
 
 ---
 
+## 🆕 Receta 19: QA autónomo con un agente de playtesting open source — **multi-engine, Apache-2.0**
+
+**Caso de uso**: un estudio con un build jugable que necesita cobertura de
+regresión sobre niveles y progresión, y no tiene equipo de QA para repetirlo en
+cada build.
+
+**Por qué ahora**: hasta este pass, la Receta 9 (QA medido) dependía de
+`lmgame-org/GamingAgent`, **congelado desde 2025-11-16**, y de entornos RL que
+hay que entrenar por juego. **Apareció la pieza que faltaba**:
+[ramenvr/autopilot](https://github.com/ramenvr/autopilot) — **Apache-2.0**
+(`LICENSE`, 11358 B), 881★, commit de hoy — un agente de playtesting que
+**aprende el juego y mejora corrida a corrida**, con soporte **UE 5.4–5.8,
+Unity 6, Godot 4 y Roblox Studio** en Windows y macOS.
+
+🟢 **Verificado que el grant cubre fuente real, no un envoltorio de descarga:**
+651 archivos versionados, `plugin/` de 10 MB, **50 `.cpp` / 24 `.h` / 81 `.cs` /
+47 `.gd` / 156 `.py`** y un `.uplugin`.
+
+**Stack**:
+```
+build jugable del cliente (UE5 / Unity 6 / Godot 4 / Roblox Studio)
+    ↓ plugin Autopilot instalado en el proyecto
+ramenvr/autopilot (Apache-2.0)
+    ├── modo plugin        → exploración autónoma, aprende entre corridas
+    └── modo MCP           → el agente de codegen (Claude Code / Codex) PIDE
+                              una sesión de playtest y LEE el resultado
+    ↓ salida
+repro steps + estado al fallo
+    ↓
+LMGame Bench / escenarios propios   ← la capa de MEDICIÓN de la Receta 9
+    ↓
+gate en CI: regresión de progresión por build
+```
+
+**Cómo conectar**:
+1. **Instalar de fuente, no el binario, si el cliente exige auditabilidad.**
+   ⚠️ El camino por defecto del README **descarga builds precompilados de
+   `tryaura.dev`**; el repo soporta compilar desde fuente para Unreal
+   explícitamente. Para un entregable con revisión de seguridad, **compilar**:
+   el grant Apache-2.0 cubre la fuente, no las condiciones del sitio de descarga.
+2. **Empezar por el MCP, no por el plugin.** El valor inmediato no es "QA
+   automático": es que **el agente que escribe el código pueda probar su propio
+   cambio** antes de abrir el PR. Eso cierra el loop de las Recetas 6 y 11.
+3. **Medir con la Receta 9, no con el vendor.** ⚠️ Las cifras de Ramen (**43%
+   más preciso**, **2× más rápido**, **7/7 vs 5/7** en un benchmark de 7 tareas
+   de Unreal) **son del vendor y no están verificadas independientemente**. Se
+   citan como lo que el proyecto declara; el número que va a la propuesta es el
+   medido sobre el juego del cliente.
+4. **Definir qué es un fallo antes de correrlo.** Un agente que explora encuentra
+   *comportamiento inesperado*, no *bugs*. Sin criterio de aceptación escrito, la
+   salida es una lista que nadie tríaga y el proyecto muere en la semana 3.
+
+**Tiempo estimado**: **3-5 días** para el primer loop MCP sobre un build
+existente; **2-3 semanas** para el gate de regresión en CI.
+
+**Encaje regional**: 🟢 **Fuerte en APAC y NA.** En APAC conecta directo con la
+práctica ya declarada por los estudios japoneses (**prohibido que salidas crudas
+de AI lleguen al producto sin revisión**): un agente de QA es AI **que no toca el
+contenido del jugador**, así que **no dispara ni disclosure ni backlash**. En NA
+cae del lado exento de la política de Steam (herramienta de desarrollo).
+
+---
+
+## 🆕 Receta 20: Auditoría de licencias, **versión corregida** — el checksum tríaga, el íncipit dicta
+
+**Caso de uso**: el mismo de las Recetas 10, 14 y 17 — auditar el grant de un
+stack de gaming. **Esta receta no las reemplaza: les corrige tres defectos
+medidos** que producen falsos negativos.
+
+**Por qué existe**: el *checksum de bytes* es la técnica estrella de esta KB y
+este pass la rompió en tres puntos distintos, todos reproducibles.
+
+### Los tres defectos, con el repo donde se midió cada uno
+
+| Defecto | Medición | Falso resultado que produce |
+|---------|----------|-----------------------------|
+| **Apache-2.0 tiene DOS valores válidos** | **11358 B** con `APPENDIX: How to apply` (`open_spiel`, `mujoco`, `autopilot`) vs **10173/10174 B** sin apéndice (`bevy`, `libgdx`). **Δ = 1.185 B = el bloque del apéndice** | 🔴 **Falso negativo**: el checksum heredado (`Apache~11350`) marca a **bevy y libgdx** como "no Apache" — dos de los engines más usados del mundo |
+| **Un conteo POR ENCIMA del canónico es un hallazgo** | **15057 B** en `NVIDIA/Audio2Face-3D-training-framework` = Apache-2.0 **+** un inventario `PORTIONS LICENSED AS FOLLOWS` con **3 dependencias vendorizadas MIT y su ruta** (`audio2face/deps/charsiu/`, `.../motion_diffusion_model/`) | 🔴 **La enumeración de la Receta 17 no lo caza**: encuentra **UN** archivo de licencia y concluye **un** grant. El inventario vive **dentro** del `LICENSE`, no en archivos separados |
+| **El checksum no distingue un grant hecho a medida** | **9977 B** = `Defold License 1.0`, a **196 B** del Apache sin apéndice, y es **Apache verbatim + una restricción de campo de uso** | 🔴 **Falso positivo**: "pesa como Apache" ⇒ se aprueba un grant **que no es open source** |
+
+### El 8º eje de partición: **por rama**
+
+```
+Unity-Technologies/ml-agents — el MISMO archivo, el MISMO repo:
+  develop (rama DEFAULT) → LICENSE.md =    572 B  (aviso corto de Apache)
+  main                   → LICENSE.md = 11.324 B  (texto completo)
+```
+🔴 Leer sólo `HEAD` (que resuelve la default) y concluir *"cabecera-puntero, no
+el texto completo"* es lo que esta KB publicaba. **El texto completo existe, en
+otra rama.** Y esos 572 B **no son un grant deficiente**: son el **boilerplate
+que Apache-2.0 recomienda en su propio apéndice** — el mismo bloque que `bevy` y
+`libgdx` omiten.
+
+### Implementación
+
+```bash
+# audit-grant.sh — reemplaza el núcleo de la Receta 10
+SLUG="$1"
+
+# 1) CANAL 1: existencia + badge + ★ + archived + pushed_at
+gh api -X GET search/repositories -f q="repo:$SLUG"
+#    NOASSERTION / null  -> NO es un veredicto: es la AUSENCIA de uno.
+#    Resolver SIEMPRE por byte-read, y EN LAS DOS DIRECCIONES.
+
+# 2) CANAL 3 primero (enumerar, no sondear)
+gh api -X GET search/code -f q="repo:$SLUG filename:LICENSE"
+#    bevy -> 164 archivos (doble grant replicado por crate)
+#    defold -> 37 (incl. COMPLYING_WITH_LICENSES.md, TOOLS_LICENSES.md)
+#    total_count: 0 -> ver el paso 5
+
+# 3) CANAL 2 por rama, NO sólo HEAD  <-- EL CAMBIO DE ESTA RECETA
+for BR in HEAD main master develop; do
+  for F in LICENSE LICENSE.md LICENSE.txt LICENCE LICENSE-MIT LICENSE-APACHE \
+           COPYING COPYING.txt license.txt LICENSE.rst NOTICE; do
+    curl -sL -o /tmp/l -w "$BR/$F %{http_code} " \
+      "https://raw.githubusercontent.com/$SLUG/$BR/$F"
+    wc -c < /tmp/l; sha256sum /tmp/l    # <-- dedupe POR HASH, no por rama
+  done
+done
+#    < 50 B           -> 404 fantasma (el cuerpo "404: Not Found" son 14 B)
+#    tomar el texto MAS LARGO como el operativo
+
+# 4) Los tres discriminadores que el conteo NO resuelve
+head -c 200 /tmp/l                      # a) EL INCIPIT MANDA. "Defold License"? "Ms-PL"?
+grep -c "APPENDIX: How to apply" /tmp/l # b) explica 11358 vs 10173 en Apache
+awk '/END OF TERMS AND CONDITIONS/{f=1} f' /tmp/l   # c) TODO lo que viene despues
+                                        #    son CLAUSULAS ANADIDAS. Leerlas.
+
+# 5) Si no hay NINGUN archivo de licencia: NO es permisivo por defecto
+#    htdt/godogen_assets -> 69 archivos versionados, 0 licencias, 2 canales de acuerdo
+#    SIN GRANT = PROHIBIDO. Exclusion dura, no "a revisar".
+```
+
+### ⚠️ Defecto del instrumento que hay que conocer: `raw` aliasea `master` → `main`
+
+`ml-agents` **no tiene** `refs/heads/master` y aun así
+`raw/.../master/LICENSE.md` devuelve **200 con los bytes de `main`**; una rama
+inventada devuelve **404**. ⇒ el bucle de arriba **cuenta el mismo archivo dos
+veces**, y *"lo encontré en master"* **no prueba que `master` exista**. Por eso
+el `sha256sum`: **deduplicar por contenido, no por nombre de rama.**
+
+### El resultado que esta receta produce y las anteriores no
+
+| Repo | Badge | Veredicto real por byte-read | Dirección |
+|------|-------|------------------------------|-----------|
+| `cocos/cocos-engine` | `NOASSERTION` | **MIT** (1164 B = 2 líneas de copyright) | 🟢 permisivo detrás del badge |
+| `panda3d/panda3d` | `NOASSERTION` | **BSD-3-Clause** (1569 B, se auto-declara en prosa al final) | 🟢 permisivo detrás del badge |
+| `bevyengine/bevy` | `Apache-2.0` | **MIT *o* Apache-2.0** (164 archivos de licencia) | 🟢 **el badge SUB-declara el grant** |
+| `defold/defold` | `NOASSERTION` | 🔴 **`Defold License 1.0`**, field-of-use | 🔴 restrictivo |
+| `minerllabs/minerl` | `NOASSERTION` | 🔴 **CC-BY-NC-SA 4.0** | 🔴 **NonCommercial** |
+| `htdt/godogen_assets` | `null` | 🔴 **ningún grant** | 🔴 prohibido |
+
+> 📐 **La regla de una línea, para copiar a toda la familia de KBs:**
+> **el badge no es el grant, el conteo de bytes no es el grant, y la rama default
+> no es el repo.** El grant es el texto, y hay que leerlo — en todas las ramas y
+> en todos los archivos que la enumeración devuelva.
+
+**Tiempo estimado**: **medio día** sobre un stack ya inventariado; **1 día** si
+hay que enumerar por rama en más de 20 repos.
+
+---
+
 ## Tabla resumen
 
 | Patrón | Stack principal | Esfuerzo | ROI esperado |
@@ -1119,15 +1314,17 @@ libera semanas de ingeniería. **Encaja con:** va **antes** de la 7 y de la 13.
 | 🆕 16 · **Gate de licencia para packs de skills y prompts** | `gate-skills.sh` + 3 discriminadores de bytes + awesome-gamedev-agent-skills (Apache-2.0 + `NOTICE`, 9.929★) | **1-2 días** + 0,5 día/repo | 🔴 **3 de 6 packs de gaming nuevos >400★ son copyleft** y entran con un `cp -r`: ningún gate de dependencias los ve |
 | 🆕 17 · **Auditoría de grant por ENUMERACIÓN** | `gh api search/code filename:LICENSE` + `THIRD_PARTY_NOTICES` + discriminador de byte-identidad + regla del modelo base | **1 día/stack** | 🟢 **4 de 12** repos recomendados tenían grant no representado (LimboAI = MIT + **CC BY 4.0**); Matrix-Game: **7** archivos, no 2; **1er grant de pesos verificado** de la KB |
 | 🆕 18 · **Clasificación de audiencia por edad antes del Art. 50** | Columna PEGI/ESRB en el inventario de la R7 + edad como parámetro de runtime (no constante de build) | **2-3 días** | 🟢 Libera semanas de ingeniería: la obligación europea **depende de la audiencia**, no de tener un NPC |
+| 🆕 19 · **QA autónomo con agente de playtesting OSS** | [ramenvr/autopilot](https://github.com/ramenvr/autopilot) (Apache-2.0, 881★, UE 5.4–5.8 / Unity 6 / Godot 4 / Roblox) + MCP + LMGame Bench | **3-5 días** (loop MCP) · 2-3 semanas (gate CI) | 🟢 Reemplaza la dependencia de `GamingAgent`, **congelado desde 2025-11-16**. Cierra el loop de las R6/R11: el agente que escribe el código **prueba su propio cambio**. ⚠️ Compilar de fuente si hay revisión de seguridad; las cifras del vendor no están verificadas |
+| 🆕 20 · **Auditoría de licencias CORREGIDA** | Canal 3 → canal 2 **por rama** + dedupe por `sha256` + 3 discriminadores (íncipit / apéndice / texto post-`END OF TERMS`) | **medio día** por stack | 🔴 **Corrige 3 defectos medidos del checksum**: Apache tiene **dos** valores válidos (falso negativo en `bevy` y `libgdx`), un conteo **por encima** del canónico son cláusulas añadidas (NVIDIA 15057 B), y **9977 B ≠ Apache** (`Defold License`, field-of-use). 8º eje: **partición por rama** (`ml-agents` 572 B vs 11.324 B) |
 
 ### Cuál proponer según la región del engagement
 
 | Región | Receta de entrada | Por qué |
 |--------|-------------------|---------|
-| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 🆕 18 (clasificar audiencia), luego 7 reencuadrada (inventario), luego 17, 10 y 15** · 🆕 **11 días** | Fecha legal dura **a 12 días** y un segundo reloj en 2-dic-2027. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
-| **North America** | 🆕 **13** primero si hay NPC conversacional, luego **6** y **9**, luego 2, **17** y **10** · 🆕 **16 obligatoria** si el entregable incluye packs de skills | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 🆕 **55%** de los devs ve la gen AI como daño (GDC nov-2026; era 52%) y ~85% de los jugadores la rechaza. 🆕 **Adopción estadounidense estancada: 36%→38%, dentro del margen de error** ⇒ acá se vende *primer paso*, no escala. 🆕 **Y ya hay obligación de runtime: Receta 13.** **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". |
-| **APAC** | **8** y **11**, luego 7 adaptada, **17**, **10** y 🆕 **15** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; 🔴 **HY-World 2.0 sí publica licencia — `License.txt` — y excluye EU, UK y Corea**). 🆕 **Adopción japonesa 85,8% con 63% de uso diario (CESA 2026, 1.349 respuestas)** ⇒ acá no se vende adopción: se vende **gobernanza, escala y evaluación de calidad de salidas** (la preocupación nº1 declarada es precisión/calidad, 51,9%). |
-| **LATAM** | **1**, **3**, **5** y **12** (y **13** sólo si se publica en EE.UU.; **16** si el entregable lleva packs de skills) | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad (PGB Latam 2026), y Ubisoft acaba de ponerle titular. 🆕 **El único compliance con fecha en LATAM es publicitario, no de producto: guía CONAR de Brasil en vigor desde el 1-jun-2026** (el PL 2338/2023 sigue trabado en la Cámara ⇒ **no hay ley general de AI en vigor**). |
+| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 🆕 FASE 0 de la R7 (partir el catálogo por fecha de puesta en el mercado), luego 18 (clasificar audiencia), luego 7 reencuadrada, luego 20, 17 y 15** · 🆕 **quedan 11 días** | Fecha legal dura **a 11 días** (2-dic-2026) y un segundo reloj en 2-dic-2027. 🆕 **Y el alcance es más chico de lo que vendíamos: el 2-dic cubre SÓLO el Art. 50(2) y SÓLO el catálogo puesto en el mercado antes del 2-ago-2026** (base legal citada: **Art. 111(4)**). Un título lanzado después **nunca tuvo gracia** y el Art. 50(1) **vence para todos desde agosto** ⇒ la Fase 0 decide si es un sprint o una remediación. 🆕 **C2PA no es obligatorio: el Acta no nombra tecnología de marcado.** 🆕 Sanción **15 M€ / 3%**. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
+| **North America** | 🆕 **13** primero si hay NPC conversacional, luego **6** y **9**, luego 2, **17** y **10** · 🆕 **16 obligatoria** si el entregable incluye packs de skills | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 🆕 **55%** de los devs ve la gen AI como daño (GDC nov-2026; era 52%) y ~85% de los jugadores la rechaza. 🆕 **Adopción estadounidense estancada: 36%→38%, dentro del margen de error** ⇒ acá se vende *primer paso*, no escala. 🆕 **Y ya hay obligación de runtime: Receta 13.** **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". 🆕 **Añadir 19** (QA con agente OSS): cae del lado **exento** de Steam. 🆕 **Y el dato de rechazo del jugador está en conflicto y hay que llevar las dos cifras:** ~85% de rechazo en abstracto (Quantic Foundry) **pero 43% de ~3.800 usuarios de Steam no tiene problema en comprar un juego con disclosure** (GameDiscoverCo) ⇒ **la fricción de compra medida es mucho menor que el rechazo declarado**, y ésa es la objeción nº1 que frena la R7. 🆕 Censo de **53.597 releases**: 10,9% (2024) → 19,9% (2025) → 30,8% (2026 a julio); **47% de los títulos con <10 reviews declaran AI vs 14% de los de ≥1.000** ⇒ para un AAA, declarar lo pone en el 14%: conversación de **riesgo de marca**. |
+| **APAC** | **8** y **11**, luego 7 adaptada, **17**, **10** y 🆕 **15** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; 🔴 **HY-World 2.0 sí publica licencia — `License.txt` — y excluye EU, UK y Corea**). 🆕 **Adopción japonesa 85,8% con 63% de uso diario (CESA 2026, 1.349 respuestas)** ⇒ acá no se vende adopción: se vende **gobernanza, escala y evaluación de calidad de salidas** (la preocupación nº1 declarada es precisión/calidad, 51,9%). 🆕 **Corea entra con cifra propia: 77,5% de 120 empresas** (KOCCA Q2-2026) y *"AI skills"* como **prioridad nº1 de contratación**; **JOGA: 100%** de las empresas japonesas de juego online. 🆕 **Y la práctica declarada del cliente YA coincide con nuestro entregable:** los estudios japoneses **restringen qué herramientas usa el personal** y **prohíben que salidas crudas lleguen al producto** ⇒ **15 y 16 no hay que justificarlas, hay que implementarlas**, y **19** es AI que no toca contenido de jugador. |
+| **LATAM** | **1**, **3**, **5** y **12** (y **13** sólo si se publica en EE.UU.; **16** si el entregable lleva packs de skills) | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad (PGB Latam 2026), y Ubisoft acaba de ponerle titular. 🆕 **El único compliance con fecha en LATAM es publicitario, no de producto: guía CONAR de Brasil en vigor desde el 1-jun-2026** (el PL 2338/2023 sigue trabado en la Cámara ⇒ **no hay ley general de AI en vigor**). 🆕 **El constraint está nombrado por la industria y no es tecnológico: es FINANCIAMIENTO** ⇒ **el entregable tiene que pagarse solo dentro del trimestre**; un programa a 12 meses no tiene de dónde financiarse, una R1/R3 acotada sí. 🆕 **Estructura: Brasil ~13.225 devs / ~1.042 estudios activos** (el talento), **México 72,6 M de jugadores = 61% de la población 6+** (el jugador) — **son dos conversaciones distintas**. ⚫ **Cero medido con dos instrumentos: no existe encuesta de adopción de gen AI por estudios LATAM** ⇒ la cifra vendible de la región sigue siendo de **jugadores**, no de estudios. |
 
 ---
 *Pass **2026-11-21 (cycle 6)**: recetas nuevas **16** (gate de licencia para
@@ -1170,3 +1367,26 @@ nuevas de este pass: **10** (auditoría de licencias con checksum de bytes),
 **11** (pipeline de estudio con agentes por rol), **12** (capacidad elástica con
 Agones). Receta **7 reencuadrada** porque su deadline pasó de 5 semanas a 12 días.
 Receta **6 corregida** en la elección de MCP para Unity y Godot.*
+
+---
+*Pass **2026-11-21 (cycle 7)**: recetas nuevas **19** (QA autónomo con
+[ramenvr/autopilot](https://github.com/ramenvr/autopilot), Apache-2.0 verificado
+sobre fuente real — 651 archivos, 50 cpp/81 cs/47 gd/156 py —, multi-engine
+UE 5.4–5.8 / Unity 6 / Godot 4 / Roblox Studio y con MCP, que **reemplaza la
+dependencia de `GamingAgent` congelado desde 2025-11-16**) y **20** (auditoría de
+licencias **corregida**: el checksum de bytes tiene **tres defectos medidos** —
+Apache-2.0 con **dos** valores legítimos 11358/10173 que producen **falso
+negativo en `bevy` y `libgdx`**; un conteo **por encima** del canónico = cláusulas
+añadidas, con el inventario de dependencias vendorizadas **dentro** del
+`LICENSE` de NVIDIA, 15057 B, que la enumeración de la R17 no caza; y la
+`Defold License 1.0` a **196 bytes** del Apache sin apéndice, que el conteo no
+puede distinguir — más el **8º eje de partición del grant: por RAMA**,
+`ml-agents` con el mismo `LICENSE.md` en **572 B en `develop`** y **11.324 B en
+`main`**, y el defecto de instrumento **`raw` aliasea `master`→`main`** que
+obliga a deduplicar por hash). **Receta 7 reencuadrada por TERCERA vez**, ahora
+con base legal (**Art. 111(4)**) y una **Fase 0** nueva y previa al inventario:
+partir el catálogo por **fecha de puesta en el mercado**, porque el 2-dic-2026
+cubre **sólo el Art. 50(2)** y **sólo lo anterior al 2-ago-2026** — un título
+lanzado después **nunca tuvo período de gracia**, y el Art. 50(1) vence para
+todos desde agosto. **C2PA queda explícitamente como elección de ingeniería, no
+como requisito legal** (el Acta no nombra tecnología de marcado). 2026-11-21.*

@@ -12,6 +12,107 @@ updated: 2026-11-21
 
 ---
 
+## 🆕 2026-11-21 — pass cycle 7
+
+> Tercer pass del día. **Igual que en los cycles 5 y 6, no se reportan deltas de
+> ★**: una hora no mueve una estrella de forma interpretable. Lo que este pass
+> aporta no es crecimiento, es **cobertura** — y el hallazgo es que la cobertura
+> estaba peor de lo que seis passes de verificación de licencias podían detectar.
+
+### 🔴 El evento del pass: la KB tenía un agujero de 158.000 ★ y ninguna sonda podía verlo
+
+El cycle 6 formuló la regla *"una sonda sólo confirma lo que ya sospechabas; sólo
+la enumeración te dice lo que te faltaba"* y la aplicó a los archivos de licencia
+**dentro** de cada repo. Aplicada a **la lista de repos**, aparecieron de golpe
+8 engines y 2 frameworks de RL que esta KB **nunca había listado en 6 passes**,
+encabezados por **`bevyengine/bevy` (49.914 ★, release 0.20 el 8-oct-2026)**.
+
+**La causa es el vocabulario, no el esfuerzo:** todas las consultas de esta KB
+tienen forma de problema ("NPC con LLM", "MCP para engines", "agentes que
+juegan"). Un engine de propósito general **no responde a ningún problema
+concreto** y por eso no aparece nunca. Ver `repos/foundations.md` para el censo
+completo y `agents/top.md` para las reglas de método nº14–16.
+
+### 🟢 Agentes nuevos con licencia leída en bytes (6)
+
+| Agente | Repo | Licencia (bytes) | Señal | ★ |
+|--------|------|------------------|-------|---|
+| **Aura Autopilot** | [ramenvr/autopilot](https://github.com/ramenvr/autopilot) | **Apache-2.0** (11358) | 🟢 **La novedad más relevante del pass para vender.** Agente de playtesting OSS para **UE 5.4–5.8 / Unity 6 / Godot 4 / Roblox Studio**, con MCP para Claude Code y Codex. Anunciado ~30-oct-2026; **commit de hoy**. Fuente real verificada (651 archivos, 50 cpp / 81 cs / 47 gd / 156 py) | 881 |
+| **Godogen** | [htdt/godogen](https://github.com/htdt/godogen) | **MIT** (1077) | **El pack de skills de gaming más estrellado que existe — y es MIT.** Contraejemplo a la tendencia 16. Cubre Godot, **Bevy**, Babylon.js, three.js. Commit de hoy | **7.378** |
+| **godogen_assets** | [htdt/godogen_assets](https://github.com/htdt/godogen_assets) | 🔴 **ninguna** (0 archivos de licencia / 69 versionados) | ⛔ La dependencia **sin grant** que Godogen instala. Ver abajo | 2 |
+| **Voyager** | [MineDojo/Voyager](https://github.com/MineDojo/Voyager) | **MIT** (1070) | ⚠️ Hueco histórico cerrado **como referencia, no como base**: `pushed_at` 2024-04-03, **2 años 8 meses congelado** | 7.339 |
+| **Mindcraft** | [kolbytn/mindcraft](https://github.com/kolbytn/mindcraft) | **MIT** (1073) | Recuperado del cycle 3, que **se perdió por quedar en commit local sin push**. 🔵 Sin ★: ausente del índice de `search/repositories` | n/d |
+| **OpenGameAgent** | [EricSun0218/OpenGameAgent](https://github.com/EricSun0218/OpenGameAgent) | **MIT** (1096) | Runtime TS para personajes AI-native. push 2026-11-17. Señal temprana, 61 ★ | 61 |
+
+### 🔴 La ruta de contaminación nueva, y es peor que el copyleft: **la ausencia de grant**
+
+La tendencia 16 de esta KB dice que *el copyleft se mudó hacia arriba del stack,
+a los packs de skills*. Este pass encuentra la variante **más peligrosa y menos
+visible**:
+
+```
+htdt/godogen  (MIT, 7.378 ★)   ← el pack que el cliente instala
+      │  su README: "el agente te instala godogen_assets en tu GPU"
+      ▼
+htdt/godogen_assets  (2 ★)     ← 69 archivos versionados, CERO archivos de licencia
+      │  su README: requiere token de Hugging Face cuya cuenta haya
+      ▼                           aceptado la licencia de stable-audio-3-small-sfx
+modelos gated de terceros
+```
+
+🔴 **Sin licencia no hay permiso.** Un repo sin grant no es "permisivo por
+defecto": por derecho de autor **no se puede copiar, modificar ni redistribuir**.
+Y el vehículo de entrega es un pack **MIT con 7.378 ★**, es decir el que *pasa*
+cualquier gate de licencia que mire sólo el repo que el cliente nombró.
+
+**Confirmado por dos canales independientes** (no por un 404 mal leído):
+`find` sobre el clon → 0 resultados; `search/code repo:htdt/godogen_assets
+filename:LICENSE` → `total_count: 0`.
+
+> 📐 **Consecuencia para la Receta 16** (gate de licencia para packs de skills):
+> el gate no puede parar en el repo del pack. Tiene que **seguir las
+> instrucciones de instalación del pack** y auditar lo que el agente va a
+> clonar. Un pack es un **instalador**, y se audita como un instalador.
+
+### 🟢 El dato que corrige a esta página sobre NVIDIA ACE
+
+Esta KB cita **ACE en 8 archivos** desde el cycle 3 y **nunca había leído un
+grant**. `NVIDIA/Audio2Face-3D` (574 ★) resulta ser un **repo-señalizador sin
+código**: 3 entradas versionadas, 0 licencias, y las licencias de los componentes
+**declaradas en prosa en una tabla HTML del README**. Leídos los componentes:
+SDK **MIT** (1097), Training Framework **Apache-2.0 + 3 porciones MIT
+vendorizadas** (15057), Maya ACE **MIT** (1098). 🟢 Los tres usables. ⚠️ El
+plugin de UE5 que el README declara MIT **no tiene repo enlazado**: gap, no fila.
+
+### ⛔ Candidatos nuevos rechazados (para no re-gastar la búsqueda)
+
+| Candidato | Motivo medido |
+|-----------|---------------|
+| [minerllabs/minerl](https://github.com/minerllabs/minerl) | Badge `NOASSERTION` → **CC-BY-NC-SA 4.0** (20850 B). **NonCommercial = exclusión dura.** Congelado (2025-01-22). Es el entorno RL de Minecraft que la literatura recomienda por defecto ⇒ **un cliente lo va a proponer** |
+| [SillyTavern/SillyTavern](https://github.com/SillyTavern/SillyTavern) | **AGPL-3.0** (34523 B). 35.925 ★ y front-end dominante de roleplay con personajes: se anota para poder contestar, no para construir |
+| GameReverie | 🔵 **Gap declarado, no rechazo**: descrito como Codex Skill MIT (sep-2026) en fichas de lanzamiento, **sin slug resoluble** (`search/repositories` → 0). Sin repo verificable no se escribe fila |
+
+### Método y control negativo de este pass
+
+- **Canal 1** `search/repositories` (★/`archived`/`pushed_at`/badge SPDX): OK.
+  Control negativo heredado sigue válido (422 para slug inexistente).
+- **Canal 2** byte-read en `raw`: OK. 🧪 **Defecto nuevo encontrado:** `raw`
+  **aliasea `master` → la rama default renombrada**. `ml-agents` no tiene
+  `refs/heads/master` y sin embargo `raw/.../master/LICENSE.md` devuelve **200 y
+  bytes idénticos a `main`**; una rama inventada devuelve 404. ⇒ un bucle de
+  sondas sobre `main` y `master` **cuenta el mismo archivo dos veces**.
+  Deduplicar por contenido.
+- **Canal 3** `search/code` (enumeración): OK, y es el que confirmó el cero de
+  `godogen_assets` y los **164** archivos de licencia de `bevy`.
+- 🔴 **WebFetch está muerto para hosts arbitrarios en esta sesión** (ENOTFOUND):
+  `dlapiper.com`, `github.blog`, `digital-strategy.ec.europa.eu`, `orrick.com`.
+  La API de `huggingface.co` responde **vacío**. ⇒ la licencia de **pesos** de
+  Audio2Face **sigue sin poder leerse**, y el Art. 50 del AI Act **no pudo
+  verificarse en fuente primaria** (ver `intel/market.md`: se resolvió con 4+
+  secundarias concordantes que citan el **Art. 111(4)**).
+
+---
+
 ## 🆕 2026-11-21 — pass cycle 6 (≈1 h después del cycle 5)
 
 > ⏱️ **Advertencia de instrumento, y es la entrada más importante de esta

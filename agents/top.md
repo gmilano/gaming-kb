@@ -7,8 +7,14 @@ updated: 2026-11-21
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-21 (pass cycle 6)**. Passes previos: 2026-11-21
-> (cycle 5), 2026-11-20, 2026-10-26, 2026-07-02.
+> Última actualización: **2026-11-21 (pass cycle 7)**. Passes previos: 2026-11-21
+> (cycle 6), 2026-11-21 (cycle 5), 2026-11-20, 2026-10-26, 2026-07-02.
+>
+> 🔴 **Lo que este pass cambia de raíz:** los seis passes anteriores afinaron
+> *cómo leer una licencia*. Este pass descubre que **la lista de repos sobre la
+> que se aplicaba esa lectura tenía un agujero de 50.000 ★** — y que el checksum
+> de bytes, la técnica estrella de la casa, **produce falsos negativos medidos**.
+> Ver los hallazgos nº1, nº2 y nº3.
 >
 > ⏱️ **Este pass corre ~1 hora después del anterior. No mide crecimiento: no
 > puede.** Ninguna ★ se movió de forma interpretable en 60 minutos, así que **no
@@ -47,6 +53,192 @@ updated: 2026-11-21
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## Lo más importante del pass 2026-11-21 (cycle 7): **la regla del pass anterior, aplicada un nivel más arriba**
+
+El pass cycle 6 cerró con la regla central de esta familia de KBs:
+
+> *"Una sonda sólo puede confirmar lo que ya sospechabas. Sólo la enumeración te
+> dice lo que te faltaba."*
+
+La aplicó a **los archivos de licencia dentro de un repo**. Este pass la aplica a
+**la lista de repos misma** — y ahí la KB estaba tan sesgada como el inventario
+de sondas que la regla describe.
+
+🔴 **El hallazgo:** esta KB tenía **117 slugs** y **seis passes**, y no tenía
+`bevyengine/bevy` — **49.914 ★, commit de anteayer, el segundo engine open source
+más estrellado del mundo después de Godot.** Tampoco `phaserjs/phaser` (40.756 ★),
+ni `raysan5/raylib` (35.758 ★), ni `libgdx/libgdx` (25.553 ★), ni
+`google-deepmind/open_spiel` (5.603 ★, el framework de referencia de RL en juegos).
+
+**Por qué se escaparon, y es un defecto de método, no de suerte:** todas las
+consultas de esta KB tienen forma de **problema** ("NPC con LLM", "MCP para
+engines", "agentes que juegan", "licencias que bloquean"). Un **engine de
+propósito general no responde a ningún problema en particular**, así que no
+aparece en ninguna búsqueda — por más veces que se busque. `bevy` sólo figuraba
+en esta KB como la palabra *"paridad Bevy"* **dentro de la descripción de un pack
+de skills ajeno**.
+
+> 📐 **Regla de método nº14 — el chequeo de inventario plano.** Toda KB a partir
+> de su tercer pass debe gastar **una consulta por pass** en un **censo contra
+> los incumbentes obvios** de la industria, sin forma de problema: "los 10
+> engines open source más usados", "las 10 plataformas de X". Un vocabulario de
+> problemas tiene un punto ciego **con la forma exacta de un producto**.
+> *(La KB de enterprise llegó a la misma conclusión de forma independiente al
+> descubrir que le faltaba `google/adk-python` con 22.295 ★. Dos industrias, el
+> mismo agujero: no es casualidad, es el método.)*
+
+---
+
+## 🔴 Hallazgo nº2: el **checksum de bytes** —la técnica estrella de esta KB— tiene tres defectos medidos, y dos producen falsos negativos
+
+El checksum heredado dice `Apache~11350`. Este pass midió **tres valores legítimos
+distintos de Apache-2.0** y uno que **no es Apache y cae a 196 bytes de él**:
+
+| Bytes | Qué es | Medido en | Consecuencia |
+|-------|--------|-----------|--------------|
+| **11358** | Apache-2.0 **canónico**, con `APPENDIX: How to apply` + boilerplate | `open_spiel`, `mujoco`, `ramenvr/autopilot` | Es el valor que el checksum conocía |
+| **10173 / 10174** | Apache-2.0 **sin el apéndice** — el texto termina en `END OF TERMS AND CONDITIONS` | `bevyengine/bevy`, `libgdx/libgdx` | 🔴 **FALSO NEGATIVO**: el checksum heredado los habría marcado como "no Apache". Δ = **1.185 B = exactamente el bloque del apéndice** |
+| **15057** | Apache-2.0 **+ texto añadido dentro del mismo archivo** | `NVIDIA/Audio2Face-3D-training-framework` | 🔴 Un conteo **por encima** del canónico significa **cláusulas añadidas** y obliga a leer. Acá son 3 dependencias vendorizadas MIT (Charsiu, MDM, OpenAI Guided Diffusion) declaradas bajo `PORTIONS LICENSED AS FOLLOWS`, **con su ruta** (`audio2face/deps/...`) |
+| **9977** | 🔴 **NO es Apache**: `Defold License Version 1.0, May 2020` | `defold/defold` | Está a **196 B** del Apache sin apéndice. **El checksum no puede distinguirlos.** |
+
+> 📐 **Regla de método nº15 — el checksum tríaga, el íncipit dicta.** Un conteo de
+> bytes **acota el candidato**; nunca lo resuelve. Tres correcciones concretas:
+> 1. **Apache-2.0 tiene dos valores válidos**, con y sin apéndice (~11358 / ~10173).
+>    Usar sólo uno descarta mal.
+> 2. Un conteo **por encima** del canónico es **tan informativo como uno por
+>    debajo**: significa texto añadido. Leerlo siempre.
+> 3. La **primera línea** es el único dato que separa un grant estándar de uno
+>    hecho a medida. `Defold` copia Apache palabra por palabra y le cambia el
+>    nombre y una cláusula.
+
+### 🔴 `defold/defold` (6.476 ★): la restricción que apunta a Globant, no al cliente
+
+El badge dice `NOASSERTION`. El byte-read dice `Defold License 1.0` (9977 B), que
+es **Apache-2.0 verbatim** (diff a nivel palabra: 127 palabras de diferencia sobre
+1.413) más **una definición y una cláusula**:
+
+```
+"Game Engine Product" shall mean software used for video game development. This
+includes both the content authoring software and the software used to show the
+created content.
+...
+4. a) You do not sell or otherwise commercialise the Work or Derivative Works as
+a Game Engine Product; and
+```
+
+🔴 **Es una restricción de campo de uso** ⇒ **falla el punto 6 de la Open Source
+Definition** ⇒ **source-available, no open source**, por mucho que el cuerpo sea
+Apache.
+
+🟢 **Y el matiz comercial es el inverso del habitual en esta KB:** un estudio que
+**hace un juego** con Defold está perfectamente dentro del grant. Quien choca con
+la cláusula es **quien vende herramientas de autoría** — es decir, **exactamente
+el entregable "pipeline de desarrollo asistido por AI" que esta KB propone en las
+Recetas 6 y 11.** Es la única licencia del inventario cuya restricción apunta al
+**modelo de negocio de la consultora** y no al del cliente. Si el entregable es un
+autoring tool, Defold está fuera; si es un juego, está dentro.
+
+---
+
+## 🔴 Hallazgo nº3: `Unity-Technologies/ml-agents` — **un 8º eje de partición del grant: por RAMA**, y una corrección a lo que esta KB publicaba
+
+Esta KB publica, en `repos/foundations.md` y en `repos/trending.md`:
+
+> *`Apache-2.0` (`LICENSE.md`, 572 — **cabecera-puntero, no el texto completo**)*
+
+Medido hoy, el **mismo nombre de archivo** en el **mismo repo**:
+
+| Rama | `LICENSE.md` | Qué contiene |
+|------|-------------|--------------|
+| **`develop`** ← rama **default** | **572 B** | El **aviso corto** de Apache ("Licensed under the Apache License, Version 2.0... You may obtain a copy at...") |
+| `main` | **11.324 B** | El **texto completo** de Apache-2.0 |
+
+🔴 **Dos correcciones, no una:**
+1. **El texto completo existe** — está en `main`. La KB leyó sólo la rama default
+   (`HEAD` la resuelve sola) y concluyó "no está el texto completo", que es cierto
+   *de esa rama* y falso *del repo*.
+2. **"Cabecera-puntero" sugiere un grant deficiente, y no lo es.** Esos 572 B son
+   el **boilerplate que Apache-2.0 recomienda** en su propio apéndice — el mismo
+   bloque que `bevy` y `libgdx` omiten de su `LICENSE`. Es un grant válido y
+   completo por referencia. **No hay nada que arreglar en ml-agents; había algo
+   que arreglar en nuestra lectura.**
+
+> 📐 **Regla de método nº16 — el grant puede partirse por rama.** Un archivo de
+> licencia **corto no es un grant incompleto**: puede ser un artefacto de rama.
+> Sondear `HEAD` **y** `main` **y** `master`, comparar bytes, y tomar **el texto
+> más largo como el operativo**. 20× de diferencia en el mismo nombre de archivo
+> del mismo repo, medido.
+
+### 🧪 Defecto de instrumento encontrado dentro de este pass: `raw` **aliasea `master` → `main`**
+
+Al verificar lo anterior: `ml-agents` **no tiene** `refs/heads/master`
+(`git ls-remote` lista `develop`, `main`, `hotfix-bump-version-master`,
+`master-limitation-docs`, `master-project-upgrade`, `master-reward-providers`,
+`master-tracking` — ninguna es `master`). Y sin embargo:
+
+```
+raw.githubusercontent.com/Unity-Technologies/ml-agents/master/LICENSE.md
+  → HTTP 200, 11.324 B, byte-idéntico a main
+raw.githubusercontent.com/Unity-Technologies/ml-agents/zzz-no-such-branch/LICENSE.md
+  → HTTP 404   ← control negativo
+```
+
+⇒ **`raw` resuelve `master` como alias de la rama default renombrada.** Un bucle
+de sondas sobre `main` y `master` **cuenta el mismo archivo dos veces** y hace
+creer que existe una rama que no existe. 🔴 **"Lo encontré en `master`" no es
+prueba de que `master` exista.** Deduplicar por **hash de contenido**, no por
+nombre de rama.
+
+---
+
+## 🆕 Agentes nuevos verificados este pass (cycle 7)
+
+★, `archived` y `pushed_at` leídos con canal 1 el **2026-11-21**; grant leído en
+bytes con status HTTP; multiplicidad de archivos de licencia enumerada con canal 3.
+
+| Nombre | Repo | Licencia (archivo, bytes) | Descripción | ★ |
+|--------|------|---------------------------|-------------|---|
+| 🆕 🟢 **Aura Autopilot** | [ramenvr/autopilot](https://github.com/ramenvr/autopilot) | **Apache-2.0** (`LICENSE`, 11358) | **El agente de playtesting open source que esta KB venía pidiendo.** Sistema de playtesting general que aprende el juego y mejora corrida a corrida. Soporta **UE 5.4–5.8, Unity 6, Godot 4 y Roblox Studio**, Windows y macOS, y expone un **MCP** usable desde Claude Code o Codex. Commit de hoy. 🟢 **Verificado que el grant cubre fuente real, no un envoltorio**: 651 archivos, `plugin/` de 10 MB, 50 `.cpp` / 24 `.h` / 81 `.cs` / 47 `.gd` / 156 `.py` y un `.uplugin`. ⚠️ **El camino de instalación por defecto descarga binarios precompilados de `tryaura.dev`**, no del repo: para un cliente que exige auditabilidad hay que **compilar de fuente** (el README lo soporta explícitamente para Unreal). Las cifras de rendimiento (43% más preciso, 2×, 7/7 vs 5/7) **son del vendor y no están verificadas independientemente**. | 881 |
+| 🆕 🟢 **Godogen** | [htdt/godogen](https://github.com/htdt/godogen) | **MIT** (`LICENSE.md`, 1077) | Dos skills para Claude Code / Codex / Antigravity: **`engine-guide`** (Godot C#/GDScript, **Bevy**, Babylon.js, three.js, HTML — cómo elegir, captura headless a screenshot y vídeo, y las trampas que fallan sin error) y **`asset-gen`** (sprites, 3D texturizado, humanoides riggeados, SFX y voz). Commit de hoy. **El pack de skills de gaming más estrellado que existe, y es MIT** ⇒ **contraejemplo medido a la tendencia 16** (el copyleft subiendo a la capa de skills): la cima de esa capa es permisiva. 🔴 **Pero ver el hallazgo nº4: te instala una dependencia sin licencia.** | **7.378** |
+| 🆕 ⚫ **godogen_assets** | [htdt/godogen_assets](https://github.com/htdt/godogen_assets) | 🔴 **SIN LICENCIA — ningún grant** (69 archivos versionados, **0** archivos de licencia) | El motor de generación local de assets de Godogen (Blender, imagen, mesh, rig, motion, lipsync, sfx, voz vía `bin/*`). **Dos canales independientes concuerdan**: `find` sobre el clon → 0 resultados; `search/code repo:htdt/godogen_assets filename:LICENSE` → `total_count: 0`. ⛔ **Sin licencia no hay permiso**: no se puede copiar, modificar ni redistribuir en un entregable de cliente. Además exige un token de Hugging Face cuya cuenta haya **aceptado la licencia de `stabilityai/stable-audio-3-small-sfx`** (único modelo *gated*). | 2 |
+| 🆕 **OpenGameAgent** | [EricSun0218/OpenGameAgent](https://github.com/EricSun0218/OpenGameAgent) | **MIT** (`LICENSE`, 1096) | Runtime TypeScript para **personajes y mundos AI-native**. Muy nuevo (push 2026-11-17) y muy chico: **se anota como señal temprana, no como base recomendada**. | 61 |
+| 🆕 ⚠️ **Voyager** | [MineDojo/Voyager](https://github.com/MineDojo/Voyager) | **MIT** (`LICENSE`, 1070) | El agente LLM *open-ended* de Minecraft (currículo automático + skill library + prompting iterativo): **la implementación de referencia más citada de "LLM que juega"**, y un hueco histórico de esta KB. 🔴 **`pushed_at` = 2024-04-03: 2 años y 8 meses sin un commit.** Todo roundup de 2026 lo sigue recomendando. ⇒ **9º caso en esta KB+energy+enterprise de "archivado/congelado pero recomendado"**, y otra vez el patrón: lo recomienda la documentación adyacente al proyecto, nunca una fuente independiente. **Leer el paper y la skill library; no forkear como base viva.** | 7.339 |
+| 🆕 **Mindcraft** | [kolbytn/mindcraft](https://github.com/kolbytn/mindcraft) | **MIT** (`LICENSE`, 1073) | Framework de agentes LLM en Minecraft (multi-agente, colaboración, construcción). 🔵 **No se cita ★**: el repo **no está en el índice de `search/repositories`** (igual que `ossf/gemara` en la KB de enterprise), aunque `ls-remote` lo da vivo y la licencia se leyó en bytes. **Un repo ausente del índice no es un repo inexistente — pero inventarle una cifra sería peor que no darla.** 🔴 Figuraba en el cycle 3 (ago-2026) y **se perdió**: ese pass quedó en commit local sin push. | n/d |
+
+### 🟢 NVIDIA ACE / Audio2Face-3D: la KB lo citaba en 8 archivos sin un solo grant leído
+
+`NVIDIA/Audio2Face-3D` (574 ★) **no tiene licencia porque no tiene código**: 3
+entradas versionadas (`README.md`, `RELEASE.md`, `media/`) y **cero** archivos de
+licencia. Es un **repo-señalizador** que declara las licencias de sus componentes
+**en prosa, dentro de una tabla HTML del README**. Leídas en bytes, una por una:
+
+| Componente | Repo | Licencia (archivo, bytes) | ★ | `pushed_at` |
+|------------|------|---------------------------|---|-------------|
+| **A2F-3D SDK** | [NVIDIA/Audio2Face-3D-SDK](https://github.com/NVIDIA/Audio2Face-3D-SDK) | **MIT** (`LICENSE.txt`, 1097) | 238 | 2025-08-28 |
+| **A2F-3D Training Framework** | [NVIDIA/Audio2Face-3D-training-framework](https://github.com/NVIDIA/Audio2Face-3D-training-framework) | **Apache-2.0 + 3 porciones MIT vendorizadas** (`LICENSE`, **15057**) | 125 | 2025-10-15 |
+| **Maya ACE** | [NVIDIA/Maya-ACE](https://github.com/NVIDIA/Maya-ACE) | **MIT** (`LICENSE.txt`, 1098) | 103 | 2026-02-05 |
+
+🟢 **Veredicto: los tres son usables comercialmente** y las 3 porciones
+vendorizadas del training framework (Charsiu, MDM, OpenAI Guided Diffusion) son
+**todas MIT**, así que no hay contaminación. ⚠️ **El plugin de UE5 que el README
+lista como MIT no tiene repo de GitHub enlazado** — se distribuye por otra vía y
+**su grant no se pudo leer**: queda como gap declarado, no como fila MIT.
+⚠️ **Y la prosa del README no es el grant**: acertó en los tres casos
+verificables, pero se verificó, no se adoptó.
+
+### ⚫ Candidatos nuevos **rechazados** este pass, con motivo medido
+
+| Candidato | Repo | Motivo | ★ |
+|-----------|------|--------|---|
+| **minerl** | [minerllabs/minerl](https://github.com/minerllabs/minerl) | Badge `NOASSERTION` → byte-read: **CC-BY-NC-SA 4.0** (`LICENSE`, 20850). 🔴 **`NonCommercial`: exclusión dura** para cualquier entregable de cliente. Además congelado (push 2025-01-22). Es el entorno RL de Minecraft que la literatura académica recomienda por defecto. | 981 |
+| **SillyTavern** | [SillyTavern/SillyTavern](https://github.com/SillyTavern/SillyTavern) | **AGPL-3.0** (`LICENSE`, 34523 — **el checksum heredado `AGPL~34500` acertó**). Es el front-end dominante de roleplay con personajes y **un cliente va a preguntar por él**: se anota para poder responder, fuera de la ruta permisiva. | 35.925 |
+| **GameReverie** | — | 🔵 **GAP, no rechazo.** Varias fichas de lanzamiento (Product Hunt, prensa de nicho) lo describen como *Codex Skill* **MIT** para desarrollo de juegos multi-agente, sep-2026. **No tiene slug resoluble**: `search/repositories q=gamereverie` → `total_count: 0`, y ninguna fuente publica la URL del repo. **No se escribe fila sin repo verificable.** | n/d |
+
+
+---
+
+## 📜 Passes anteriores
 
 ## 🔴 Hallazgo nº1 del pass: el canal de enumeración existe, y lo primero que encuentra es que **Matrix-Game tiene 7 archivos de licencia, no 2**
 

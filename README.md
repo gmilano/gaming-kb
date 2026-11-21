@@ -1,3 +1,9 @@
+---
+industry: gaming
+region: Global
+updated: 2026-11-21
+---
+
 # 🎮 Gaming KB
 
 > Knowledge base de la industria **Gaming** para Globant AI Studios.
@@ -20,6 +26,26 @@ gaming-kb/
 1. **Nuevo engagement**: leer `intel/market.md` + `repos/foundations.md`
 2. **Proponer solución AI**: `agents/top.md` + `compose/patterns.md`
 3. **Mantenerse al día**: correr `ingest/update.sh` semanalmente
+
+## Cómo leer esta KB
+
+- **`agents/trending.md` y `repos/trending.md` son APPEND-ONLY.** Cada pass
+  agrega una sección fechada arriba y conserva la historia debajo: la historia
+  es el dato.
+- **Toda licencia de esta KB está leída en bytes del archivo del repo**, no
+  tomada del badge de la API. Las reglas de método viven en `agents/top.md` y el
+  procedimiento ejecutable en `compose/patterns.md` → **Receta 20**.
+  🔴 **Tres cosas que esta KB aprendió a no confiar: el badge no es el grant, el
+  conteo de bytes no es el grant, y la rama default no es el repo.**
+- **Las oportunidades de `intel/market.md` están organizadas bajo un único
+  encabezado `## Opportunities by region`** con una subsección por región
+  (North America / EMEA / APAC / LATAM). **Los gaps se escriben como gaps**: un
+  cero medido es información, un silencio parece cobertura.
+- ⚠️ **"Gaming" es ambiguo en fuentes regulatorias**: las consultas con esa
+  palabra devuelven la industria del **juego de azar**. El material de *iGaming*
+  de esta KB está etiquetado como carril separado y **no debe mezclarse con
+  videojuegos**. Para investigar la industria, el instrumento correcto dice
+  **"video game"**.
 
 ---
 *Red de KBs Globant AI Studios → [globant-kb](../globant-kb/)*

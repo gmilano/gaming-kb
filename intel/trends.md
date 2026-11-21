@@ -465,6 +465,117 @@ Es el **tercer** movimiento del mismo tipo que esta KB registra en 48 horas:
 > orquestación es **`agones-dev/agones`**, no OpenGB. OpenGB no está
 > desmantenido: **dejó de existir como producto de gaming.**
 
+### 19. 🆕 🔴 El riesgo de licencia dejó de ser copyleft y pasó a ser **ausencia de licencia**, y entra por el pack permisivo
+
+La tendencia 16 de este archivo (el copyleft subiendo al pack de skills) describe
+un riesgo **visible**: un `LICENSE` que dice LGPL o AGPL, que cualquiera puede
+leer. Este pass encuentra la variante que **ningún gate detecta**, y en el pack
+de skills de gaming **más estrellado que existe**:
+
+```
+htdt/godogen          MIT, 7.378 ★   ← lo que el cliente instala y lo que el gate audita
+   │ README: "el agente instala godogen_assets en tu GPU"
+   ▼
+htdt/godogen_assets   2 ★            ← 69 archivos versionados, CERO licencia
+   ▼
+modelos gated de terceros (stable-audio-3-small-sfx exige aceptar su licencia)
+```
+
+🔴 **Un repo sin grant no es "permisivo por defecto": es "prohibido por
+defecto".** Por derecho de autor, sin licencia **no hay permiso** para copiar,
+modificar ni redistribuir. Y el vehículo es un repo **MIT con 7.378 estrellas**,
+es decir el que **pasa limpio** cualquier auditoría que mire el repo que el
+cliente nombró.
+
+**Confirmado por dos canales independientes**, no por un 404 mal leído: `find`
+sobre el clon → 0; `search/code repo:htdt/godogen_assets filename:LICENSE` →
+`total_count: 0`.
+
+> **Consecuencia de método (modifica la Receta 16):** un pack de skills es un
+> **instalador**, y se audita como un instalador. El gate tiene que **seguir las
+> instrucciones de instalación** y auditar lo que el agente va a clonar en
+> tiempo de setup, no sólo el árbol del repo declarado. 🟢 Y hay un punto de
+> control natural nuevo: [vercel-labs/skills](https://github.com/vercel-labs/skills)
+> (MIT, 40.334 ★) es la CLI por la que estos packs se instalan.
+
+---
+
+### 20. 🆕 🔴 El sentimiento del jugador tiene dos cifras irreconciliables, y la diferencia **es** el producto
+
+Este archivo y `intel/market.md` vienen sosteniendo **~85% de rechazo del
+jugador** a la AI en juegos (Quantic Foundry, ~2M de jugadores). Este pass mide
+lo contrario en dos muestras distintas:
+
+| Fuente | Qué pregunta | Resultado |
+|--------|--------------|-----------|
+| Quantic Foundry (~2M jugadores) | Actitud hacia la AI en juegos, **en abstracto** | **~85% de rechazo** |
+| GameDiscoverCo (~3.800 usuarios de Steam) | **Comprarías** un juego con disclosure de AI en Steam | **43% no tiene problema** |
+| Misma familia de datos, otra lectura | ¿Tenés problema con la AI en juegos? | **sólo 31% sí** |
+
+🔵 **No se elige una cifra, y no es un error de nadie: miden cosas distintas.**
+El rechazo declarado en abstracto y la decisión de compra ante una etiqueta
+concreta **son dos variables diferentes**, y la brecha entre ambas es grande y
+sistemática.
+
+🟢 **Y la brecha es el argumento comercial:** significa que **la etiqueta cuesta
+mucho menos de lo que el discurso público sugiere**, que es precisamente la
+objeción nº1 con la que un publisher frena la Receta 7. ⇒ **llevar las dos
+cifras a la reunión y nombrar la diferencia** es más creíble que citar la
+conveniente, y evita que el cliente aparezca con la otra. ⚠️ Ninguna de las
+muestras está desagregada por región.
+
+---
+
+### 21. 🆕 🟡 La adopción declarada por developers va de 29% a 90% según cómo se pregunte
+
+Cuatro cifras de 2026, todas defendibles, todas incompatibles:
+
+| Fuente | Muestra | Cifra |
+|--------|---------|-------|
+| GDC *State of the Game Industry 2026* | 2.300+ profesionales | **≈36%** |
+| Otra encuesta 2026 | n/d | **29%** (bajando desde 36%) |
+| Sondeo de Google Cloud | 615 developers | **~90%** "usa AI de alguna forma" |
+| CESA (Japón) | 1.349 respuestas | **85,8%**, 63% a diario |
+
+🔴 **La horquilla 29–90% no es ruido de muestreo: es el redactado de la
+pregunta.** *"¿Usás gen AI en tu trabajo?"* y *"¿hay AI en algún punto de tu
+pipeline?"* describen dos mercados distintos — y el segundo incluye autocompletado
+de código, que casi nadie llama "AI en el pipeline".
+
+> 📐 **Regla: pedir el redactado antes de citar el número.** Esta KB ya tenía la
+> regla *"un número sin su muestra no es un número"* (cycle 5). Este pass le
+> agrega la segunda mitad: **un número sin su pregunta tampoco lo es.** Y la
+> consecuencia de venta es concreta: la cifra alta sirve para argumentar
+> *gobernanza* (ya está pasando, sin control), la baja para argumentar
+> *habilitación* (todavía no escaló). **Elegir según lo que se vende, declarando
+> cuál se usó.**
+
+---
+
+### 22. 🆕 🟢 APAC pasó de un país con cifra propia a dos, y aparece la práctica que se puede implementar
+
+- **Japón**: CESA **85,8%** (1.349 respuestas), **63% a diario**; **JOGA: 100%**
+  de las empresas de juego online encuestadas, Gemini la herramienta más común.
+- 🆕 **Corea**: **77,5% de 120 empresas de juego** usan gen AI (**KOCCA**,
+  Q2-2026), y **"AI skills" es la prioridad nº1 de contratación** del sector.
+
+⇒ La tesis de esta KB —*"en APAC no se vende adopción, se vende gobernanza,
+escala y evaluación de calidad"*— **dejó de apoyarse en un solo país**.
+
+🟢 **Y lo nuevo y más vendible: los estudios japoneses ya declaran los controles
+que esta KB sabe construir** — **restringen qué herramientas puede usar el
+personal** y **prohíben que salidas crudas de AI lleguen al producto** sin
+revisión. **Primera vez en esta KB que la práctica declarada del cliente coincide
+exactamente con un entregable ya escrito** (Recetas 15 y 16, gates en el pipeline
+de build). No hay que convencer de la necesidad: hay que implementar lo decidido.
+
+⚫ **Y el hueco más caro de la región: China.** Con el instrumento corregido
+(*"video game"* en vez de *"gaming"*), **ninguna cifra de adopción de estudios
+chinos** — siendo el mercado con el régimen vinculante más desarrollado y el
+origen de los world models punteros. **Cero de medición, no de mercado.**
+
+---
+
 ## En el radar (emergente, 2026-2027)
 
 | Tendencia | Señal verificada | Estado |
@@ -528,6 +639,22 @@ Es el **tercer** movimiento del mismo tipo que esta KB registra en 48 horas:
 - **Oferta OSS de origen LATAM**: buscada explícitamente en español apuntando a
   estudios brasileños y argentinos. **Cero repos de gaming AI.** Detalle y
   denominador en `intel/market.md` → LATAM.
+- 🆕 **Fuente primaria del EU AI Act: sigue sin leer, y ahora con el motivo
+  medido.** `digital-strategy.ec.europa.eu`, `orrick.com`, `dlapiper.com` y
+  `github.blog` dan **ENOTFOUND** en esta sesión (WebFetch no resuelve hosts
+  arbitrarios); la API de `huggingface.co` responde **vacío**. 🟢 **Pero el
+  2-dic-2026 quedó resuelto a nivel de artículo** (**Art. 111(4)**) por 4+
+  secundarias independientes y concordantes — ver `intel/market.md` → EMEA.
+  **Verificar contra el texto oficial antes de cualquier entregable firmado.**
+- 🆕 **Adopción de gen AI por estudios LATAM: cero medido con dos instrumentos.**
+  No existe encuesta por país ni por tamaño. El informe Xsolla/GamesBeat
+  *State of the LATAM Games Industry 2026* está *gated*.
+- 🆕 **Adopción de estudios chinos: cero medido.** Ver tendencia 22.
+- 🆕 **Licencia de los *pesos* de NVIDIA Audio2Face-3D: no resoluble.** Los
+  modelos están en Hugging Face y la API del host responde vacío. El **código**
+  sí quedó leído en bytes (MIT / Apache-2.0 + 3 porciones MIT).
+- 🆕 **Plugin de UE5 de Audio2Face-3D:** el README de NVIDIA lo declara **MIT**
+  pero **no enlaza repo de GitHub**. Sin slug no hay byte-read ⇒ **gap, no fila**.
 
 ---
 *Fuentes añadidas 2026-11-20: análisis independiente del censo Steam (~63.600
@@ -570,3 +697,26 @@ política), WH Partners (*Same NPC, Different Rules* — Art. 50 por edad de
 audiencia), PGB Latam vía gamescom latam (Gen Z mexicana 51,8%), CAC China
 (>550 servicios registrados a mediados de 2026), Gabinete de Japón (AI Basic
 Plan del 14-jul-2026). 2026-11-21.*
+
+---
+*Pass 2026-11-21 (cycle 7) — tendencias 19, 20, 21 y 22 agregadas. Fuentes
+nuevas: KOCCA (Korea Creative Content Agency, Q2-2026, 77,5% de 120 empresas);
+JOGA vía prensa japonesa (100% de empresas de juego online, Gemini);
+GameDiscoverCo (~3.800 usuarios de Steam, 43% sin problema de compra);
+GDC *State of the Game Industry 2026* (2.300+ respondentes, ≈36%); sondeo de
+Google Cloud (615 developers, ~90%); censo de Steam de 53.597 releases
+(30,8% 2026-hasta-julio / 19,9% 2025 / 10,9% 2024, y 47% vs 14% por tamaño de
+título); encuesta de 826 trabajadores (9/10 quieren más que un sí/no, 28,4%
+conforme con sí/no); comentario legal concordante sobre **Art. 111(4)** y la
+transición del Art. 50(2) al 2-dic-2026, guías no vinculantes de la Comisión del
+20-jul-2026 (umbral de "obviedad" en NPCs single-player), sanción de 15 M€ / 3%,
+Code of Practice on Transparency of AI-Generated Content; Video Games Europe
+(escrito del 3-jun-2026) y EGDF (prioridades 2026); imarc y Xsolla/GamesBeat
+(estructura de mercado LATAM: Brasil ~13.225 devs / ~1.042 estudios, México
+72,6 M jugadores = 61% de 6+); PNUD vía prensa sectorial (rezago LAC).
+**24 repos nuevos verificados en tres canales**, 23 licencias leídas en bytes,
+4 badges `NOASSERTION` resueltos en ambas direcciones, 1 fila corregida
+(`ml-agents`, grant partido por rama) y 1 gap declarado sin fila (GameReverie).
+⚠️ El informe **UNLV/KPMG "State of AI in Gaming 2026" (83 empresas) es un
+benchmark de *gambling***, no de videojuegos: esta KB ya lo etiquetaba así y se
+confirma. 2026-11-21.*

@@ -11,6 +11,97 @@ updated: 2026-11-21
 
 ---
 
+## 🆕 2026-11-21 — pass cycle 7
+
+> Sin deltas de ★ por la misma razón que en los cycles 5 y 6 (una hora no mueve
+> una estrella). Lo que cambia este pass es **el tamaño del universo medido**.
+
+### 🔴 El evento del pass: **8 engines y 2 frameworks de RL que esta página nunca listó**
+
+Un censo plano contra los incumbentes obvios —una consulta formulada como
+**categoría** y no como problema— devolvió repos que seis passes de verificación
+no habían tocado porque **nunca los habían buscado**:
+
+| Repo | Licencia (archivo, bytes) | ★ | `pushed_at` |
+|------|---------------------------|---|-------------|
+| [bevyengine/bevy](https://github.com/bevyengine/bevy) | **MIT** (`LICENSE-MIT`, 1036) **o** **Apache-2.0** (`LICENSE-APACHE`, 10173) | **49.914** | 2026-11-20 |
+| [phaserjs/phaser](https://github.com/phaserjs/phaser) | **MIT** (`LICENSE.md`, 1100) | **40.756** | 2026-08-21 |
+| [raysan5/raylib](https://github.com/raysan5/raylib) | **Zlib** (`LICENSE`, 877) | **35.758** | 2026-11-21 |
+| [libgdx/libgdx](https://github.com/libgdx/libgdx) | **Apache-2.0** (`LICENSE`, 10174) | **25.553** | 2026-11-19 |
+| [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) | **Apache-2.0** (`LICENSE`, 11358) | 18.369 | 2026-11-21 |
+| [flame-engine/flame](https://github.com/flame-engine/flame) | **MIT** (`LICENSE`, 1067) | 10.821 | 2026-11-21 |
+| [cocos/cocos-engine](https://github.com/cocos/cocos-engine) | **MIT** (`LICENSE.md`, 1164) · badge `NOASSERTION` | 9.941 | 2026-10-28 |
+| [defold/defold](https://github.com/defold/defold) | 🔴 **`Defold License 1.0`** (`LICENSE.txt`, 9977) · badge `NOASSERTION` | 6.476 | 2026-11-21 |
+| [google-deepmind/open_spiel](https://github.com/google-deepmind/open_spiel) | **Apache-2.0** (`LICENSE`, 11358) | 5.603 | 2026-11-14 |
+| [panda3d/panda3d](https://github.com/panda3d/panda3d) | **BSD-3-Clause** (`LICENSE`, 1569) · badge `NOASSERTION` | 5.280 | 2026-07-28 |
+
+**158.000 ★ acumuladas, 4 de ellas por encima de las 25.000.** Ninguna había sido
+sondeada nunca: no es un fallo de verificación, es un fallo de **vocabulario de
+búsqueda**. Ver la regla nº14 en `repos/foundations.md`.
+
+### 🆕 Trending verificado este pass (nuevo y vivo)
+
+| Repo | Licencia (bytes) | Por qué está acá | ★ |
+|------|------------------|------------------|---|
+| [ramenvr/autopilot](https://github.com/ramenvr/autopilot) | **Apache-2.0** (11358) | Agente de playtesting OSS multi-engine (UE 5.4–5.8, Unity 6, Godot 4, Roblox Studio) + MCP. Commit de hoy | 881 |
+| [htdt/godogen](https://github.com/htdt/godogen) | **MIT** (1077) | Pack de skills de game dev más estrellado que existe. Commit de hoy | **7.378** |
+| [vercel-labs/skills](https://github.com/vercel-labs/skills) | **MIT** (`LICENSE`, 1069) | 🆕 **La capa de distribución de los packs de skills**, que esta KB no tenía: `npx skills add <owner>/<repo>` instala en `.agents/skills/` para Codex y Antigravity con enlaces desde `.claude/skills/`. Es el **punto de control natural del gate de la Receta 16** | **40.334** |
+| [EricSun0218/OpenGameAgent](https://github.com/EricSun0218/OpenGameAgent) | **MIT** (1096) | Runtime TS para personajes AI-native. push 2026-11-17 | 61 |
+
+### 🔴 Las tres correcciones al **checksum de bytes** de esta casa
+
+El checksum heredado (`MIT~1100 / Apache~11350 / AGPL~34500`) se validó en 2 de 3
+y **falló en Apache**, en dos direcciones:
+
+1. **Apache-2.0 tiene dos valores legítimos**: **11358** (canónico, con
+   `APPENDIX: How to apply`) y **10173/10174** (el texto termina en `END OF TERMS
+   AND CONDITIONS`). **Δ = 1.185 B = el bloque del apéndice.** Con el checksum
+   heredado, `bevy` y `libgdx` se habrían marcado **mal** como "no Apache".
+2. **Un conteo por encima del canónico es un hallazgo, no ruido:**
+   `NVIDIA/Audio2Face-3D-training-framework` = **15057 B** = Apache-2.0 + un
+   inventario `PORTIONS LICENSED AS FOLLOWS` de **3 dependencias vendorizadas
+   MIT con su ruta**, dentro del mismo archivo. 🔴 **La enumeración de la Receta
+   17 no lo caza**: encuentra **un** archivo de licencia y concluye un grant.
+3. **El checksum no puede distinguir un grant hecho a medida:** la
+   `Defold License 1.0` son **9977 B**, a **196 bytes** del Apache sin apéndice,
+   y es Apache verbatim con una **restricción de campo de uso** añadida.
+
+🟢 **`AGPL~34500` confirmado** por `SillyTavern` (34523 B). **`MIT~1100`
+confirmado exacto** por `phaser` (1100 B), con la variación esperada por número
+de líneas de copyright (`cocos-engine` 1164 B = dos titulares).
+
+### 🧪 Defecto de instrumento nuevo: `raw` **aliasea `master` → `main`**
+
+`Unity-Technologies/ml-agents` **no tiene** `refs/heads/master` (sus ramas son
+`develop`, `main`, `hotfix-bump-version-master`, `master-limitation-docs`,
+`master-project-upgrade`, `master-reward-providers`, `master-tracking`). Y aun
+así:
+
+```
+raw/.../ml-agents/master/LICENSE.md       → 200, 11.324 B, idéntico a main
+raw/.../ml-agents/zzz-no-such-branch/...  → 404   (control negativo)
+```
+
+⇒ **"lo encontré en `master`" no prueba que `master` exista.** Un bucle de sondas
+`main`+`master` **cuenta dos veces el mismo archivo**. Deduplicar por hash de
+contenido, no por nombre de rama.
+
+### 📋 Censo de verificación de este pass
+
+- **24 repos nuevos** pasados por los 3 canales; **24/24 vivos** vía
+  `git ls-remote`; **0 archivados**.
+- **23/24 licencias leídas en bytes.** La excepción es
+  `NVIDIA/Audio2Face-3D`, que **no tiene ninguna** (y eso *es* el hallazgo).
+- **2 repos fuera del índice** de `search/repositories` (`kolbytn/mindcraft`,
+  y `htdt/godogen_assets` sólo por `search/code`): **no se les inventó ★**.
+- **4 badges `NOASSERTION` resueltos por byte-read en las dos direcciones**:
+  🟢 permisivos → `cocos-engine` (MIT), `panda3d` (BSD-3-Clause);
+  🔴 restrictivos → `defold` (field-of-use), `minerl` (CC-BY-NC-SA).
+- **1 corrección a una fila publicada**: `ml-agents` (grant partido por rama).
+- **1 gap declarado sin fila**: GameReverie (sin slug resoluble).
+
+---
+
 ## 🆕 2026-11-21 — pass cycle 6 (≈1 h después del cycle 5)
 
 > ⏱️ **Una hora no es un intervalo de medición. Este pass no reporta un solo

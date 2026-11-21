@@ -14,6 +14,26 @@ updated: 2026-11-21
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
 
+## 🔴 Lo que cambió — pass cycle 7 (2026-11-21)
+
+> Tercer pass del día. **Ninguna cifra heredada se reescribe por antigüedad.** Lo
+> que este pass aporta en mercado son **tres cosas**: (1) la base legal exacta del
+> único deadline que esta KB vende, (2) un **defecto del instrumento regional**
+> que explica por qué EMEA y LATAM venían devolviendo material de *gambling*, y
+> (3) **cifras propias nuevas para APAC** y un **cero medido** para LATAM.
+
+| Qué | Dato | Por qué cambia la conversación |
+|-----|------|-------------------------------|
+| 🔴 **El 2-dic-2026 tiene base legal, y un alcance mucho más chico del que vendíamos** | El Art. 50 **aplica desde el 2-ago-2026**. El 2-dic-2026 es una **transición del Art. 50(2) (marcado *machine-readable*) y SÓLO para sistemas puestos en el mercado ANTES del 2-ago-2026**; la base legal que citan las fuentes es el **Art. 111(4)**. **No extiende el Art. 50(1)** (disclosure al jugador), que vence desde agosto | ⇒ **La Receta 7 necesita una columna nueva y decisiva: ¿el título se puso en el mercado antes o después del 2-ago-2026?** Si es **después, nunca tuvo período de gracia** y el cliente **ya está en incumplimiento** — el encuadre "quedan 11 días" se lo oculta. Ver el reencuadre nº3 en `compose/patterns.md` |
+| 🔴 **El AI Act no impone ninguna tecnología de marcado** | Las fuentes coinciden en que el Acta **no nombra un estándar técnico** | ⇒ **C2PA es una elección defendible, no un requisito legal.** Decir "hay que usar C2PA para cumplir" es vender una preferencia como obligación. Se propone *porque* es auditable e interoperable, y así hay que argumentarlo |
+| 🟡 **Las guías de la Comisión son del 20-jul-2026 y NO son vinculantes** | Y citan como ejemplo que la interacción con un **NPC de un juego single-player** puede alcanzar el umbral de **"obviedad"** y **no requerir disclosure adicional** | ⇒ Refuerza y precisa el hallazgo del cycle 6 (la edad de la audiencia): el alcance del Art. 50(1) se decide por **modo de juego + audiencia**, y hay base para **no etiquetar** en el caso más común del catálogo |
+| 🔴 **Sanción con número** | Hasta **15 M€ o 3% de la facturación mundial anual**, el mayor de los dos | Es la cifra que mueve la conversación del equipo legal al comité. Esta KB no la tenía |
+| 🧪 **Defecto del instrumento regional, y explica 2 passes de ruido** | La consulta obligatoria `AI {industry} {region} 2026 adoption regulation players` con `industry=gaming` devuelve **la industria del juego de azar**, no videojuegos: el informe **UNLV/KPMG "State of AI in Gaming 2026" (83 empresas) es un benchmark de *gambling*** | 🟢 Esta KB **ya etiquetaba bien** ese material como carril separado — no hay contaminación que corregir. Pero **sustituir "gaming" por "video game" en la consulta regional cambió el conjunto de resultados por completo** y produjo los hallazgos de Corea, JOGA y el censo de Steam de abajo. **Regla nº17: en esta industria, el instrumento regional debe decir "video game".** |
+| 🟢 **APAC gana dos cifras propias que no estaban** | **Corea: 77,5% de 120 empresas de juego usan gen AI** (KOCCA, Q2-2026), y *"AI skills"* como **prioridad nº1 de contratación**. **JOGA: 100% de las empresas japonesas de juego online encuestadas** usan gen AI, Gemini la herramienta más común | Japón ya tenía su 85,8% (CESA). **Corea es el segundo mercado de APAC con cifra propia** ⇒ la tesis "APAC no se vende adopción, se vende gobernanza" ahora tiene **dos países**, no uno |
+| ⚫ **LATAM: cero medido en adopción por estudios** | Buscado con **dos instrumentos** (`AI gaming LATAM...` y `Latin America video game developers AI 2026 Brazil Mexico Argentina studios adoption`): **ninguna encuesta de adopción de gen AI por estudios LATAM**, ni por país ni por tamaño | Es un **cero medido, no un silencio**. Lo que sí hay es **estructura de mercado** (abajo). La cifra vendible de LATAM sigue siendo de **jugadores** (48,8% / 51,8% Gen Z), no de estudios |
+
+---
+
 ## 🔴 Lo que cambió en ~1 h — pass cycle 6 (2026-11-21)
 
 > ⏱️ Este pass corre ~1 hora después del cycle 5. **Ninguna cifra de mercado
@@ -174,6 +194,47 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 2026-11-21 (cycle 7) — el censo de Steam se puede citar con su muestra, y el sentimiento del jugador entra en conflicto
+
+- 🟢 **El 49,9% de octubre ahora tiene censo detrás, con numerador y
+  denominador.** Un censo de **53.597 releases** da **30,8% de los juegos
+  publicados en 2026 hasta julio** con disclosure de AI, contra **19,9% (2025)**
+  y **10,9% (2024)**. El **49,9% de octubre-2026** es el dato mensual (≈2× el
+  26,4% del mismo mes del año anterior). ⇒ **la serie es la venta, no el pico**:
+  10,9 → 19,9 → 30,8 es una pendiente que un comité entiende sin discusión.
+- 🔴 **Y el sesgo por tamaño de título está medido, lo que invierte el pitch:**
+  **47%** de los títulos con **menos de 10 reviews** declaran AI, contra **14%**
+  de los que tienen **1.000 o más**. ⇒ **el disclosure es inversamente
+  proporcional al tamaño del estudio**, confirmando por tercera vez el hallazgo
+  de esta KB. Para un cliente AAA, declarar lo pone en el 14%: **la conversación
+  no es técnica, es de riesgo de marca**, y hay que llevarla preparada.
+- ⚠️ **Dato de método que hay que decir en la sala: el disclosure de Steam es
+  autodeclarado y no auditado.** Mide **lo que los estudios eligieron declarar**,
+  no uso real de AI. Cualquier proyección de mercado construida sobre esa serie
+  hereda ese sesgo.
+- 🔴 **CONFLICTO DECLARADO, no resuelto — el rechazo del jugador.** Esta KB
+  publica **~85% de rechazo** (Quantic Foundry) como dato central de NA. Este
+  pass encuentra lo contrario en dos muestras distintas: **43% de ~3.800
+  usuarios de Steam no tiene problema en comprar un juego con disclosure de AI**
+  (GameDiscoverCo), y otra lectura del mismo material dice que **sólo 31% sí
+  tiene problema**. 🔵 **No se elige una cifra**: miden cosas distintas
+  (rechazo declarado en abstracto vs. decisión de compra ante una etiqueta
+  concreta) y es exactamente la distinción que importa comercialmente.
+  ⇒ **Para la propuesta: el rechazo abstracto es alto, la fricción de compra
+  medida es mucho menor.** Usar las dos cifras y nombrar la diferencia es más
+  creíble que citar la que convenga — y evita que el cliente llegue con la otra.
+- 🟡 **La adopción declarada por los devs tiene tres números y el conflicto es de
+  pregunta, no de realidad:** GDC 2026 (**2.300+** respondentes) **≈36%**; otra
+  encuesta 2026 **29%** (bajando desde 36%); y un sondeo de **Google Cloud a 615
+  developers** da **~90%** "usa AI de alguna forma". ⇒ **La horquilla 29–90% no
+  es ruido: es el redactado de la pregunta.** "¿Usás gen AI en tu trabajo?" y
+  "¿hay AI en algún punto de tu pipeline?" son dos mercados distintos. **Pedir
+  siempre el redactado antes de citar el número.**
+- 🟢 **9 de cada 10 trabajadores de la industria quieren MÁS disclosure que un
+  sí/no** (muestra de **826**; sólo **28,4%** cree que un sí/no alcanza). ⇒ el
+  **reporte de cobertura fechado** de la Receta 7 no es sólo un entregable
+  regulatorio: es lo que la propia plantilla del cliente pide.
+
 #### 🆕 2026-11-21 (cycle 6) — tres piezas que faltaban: el múltiplo, el tamaño del mercado y la brecha regulador-industria
 
 - 🟢 **El argumento de valuación es un argumento de North America.** La tesis de
@@ -313,6 +374,58 @@ declarado; usar con la regla de la muestra de arriba.
 | **Anti-fraude conductual** | Carril iGaming NA con supervisión activa. | GNNs sobre red de jugadores + detección server-side. |
 
 ### EMEA
+
+#### 🆕 2026-11-21 (cycle 7) — el deadline que esta KB vende tiene por fin su base legal, y un alcance mucho más chico
+
+- 🔴 **Resuelto el 2-dic-2026, con artículo.** El **Art. 50 aplica desde el
+  2-ago-2026**. El **2-dic-2026** es una **transición acotada**: cubre
+  **únicamente el Art. 50(2)** —el marcado *machine-readable*— y **sólo para
+  sistemas puestos en el mercado o en servicio ANTES del 2-ago-2026**. La base
+  legal que citan las fuentes de forma concordante es el **Art. 111(4)**.
+  🔵 **Cuatro+ fuentes secundarias independientes coinciden y nombran el mismo
+  artículo**; la **fuente primaria no se pudo leer** (`digital-strategy.ec.europa.eu`
+  y las firmas legales dan **ENOTFOUND** en esta sesión). ⇒ **se cita el
+  Art. 111(4) como lo que las fuentes dicen, y se verifica contra el texto
+  oficial antes de cualquier entregable firmado.**
+- 🔴 **La consecuencia reencuadra la Receta 7 por tercera vez, y en contra del
+  cliente:** un título **lanzado después del 2-ago-2026 NUNCA tuvo período de
+  gracia** — debía marcado **desde el día de su puesta en el mercado**. El
+  encuadre "quedan 11 días" **sólo aplica al catálogo viejo** y, aplicado a un
+  lanzamiento reciente, **oculta un incumplimiento que ya ocurrió**. ⇒ **el
+  inventario necesita una columna nueva: fecha de puesta en el mercado, antes o
+  después del 2-ago-2026.** Es la columna que decide si el cliente tiene 11 días
+  o una brecha abierta hace meses.
+- 🟢 **Y la transición no toca el Art. 50(1):** la obligación de avisar al
+  jugador que habla con un sistema de AI **vence desde agosto para todos**. Un
+  cliente que creía tener hasta diciembre para su NPC conversacional **está
+  mirando el deadline equivocado**.
+- 🟢 **El AI Act no impone ninguna tecnología de marcado.** ⇒ **C2PA es una
+  elección de ingeniería defendible, no un requisito legal.** Esta KB debe
+  proponerlo por auditabilidad e interoperabilidad, **nunca** como "lo que la ley
+  exige". Hay además una vía formal alternativa: el **Code of Practice on
+  Transparency of AI-Generated Content**; quien no lo suscriba debe demostrar
+  cumplimiento por *"alternative equivalently adequate means"*.
+- 🟡 **Las guías de la Comisión son del 20-jul-2026 y NO son vinculantes**, y dan
+  un ejemplo que **reduce alcance en el caso más común del catálogo**: la
+  interacción con **NPCs de un juego single-player** puede alcanzar el umbral de
+  **"obviedad"** y **no requerir disclosure adicional**. Combinado con el
+  hallazgo del cycle 6 (la edad de la audiencia), el alcance del Art. 50(1) se
+  decide por **modo de juego × audiencia**, no por título.
+- 🔴 **Sanción, con número:** hasta **15 M€ o 3% de la facturación mundial anual**,
+  el mayor de los dos. Es la cifra que esta KB no tenía y la que convierte la
+  Receta 7 de proyecto técnico en punto de comité.
+- 🟢 **La industria europea ya está en la mesa:** **Video Games Europe** presentó
+  su escrito a la consulta de las guías del Art. 50 el **3-jun-2026**, y la
+  **EGDF** lleva tres prioridades 2026 —*human-led AI*, mercados justos y
+  **soberanía europea**— incluyendo **etiquetado más claro del contenido
+  asistido por AI**. ⇒ para un cliente europeo, el etiquetado **no es una
+  imposición externa**: su propia federación lo está pidiendo. Cambia el tono de
+  la reunión.
+- ⚫ **Gap que sigue abierto, y es el mismo del cycle 6:** ninguna cifra de
+  **adopción o sentimiento de jugadores europeos**. Buscado otra vez, ahora con
+  el instrumento corregido (*"video game"* en lugar de *"gaming"*). **EMEA sigue
+  siendo la región con el gancho regulatorio más fuerte y la evidencia de
+  demanda más débil de esta KB.**
 
 #### 🆕 2026-11-21 (cycle 6) — el matiz que cambia **quién** tiene que etiquetar: la **edad de la audiencia**
 
@@ -470,6 +583,44 @@ declarado; usar con la regla de la muestra de arriba.
 | **Arquitectura "sin perfilado" por diseño** | Si los sistemas adaptativos caen en Anexo III, el dynamic difficulty basado en perfil del jugador se vuelve caro. | Sacar la decisión de dificultad del LLM y llevarla a un modelo auditable y determinista. |
 
 ### APAC
+
+#### 🆕 2026-11-21 (cycle 7) — Corea entra con cifra propia, y aparece la práctica de gobernanza que se puede vender
+
+- 🟢 **COREA TIENE SU PROPIA CIFRA Y ES ALTA: 77,5% de 120 empresas de juego
+  usan gen AI** (**KOCCA** — Korea Creative Content Agency —, informe del
+  **Q2-2026**). Y el dato que la acompaña es el comercialmente útil: **"AI
+  skills" es ya la prioridad nº1 de contratación** del sector. ⇒ Hasta hoy la
+  tesis "en APAC no se vende adopción, se vende gobernanza y escala" **se
+  apoyaba en un solo país** (Japón, CESA 85,8%). **Ahora tiene dos mercados
+  independientes**, con muestras y organismos distintos.
+- 🟢 **JOGA: el 100% de las empresas japonesas de juego online encuestadas usa
+  gen AI**, y **Gemini es la herramienta más común**. Es una tercera medición
+  japonesa, con una población distinta (juego online) a la de CESA.
+  ⚠️ **Muestra chica y no publicada en detalle**: se cita como confirmación de
+  dirección, no como porcentaje de precisión.
+- 🟢 **🆕 LA PRÁCTICA DE GOBERNANZA QUE SE PUEDE VENDER, Y ES DE APAC:** los
+  estudios japoneses reportan que **restringen qué herramientas puede usar el
+  personal** y **prohíben que salidas crudas de AI lleguen al producto sin
+  pasar por revisión**. ⇒ **Esto no es una política, es un control implementable**
+  — y es exactamente el entregable que las Recetas 15 y 16 (gates en el pipeline
+  de build) producen. **Primer caso en esta KB donde la práctica declarada del
+  cliente coincide con un entregable que ya tenemos escrito**: no hay que
+  convencerlo de la necesidad, hay que implementarle lo que ya decidió.
+- ⚠️ **Comparabilidad: la base de CESA 2025 eran 54 empresas y la cifra 2026 de
+  developers son 1.349 respuestas individuales.** La prensa presenta
+  "51% → 85,8%" como crecimiento interanual; **son poblaciones e instrumentos
+  distintos**. Citar el 85,8% con su muestra, **nunca el salto**.
+- 🔴 **El freno estructural de APAC es regulatorio y es de aprobación de
+  producto, no de AI:** el *patchwork* entre los mercados grandes —aprobación de
+  títulos, límites de monetización y reglas de menores— es el constraint
+  principal, agravado por reglas de privacidad y datos de jugador fragmentados;
+  **los estudios chicos son los más afectados**. ⇒ sostiene la regla heredada:
+  **país por país, nunca una plataforma regional**.
+- ⚫ **Gap medido: China.** Con el instrumento corregido (*"video game"*), las
+  consultas **no devolvieron ninguna cifra de adopción de estudios chinos**, aun
+  siendo el mercado con el régimen vinculante más desarrollado y el origen de
+  los world models punteros (Hunyuan, Skywork). **Es un cero de medición, no de
+  mercado**, y es el hueco más caro de APAC en esta KB.
 
 #### 🆕 2026-11-21 (cycle 6) — Japón mueve su plan de Estado, y aparece el primer repo con un estudio AAA de APAC detrás
 
@@ -635,6 +786,45 @@ open source más fuerte del ciclo.**
 | **Analítica de esports** | Juegos Asiáticos 2026. | Anti-cheat conductual + analítica de broadcast. |
 
 ### LATAM
+
+#### 🆕 2026-11-21 (cycle 7) — el cero medido en adopción, y la estructura de mercado que sí se puede citar
+
+- ⚫ **CERO MEDIDO, con los dos instrumentos declarados.** Buscado como pide la
+  rotación (`AI gaming LATAM 2026 adoption regulation players`) **y** con el
+  instrumento corregido (`Latin America video game developers AI 2026 Brazil
+  Mexico Argentina studios adoption`): **no existe ninguna encuesta de adopción
+  de gen AI por estudios latinoamericanos**, ni por país ni por tamaño.
+  🔵 **Es la segunda vez que esta KB mide este cero** y hay que escribirlo así:
+  **un cero medido es información; un silencio parece cobertura.** El informe
+  **Xsolla/GamesBeat *State of the LATAM Games Industry 2026*** existe y está
+  organizado por Brasil / México / resto, pero **está *gated***: si tiene sección
+  de AI, no es legible desde acá.
+- 🟢 **Lo que SÍ se puede citar es estructura de mercado, y sirve para dimensionar
+  un engagement** (fuentes secundarias de mercado — **atribuir, no adoptar**):
+  **Brasil ~13.225 developers y ~1.042 estudios activos** (el mayor pool de la
+  región y el líder en revenue); **México 72,6 M de jugadores = 61% de la
+  población de 6+** (la puerta comercial); **Argentina y México con pools de
+  developers de varios miles**. ⇒ **Brasil es dónde está el talento, México es
+  dónde está el jugador.** Son dos conversaciones distintas y esta KB las
+  mezclaba.
+- 🔴 **El constraint de LATAM está nombrado por la propia industria y NO es
+  tecnológico: es financiamiento.** Entrevistas de prensa especializada sitúan la
+  falta de **funding** como lo que falta en Brasil. ⇒ **consecuencia directa para
+  la oferta: en LATAM el entregable tiene que pagarse solo dentro del trimestre.**
+  Un programa de transformación a 12 meses no tiene de dónde financiarse; una
+  Receta 1 o 3 acotada, sí. **Esto refuerza, con causa económica, la elección de
+  recetas que esta KB ya hacía para la región.**
+- 🟡 **Contrapeso macro:** el **PNUD advierte que América Latina y el Caribe van
+  rezagados en adopción de AI** (vía prensa sectorial). Es el marco en el que hay
+  que leer el 48,8% / 51,8% de **jugadores** dispuestos a comprar juegos hechos
+  con AI: **la apertura del jugador latinoamericano sigue siendo la ventaja
+  estructural de la región** (y la única ventaja *estructural*, no de precio, de
+  toda esta KB) **pero conviene no confundirla con capacidad de producción
+  instalada**, que es la que el funding limita.
+- 🔵 **Y el carril regulatorio sigue como estaba:** el único compliance con fecha
+  en LATAM es **publicitario** (guía CONAR de Brasil, en vigor desde el
+  1-jun-2026); **no hay ley general de AI en vigor** (PL 2338/2023 trabado).
+  Nada de este pass lo mueve.
 
 #### 🆕 2026-11-21 (cycle 6) — la cifra LATAM se parte por generación, y es el dato más vendible de la región
 

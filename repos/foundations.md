@@ -7,7 +7,7 @@ updated: 2026-11-21
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-21 (cycle 6)** (passes previos: 2026-11-21 cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-21 (cycle 7)** (passes previos: 2026-11-21 cycle 6, 2026-11-21 cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Doble canal obligatorio en esta página.** El SPDX del API
 > (`gh api search/repositories -f q='repo:<slug>'`) y la lectura del archivo en
@@ -32,6 +32,40 @@ updated: 2026-11-21
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El censo de inventario del cycle 7 (2026-11-21): **8 engines que esta página no tenía, 158.000 ★ en total**
+
+El cycle 6 cerró con la regla *"una sonda confirma lo que ya sospechabas; sólo la
+enumeración te dice lo que te faltaba"* — y la aplicó a los **archivos dentro de
+cada repo**. Este pass la aplicó a **la lista de repos**, con una sola consulta en
+forma de censo (*"los engines open source más usados"*, sin forma de problema).
+Resultado:
+
+| Engine añadido | ★ | Por qué se escapó 6 passes |
+|----------------|---|----------------------------|
+| `bevyengine/bevy` | **49.914** | Un engine de propósito general **no responde a ninguna consulta con forma de problema**. Sólo aparecía como la palabra *"paridad Bevy"* dentro de la descripción de un pack de skills ajeno |
+| `phaserjs/phaser` | **40.756** | Idem. Aparecía como **ítem de una lista dentro de la celda de otra fila** (`awesome-gamedev-agent-skills`), nunca como fila |
+| `raysan5/raylib` | **35.758** | Nunca mencionado |
+| `libgdx/libgdx` | **25.553** | Nunca mencionado |
+| `flame-engine/flame` | 10.821 | Nunca mencionado |
+| `cocos/cocos-engine` | 9.941 | Nunca mencionado; badge `NOASSERTION` lo habría descartado igual |
+| `defold/defold` | 6.476 | Nunca mencionado; y es el hallazgo de licencia del pass (ver su fila) |
+| `panda3d/panda3d` | 5.280 | Nunca mencionado; badge `NOASSERTION` |
+
+Más, en RL y entornos: **`google-deepmind/open_spiel`** (5.603 ★) y
+**`google-deepmind/mujoco`** (18.369 ★).
+
+> 📐 **Regla nº14 para toda la familia de KBs:** a partir del 3er pass, **una
+> consulta por pass** debe ser un **censo plano contra los incumbentes obvios**,
+> formulada como categoría y no como problema. La KB de enterprise descubrió lo
+> mismo de forma independiente (le faltaba `google/adk-python`, 22.295 ★). El
+> punto ciego de un vocabulario de problemas **tiene la forma exacta de un
+> producto**.
+
+🟢 **Y el efecto práctico inmediato:** la pregunta *"¿cuál es la alternativa a
+O3DE si el cliente exige MIT y no acepta el Qt/LGPL del editor?"* **ahora tiene
+respuesta** (`bevy`, MIT *o* Apache a elección, 49.914 ★) y hasta hoy esta KB no
+la tenía.
 
 ## 🆕 Enumeración aplicada a esta página (2026-11-21 cycle 6): **lo que una sonda no podía ver**
 
@@ -112,6 +146,14 @@ una fila "MIT" con **3882 B** y una fila "MIT" con **1563 B** no pueden ser MIT
 | [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | 🔴 **Ms-PL** (`LICENSE.txt`, 3882) — **no MIT**, 🆕 **confirmado 2026-11-21 leyendo la cabecera**: *"Microsoft Public License (Ms-PL)"* (el checksum de ayer acertó) | Framework C# cross-platform. Para equipos .NET añadiendo AI. ⚠️ default **`develop`**. | 14.663 |
 | [stride3d/stride](https://github.com/stride3d/stride) | **MIT** (`LICENSE.md`, 1304) | Engine C# cross-platform (ex-Xenko). Alternativa .NET madura a Unity. ⚠️ default `master`. Commit de hoy. | 7.957 |
 | [love2d/love](https://github.com/love2d/love) | **zlib** para LÖVE — ⚠️ `license.txt` (74927) es **agregado** · 🆕 **confirmado por lectura directa 2026-11-21**: la línea 8 del archivo dice `License: zlib` para LOVE, y debajo vienen ENet (MIT/Expat), FreeType, GLAD (MIT), glslang (BSD-3), SPIRV-Cross (Apache-2.0 o MIT) y más | LÖVE 2D: Lua, ligero, ideal para prototipos. El archivo agrega ENet (MIT), FreeType, GLAD y texto LGPL/GPL de dependencias: el grant de LÖVE es zlib, el del binario depende de qué se enlace. **Minúsculas: `license.txt`, no `LICENSE.txt`** (404). | 8.981 |
+| 🆕 🟢 [bevyengine/bevy](https://github.com/bevyengine/bevy) | 🟢 **MIT *o* Apache-2.0, a elección** — `LICENSE-MIT` (1036) **y** `LICENSE-APACHE` (10173, sin apéndice). 🔴 **El badge dice sólo `Apache-2.0` y sub-declara el grant.** Canal 3 enumera **164 archivos de licencia**: el doble grant está replicado **en cada crate** (`crates/bevy_ecs/LICENSE-MIT`, `crates/bevy_pbr/…`), no sólo en la raíz | **La omisión más grande en la historia de esta KB: 6 passes sin listarlo.** Engine ECS en Rust, data-driven, 2D/3D, el 2º engine open source más estrellado después de Godot. Releases **0.19 (19-jun-2026)** y **0.20 (8-oct-2026, rendering Solari + sistema de escenas BSN)**. Para un cliente que exige MIT es **la alternativa AAA-grade a O3DE sin el problema de Qt/LGPL**. ⚠️ Rust: el equipo del cliente lo tiene o no lo tiene. | **49.914** |
+| 🆕 [phaserjs/phaser](https://github.com/phaserjs/phaser) | **MIT** (`LICENSE.md`, **1100** — coincide **exacto** con el checksum canónico MIT) | Engine 2D HTML5/WebGL: el estándar de facto de juegos web y el engine que **`OpenGame` usa como target de generación**. Camino más corto a un juego jugable en navegador, sin instalación. ⚠️ default `master`. push 2026-08-21. | **40.756** |
+| 🆕 [raysan5/raylib](https://github.com/raysan5/raylib) | **Zlib** (`LICENSE`, 877) | Librería C para juegos, sin dependencias, extremadamente simple. **Zlib es permisiva y sin cláusula de atribución en binario** ⇒ la más limpia del inventario para firmware/embedded y para entregables donde el cliente no quiere avisos. Commit de hoy. | **35.758** |
+| 🆕 [libgdx/libgdx](https://github.com/libgdx/libgdx) | **Apache-2.0** (`LICENSE`, **10174 — sin apéndice**; ver regla nº15 en `agents/top.md`) | Framework Java/JVM cross-platform (desktop, Android, iOS, web). **La opción JVM**: si el cliente es una casa Java —común en LATAM y en enterprise— es el engine que su equipo ya puede mantener. push 2026-11-19. | **25.553** |
+| 🆕 [cocos/cocos-engine](https://github.com/cocos/cocos-engine) | 🟢 **MIT** (`LICENSE.md`, 1164) — **badge `NOASSERTION`, permisivo detrás del badge**. Los 1164 B (vs 1100 canónico) son **dos líneas de copyright** (Chukong 2013-2016 + Xiamen Yaji 2017-2023), no cláusulas añadidas | Cocos Creator: engine 2D/3D muy fuerte en **mobile de APAC** (China en particular). Relevante por región más que por estrellas. push 2026-10-28. | 9.941 |
+| 🆕 [flame-engine/flame](https://github.com/flame-engine/flame) | **MIT** (`LICENSE`, 1067) | Engine de juegos sobre **Flutter/Dart**: la vía cuando el cliente ya tiene una app Flutter y quiere gamificar dentro de ella, en vez de incrustar un engine ajeno. Commit de hoy. | 10.821 |
+| 🆕 [panda3d/panda3d](https://github.com/panda3d/panda3d) | 🟢 **BSD-3-Clause** (`LICENSE`, 1569) — **badge `NOASSERTION`, permisivo detrás del badge.** El clasificador no lo ve porque el archivo **no es la plantilla BSD verbatim**: no tiene cabecera SPDX y **se auto-declara en prosa al final** (*"(This is the Modified BSD License.)"*) | Engine 3D en C++ con API Python, origen Disney/CMU. **La opción Python**: equipos de data science / ML que quieren un engine sin salir de Python. push 2026-07-28. | 5.280 |
+| 🆕 🔴 [defold/defold](https://github.com/defold/defold) | 🔴 **`Defold License 1.0` (`LICENSE.txt`, 9977) — NO es open source.** Apache-2.0 verbatim + cláusula **4(a): prohibido comercializar la obra o derivados como *"Game Engine Product"*** (= software de desarrollo de videojuegos, autoría **y** runtime). Falla el punto 6 de la OSD ⇒ **source-available**. Canal 3: 37 archivos de licencia, incl. `COMPLYING_WITH_LICENSES.md` y `TOOLS_LICENSES.md` | Engine 2D/3D ligero (ex-King), muy usado en mobile. Commit de hoy, proyecto sanísimo. 🔴 **Pero la restricción apunta al entregable de Globant, no al del cliente:** hacer **un juego** con Defold está dentro del grant; vender un **pipeline de autoría asistido por AI** (Recetas 6 y 11) está fuera. | 6.476 |
 
 ### 🟡 O3DE: dos matices que esta página no decía
 
@@ -231,8 +273,10 @@ de fallo de rename con mayor radio de daño.
 | [Farama-Foundation/Gymnasium](https://github.com/Farama-Foundation/Gymnasium) | **MIT** (`LICENSE`, 1104) | API estándar de entornos RL. Sucesor mantenido de `openai/gym`. | 12.843 |
 | [Farama-Foundation/PettingZoo](https://github.com/Farama-Foundation/PettingZoo) | **MIT** (`LICENSE`, 1073) | Equivalente multi-agente de Gymnasium. Para NPCs que compiten o cooperan. | 3.556 |
 | [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) | **MIT** (`LICENSE`, 1075) | PPO, SAC, A2C, DQN en PyTorch. El algoritmo por defecto para QA bots. ⚠️ default `master`. | 14.038 |
-| [Unity-Technologies/ml-agents](https://github.com/Unity-Technologies/ml-agents) | **Apache-2.0** (`LICENSE.md`, 572 — cabecera-puntero, no el texto completo) | Toolkit RL oficial de Unity. ⚠️ default **`develop`**. Commit de hoy. | 19.887 |
+| [Unity-Technologies/ml-agents](https://github.com/Unity-Technologies/ml-agents) | **Apache-2.0** — 🔴 **corregido 2026-11-21 (cycle 7): el grant está partido por RAMA.** `LICENSE.md` = **572 B en `develop`** (rama default: es el **aviso corto que Apache recomienda**, grant válido por referencia) y **11.324 B en `main`** (texto completo). La KB publicaba *"cabecera-puntero, no el texto completo"*, que es cierto de la rama default y **falso del repo** | Toolkit RL oficial de Unity. ⚠️ default **`develop`**. Commit de hoy. Badge `NOASSERTION`. | **19.890** |
 | [edbeeching/godot_rl_agents](https://github.com/edbeeching/godot_rl_agents) | **MIT** (`LICENSE`, 1071) | Puente Godot ↔ Python para 4 frameworks RL. **900+ → 1.639 (+82%)**: mayor salto relativo de la KB. | 1.639 |
+| 🆕 🟢 [google-deepmind/open_spiel](https://github.com/google-deepmind/open_spiel) | **Apache-2.0** (`LICENSE`, 11358 — canónico) | **El framework de referencia de RL y search/planning en juegos, y faltaba.** Juegos en C++ con wrapper Python; n-jugadores, suma cero, cooperativos y suma general; CFR, Q-learning, SARSA, regret matching, DQN, PPO, A2C. **Es la base correcta para información imperfecta** (póker, Guandan, negociación) donde PPO sobre Gymnasium no alcanza. v1.6.11 publicada 5-ene-2026, push 2026-11-14. ⚠️ default `master`. | 5.603 |
+| 🆕 [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) | **Apache-2.0** (`LICENSE`, 11358) | Motor de física para control y robótica, el estándar de los benchmarks de locomoción. En gaming sirve para **animación procedural y ragdoll/control físico aprendido**, no para gameplay. Commit de hoy. | 18.369 |
 
 ## 🆕 Foundation models de agente de juego (nuevo en esta página, 2026-11-21 cycle 6)
 
