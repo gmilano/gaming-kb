@@ -12,7 +12,79 @@ updated: 2026-11-21
 
 ---
 
-## 🆕 2026-11-21
+## 🆕 2026-11-21 — pass cycle 6 (≈1 h después del cycle 5)
+
+> ⏱️ **Advertencia de instrumento, y es la entrada más importante de esta
+> sección: una hora no es un intervalo de medición.** Ninguna ★ se mueve de
+> forma interpretable en 60 minutos. **Este pass no reporta un solo delta**, y
+> no reescribe ninguna cifra heredada. Un archivo append-only tiene una tentación
+> propia —anotar algo cada vez que corre— y la forma de resistirla es anotar
+> explícitamente **que no hubo nada que medir**. Lo que sí cambió en una hora es
+> el **instrumento**: hay un canal de verificación nuevo.
+
+**Canal nuevo (el cambio real del pass):**
+`gh api search/code -f q='repo:<slug> filename:LICENSE'` **enumera** los archivos
+de licencia de un repo de terceros. Los passes del 2026-11-20 y del 2026-11-21
+cycle 5 declararon este gap como *"CONFIRMADO sin canal"* dos veces seguidas,
+porque los dos probaron `gh api repos/<o>/<r>/contents` (bloqueado) y ninguno
+probó `search/code`. **Regla: "sin canal" significa "sin los canales que
+probamos", y hay que escribir *cuáles*.**
+
+### Agentes y packs nuevos, verificados hoy (★ de hoy, sin delta por lo dicho arriba)
+
+| Nombre | Repo | Licencia (bytes) | ★ | Forks |
+|--------|------|------------------|---|-------|
+| **awesome-gamedev-agent-skills** | [gamedev-skills/awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) | **Apache-2.0** (11395) + `NOTICE` (883) | **9.929** | 1.013 |
+| **coop-anything** | [cranebeaker/coop-anything](https://github.com/cranebeaker/coop-anything) | **MIT** (1085) | 2.185 | 298 |
+| **Gamer** (VLA) | [RainBowLuoCS/Gamer](https://github.com/RainBowLuoCS/Gamer) | **Apache-2.0** (11358) | 1.189 | 23 |
+| **Game-Dev-Agentic-Skills** | [thedivergentai/Game-Dev-Agentic-Skills](https://github.com/thedivergentai/Game-Dev-Agentic-Skills) | 🔴 **LGPL-3.0** (7652) | 983 | 62 |
+| **bot-crossing** | [Station-Sciences/bot-crossing](https://github.com/Station-Sciences/bot-crossing) | **MIT** (1069) | 906 | 286 |
+| **DanKS** | [Calix-L/DanKS](https://github.com/Calix-L/DanKS) | **Apache-2.0** (11348) | 833 | 36 |
+| **GameScaling** | [THUSI-Lab/GameScaling](https://github.com/THUSI-Lab/GameScaling) | **Apache-2.0** — 🟢 **pesos también (Qwen3.5)** | 604 | 35 |
+| **OpenLiberty** | [openfw-game/OpenLiberty](https://github.com/openfw-game/OpenLiberty) | **MIT** en **`LICENCE`** (1066) | 493 | 46 |
+| **guizang-game-skill** | [op7418/guizang-game-skill](https://github.com/op7418/guizang-game-skill) | 🔴 **AGPL-3.0** (34524) | 431 | 71 |
+| **awesome-ai-for-games** | [Eurekaleo/awesome-ai-for-games](https://github.com/Eurekaleo/awesome-ai-for-games) | **MIT** (1082) | 391 | 17 |
+
+### 🔴 La tendencia de licencia que esta página venía contando al revés
+
+Los passes del 20 y del 21 abrieron la tier de orquestación y la celebraron como
+*"catálogos de agentes MIT, gratis, con 27k forks"*. Medido sobre los packs
+**nuevos** de la misma tier con >400★:
+
+| Grant | Repos | ★ sumadas |
+|-------|-------|-----------|
+| 🟢 Permisivo (MIT/Apache-2.0) | 3 | 13.020 |
+| 🔴 **Copyleft (LGPL-3.0 / AGPL-3.0 ×2)** | **3** | **2.023** |
+
+**3 de 6.** La tier sigue estando dominada en volumen por lo permisivo, pero
+**la mitad de los repos nuevos no lo es**, y eso es lo contrario de lo que esta
+página comunicaba. El activo viral de gaming ahora es el **pack de skills** —
+markdown y prompts, lo más fácil de copiar accidentalmente dentro del repo de un
+cliente. Un `.md` de instrucciones bajo AGPL-3.0 pegado en un entregable arrastra
+la obligación de red sobre **lo que lo ejecute**. Ver Receta 16.
+
+### 🟢 Señal de procedencia: un `NOTICE` como activo comercial
+
+`awesome-gamedev-agent-skills` (9.929★) trae un `NOTICE` de 883 B que declara que
+**todas las skills son obra original escrita desde documentación primaria** y que
+*"no text or code was copied"* de otras colecciones, más un disclaimer de marcas
+de los 11 engines que nombra. En una industria con la ansiedad de IP que tiene
+esta —ver `intel/trends.md` nº 1 y nº 12— **una atestación de procedencia escrita
+por el autor es algo que se le puede mostrar al cliente**. Apache-2.0 §4(d)
+obliga a propagarla, así que llevarla no es un costo: es el entregable.
+
+### ⚫ Rechazados hoy, con motivo
+
+| Candidato | Medido | Motivo |
+|-----------|--------|--------|
+| [AIGeeksGroup/Code2Games](https://github.com/AIGeeksGroup/Code2Games) | 89★, SPDX `NONE`, 11 sondas → 404 | **Sin grant.** Apareció en snippets como trending de generación de mundos. |
+| [AlterLab-IEU/AlterLab_GameForge](https://github.com/AlterLab-IEU/AlterLab_GameForge) | 57★, MIT, 15 días sin commits | **"Rank #1 de un día" en un tracker no es tracción.** Señal, no ruta. |
+| `jaylfc/taOS` | 609★, AGPL-3.0 | Menciona *gaming PC* sólo como hardware de cluster. Falso positivo de query; contó sólo en el reparto de licencias. |
+| `shinkuan/Akagi` | 1.151★, Apache-2.0, rama default **`v3`** | Asistente de Mahjong online a un jugador humano, no game dev. Se anota la 4ª rama default no-`main`/`master` de la KB. |
+
+---
+
+## 2026-11-21 — pass cycle 5
 
 Un día desde el pass anterior, así que **este pass no mide crecimiento: resuelve
 licencias y descubre.** Las ★ de abajo se releyeron hoy (`repo:` sobre las 83

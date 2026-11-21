@@ -7,25 +7,360 @@ updated: 2026-11-21
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-21** (passes previos: 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-21 (pass cycle 6)**. Passes previos: 2026-11-21
+> (cycle 5), 2026-11-20, 2026-10-26, 2026-07-02.
 >
-> **Método de este pass — dos canales, y el segundo es nuevo:**
-> 1. `gh api search/repositories -f q='repo:<slug>'` → existencia + **SPDX** +
->    ★ + `archived` + `pushed_at` + **default_branch**, todo en una llamada.
->    El pass de octubre registró este canal como **bloqueado**; **no lo está**.
->    Esa corrección es la que hizo posible todo lo de abajo.
+> ⏱️ **Este pass corre ~1 hora después del anterior. No mide crecimiento: no
+> puede.** Ninguna ★ se movió de forma interpretable en 60 minutos, así que **no
+> se reportan deltas** y no se reescribe ninguna cifra heredada que no haya
+> cambiado de significado. Lo que sí se puede hacer en una hora es **abrir un
+> canal de verificación nuevo y pasarlo por lo que ya estaba escrito** — y eso
+> es lo que hace este pass.
+>
+> **Método — TRES canales, y el tercero es nuevo y cambia la naturaleza del
+> trabajo:**
+> 1. `gh api search/repositories -f q='repo:<slug>'` → existencia + **SPDX** + ★ +
+>    `archived` + `pushed_at` + `default_branch`, en una llamada.
 > 2. `raw.githubusercontent.com/<slug>/HEAD/<archivo>` → el **grant real**, leído
->    con bytes.
+>    en bytes. ⚠️ Ver *el trap de los 14 bytes*, abajo.
+> 3. 🆕 **`gh api search/code -f q='repo:<slug> filename:LICENSE'` → la LISTA
+>    COMPLETA de archivos de licencia del repo.** Los passes del 2026-11-20 y
+>    2026-11-21 declararon este gap como *"CONFIRMADO sin canal"* dos veces
+>    seguidas, porque probaron `gh api repos/<o>/<r>/contents` (que sigue
+>    bloqueado: el scope de GitHub de esta sesión cubre `search/*` y `raw`).
+>    **`search/code` no estaba probado y funciona sobre repos de terceros.**
 >
-> Los dos canales **no son redundantes y discrepan sistemáticamente**: el API
-> devuelve `NOASSERTION` para 8 repos de esta KB cuyo grant es permisivo y
-> legible. `NOASSERTION` **no significa "sin licencia": significa "no matcheó un
-> SPDX único"**, y eso es un **detector de licencias compuestas** — es el canal
-> que destapó las 4 correcciones de este pass. `curl -sI https://github.com/...`
-> sigue sin servir como prueba de existencia (403/200 del proxy, no del repo).
-> Control negativo: `gmilano/this-repo-does-not-exist-control-xyz` → `NOT_FOUND`. ✅
+> **Por qué el canal 3 no es "uno más": cambia la pregunta.** Los canales 1 y 2
+> sólo responden lo que se les pregunta — hay que *saber* el nombre del archivo
+> para pedirlo. Toda la typología de 6 ejes del pass anterior se construyó
+> **adivinando nombres de archivo**, y su propia conclusión fue que *"no puedo
+> afirmar que `Matrix-Game-4/` sea el único subdirectorio con licencia propia"*.
+> Con el canal 3 no hay que afirmarlo: se enumera.
+>
+> > **Regla de método, la central de este pass y para copiar a toda la familia de
+> > KBs: una sonda sólo puede confirmar lo que ya sospechabas. Sólo la
+> > enumeración te dice lo que te faltaba.** Un inventario construido con sondas
+> > tiene un sesgo que no se ve desde dentro: es exactamente tan completo como la
+> > imaginación de quien escribió la lista de sondas.
+>
+> `curl -sI https://github.com/...` sigue sin servir como prueba de existencia
+> (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
+> `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
+> exist or you do not have permission"*. ✅
 
-## 🔴 Lo más importante de este pass: **un grant sin su alcance no es un grant**
+## 🔴 Hallazgo nº1 del pass: el canal de enumeración existe, y lo primero que encuentra es que **Matrix-Game tiene 7 archivos de licencia, no 2**
+
+El pass anterior publicó el grant de `SkyworkAI/Matrix-Game` como una tabla de
+**dos filas** (raíz MIT / `Matrix-Game-4/` Apache-2.0) y declaró que no podía
+saber si había más. Enumerado el 2026-11-21 con el canal 3 — **`total_count: 7`**:
+
+| Ruta (enumerada, no adivinada) | Bytes | Grant leído |
+|--------------------------------|-------|-------------|
+| `LICENSE` | 1116 | **MIT** |
+| `Matrix-Game-1/GameWorldScore/LICENSE` | 11356 | **Apache-2.0** |
+| `Matrix-Game-3/LICENSE.txt` | 11357 | **Apache-2.0** |
+| `Matrix-Game-4/LICENSE` | 11356 | **Apache-2.0** |
+| `Matrix-Game-4/licenses/MG4CF-LICENSE` | 11356 | **Apache-2.0** (componente vendorizado) |
+| `Matrix-Game-4/licenses/TAEHV-LICENSE` | 1072 | **MIT** — © Ollin Boer Bohan |
+| `Matrix-Game-4/matrix_game/web/mediamtx-reader.LICENSE` | 1061 | **MIT** — © aler9 |
+
+Tres de las siete rutas **no son adivinables**: nadie iba a sondear
+`Matrix-Game-4/licenses/MG4CF-LICENSE`. La fila de dos entradas no estaba mal,
+estaba **truncada**, y el pass anterior no tenía forma de saber cuánto.
+
+## 🟢 Hallazgo nº2: el gap más viejo y más caro de esta KB — **la licencia de los pesos** — queda PARCIALMENTE CERRADO, y no por llegar a Hugging Face
+
+Cuatro passes consecutivos declararon: *"ninguna licencia de pesos ha sido
+verificada nunca por esta KB"*. **Ya no es cierto.** La vía no fue la red, fue
+leer lo que el publicador declara en su propio repo.
+
+**Primer grant de pesos verificado en la historia de esta KB:**
+
+| Modelo | Pesos | Grant de los pesos | Evidencia (leída en bytes hoy) |
+|--------|-------|--------------------|-------------------------------|
+| **GameScaling** (`THUSI-Lab/GameScaling`, Apache-2.0, 604★) | 8 checkpoints, 0,8B / 2B / 9B / 27B | 🟢 **Apache-2.0** | El `README.md` dice, literal: *"The models are continued pre-trained from **Qwen3.5**, which is also **Apache 2.0**"*. Los pesos son `bfloat16` **desde los backbones Qwen3.5**, y `config.json` declara arquitectura Qwen3.5. |
+
+> **Regla nueva, mecánica y portable a toda la familia de KBs: el grant de los
+> pesos de un modelo derivado está acotado por el grant de su modelo base, y el
+> modelo base casi siempre está nombrado en el README del repo de código.**
+> Un modelo *continued-pretrained* o *fine-tuned* no puede ser más permisivo que
+> su backbone. Eso convierte una pregunta que requería acceso a Hugging Face en
+> una que se responde con `raw.githubusercontent.com` + `grep -i "base model"`.
+> No sirve para un modelo entrenado desde cero; sirve para la mayoría.
+
+Y en el caso donde **no** se puede cerrar, ahora el gap está **declarado por el
+publicador**, que es mucho más fuerte que inferido por nosotros.
+`Matrix-Game-4/THIRD_PARTY_NOTICES.md` (leído hoy, existencia descubierta por
+enumeración) dice textualmente:
+
+- *"The project-level Apache-2.0 license does not replace the licenses below."*
+- *"**Model and asset distributions carry their own accompanying license
+  statements.**"*
+- *"**Base-model and codec weight licenses accompany their upstream
+  distributions.**"*
+- *"Game runtime assets are distributed separately by Skywork AI, with their own
+  license/attribution documents."*
+
+⇒ Antes decíamos *"la licencia de los pesos de Matrix-Game 4.0 no está
+verificada"*. Ahora podemos decir algo accionable: **el publicador declara que
+los pesos y los assets NO están cubiertos por el Apache-2.0 del repo, y que su
+grant viaja con la distribución de Hugging Face.** Para una propuesta, esa
+diferencia es la que separa "no sabemos" de "sabemos que hay que pedirlo".
+
+### 🆕 7º eje de partición de un grant: **por dependencia vendorizada**
+
+El pass anterior derivó 6 ejes (directorio, tipo de medio, archivo, territorio,
+campo de uso, binario vs fuente). `THIRD_PARTY_NOTICES.md` de Matrix-Game-4
+expone el séptimo, con 11 componentes y su grant cada uno:
+
+| Componente vendorizado | Ubicación | Grant |
+|------------------------|-----------|-------|
+| MG4CF (implementación del modelo) | `matrix_game/inference/wan` | Apache-2.0, extraído de MG4CF `d5b0307`, *"based on Wan and Causal Forcing"* |
+| Código Wan (modelo/códec) | mismos módulos | notices originales de Alibaba/Wan retenidos |
+| **TAEHV** | `matrix_game/inference/taehv.py` | **MIT** — [madebyollin/taehv](https://github.com/madebyollin/taehv) (589★, MIT), commit `011dfc2` |
+| MediaMTX reader | `matrix_game/web/mediamtx-reader.js` | MIT (© aler9) |
+| **Jolt Physics** | `game/third_party/JoltPhysics` | MIT |
+| **Recast/Detour** | `game/third_party/recastnavigation` | **zlib** — ⚠️ es el **mismo repo** que esta KB ya recomendaba por separado |
+| DirectXMath + SAL | `game/third_party/DirectXMath` | `LICENSE` + `SAL-LICENSE.txt` |
+| stb | `game/third_party/stb` | texto dual-license |
+| nlohmann/json | `game/third_party/json.hpp` | MIT embebido en el header |
+| 🔴 **Audio de racing** (motor, neumáticos, impactos) | bundle `racing/assets/audio` | **CC0 y CC BY 3.0** — *"retain `audio/CREDITS.md`, including tire attribution"* ⇒ **obligación de atribución en el producto** |
+
+**Lo que esto cambia en la práctica.** "Matrix-Game 4.0 es Apache-2.0" es
+verdadero *para el código del proyecto* y **falso como entrada de inventario**:
+el entregable arrastra zlib, MIT ×4, un dual-license, **CC BY 3.0 con
+atribución obligatoria** y pesos bajo un grant que no está en el repo. Un eje de
+partición más, y el único que **no se puede descubrir sondeando nombres de
+licencia**: se descubre leyendo el archivo de notices, cuya existencia se
+descubre enumerando.
+
+## 🔴 Hallazgo nº3: el **trap de los 14 bytes** — una falla en la técnica estrella de esta KB
+
+El *checksum de bytes* es el método que esta KB más usa. Tiene un modo de fallo
+que no estaba documentado y que **fabrica datos en silencio**:
+
+```
+$ curl -sS https://raw.githubusercontent.com/rivet-dev/rivet/HEAD/LICENSE.md | wc -c
+14
+$ curl -sS -o /dev/null -w "%{http_code}" https://raw.githubusercontent.com/rivet-dev/rivet/HEAD/LICENSE.md
+404
+$ curl -sS https://raw.githubusercontent.com/rivet-dev/rivet/HEAD/LICENSE.md | od -c
+0000000   4   0   4   :       N   o   t       F   o   u   n   d
+```
+
+**El cuerpo de un 404 de `raw.githubusercontent.com` son exactamente 14 bytes:
+la cadena `404: Not Found`.** `curl` sin `-f` sale con código 0 y escribe ese
+cuerpo en stdout. Un script que mida bytes sin mirar el status HTTP anota
+**"`LICENSE.md`, 14 B"** como si fuera un archivo de licencia que existe.
+
+> **Regla mecánica, nueva: todo byte-count por debajo de ~50 es un no-hallazgo,
+> no una licencia. Hay que leer el status HTTP junto con el cuerpo, siempre.**
+> Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan todo lo
+> que no sea 200. Verificado: la lista de 11 sondas × 13 repos de este pass dio
+> 0 falsos positivos de 14 B.
+>
+> Nótese la interacción venenosa con la regla heredada *"bytes muy por debajo de
+> la banda ⇒ archivo puntero, seguir el puntero"*: esa regla, aplicada a 14 B,
+> manda a seguir un puntero que no existe.
+
+### 🔴 El mismo trap en el otro canal, y lo cazamos con las manos en la masa
+
+El trap de los 14 bytes es *"la herramienta escribe el fallo en stdout y sale
+con código 0"*. **El canal 1 tiene exactamente el mismo defecto**, y este pass
+lo descubrió **fallando**: el script de verificación de URLs de este mismo pass
+dio un **✅ falso** para `rivet-gg/toolchain`.
+
+```bash
+# ❌ MAL — `gh` escribe el cuerpo del error de la API en STDOUT
+R=$(gh api -X GET search/repositories -f q="repo:$s" --jq '.items[0].full_name' 2>/dev/null)
+[ -n "$R" ] && echo "existe"     # $R = '{"message":"Validation Failed",...}' ⇒ no vacío ⇒ ✅ FALSO
+
+# ✅ BIEN — comparar contra el valor esperado, no contra "no vacío"
+R=$(gh api -X GET search/repositories -f q="repo:$s" --jq '.items[0].full_name' 2>/dev/null)
+[ "$R" = "$s" ] && echo "existe"
+```
+
+Corrida de nuevo con el test correcto, la verificación de las 26 URLs del diff
+dio **25 existentes + 1 archivada-y-citada-a-propósito + 0 rotas**, y la fila de
+`rivet-gg/toolchain` pasó de *"el destino del redirect tampoco existe"* (lo que
+este pass escribió primero, **y era falso**) a lo que realmente dice su README:
+*"Archived Repository … It has been moved to `rivet-gg/rivet`"*.
+
+> **Regla de método, y es la generalización de las dos: en este entorno, una
+> herramienta que falla puede escribir su fallo en stdout y salir con código 0.
+> Un chequeo de existencia nunca puede ser "¿devolvió algo?" — tiene que ser
+> "¿devolvió *lo que esperaba*?".** Vale para `curl` (status HTTP, no bytes) y
+> para `gh` (valor esperado, no no-vacío). **Las dos verificaciones de esta KB
+> compartían el mismo agujero y ninguna de las dos lo había visto en 4 passes.**
+
+## 🔴 Hallazgo nº4: la enumeración pasada por las recomendaciones nº1 de esta KB — **tasa medida: 4 de 12**
+
+Aplicado el canal 3 a los 12 repos que esta KB más recomienda. Resultado medido,
+con el honesto incluido: **2 de los 4 "hallazgos" eran falsas alarmas**, y hay
+un discriminador barato que los separa.
+
+| Repo | Archivos de licencia enumerados | Veredicto |
+|------|--------------------------------|-----------|
+| 🔴 **`limbonaut/limboai`** (3.137★) | `LICENSE.md` (1103, **MIT**) · `LOGO_LICENSE.md` (212, **CC BY 4.0**) · `demo/LICENSE_ASSETS.md` (280, **CC BY 4.0**) | **GRANT PARTIDO REAL.** Esta KB lo publica como "MIT" plano en 2 archivos. Es **MIT para el código y CC BY 4.0 para el logo y para los assets gráficos del proyecto demo**. Un estudio que forkea el demo como punto de partida **hereda una obligación de atribución**. |
+| 🟡 `CoplayDev/unity-mcp` (16.087★) | `LICENSE` (1066, MIT) · `Server/LICENSE` (1066, MIT) · `TestProjects/.../com.unity.asset-store-tools/LICENSE.md` (588, 🔴 **Unity Companion License**) | **1 grant no-OSI real, confinado a `TestProjects/`.** El `Server/LICENSE` es **byte-idéntico** a la raíz ⇒ copia de packaging, no partición. La recomendación MIT **se sostiene**; el Unity Companion License está en tooling de test que no se envía. |
+| 🟡 `recastnavigation/recastnavigation` (8.203★) | `License.txt` (zlib) · `Docs/doxygen-awesome-css/LICENSE` · `RecastDemo/Contrib/implot/LICENSE` · `RecastDemo/Contrib/imgui/LICENSE.txt` | **3 grants vendorizados** en docs y demo (MIT). Benignos, pero el `RecastDemo` no es zlib puro. |
+| 🟡 `agones-dev/agones` (7.106★) | `LICENSE` (Apache-2.0) · `proto/grpc-gateway/LICENSE.txt` · `sdks/rust/proto/grpc-gateway/LICENSE.txt` | grpc-gateway vendorizado. Benigno. Nota: `build/extract-licenses.sh` aparece en la enumeración y **no es una licencia** — ver falso positivo abajo. |
+| 🟢 `hi-godot/godot-ai` (3.627★) | `LICENSE` (1078, MIT) · `plugin/addons/godot_ai/LICENSE` (1078, MIT) | **Falsa alarma: byte-idénticos.** El addon que se instala en el juego del cliente lleva el mismo MIT. ✅ |
+| 🟢 `heroiclabs/nakama` (13.763★) | `LICENSE` (Apache-2.0) · `internal/gopher-lua/LICENSE` | gopher-lua vendorizado. Benigno. |
+| 🟢 `gamedev-skills/awesome-gamedev-agent-skills`, `Donchitos/Claude-Code-Game-Studios`, `a16z-infra/ai-town`, `rivet-dev/rivet`, `thedivergentai/Game-Dev-Agentic-Skills`, `lmgame-org/GamingAgent` | 1 archivo cada uno | ✅ grant único, confirmado por enumeración y no sólo por sonda. |
+
+**Dos reglas nuevas que salen de esto:**
+
+> **1. Discriminador de byte-identidad.** Un segundo archivo de licencia cuyos
+> **bytes coinciden con el de la raíz** es una copia de packaging (un
+> subpaquete que embarca su propio LICENSE), **no** una partición del grant. Si
+> los bytes difieren, hay que leerlo. Es gratis: el byte-count que esta KB ya
+> anota hace todo el trabajo. **En este pass separó 2 falsas alarmas de 2
+> hallazgos reales.**
+>
+> **2. `filename:LICENSE` matchea código, no sólo licencias.** La enumeración
+> devolvió `tools/ci_unity_license.py`, `tools/tests/test_ci_unity_license.py` y
+> `build/extract-licenses.sh`. Son scripts *sobre* licencias. Hay que filtrar
+> por extensión/ruta antes de contar, o el `total_count` infla.
+
+**Y una nota sobre el propio texto de LimboAI que vale como regla aparte:** su
+`LICENSE.md` (1103 B) **no empieza con la cadena `MIT License`** — arranca con
+la línea de copyright. Una sonda que clasifique por *primera línea* lo da por
+desconocido; la que clasifica por **banda de bytes** (1.050–1.150) lo acierta.
+Es el argumento más limpio a favor del checksum de bytes que ha producido esta
+KB, justo en el mismo pass en que le encontramos el trap de los 14 B.
+
+## 🔴 Hallazgo nº5: el copyleft se mudó hacia arriba del stack — ahora vive en los **packs de skills**
+
+Los passes del 2026-11-20 y 2026-11-21 abrieron la tier de orquestación y la
+contaron como la buena noticia: *catálogos de agentes MIT, gratis, con 27k
+forks*. Este pass midió los repos **nuevos** de esa misma tier. El reparto es
+otro:
+
+| Repo | ★ | Grant leído en bytes | |
+|------|---|---------------------|---|
+| `gamedev-skills/awesome-gamedev-agent-skills` | **9.929** | **Apache-2.0** (11395) + **`NOTICE`** (883) | 🟡 obliga a propagar el NOTICE |
+| `cranebeaker/coop-anything` | 2.185 | **MIT** (1085) | 🟢 |
+| `thedivergentai/Game-Dev-Agentic-Skills` | 983 | 🔴 **LGPL-3.0** (7652) | copyleft |
+| `Station-Sciences/bot-crossing` | 906 | **MIT** (1069) | 🟢 |
+| `jaylfc/taOS` | 609 | 🔴 **AGPL-3.0** (34523) | copyleft de red |
+| `op7418/guizang-game-skill` | 431 | 🔴 **AGPL-3.0** (34524) | copyleft de red |
+
+**De los 6 packs de agentes/skills de gaming nuevos con >400★, 3 son copyleft
+(1 LGPL-3.0, 2 AGPL-3.0).** No es una anécdota con ese tamaño de muestra, y es
+el reparto opuesto al que esta KB venía comunicando para la tier.
+
+> **Lectura para engagement, y es incómoda:** el activo que se volvió viral en
+> gaming **no es el engine, es el pack de skills** — y un pack de skills es
+> *markdown y prompts*, lo más fácil de copiar accidentalmente dentro de un
+> entregable de cliente. Un `.md` con instrucciones de agente bajo AGPL-3.0,
+> pegado dentro del repo de un cliente, arrastra la obligación de red sobre
+> **lo que lo ejecute**. El gate de licencia de la Receta 15 miraba
+> dependencias de build; **hay que extenderlo a `*.md` y a los directorios de
+> skills**. Ver Receta 16.
+
+### ⚠️ Y la LGPL-3.0 rompe el checksum de bytes — asimetría que hay que anotar
+
+`thedivergentai/Game-Dev-Agentic-Skills` trae 7.652 B de licencia. La banda de
+copyleft de esta KB arranca en ~26.400 (LGPL-2.1). ¿7.652 B es copyleft? Sí, y
+la razón está en el byte 300 del propio archivo:
+
+> *"This version of the GNU Lesser General Public License **incorporates the
+> terms and conditions of version 3 of the GNU General Public License**,
+> supplemented by the additional permissions listed below."*
+
+**La LGPL-3.0 no es un texto completo: es un suplemento de ~7.650 B sobre la
+GPL-3.0.** Y en este repo **la GPL-3.0 no está** — `repo:… filename:COPYING` →
+`total_count: 0`. Es decir: **los ~35.200 B de términos que el repo realmente
+impone no están en el repositorio**. Quien lea sólo el archivo presente ve
+7.652 B y la palabra *"Lesser"*, y puede concluir "permisivo".
+
+| Familia | Bytes | Nota |
+|---------|-------|------|
+| **LGPL-2.1** | **~26.400** | autocontenida |
+| 🆕 **LGPL-3.0** | **~7.650** | **suplemento. Incorpora GPL-3.0 (~35.200 B) por referencia, y casi nunca la embarca** |
+
+⇒ **Nueva banda en la tabla de checksum, y la única de la tabla donde los bytes
+son inversamente proporcionales a la restricción.** Precedente en esta misma
+KB: el `LICENSE.txt` de O3DE son 1.475 B y es un *puntero*; el de la LGPL-3.0
+es un *puntero a un texto que no está*.
+
+## 🆕 Agentes y repos nuevos verificados este pass
+
+Enumerados con canal 3, grant leído en bytes con status HTTP, ★ y `pushed_at`
+leídos con canal 1 el **2026-11-21**.
+
+| Nombre | Repo | Licencia | Descripción | ★ |
+|--------|------|----------|-------------|---|
+| 🆕 **awesome-gamedev-agent-skills** | [gamedev-skills/awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) | **Apache-2.0** (`LICENSE`, 11395) + **`NOTICE`** (883) | **79 skills de game-dev + un router**, para Godot, Unity, Unreal, Roblox, three.js, Phaser y 6 engines más — *"Checked on the real engines"*. **1.013 forks.** 🟢 **El `NOTICE` es un activo, no sólo una obligación:** declara que todas las skills son obra original escrita desde documentación primaria y que *"no text or code was copied"* de otras colecciones, más un disclaimer de marcas de los 11 engines. En una industria con ansiedad de IP, **es una atestación de procedencia que se le puede mostrar al cliente**. Apache-2.0 §4(d) obliga a propagarlo. | **9.929** |
+| 🆕 **Gamer** | [RainBowLuoCS/Gamer](https://github.com/RainBowLuoCS/Gamer) | **Apache-2.0** (`LICENSE`, 11358) | *Generalist Vision-Language-Action foundation model* para **agentes de juego de horizonte largo y tiempo real**. Es la primera fila VLA de esta KB: no un LLM con tools, un modelo de acción. 23 forks ⇒ **código de investigación**, no producto. | 1.189 |
+| 🆕 **GameScaling** | [THUSI-Lab/GameScaling](https://github.com/THUSI-Lab/GameScaling) | **Apache-2.0** — 🟢 **y sus PESOS también (Qwen3.5)** | *Continued pre-training* para agentes embodied en mundos virtuales diversos. 8 checkpoints (0,8B/2B/9B/27B), evaluación en 4 benchmarks de juego. ⚠️ **no hay código de entrenamiento**; cada checkpoint es un repo de HF aparte. 🟢 **El único modelo de esta KB con grant de pesos verificado.** 🔵 Señal APAC: el paper acredita trabajo hecho *"while interning at **miHoYo**"*. | 604 |
+| 🆕 **coop-anything** | [cranebeaker/coop-anything](https://github.com/cranebeaker/coop-anything) | **MIT** (`LICENSE`, 1085) | Servidor MCP + playbook para que un agente **convierta un juego single-player en co-op** (online y splitscreen) por reverse engineering, y comparta lo aprendido. 298 forks. ⚠️ **El grant cubre la herramienta, no el juego:** el EULA de cada título manda, y el reverse engineering de un juego comercial es **exactamente** lo que la licencia de SkyrimNet §4 prohíbe. Herramienta legítima, uso que hay que encuadrar. | 2.185 |
+| 🆕 **bot-crossing** | [Station-Sciences/bot-crossing](https://github.com/Station-Sciences/bot-crossing) | **MIT** (`LICENSE`, 1069) | *"A video game for AI agents"*. Categoría nueva en esta KB: **el juego como entorno de evaluación**, no el agente. 286 forks. Es la pieza viva que `lmgame-org/GamingAgent` (congelado hace un año) dejó de ser. | 906 |
+| 🆕 **Game-Dev-Agentic-Skills** | [thedivergentai/Game-Dev-Agentic-Skills](https://github.com/thedivergentai/Game-Dev-Agentic-Skills) | 🔴 **LGPL-3.0** (`LICENSE`, 7652 — **suplemento; la GPL-3.0 que incorpora NO está en el repo**) | Memoria de largo plazo multi-engine para agentes de game dev: **99 skills de Godot 4.7+ y 27 blueprints de género**, paridad Bevy, orquestación por personas (Analyst/Auditor/Builder). Técnicamente el pack más profundo de Godot que existe. 🔴 **Fuera de la ruta permisiva**: copyleft sobre *skills*. | 983 |
+| 🆕 **guizang-game-skill** | [op7418/guizang-game-skill](https://github.com/op7418/guizang-game-skill) | 🔴 **AGPL-3.0** (`LICENSE`, 34524) | 歸藏 Game Skill: skill para Claude Code / Codex que construye **un juego de acción 3D jugable en el browser** (three.js, HTML único) con assets generados por AI, con demo jugable *《雾锁山门》*. 🔵 **Origen APAC**, README bilingüe. 🔴 AGPL-3.0. | 431 |
+| 🆕 **DanKS** | [Calix-L/DanKS](https://github.com/Calix-L/DanKS) | **Apache-2.0** (`LICENSE`, 11348) + `NOTICE` (453) | Agente de **Guandan** (掼蛋) competitivo por RL a escala chica. 🔵 APAC. Relevante como patrón: **RL de juego de cartas con imperfecta información y equipos**, el caso que los agentes LLM todavía no resuelven. | 833 |
+| 🆕 **awesome-ai-for-games** | [Eurekaleo/awesome-ai-for-games](https://github.com/Eurekaleo/awesome-ai-for-games) | **MIT** (`LICENSE`, 1082) | Colección curada y **buscable** de investigación sobre AI y foundation models **a lo largo del ciclo de vida del juego** (no sólo NPCs). Escrita en **TeX** ⇒ es una survey, no una lista de links. Canal de descubrimiento. | 391 |
+| 🆕 **OpenLiberty** | [openfw-game/OpenLiberty](https://github.com/openfw-game/OpenLiberty) | **MIT** — ⚠️ en **`LICENCE`** (1066), ortografía británica | Juego de mundo abierto en Godot que **carga modelos y texturas de la era 3D de GTA**. Útil como base de mundo abierto con AI. 🔴 **Riesgo propio, no de licencia:** el grant cubre el *motor de carga*; los assets de GTA son de Take-Two. | 493 |
+
+### 🔴 `LICENCE` (ortografía británica) estrena testigo — la lista de sondas del pass anterior tenía un hueco medido
+
+El pass anterior publicó la lista de 11 sondas y dijo que *"los casos reales de
+esta KB cubren **cinco** de esas variantes"*. `OpenLiberty` la convierte en
+**seis**: es el primer repo de esta KB cuyo grant está **sólo** en `LICENCE`
+(sin S), y `LICENSE` devuelve 404 (14 B). La lista de sondas del pass anterior
+**ya incluía `LICENCE`**, así que la sonda no falló — **la cobertura medida
+subió porque apareció el testigo**. Vale anotarlo exactamente así: la lista era
+correcta *antes* de tener la prueba, que es lo que una lista de sondas debe
+lograr.
+
+## 🔴 Hallazgo nº6: `rivet-gg/opengb` — una **cadena de renames de 3 saltos**, y el pivot de mercado que la explica
+
+El *Open Game Backend* figuraba en la prensa de backends de juego como la
+alternativa Apache-2.0 a Nakama. Trazado hoy:
+
+| Paso | Slug | `search/repositories` | `raw` | Qué dice el `README.md` leído |
+|------|------|----------------------|-------|-------------------------------|
+| 1 | `rivet-gg/opengb` | 422 | **200** | *"# Open Game Backend — **Moved to https://github.com/rivet-gg/toolchain**"* |
+| 2 | `rivet-gg/toolchain` | 422 | **200** | *"# **Archived Repository** — ⚠️ This repository is archived and no longer maintained. **It has been moved to `rivet-gg/rivet`**"* |
+| 3 | `rivet-gg/rivet` | 422 | **200** | sin aviso: es el **redirect de organización**, `rivet-gg` → `rivet-dev` |
+| 4 | **`rivet-dev/rivet`** | ✅ **6.970★, Apache-2.0 (`LICENSE`, 11350), `pushed_at` 2026-11-21** | 200 | el slug canónico |
+
+**Dos lecciones.** (a) La firma de rename que esta KB documentó (`repo:` → no
+visible + `raw` del slug viejo → 200) **se sostiene**, y aquí resolvió una
+cadena de **3 saltos**. 🔴 **Precisión obligatoria, porque la primera lectura de
+este pass fue incorrecta:** el eslabón intermedio **no está muerto** — está
+**archivado y apunta hacia adelante**. Los tres slugs obsoletos devuelven **200
+en `raw`**, así que *todos parecen vivos*, y ninguno es visible para el API. ⇒
+hay que **iterar** la firma, no aplicarla una vez, y leer el `README` de cada
+eslabón: es ahí donde está el puntero siguiente. (b) Un rename de **organización** renombra *todos* sus
+repos a la vez: es el modo de fallo de rename con mayor radio de daño, y el
+único que invalida una página entera de punteros de golpe.
+
+**Y el dato de mercado, que es más grande que el de método.** `rivet-dev/rivet`
+ya no se describe como backend de juego. Hoy es *"the orchestrator for agentic
+workloads"*, con *"4,99 ms p99 cold starts, 72 KB RAM per Actor"* y la frase
+*"you can create one for each **agent**, user, session, or tenant"*. La misma
+org publica `rivet-dev/agentos` (**4.912★**, Apache-2.0, sandboxes WASM) y
+`rivet-dev/agents` (1.652★, Apache-2.0). **La empresa que construyó el Open
+Game Backend abandonó el nicho de gaming y revendió su tecnología de
+orquestación de game servers como infraestructura de agentes AI.** Ver
+`intel/trends.md` nº 18.
+
+Consecuencia operativa inmediata: **la alternativa Apache-2.0 a Nakama en
+orquestación de servers es `agones-dev/agones`, no OpenGB.** OpenGB no está
+"sin mantenimiento": **ya no existe como producto de gaming.**
+
+## ⚫ Candidatos nuevos evaluados y **rechazados** este pass
+
+| Candidato | Medido | Por qué se rechaza |
+|-----------|--------|--------------------|
+| [AIGeeksGroup/Code2Games](https://github.com/AIGeeksGroup/Code2Games) | **89★**, **SPDX `NONE`**, `pushed_at` 2026-10-17 | Apareció en snippets de búsqueda como repo de trending de generación de mundos de juego. **Sin archivo de licencia** (las 11 sondas → 404) ⇒ *all rights reserved*. Mismo patrón que `chongdashu/unreal-mcp`, con 24× menos tracción. |
+| [AlterLab-IEU/AlterLab_GameForge](https://github.com/AlterLab-IEU/AlterLab_GameForge) | 57★, MIT, `pushed_at` 2026-11-06 | Grant limpio, proyecto real, **pero 57★ y 15 días sin commits**. Apareció como "rank #1 de un día" en un tracker de trending: **el ranking diario de un tracker no es tracción.** Señal, no ruta. |
+| `jaylfc/taOS` | 609★, **AGPL-3.0** | "AI agent OS" self-hosted que menciona *gaming PC* sólo como **hardware de cluster**. **No es un repo de gaming**: entró por la query y se va por el alcance. Se anota porque su AGPL-3.0 contó en el reparto de la tier de skills, y porque es el tipo de falso positivo que una búsqueda por palabra clave produce. |
+| `shinkuan/Akagi` | 1.151★, Apache-2.0, ⚠️ rama default **`v3`** | Asistente de **Mahjong online** (riichi). Grant limpio y activo, pero es **asistencia a un jugador humano en un juego con dinero**, no game dev. Fuera de alcance; se anota la rama default `v3` porque es la **4ª rama no-`main`/`master`** que esta KB encuentra y refuerza usar `HEAD`. |
+
+## Lo más importante del pass 2026-11-21 (cycle 5): **un grant sin su alcance no es un grant**
 
 El pass del 2026-11-20 derivó el *checksum de bytes* y cazó 4 filas mal
 clasificadas. Este pass aplica la regla que llegó de la KB de **enterprise**
@@ -149,6 +484,7 @@ fila cuyos bytes no caen en la banda de su familia está **mal clasificada**.
 | Apache-2.0 | **11.300 – 11.400** |
 | MPL-2.0 | **~16.700** |
 | CC-BY-4.0 | **~18.650** |
+| 🆕 **LGPL-3.0** | **~7.650** — ⚠️ **suplemento, no texto completo: incorpora la GPL-3.0 (~35.200 B) por referencia y casi nunca la embarca. La única banda de esta tabla donde menos bytes = MÁS restricción.** |
 | LGPL-2.1 | **~26.400** |
 | AGPL-3.0 | **~34.500** |
 | GPL-3.0 | **~35.200** |
@@ -266,7 +602,7 @@ temprano o no tiene grant (ver tabla de bloqueantes).
 
 | Nombre | Repo | Licencia | Descripción | ★ |
 |--------|------|----------|-------------|---|
-| LimboAI | [limbonaut/limboai](https://github.com/limbonaut/limboai) | MIT | Plugin C++ Godot: Behavior Trees + HSM. `BTState` combina ambos. ⚠️ rama default **`master`**. | 3.137 |
+| LimboAI | [limbonaut/limboai](https://github.com/limbonaut/limboai) | 🔴 **MIT el código + CC BY 4.0 el logo y los assets del demo** (corregido 2026-11-21 cycle 6 por enumeración) | Plugin C++ Godot: Behavior Trees + HSM. `BTState` combina ambos. **Tres archivos de licencia, no uno:** `LICENSE.md` (1103, MIT — ⚠️ no empieza con la cadena `MIT License`), `LOGO_LICENSE.md` (212, **CC BY 4.0**), `demo/LICENSE_ASSETS.md` (280, **CC BY 4.0**, cubre los PNG/SVG de `assets/`). ⇒ el **código** se puede relicenciar; **forkear el proyecto demo como punto de partida arrastra atribución CC BY 4.0**. ⚠️ rama default **`master`**. | 3.137 |
 | Beehave | [bitbrain/beehave](https://github.com/bitbrain/beehave) | MIT | Behavior trees componibles en el scene tree. ⚠️ rama default **`godot-4.x`** — ni `main` ni `master`. | 3.329 |
 | godot_rl_agents | [edbeeching/godot_rl_agents](https://github.com/edbeeching/godot_rl_agents) | MIT | Wrappers para 4 frameworks RL: SB3, Sample Factory, Ray RLLib, CleanRL. **900+ → 1.639: +82%**, el mayor salto relativo de la KB. | 1.639 |
 
@@ -289,7 +625,7 @@ temprano o no tiene grant (ver tabla de bloqueantes).
 
 | Nombre | Repo | Licencia | Descripción | ★ |
 |--------|------|----------|-------------|---|
-| Matrix-Game 4.0 | [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | ⚠️ **grant partido** (ver abajo) | Release 15-oct-2026. Engine ejecutable (lógica, física, input) + modelo causal de video que convierte frames low-poly en visuales. 67 FPS en RTX 5080 @864×480 con SageAttention. | 2.944 |
+| Matrix-Game 4.0 | [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | ⚠️ **grant partido en 7 archivos** + 11 componentes vendorizados + pesos aparte (enumerado 2026-11-21 cycle 6 — ver arriba) | Release 15-oct-2026. Engine ejecutable (lógica, física, input) + modelo causal de video que convierte frames low-poly en visuales. 67 FPS en RTX 5080 @864×480 con SageAttention. | 2.944 |
 | MineWorld | [microsoft/mineworld](https://github.com/microsoft/MineWorld) | MIT (`LICENSE`, 1141) | World model interactivo sobre Minecraft. Transformer autoregresivo visual-acción. Checkpoints 300M/700M/1200M. 4–7 fps con Diagonal Decoding. 6 meses sin commits. | 497 |
 
 ⚠️ **Matrix-Game — el grant depende del directorio, y el badge de GitHub engaña.**
@@ -372,7 +708,19 @@ legal.**
 
 Una ausencia medida vale más que un silencio.
 
-- **`huggingface.co` → no resuelve DNS. CUARTO pass consecutivo (2026-11-21).** Consecuencia
+- 🔴 **CORRECCIÓN DE DIAGNÓSTICO (2026-11-21 cycle 6): `huggingface.co` NO es un fallo de DNS.** Cuatro passes lo
+  registraron como *"no resuelve DNS"*. Medido hoy: `curl` devuelve
+  **`(56) CONNECT tunnel failed, response 403`** para `huggingface.co` **y** para
+  `hf.co`. Según `/root/.ccr/README.md`, un 403 en el CONNECT significa que
+  *"the destination host is not allowed for this session"*: es una **denegación
+  de política del proxy de egreso**, no una resolución fallida. **La diferencia
+  es operativa.** Un fallo de DNS podría ser transitorio y justifica reintentar
+  cada pass; una denegación de política **no va a cambiar reintentando**.
+  ⇒ **dejar de sondear Hugging Face.** La vía que sí funciona es la del hallazgo
+  nº2: leer el **modelo base declarado en el README** del repo de código.
+  Aplicada hoy dio el primer grant de pesos verificado de esta KB
+  (GameScaling → Qwen3.5, Apache-2.0).
+- **Historia del gap, conservada — `huggingface.co` inalcanzable.** Consecuencia
   concreta e inmutable desde julio: **ninguna licencia de pesos ha sido verificada
   nunca por esta KB** — ni Matrix-Game 4.0, ni los checkpoints de MineWorld, ni
   `tencent/HY-World-2.0`. En un world model, los pesos son la mitad del entregable.
@@ -387,7 +735,8 @@ Una ausencia medida vale más que un silencio.
   cross-chequea corriendo búsquedas independientes sobre la misma cifra. Dicho
   explícitamente porque cambia el peso de las secciones de `intel/`: los repos
   están leídos en bytes, **los números de mercado no**.
-- **Listado de directorios de un repo: CONFIRMADO sin canal, 2º pass.**
+- 🟢 **RESUELTO (2026-11-21 cycle 6): enumerar los archivos de licencia de un repo de terceros SÍ tiene canal — `gh api search/code -f q='repo:<slug> filename:LICENSE'`.** Ver hallazgo nº1: devolvió `total_count: 7` para `SkyworkAI/Matrix-Game` y resolvió los 12 repos principales de esta KB. **Sigue sin canal** la enumeración de un directorio *arbitrario* (`search/code` indexa por nombre de archivo, no lista rutas) y la API de contenidos. 🆕 **También medido bloqueado: el MCP de GitHub de esta sesión para repos de terceros** — `mcp__github__get_file_contents` sobre `SkyworkAI/Matrix-Game` devuelve *"repository is not configured for this session. Allowed repositories: gmilano/globant-kb"*: es un **scope de sesión**, no una falla del servidor. ⚠️ Y `filename:LICENSE` **matchea código también** (`tools/ci_unity_license.py`, `build/extract-licenses.sh`): hay que filtrar por ruta/extensión antes de contar.
+- **Historia del gap, conservada — listado de directorios: CONFIRMADO sin canal, 2º pass (cycle 5).**
   `gh api repos/<owner>/<repo>/contents` devuelve
   *"GitHub access to this repository is not enabled for this session"* —
   el scope de GitHub de esta sesión cubre `search/*` y `raw`, no la API de
@@ -398,6 +747,28 @@ Una ausencia medida vale más que un silencio.
 - **★ de este pass: 100% releídas.** No queda ninguna fila con `*` heredado. El
   canal `gh api search/repositories` lo hizo posible; el pass de octubre lo creía
   bloqueado y tuvo que dejar 20 filas sin verificar.
+
+---
+*Pass 2026-11-21 (cycle 6), ~1 h después del cycle 5, por lo que **no mide
+crecimiento**: 1 **canal de verificación nuevo** (`gh api search/code` —
+enumeración de archivos de licencia en repos de terceros, gap declarado
+"sin canal" dos passes seguidos); Matrix-Game enumerado en **7** archivos de
+licencia (no 2) + `THIRD_PARTY_NOTICES.md` con 11 componentes vendorizados ⇒
+**7º eje de partición de grant**; **1er grant de pesos verificado en la historia
+de esta KB** (GameScaling ← Qwen3.5, Apache-2.0) por la regla nueva *"el grant
+de los pesos está acotado por el del modelo base, y el modelo base está en el
+README"*; 1 corrección de diagnóstico (Hugging Face es **denegación de política
+del proxy**, no fallo de DNS ⇒ dejar de reintentar); **trap de los 14 bytes**
+(el cuerpo de un 404 de `raw` son 14 B y un byte-count sin status HTTP lo anota
+como licencia); enumeración pasada por 12 repos recomendados, tasa medida
+**4/12**, con **discriminador de byte-identidad** que separó 2 falsas alarmas de
+2 hallazgos reales; **LimboAI corregido: MIT el código, CC BY 4.0 el logo y los
+assets del demo**; **el copyleft se mudó a los packs de skills** (3 de 6 packs
+nuevos >400★ son LGPL-3.0/AGPL-3.0) + **banda nueva LGPL-3.0 ~7.650 B** con la
+asimetría explicada; cadena de renames de **3 saltos** en `rivet-gg/opengb` y el
+pivot de Rivet de backend de juego a orquestador de agentes; 10 repos nuevos
+verificados, 4 rechazados con motivo; `LICENCE` estrena testigo (6 de 11
+variantes de sonda con caso real). 2026-11-21.*
 
 ---
 *Pass 2026-11-21 (cycle 5): 16 badges `NOASSERTION`/`null` resueltos por lectura

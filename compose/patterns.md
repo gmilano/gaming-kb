@@ -7,9 +7,18 @@ updated: 2026-11-21
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-10-26** (pass previo: 2026-07-02).
+> Última actualización: **2026-11-21 (cycle 6)** (passes previos: 2026-11-21
+> cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
-> Nueve recetas. Las seis primeras vienen del pass de julio con sus cifras y
+> **Dieciocho recetas.** Las del cycle 6 son la **16** (gate de licencia para
+> packs de skills y prompts — la ruta de contaminación por `cp -r` que el gate
+> de build no ve), la **17** (auditoría de grant **por enumeración** en vez de
+> por sonda, con el inventario de componentes vendorizados y el cierre de la
+> licencia de pesos vía el modelo base) y la **18** (clasificación de audiencia
+> **por edad** antes del sprint del Art. 50, porque la obligación europea
+> depende de a quién apunta el juego).
+>
+> Nueve recetas originales. Las seis primeras vienen del pass de julio con sus cifras y
 > licencias corregidas; **las recetas 7, 8 y 9 son nuevas** y responden a cambios
 > concretos de este ciclo: una fecha límite regulatoria en la UE, world models
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
@@ -837,6 +846,257 @@ pipeline lo recuerde solo**.
 
 ---
 
+## 🆕 Receta 16: *Gate* de licencia para **packs de skills y prompts** — la ruta de contaminación que la Receta 15 no ve
+
+**Problema, y es nuevo.** La Receta 15 pone un gate de licencia en CI sobre el
+**árbol de dependencias**: lee lockfiles, manifests y SPDX de paquetes. Es
+correcta y no alcanza. El activo que se volvió viral en gaming es el **pack de
+skills** — directorios de `.md` con instrucciones de agente — y **entra al repo
+del cliente con un `cp -r`**: sin lockfile, sin manifest, sin import, invisible
+para todo gate que mire dependencias.
+
+Medido en este pass sobre los packs nuevos de gaming con >400★: **3 de 6 son
+copyleft** (`thedivergentai/Game-Dev-Agentic-Skills` LGPL-3.0 983★,
+`jaylfc/taOS` AGPL-3.0 609★, `op7418/guizang-game-skill` AGPL-3.0 431★).
+
+**Honestidad sobre el alcance de la afirmación:** que un prompt en markdown sea
+"software" a efectos de la AGPL-3.0 **no está resuelto**, y esta receta no lo
+asume. El riesgo que mitiga es el **de aceptación del entregable**: un cliente
+corporativo con gate de licencias rechaza un archivo AGPL-3.0 en su repo sin
+esperar jurisprudencia.
+
+### Implementación
+
+**Paso 1 — inventario de packs, no de paquetes.** Todo directorio que contenga
+`SKILL.md`, `skills/`, `.claude/`, `AGENTS.md` o `*.skill.md` es un pack, venga
+de donde venga.
+
+```bash
+#!/usr/bin/env bash
+# gate-skills.sh — corre en CI, junto al gate de la Receta 15
+set -euo pipefail
+PROHIBIDAS='AGPL-3.0|LGPL-3.0|LGPL-2.1|GPL-2.0|GPL-3.0|CC-BY-NC|SSPL|BUSL'
+fail=0
+# 1) packs de skills que viven en el repo
+while IFS= read -r d; do
+  # el grant de un pack es el LICENSE más cercano hacia arriba
+  lic=""
+  p="$d"
+  while [ "$p" != "." ] && [ -n "$p" ]; do
+    for f in LICENSE LICENSE.txt LICENSE.md License.txt license.txt LICENCE COPYING; do
+      [ -f "$p/$f" ] && { lic="$p/$f"; break 2; }
+    done
+    p=$(dirname "$p")
+  done
+  if [ -z "$lic" ]; then
+    echo "🔴 SIN GRANT: $d  (ningún LICENSE en la cadena de directorios)"; fail=1; continue
+  fi
+  # firma por bytes + encabezado (ver agents/top.md)
+  b=$(wc -c < "$lic")
+  if [ "$b" -lt 50 ]; then
+    echo "🔴 ARCHIVO FANTASMA: $lic son $b B — ver el trap de los 14 bytes"; fail=1; continue
+  fi
+  if head -40 "$lic" | grep -qiE 'AFFERO|LESSER GENERAL PUBLIC|GNU GENERAL PUBLIC'; then
+    echo "🔴 COPYLEFT en pack de skills: $d → $lic ($b B)"; fail=1
+  fi
+done < <(find . -type d \( -name skills -o -name '.claude' \) -not -path './.git/*')
+
+# 2) ningún .md del repo debe declarar una licencia prohibida en su propio header
+grep -rlEi "SPDX-License-Identifier: *($PROHIBIDAS)" --include='*.md' . 2>/dev/null \
+  | sed 's/^/🔴 SPDX prohibido en markdown: /' | tee /dev/stderr | grep -q . && fail=1
+
+exit $fail
+```
+
+**Paso 2 — la regla de los 3 bytes que hace falta conocer.** El gate de arriba
+usa dos discriminadores derivados en este pass y en el anterior:
+
+| Señal | Qué significa | Por qué el gate la necesita |
+|-------|---------------|----------------------------|
+| **bytes < 50** | el cuerpo de un 404 de `raw.githubusercontent.com` son **14 B** (`404: Not Found`) | sin esto, un archivo inexistente pasa como licencia válida |
+| **bytes ≈ 7.650 + encabezado "LESSER"** | **LGPL-3.0**, que es un **suplemento** y **no embarca la GPL-3.0** que incorpora | un gate que sólo mire tamaño ve 7.650 B, lo compara con la banda de copyleft (≥26.400) y **lo deja pasar** |
+| **bytes idénticos al `LICENSE` de la raíz** | copia de packaging, **no** partición del grant | evita 2 falsas alarmas de cada 4 (tasa medida en este pass) |
+
+**Paso 3 — el pack que se recomienda usar, y por qué.**
+[gamedev-skills/awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills)
+(**Apache-2.0**, `LICENSE` 11.395 B + `NOTICE` 883 B, **9.929★, 1.013 forks**):
+79 skills + router para Godot, Unity, Unreal, Roblox, three.js, Phaser y 6
+engines más, *"checked on the real engines"*. **Su `NOTICE` es parte del valor
+del entregable**, no un costo: declara que todas las skills son obra original
+escrita desde documentación primaria y que *"no text or code was copied"* de
+otras colecciones, más disclaimer de marcas de los 11 engines. Apache-2.0 §4(d)
+obliga a propagarlo ⇒ **se entrega la atestación de procedencia junto con el
+código**, que es justo lo que un cliente con ansiedad de IP quiere firmar.
+
+**Paso 4 — alternativa si el cliente exige MIT puro:** `coop-anything` (MIT) y
+`bot-crossing` (MIT) para las piezas que cubren; para profundidad de Godot,
+`Game-Dev-Agentic-Skills` es técnicamente el mejor (99 skills, 27 blueprints de
+género) y está **fuera de la ruta permisiva** por su LGPL-3.0: hay que decirlo y
+no usarlo, no usarlo y no decirlo.
+
+**Esfuerzo:** 1-2 días para el gate; 0,5 día por repo de cliente para el barrido
+inicial. **Encaja con:** Recetas 10, 14 y 15 — la secuencia completa es
+**10 (verificar) → 14 (acotar) → 15 (gate de build) → 16 (gate de prompts)**.
+
+---
+
+## 🆕 Receta 17: Auditoría de grant **por enumeración**, no por sonda — y el inventario de componentes vendorizados
+
+**Problema.** Las Recetas 10 y 14 verifican licencias **sondeando nombres de
+archivo**: se pide `LICENSE`, `LICENSE.txt`, `License.txt`… de una lista. Esa
+lista tiene un sesgo invisible desde adentro: **es exactamente tan completa como
+la imaginación de quien la escribió.** El pass anterior auditó
+`SkyworkAI/Matrix-Game` con sondas, encontró 2 archivos de licencia y escribió
+que *no podía afirmar* que no hubiera más. Había **7**, y **3 de las rutas no
+eran adivinables** (nadie iba a sondear `Matrix-Game-4/licenses/MG4CF-LICENSE`).
+
+> **Una sonda sólo puede confirmar lo que ya sospechabas. Sólo la enumeración te
+> dice lo que te faltaba.**
+
+### Implementación
+
+**Paso 1 — enumerar, no adivinar.**
+
+```bash
+SLUG=SkyworkAI/Matrix-Game
+gh api -X GET search/code -f q="repo:$SLUG filename:LICENSE" --jq '.items[].path'
+# Matrix-Game-4/licenses/MG4CF-LICENSE
+# Matrix-Game-4/licenses/TAEHV-LICENSE
+# Matrix-Game-4/matrix_game/web/mediamtx-reader.LICENSE
+# LICENSE
+# Matrix-Game-4/LICENSE
+# Matrix-Game-3/LICENSE.txt
+# Matrix-Game-1/GameWorldScore/LICENSE
+```
+
+⚠️ **Dos trampas del canal, medidas:** (a) `filename:LICENSE` **matchea código
+también** (`tools/ci_unity_license.py`, `build/extract-licenses.sh`) — filtrar
+por ruta/extensión antes de contar; (b) repetir la consulta con
+`filename:LICENCE`, `filename:COPYING` y `filename:NOTICE`, porque el índice
+matchea el nombre que se le pide.
+
+**Paso 2 — buscar el inventario de terceros, que es el eje que ninguna sonda de
+licencia encuentra.**
+
+```bash
+for f in THIRD_PARTY_NOTICES.md THIRD_PARTY_NOTICES NOTICE CREDITS.md; do
+  curl -sS -w "|%{http_code}" "https://raw.githubusercontent.com/$SLUG/HEAD/$f"
+done   # descartar todo lo que no sea 200 (ver el trap de los 14 bytes)
+```
+
+Para Matrix-Game-4 ese archivo lista **11 componentes vendorizados** y encabeza
+con *"The project-level Apache-2.0 license does not replace the licenses
+below"*. Entre ellos: `recastnavigation` (**zlib**), Jolt Physics (MIT),
+[madebyollin/taehv](https://github.com/madebyollin/taehv) (MIT), stb
+(dual-license) y —el que muerde— **audio de racing bajo CC0 y CC BY 3.0 con
+obligación de retener `audio/CREDITS.md`**.
+
+**Paso 3 — resolver cada archivo con el discriminador de byte-identidad.**
+
+```bash
+root_bytes=$(curl -sS "https://raw.githubusercontent.com/$SLUG/HEAD/LICENSE" | wc -c)
+# para cada ruta enumerada:
+#   bytes == root_bytes  -> copia de packaging, NO es partición. No leer.
+#   bytes != root_bytes  -> leer el encabezado. Es un grant distinto.
+#   bytes < 50           -> 404 fantasma. Descartar.
+```
+
+**Tasa medida en este pass** sobre los 12 repos más recomendados de esta KB:
+**4 de 12** tenían un grant que la ficha plana no representaba, y **2 de esos 4
+hallazgos eran falsas alarmas** que el discriminador de byte-identidad separó sin
+una lectura extra. El hallazgo real más caro: **`limbonaut/limboai`, publicado
+como "MIT" plano en dos archivos de esta KB, es MIT para el código y
+CC BY 4.0 para el logo y para los assets gráficos del proyecto demo** — y el
+demo es justamente lo que un estudio forkea como punto de partida.
+
+**Paso 4 — cerrar la licencia de los pesos sin acceder a Hugging Face.** Para
+cualquier modelo del entregable:
+
+```bash
+curl -sS "https://raw.githubusercontent.com/$SLUG/HEAD/README.md" \
+  | grep -iE "pre-trained from|base model|backbone|fine-tuned from|initialized from"
+```
+
+Porque **un modelo derivado no puede ser más permisivo que su backbone**.
+Aplicado a `THUSI-Lab/GameScaling` devuelve, literal: *"The models are continued
+pre-trained from **Qwen3.5**, which is also **Apache 2.0**"* ⇒ **pesos
+Apache-2.0, verificado**, el primer grant de pesos cerrado en la historia de
+esta KB. Si el README **no** lo declara y el modelo es entrenado desde cero, el
+resultado correcto es *"grant de pesos no verificable por este canal"* escrito
+en el entregable — y no una inferencia.
+
+**Entregable:** una tabla por repo con `ruta | bytes | grant | ¿se distribuye?`,
+más una fila por componente vendorizado y una fila por artefacto de modelo. Es
+la Receta 14 (6 ejes, hoy **7** con *por dependencia vendorizada*) pero
+**completa en vez de muestreada**.
+
+**Esfuerzo:** 1 día por stack. **Encaja con:** 10 → 14 → **17** → 15/16. La 17
+va **antes** de los gates, porque es la que produce la lista contra la que los
+gates corren.
+
+---
+
+## 🆕 Receta 18: Clasificación de audiencia por edad **antes** del sprint de disclosure del Art. 50
+
+**Problema.** La Receta 7 trata el deadline del **2-dic-2026** como un sprint de
+inventario-y-etiquetado sobre todos los sistemas AI del catálogo. El análisis de
+**WH Partners** (*"Same NPC, Different Rules: How a Player's Age Changes Their
+Responsibilities Under the AI Act"*) agrega el discriminador que faltaba: **la
+obligación depende de la audiencia.** Un juego **single-player dirigido a
+adultos** puede **no** necesitar etiquetar el diálogo de un NPC; el **mismo NPC**
+en un título con audiencia de menores sí.
+
+⇒ Etiquetar todo no es "ir a lo seguro": es **gastar ingeniería en filas que no
+la necesitan** mientras quedan sin resolver las que sí, con 11 días de plazo.
+
+### Implementación
+
+**Paso 1 — agregar una columna al inventario de la Receta 7**, antes de tocar
+una línea de código:
+
+| Título | Sistema AI | Audiencia declarada (PEGI/ESRB) | ¿Interacción con el jugador? | Obligación Art. 50 | Trabajo |
+|--------|-----------|--------------------------------|------------------------------|--------------------|---------|
+| *(ejemplo)* RPG single-player | NPC con LLM | PEGI 18 | sí, sólo texto | **a evaluar** — WH Partners sugiere que puede no requerir etiqueta | registro + decisión fechada y firmada |
+| *(ejemplo)* mobile F2P | NPC con LLM | PEGI 7 | sí | **sí** | etiqueta + capa de runtime |
+| *(ejemplo)* cualquiera | upscaling de texturas en build | — | **no** | **no** (herramienta de desarrollo) | sólo registro |
+
+**Paso 2 — cruzar con la obligación de NA, que es por reloj y no por edad de
+clasificación.** Connecticut (PA 26-15) exige recordatorio de que se habla con
+una AI **≥1 vez/hora para menores y ≥1 vez/3 horas para adultos**. ⇒ **las dos
+jurisdicciones piden cosas distintas del mismo dato**: EMEA usa la edad para
+decidir **si** hay obligación; NA la usa para decidir **con qué frecuencia**
+cumplirla. Una sola implementación sirve para las dos **sólo si la edad es un
+parámetro de configuración y no una constante de build**. Es exactamente la capa
+de la Receta 13, con la edad promovida a entrada.
+
+**Paso 3 — dimensionar la exposición por jurisdicción antes de decidir cuánto
+invertir.** Las cifras no son comparables y por eso la decisión es económica:
+
+| Jurisdicción | Techo de sanción | Estado |
+|--------------|------------------|--------|
+| **EU** (Art. 5, prácticas prohibidas — p. ej. NPC que empuja al gasto) | **€35 M o 7% de facturación global** | vigente |
+| **EU** (Art. 50, transparencia) | régimen de multas del Acta | **2-dic-2026** para sistemas ya en mercado |
+| **Corea del Sur** (AI Basic Act) | **KRW 30 M** (~US$ 20 mil), sólo 3 tipos de incumplimiento, **gracia ≥1 año** | vigente 22-ene-2026 |
+| **China** (CAC) | registro **previo** del servicio de AI generativa | vigente; **>550 servicios registrados** a mediados de 2026 |
+| **Japón** | sin penalidades (enfoque por principios) | AI Basic Plan nuevo del **14-jul-2026** |
+
+**Seis órdenes de magnitud entre el techo europeo y el coreano, para un mismo
+título que publica el mismo día en los dos mercados.** La conclusión no es
+ignorar Corea: es que **el presupuesto de compliance se asigna por exposición
+medida**, y China no es una multa sino un **lead time** que hay que meter en el
+cronograma de lanzamiento.
+
+**Paso 4 — documentar la decisión, no sólo la implementación.** Para cada fila
+donde se concluye "no hay obligación", el entregable es un **registro fechado
+con el razonamiento y la fuente**. Si el criterio de la Comisión se endurece, lo
+que protege al cliente es haber decidido con fundamento en una fecha, no haber
+acertado.
+
+**Esfuerzo:** 2-3 días de clasificación para un catálogo mediano; es lo que
+libera semanas de ingeniería. **Encaja con:** va **antes** de la 7 y de la 13.
+
+---
+
 ## Tabla resumen
 
 | Patrón | Stack principal | Esfuerzo | ROI esperado |
@@ -856,18 +1116,42 @@ pipeline lo recuerde solo**.
 | 🆕 13 · **Disclosure por reloj de sesión (NPC con LLM)** | Godot + LimboAI/Beehave (MIT) + `SessionClock` + log append-only + NPCTalk (MIT) | **1-2 semanas** (3-5 días si ya hay BT) | 🔴 **Vigencia externa 1-ene-2027 (WA) · cadencia 1 h/3 h (CT)**. Preparación, no cumplimiento: la definición de "companion chatbot" para NPCs sigue abierta |
 | 🆕 14 · **Auditoría de ALCANCE de licencias (6 ejes)** | 2 canales + 11 nombres de archivo + 3 discriminadores de bytes | **medio día** sobre stack inventariado | 🟢 Sobre esta KB: 4/4 reclasificaciones, 1 rechazo revertido, 3 repos **más** permisivos, 2 licencias propias destapadas |
 | 🆕 15 · **Gate de licencia por región en CI** | Manifiesto YAML de 6 campos + job de release + sustitutos predeclarados | **2-3 días** | 🟢 Evita descubrir en el lanzamiento que un componente **no se licencia** en el mercado de destino |
+| 🆕 16 · **Gate de licencia para packs de skills y prompts** | `gate-skills.sh` + 3 discriminadores de bytes + awesome-gamedev-agent-skills (Apache-2.0 + `NOTICE`, 9.929★) | **1-2 días** + 0,5 día/repo | 🔴 **3 de 6 packs de gaming nuevos >400★ son copyleft** y entran con un `cp -r`: ningún gate de dependencias los ve |
+| 🆕 17 · **Auditoría de grant por ENUMERACIÓN** | `gh api search/code filename:LICENSE` + `THIRD_PARTY_NOTICES` + discriminador de byte-identidad + regla del modelo base | **1 día/stack** | 🟢 **4 de 12** repos recomendados tenían grant no representado (LimboAI = MIT + **CC BY 4.0**); Matrix-Game: **7** archivos, no 2; **1er grant de pesos verificado** de la KB |
+| 🆕 18 · **Clasificación de audiencia por edad antes del Art. 50** | Columna PEGI/ESRB en el inventario de la R7 + edad como parámetro de runtime (no constante de build) | **2-3 días** | 🟢 Libera semanas de ingeniería: la obligación europea **depende de la audiencia**, no de tener un NPC |
 
 ### Cuál proponer según la región del engagement
 
 | Región | Receta de entrada | Por qué |
 |--------|-------------------|---------|
-| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 7 reencuadrada (inventario), luego 10, luego 15** · 🆕 **11 días** | Fecha legal dura **a 12 días** y un segundo reloj en 2-dic-2027. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
-| **North America** | 🆕 **13** primero si hay NPC conversacional, luego **6** y **9**, luego 2 y **10** | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 🆕 **55%** de los devs ve la gen AI como daño (GDC nov-2026; era 52%) y ~85% de los jugadores la rechaza. 🆕 **Adopción estadounidense estancada: 36%→38%, dentro del margen de error** ⇒ acá se vende *primer paso*, no escala. 🆕 **Y ya hay obligación de runtime: Receta 13.** **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". |
-| **APAC** | **8** y **11**, luego 7 adaptada, **10** y 🆕 **15** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; 🔴 **HY-World 2.0 sí publica licencia — `License.txt` — y excluye EU, UK y Corea**). 🆕 **Adopción japonesa 85,8% con 63% de uso diario (CESA 2026, 1.349 respuestas)** ⇒ acá no se vende adopción: se vende **gobernanza, escala y evaluación de calidad de salidas** (la preocupación nº1 declarada es precisión/calidad, 51,9%). |
-| **LATAM** | **1**, **3**, **5** y **12** (y **13** sólo si se publica en EE.UU.) | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad (PGB Latam 2026), y Ubisoft acaba de ponerle titular. 🆕 **El único compliance con fecha en LATAM es publicitario, no de producto: guía CONAR de Brasil en vigor desde el 1-jun-2026** (el PL 2338/2023 sigue trabado en la Cámara ⇒ **no hay ley general de AI en vigor**). |
+| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 🆕 18 (clasificar audiencia), luego 7 reencuadrada (inventario), luego 17, 10 y 15** · 🆕 **11 días** | Fecha legal dura **a 12 días** y un segundo reloj en 2-dic-2027. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
+| **North America** | 🆕 **13** primero si hay NPC conversacional, luego **6** y **9**, luego 2, **17** y **10** · 🆕 **16 obligatoria** si el entregable incluye packs de skills | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 🆕 **55%** de los devs ve la gen AI como daño (GDC nov-2026; era 52%) y ~85% de los jugadores la rechaza. 🆕 **Adopción estadounidense estancada: 36%→38%, dentro del margen de error** ⇒ acá se vende *primer paso*, no escala. 🆕 **Y ya hay obligación de runtime: Receta 13.** **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". |
+| **APAC** | **8** y **11**, luego 7 adaptada, **17**, **10** y 🆕 **15** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; 🔴 **HY-World 2.0 sí publica licencia — `License.txt` — y excluye EU, UK y Corea**). 🆕 **Adopción japonesa 85,8% con 63% de uso diario (CESA 2026, 1.349 respuestas)** ⇒ acá no se vende adopción: se vende **gobernanza, escala y evaluación de calidad de salidas** (la preocupación nº1 declarada es precisión/calidad, 51,9%). |
+| **LATAM** | **1**, **3**, **5** y **12** (y **13** sólo si se publica en EE.UU.; **16** si el entregable lleva packs de skills) | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad (PGB Latam 2026), y Ubisoft acaba de ponerle titular. 🆕 **El único compliance con fecha en LATAM es publicitario, no de producto: guía CONAR de Brasil en vigor desde el 1-jun-2026** (el PL 2338/2023 sigue trabado en la Cámara ⇒ **no hay ley general de AI en vigor**). |
 
 ---
-*Pass **2026-11-21**: recetas nuevas **13** (capa de disclosure por reloj de
+*Pass **2026-11-21 (cycle 6)**: recetas nuevas **16** (gate de licencia para
+packs de skills y prompts: 3 de 6 packs nuevos de gaming con >400★ son
+LGPL-3.0/AGPL-3.0 y la ruta de contaminación es un `cp -r` invisible para
+cualquier gate de dependencias; incluye el script, los 3 discriminadores de
+bytes y la honestidad sobre que "un prompt es software" no está resuelto —el
+riesgo real es de **aceptación del entregable**), **17** (auditoría de grant
+**por enumeración** con `gh api search/code`, el inventario de componentes
+vendorizados de `THIRD_PARTY_NOTICES.md` que abre el **7º eje** de partición, el
+**discriminador de byte-identidad** que separó 2 falsas alarmas de 2 hallazgos
+reales, y la **regla del modelo base** que cerró el primer grant de pesos de la
+historia de esta KB sin acceder a Hugging Face) y **18** (clasificar audiencia
+**por edad** antes del sprint del Art. 50, porque según WH Partners un
+single-player para adultos puede no necesitar etiqueta: etiquetar todo no es ir
+a lo seguro, es gastar ingeniería en filas que no la necesitan con 11 días de
+plazo; incluye la tabla de exposición por jurisdicción con **6 órdenes de
+magnitud** entre el techo europeo y el coreano). Receta **10** gana el trap de
+los **14 bytes**; **14** pasa de 6 a **7 ejes**; **15** queda explícitamente
+incompleta sin la **16**. Secuencia recomendada: **18 → 7 → 10 → 14 → 17 → 15 →
+16**.*
+
+---
+*Pass **2026-11-21 (cycle 5)**: recetas nuevas **13** (capa de disclosure por reloj de
 sesión para NPCs con LLM — la primera obligación de NA que toca el runtime),
 **14** (auditoría de **alcance** de licencias por 6 ejes, con repo testigo
 verificado por eje) y **15** (gate de licencia **por región** en CI, nacido del

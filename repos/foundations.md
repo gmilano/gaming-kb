@@ -7,7 +7,7 @@ updated: 2026-11-21
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-20** (passes previos: 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-21 (cycle 6)** (passes previos: 2026-11-21 cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Doble canal obligatorio en esta página.** El SPDX del API
 > (`gh api search/repositories -f q='repo:<slug>'`) y la lectura del archivo en
@@ -18,6 +18,79 @@ updated: 2026-11-21
 > correcciones 🔴 de este pass.
 >
 > **★ de esta página: 100% releídas el 2026-11-20.** Ya no queda ninguna heredada.
+>
+> 🆕 **TERCER canal, agregado el 2026-11-21 (cycle 6):**
+> `gh api search/code -f q='repo:<slug> filename:LICENSE'` **enumera** todos los
+> archivos de licencia del repo. Los canales 1 y 2 sólo contestan lo que se les
+> pregunta; **hay que saber el nombre del archivo para pedirlo**, así que un
+> inventario hecho con sondas es tan completo como la lista de sondas de quien lo
+> escribió. **Una sonda confirma lo que ya sospechás; sólo la enumeración te dice
+> lo que te faltaba.** Pasado por los repos de esta página, cambió dos filas y
+> confirmó el resto — ver la sección siguiente.
+>
+> ⚠️ **Trap nuevo en el checksum de bytes:** el cuerpo de un 404 de
+> `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
+> `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
+> Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🆕 Enumeración aplicada a esta página (2026-11-21 cycle 6): **lo que una sonda no podía ver**
+
+| Repo de esta página | Archivos de licencia **enumerados** | Qué cambia |
+|---------------------|-------------------------------------|-----------|
+| 🔴 [limbonaut/limboai](https://github.com/limbonaut/limboai) | `LICENSE.md` (1103, **MIT**) · `LOGO_LICENSE.md` (212, **CC BY 4.0**) · `demo/LICENSE_ASSETS.md` (280, **CC BY 4.0**) | **Esta KB lo publicaba como "MIT" plano.** Es **MIT el código y CC BY 4.0 el logo y los PNG/SVG del proyecto demo**. Forkear el demo como base de proyecto **hereda atribución**. Corregido en `agents/top.md`. |
+| 🔴 [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | **7 archivos** (raíz MIT; `Matrix-Game-1/3/4` Apache-2.0; `licenses/MG4CF-LICENSE` Apache-2.0; `licenses/TAEHV-LICENSE` MIT; `web/mediamtx-reader.LICENSE` MIT) | El pass anterior publicó **2** y declaró que no podía saber si había más. Hay 7, y 3 de las rutas **no eran adivinables**. |
+| 🟡 [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | `License.txt` (**zlib**) · `Docs/doxygen-awesome-css/LICENSE` · `RecastDemo/Contrib/implot/LICENSE` · `RecastDemo/Contrib/imgui/LICENSE.txt` | La librería sigue siendo **zlib puro**; el `RecastDemo` **no**: vendoriza imgui/implot (MIT). Embeberlo requiere propagar esos avisos. |
+| 🟡 [agones-dev/agones](https://github.com/agones-dev/agones) | `LICENSE` (Apache-2.0) · `proto/grpc-gateway/LICENSE.txt` · `sdks/rust/proto/grpc-gateway/LICENSE.txt` | grpc-gateway vendorizado por duplicado. Benigno; hay que propagar el aviso. |
+| 🟢 [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | `LICENSE` (Apache-2.0) · `internal/gopher-lua/LICENSE` | gopher-lua vendorizado. Benigno. **Confirma** la fila. |
+| 🟢 [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp), [hi-godot/godot-ai](https://github.com/hi-godot/godot-ai) | duplicados **byte-idénticos** al de la raíz (+ un Unity Companion License confinado a `TestProjects/` en unity-mcp) | **Falsas alarmas.** Ver el discriminador abajo. |
+
+> **Discriminador de byte-identidad — nuevo y gratis.** Un segundo archivo de
+> licencia cuyos **bytes coinciden** con el de la raíz es una **copia de
+> packaging** (un subpaquete que embarca su propio LICENSE), **no** una partición
+> del grant. Si los bytes **difieren**, hay que leerlo. En este pass separó
+> **2 falsas alarmas de 2 hallazgos reales** sin una sola lectura extra: el
+> byte-count que esta página ya anota hace todo el trabajo.
+>
+> ⚠️ **`filename:LICENSE` matchea código, no sólo licencias.** La enumeración
+> devolvió `tools/ci_unity_license.py` y `build/extract-licenses.sh`. Filtrar por
+> ruta/extensión antes de contar, o el `total_count` infla.
+
+## 🆕 El inventario de dependencias vendorizadas: `THIRD_PARTY_NOTICES.md`
+
+El hallazgo de método con más alcance de este pass. `Matrix-Game-4` publica un
+archivo de notices —**cuya existencia sólo se descubre enumerando**— que abre
+el **7º eje de partición de un grant: por dependencia vendorizada.** Encabeza
+con: *"The project-level Apache-2.0 license does not replace the licenses
+below"*, lista 11 componentes y cierra con dos frases que resuelven el gap más
+viejo de esta KB: *"**Model and asset distributions carry their own accompanying
+license statements**"* y *"**Base-model and codec weight licenses accompany
+their upstream distributions**"*.
+
+Entre los 11 componentes aparecen **dos repos que esta misma página recomienda
+por separado** — `recastnavigation` (zlib) y Jolt Physics (MIT) — más
+[madebyollin/taehv](https://github.com/madebyollin/taehv) (589★, MIT) y, lo que
+muerde: **audio de racing bajo CC0 y CC BY 3.0 con obligación de retener
+`audio/CREDITS.md`**. ⇒ *"Matrix-Game 4.0 es Apache-2.0"* es cierto para el
+código del proyecto y **falso como entrada de inventario**.
+
+> **Regla para toda la familia de KBs: antes de declarar la licencia de un repo
+> grande, buscar `THIRD_PARTY_NOTICES`, `NOTICE` y `CREDITS`.** Es el único eje
+> de partición que **no** se puede descubrir sondeando nombres de licencia.
+
+## 🟢 El gap de las licencias de PESOS: primer caso verificado en la historia de esta KB
+
+| Modelo | Grant de los **pesos** | Evidencia leída en bytes (2026-11-21) |
+|--------|------------------------|---------------------------------------|
+| 🆕 [THUSI-Lab/GameScaling](https://github.com/THUSI-Lab/GameScaling) (Apache-2.0, 604★) | 🟢 **Apache-2.0** | El `README.md` dice literal: *"The models are continued pre-trained from **Qwen3.5**, which is also **Apache 2.0**"*. Pesos `bfloat16` desde los backbones Qwen3.5-0.8B/2B/9B/27B; `config.json` declara arquitectura Qwen3.5. ⚠️ **sin código de entrenamiento**; 8 checkpoints, cada uno su propio repo de HF. 🔵 el paper acredita trabajo *"while interning at miHoYo"*. |
+
+> **Regla nueva, mecánica: el grant de los pesos de un modelo derivado está
+> acotado por el grant de su modelo base, y el modelo base casi siempre está
+> nombrado en el README del repo de código.** Un modelo *continued-pretrained* o
+> *fine-tuned* no puede ser más permisivo que su backbone. Convierte una
+> pregunta que requería Hugging Face —**host denegado por política del proxy,
+> no un fallo de DNS: ver `agents/top.md`**— en una que se contesta con
+> `raw.githubusercontent.com` + `grep -i "base model\|pre-trained from"`.
+> No sirve para un modelo entrenado desde cero; sirve para la mayoría.
 
 ## 🔴 Las dos correcciones del pass 2026-11-20, y por qué el checksum de bytes las caza
 
@@ -120,6 +193,37 @@ y en los blogs **ya no es el canónico**; `repo:googleforgames/agones` →
 borrado). El proyecto salió de la org de Google a **`agones-dev`**. Misma firma
 que el rename de `casbin` en la KB de enterprise.
 
+### 🔴 2026-11-21 (cycle 6): **`rivet-gg/opengb` — "Open Game Backend" — ya no existe como producto de gaming**
+
+El *Open Game Backend* figura en la prensa de backends de juego como la
+alternativa Apache-2.0 a Nakama. Esta página **nunca lo listó**; conviene saber
+por qué no hay que agregarlo. Trazado hoy, es una **cadena de renames de 3
+saltos**:
+
+| Paso | Slug | `search/repositories` | `raw` | Qué dice |
+|------|------|----------------------|-------|----------|
+| 1 | `rivet-gg/opengb` | 422 | **200** | `README.md`: *"# Open Game Backend — **Moved to https://github.com/rivet-gg/toolchain**"* |
+| 2 | `rivet-gg/toolchain` | 422 | **200** | *"# **Archived Repository** — ⚠️ archived and no longer maintained. **It has been moved to `rivet-gg/rivet`**"* |
+| 3 | `rivet-gg/rivet` | 422 | **200** | redirect: la **organización** pasó de `rivet-gg` a `rivet-dev` |
+| 4 | ✅ [rivet-dev/rivet](https://github.com/rivet-dev/rivet) | **6.970★, Apache-2.0 (`LICENSE`, 11350), `pushed_at` 2026-11-21** | 200 | slug canónico |
+
+**Y lo que encontramos al llegar es más importante que el rename.**
+`rivet-dev/rivet` ya no se describe como backend de juego: hoy es *"the
+orchestrator for agentic workloads"* (*"4,99 ms p99 cold starts, 72 KB RAM per
+Actor"*, *"create one for each **agent**, user, session, or tenant"*). La misma
+org publica [rivet-dev/agentos](https://github.com/rivet-dev/agentos) (**4.912★**,
+Apache-2.0, sandboxes WASM) y [rivet-dev/agents](https://github.com/rivet-dev/agents)
+(1.652★, Apache-2.0). **La empresa que construyó el Open Game Backend abandonó
+el nicho de gaming y revendió su tecnología de orquestación de game servers
+como infraestructura de agentes AI.** Ver `intel/trends.md` nº 18.
+
+⇒ **Consecuencia operativa: la alternativa Apache-2.0 a Nakama para orquestación
+sigue siendo `agones-dev/agones`.** OpenGB no está "sin mantenimiento": dejó de
+existir como producto de gaming. 🔵 Dos lecciones de método: la firma de rename
+**hay que iterarla** (seguir el README del repo viejo te deja en otro 404), y un
+rename de **organización** invalida *todos* sus punteros a la vez — es el modo
+de fallo de rename con mayor radio de daño.
+
 ## RL y entornos de entrenamiento
 
 | Repo | Licencia (archivo, bytes) | Descripción | ★ |
@@ -129,6 +233,19 @@ que el rename de `casbin` en la KB de enterprise.
 | [DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3) | **MIT** (`LICENSE`, 1075) | PPO, SAC, A2C, DQN en PyTorch. El algoritmo por defecto para QA bots. ⚠️ default `master`. | 14.038 |
 | [Unity-Technologies/ml-agents](https://github.com/Unity-Technologies/ml-agents) | **Apache-2.0** (`LICENSE.md`, 572 — cabecera-puntero, no el texto completo) | Toolkit RL oficial de Unity. ⚠️ default **`develop`**. Commit de hoy. | 19.887 |
 | [edbeeching/godot_rl_agents](https://github.com/edbeeching/godot_rl_agents) | **MIT** (`LICENSE`, 1071) | Puente Godot ↔ Python para 4 frameworks RL. **900+ → 1.639 (+82%)**: mayor salto relativo de la KB. | 1.639 |
+
+## 🆕 Foundation models de agente de juego (nuevo en esta página, 2026-11-21 cycle 6)
+
+Categoría que esta página no tenía: **no un LLM con tools, un modelo de acción**.
+Las dos filas son código de investigación (23 y 35 forks), no producto — se
+listan porque son los únicos puntos de partida permisivos del nicho.
+
+| Repo | Licencia (archivo, bytes) | Descripción | ★ |
+|------|--------------------------|-------------|---|
+| 🆕 [RainBowLuoCS/Gamer](https://github.com/RainBowLuoCS/Gamer) | **Apache-2.0** (`LICENSE`, 11358) | *Generalist **Vision-Language-Action** foundation model* para agentes de juego de **horizonte largo y tiempo real**. Primera fila VLA de esta KB. 23 forks. | 1.189 |
+| 🆕 [THUSI-Lab/GameScaling](https://github.com/THUSI-Lab/GameScaling) | **Apache-2.0** (11358) — 🟢 **y los pesos también** | *Continued pre-training* para agentes embodied en mundos virtuales diversos: 8 checkpoints 0,8B–27B desde Qwen3.5, evaluación en 4 benchmarks de juego. **El único modelo de esta KB con grant de pesos verificado.** ⚠️ sin código de entrenamiento. 35 forks. | 604 |
+| 🆕 [Calix-L/DanKS](https://github.com/Calix-L/DanKS) | **Apache-2.0** (11348) + `NOTICE` (453) | Agente de **Guandan** (掼蛋) por RL a escala chica. Patrón útil: **información imperfecta + juego por equipos**, el caso que los agentes LLM todavía no resuelven. 🔵 APAC. | 833 |
+| 🆕 [Station-Sciences/bot-crossing](https://github.com/Station-Sciences/bot-crossing) | **MIT** (`LICENSE`, 1069) | *"A video game for AI agents"*: **el juego como entorno de evaluación**, no el agente. 286 forks. La pieza viva que `lmgame-org/GamingAgent` (congelado desde 2025-11-16) dejó de ser. | 906 |
 
 ## Arquitecturas de agente de referencia
 
@@ -200,6 +317,17 @@ creía el canal bloqueado:
 "bloqueado" congela una columna entera de la KB durante meses. El pass de octubre
 dejó ~20 filas con `*` por esa creencia. **Cuando un canal se declara bloqueado,
 el próximo pass debe reintentarlo, no heredar la conclusión.**
+
+---
+*Pass 2026-11-21 (cycle 6): 3er canal agregado (`gh api search/code` → enumeración
+de archivos de licencia); 2 filas corregidas por enumeración (LimboAI → MIT +
+CC BY 4.0; Matrix-Game → 7 archivos, no 2); 7º eje de partición de grant (por
+dependencia vendorizada, vía `THIRD_PARTY_NOTICES.md`); **1er grant de pesos
+verificado de la KB** (GameScaling ← Qwen3.5) con la regla del modelo base;
+trap de los 14 bytes documentado; discriminador de byte-identidad (2 falsas
+alarmas separadas de 2 hallazgos reales); categoría nueva de **foundation models
+de agente de juego** con 4 filas; cadena de renames de 3 saltos en
+`rivet-gg/opengb` + el pivot de Rivet a infraestructura de agentes. 2026-11-21.*
 
 *Ver también: `verticals/solutions.md` para plataformas verticales completas y
 `agents/top.md` para el método de verificación, el checksum de bytes y los grants

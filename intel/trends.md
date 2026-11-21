@@ -6,7 +6,7 @@ updated: 2026-11-21
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-10-26** (pass previo: 2026-07-02).
+> Última actualización: **2026-11-21 (cycle 6)** (passes previos: 2026-11-21 cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
 
@@ -364,6 +364,107 @@ mucho más. Sin control por género, precio ni presupuesto, **la lectura honesta
 es "hay correlación, la causa no está establecida"** — y sirve igual, porque el
 cliente la va a encontrar y conviene que la oiga bien contada primero.
 
+### 16. 🆕 🔴 El copyleft se mudó hacia arriba del stack: del engine al **pack de skills**
+
+Durante tres passes esta KB midió riesgo de licencia en **engines, backends y
+librerías** — la capa donde el software se compila y se enlaza. El riesgo se
+movió a la capa de arriba, que es **markdown y prompts**, y nadie la audita.
+
+Medido sobre los packs de agentes/skills de gaming **nuevos** con más de 400★:
+
+| Grant | Repos | Ejemplos |
+|-------|-------|----------|
+| 🟢 MIT / Apache-2.0 | 3 | `awesome-gamedev-agent-skills` (Apache-2.0 + `NOTICE`, 9.929★), `coop-anything` (MIT, 2.185★), `bot-crossing` (MIT, 906★) |
+| 🔴 **Copyleft** | **3** | `Game-Dev-Agentic-Skills` (**LGPL-3.0**, 983★), `taOS` (**AGPL-3.0**, 609★), `guizang-game-skill` (**AGPL-3.0**, 431★) |
+
+**Por qué es más peligroso que el mismo reparto en una librería.** Una
+dependencia copyleft entra por el gestor de paquetes, aparece en el lockfile y
+cualquier gate de CI la ve. **Un pack de skills entra copiando un directorio de
+`.md` al repo del cliente** — no hay lockfile, no hay manifest, no hay import, y
+el gate de licencias de la Receta 15 **miraba dependencias de build**. Un archivo
+de instrucciones de agente bajo AGPL-3.0 pegado en un entregable arrastra la
+obligación de red **sobre lo que lo ejecute**, y la ruta de contaminación es un
+`cp -r`.
+
+> **Dicho con honestidad sobre el límite de la afirmación:** que un prompt en
+> markdown sea "software" a efectos de la AGPL-3.0 **no está resuelto en
+> tribunales** y esta KB no va a afirmar que lo esté. El punto operativo no
+> depende de eso: **un cliente corporativo con un gate de licencias va a
+> rechazar un archivo AGPL-3.0 en su repo sin esperar jurisprudencia.** El riesgo
+> es de aceptación del entregable, y ése es seguro.
+
+**Consecuencia:** el gate de licencias tiene que cubrir `*.md` y los directorios
+de skills, no sólo el árbol de dependencias. Ver **Receta 16**.
+
+### 17. 🆕 🟢 La licencia de los **pesos** dejó de ser incognoscible, y la vía no era llegar a Hugging Face
+
+El gap más viejo de esta KB (declarado cuatro passes seguidos: *"ninguna licencia
+de pesos ha sido verificada nunca"*) se cerró en su primer caso sin acceder a
+Hugging Face — que, además, **nunca va a estar accesible**: lo que esta KB
+registraba como *"no resuelve DNS"* es en realidad un **403 en el CONNECT del
+proxy de egreso**, es decir una **denegación de política**, no un fallo
+transitorio.
+
+**La vía que funciona:** un modelo *continued-pretrained* o *fine-tuned* **no
+puede ser más permisivo que su backbone**, y el backbone está nombrado en el
+README del repo de código. `THUSI-Lab/GameScaling` lo dice textual: *"The models
+are continued pre-trained from **Qwen3.5**, which is also **Apache 2.0**"*.
+⇒ **pesos Apache-2.0, verificado, sin salir de `raw.githubusercontent.com`.**
+
+**Y el caso que no se cierra, ahora se cierra mejor de lo que estaba.**
+`Matrix-Game-4/THIRD_PARTY_NOTICES.md` declara: *"**Model and asset
+distributions carry their own accompanying license statements**"* y *"**Base-model
+and codec weight licenses accompany their upstream distributions**"*. Pasamos de
+*"no sabemos qué licencia tienen los pesos"* a *"**el publicador declara que los
+pesos no están cubiertos por el Apache-2.0 del repo**"*. En una propuesta, eso es
+la diferencia entre un riesgo desconocido y **un ítem con dueño**: hay que
+pedirle el grant de los pesos al proveedor, y ahora se sabe que existe.
+
+**Tendencia de fondo, no sólo de método:** los publicadores de world models
+**están separando explícitamente código, pesos y assets en tres grants
+distintos**. Tres de tres casos de esta KB lo hacen (Matrix-Game, HY-World con
+exclusión territorial, GameScaling con 8 repos de checkpoints aparte). ⇒
+**"el modelo es open source" dejó de ser una afirmación con significado.** Hay
+que preguntar *qué parte*.
+
+### 18. 🆕 🔴 La infraestructura de gaming se está revendiendo como infraestructura de agentes — y el nicho pierde proveedores
+
+El *Open Game Backend* (`rivet-gg/opengb`) era, en la prensa de backends, la
+alternativa Apache-2.0 a Nakama. Trazado hoy: su README dice *"Moved to
+rivet-gg/toolchain"*, ese slug está **archivado** y apunta a `rivet-gg/rivet`, que a su vez es un
+redirect de organización; el canónico es [rivet-dev/rivet](https://github.com/rivet-dev/rivet).
+
+**Lo que hay al llegar ya no es un backend de juego.** Es *"the orchestrator for
+agentic workloads"*, con *"4,99 ms p99 cold starts, 72 KB RAM per Actor"* y
+*"create one for each **agent**, user, session, or tenant"* — 6.970★, commit de
+hoy. La misma org publica `agentos` (4.912★, sandboxes WASM) y `agents` (1.652★).
+
+**La empresa que construyó la orquestación de game servers abandonó gaming y
+vendió la misma tecnología como infraestructura de agentes AI.** Tiene lógica
+técnica: un actor con estado en memoria, ciclo de vida largo y sesión por
+usuario **es** un game server, y resulta que también es un agente.
+
+Es el **tercer** movimiento del mismo tipo que esta KB registra en 48 horas:
+
+| Repo / empresa | Nicho de origen | Dónde está ahora | ★ |
+|----------------|-----------------|------------------|---|
+| `rivet-dev/rivet` | **Open Game Backend** | orquestador de workloads agénticos | 6.970 |
+| `msitarzewski/agency-agents` | — | catálogo genérico con gaming como **1 de 18** divisiones | 169.646 |
+| `Donchitos/Claude-Code-Game-Studios` | game dev | el nº1 de la categoría, **12 días sin commits** | 40.486 |
+
+> **Lectura para AI Studios, y es la incómoda:** el mercado está **drenando
+> especificidad de gaming hacia arriba**. Los repos que crecen son los
+> horizontales; el específico de gaming más grande se quedó quieto; y un
+> proveedor de infra de gaming se reposicionó fuera del nicho. **El diferencial
+> defendible no es el componente —se está volviendo genérico— es el
+> conocimiento del dominio: el engine del cliente, su pipeline de arte, su
+> compliance por región y su audiencia por edad.** Es exactamente lo que ninguno
+> de esos tres repos tiene y lo que esta KB sí está acumulando.
+>
+> **Consecuencia operativa inmediata:** la alternativa Apache-2.0 a Nakama en
+> orquestación es **`agones-dev/agones`**, no OpenGB. OpenGB no está
+> desmantenido: **dejó de existir como producto de gaming.**
+
 ## En el radar (emergente, 2026-2027)
 
 | Tendencia | Señal verificada | Estado |
@@ -451,3 +552,21 @@ paglago.net, iagovernance.com, techpost.bsa.org (APAC); note.com/commodvs
 arxiv.org (GameLogicBench, MineExplorer); benchlm.ai; raiscui/gh-trends
 (daily 2026-10-26). Repos verificados con `git ls-remote` + lectura de licencia
 en HEAD, con control negativo.*
+
+---
+*Pass 2026-11-21 (cycle 6) — tendencias 16, 17 y 18 agregadas: el copyleft se
+mudó a los packs de skills (3 de 6 packs nuevos >400★ son LGPL-3.0/AGPL-3.0, y
+la ruta de contaminación es un `cp -r` que ningún gate de build ve); la licencia
+de los pesos dejó de ser incognoscible vía la regla del modelo base
+(GameScaling ← Qwen3.5, Apache-2.0), con la corrección de que Hugging Face es
+una **denegación de política del proxy** y no un fallo de DNS; y la
+infraestructura de gaming se está revendiendo como infraestructura de agentes
+(Rivet/OpenGB → orquestador agéntico), tercer caso de drenaje de especificidad
+hacia lo horizontal. Fuentes nuevas de este pass: AlixPartners (múltiplos 2-3×),
+Omdia (*AI in Games: State of the Market 2H26* — identificado, de pago, no
+leído, sin cifras atribuidas), BCG (*Video Gaming Report 2026* — idem),
+KPMG/SIGMA (gobernanza 30/100, 58% de reguladores, 13% de operadores con
+política), WH Partners (*Same NPC, Different Rules* — Art. 50 por edad de
+audiencia), PGB Latam vía gamescom latam (Gen Z mexicana 51,8%), CAC China
+(>550 servicios registrados a mediados de 2026), Gabinete de Japón (AI Basic
+Plan del 14-jul-2026). 2026-11-21.*

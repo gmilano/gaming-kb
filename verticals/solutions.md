@@ -72,13 +72,14 @@ cliente de Godot y Unity. MIT completo, sin tier cerrado.
 | **Supabase** | Apache-2.0 (`LICENSE`, 11338 B) | [supabase/supabase](https://github.com/supabase/supabase) | PostgreSQL + APIs | BaaS para juegos asíncronos: profiles, inventarios, leaderboards, UGC. `pgvector` para RAG sin servicio externo. 115.201★ |
 | 🟢 **Elements** (Namazu) | **MPL-2.0** (`LICENSE.txt`, 16726 B) — **no AGPL-3.0** | [NamazuStudios/elements](https://github.com/NamazuStudios/elements) | Java + REST/WebSockets | **Re-admitido este pass: estaba descartado por error.** Backend self-hosted con OAuth2/OIDC y Custom Elements. MPL-2.0 es copyleft **por archivo**: hostearlo **no** obliga a liberar tu código, sólo las modificaciones a archivos MPL. **Muy chico (22★)**: opción a considerar si el cliente rechaza Apache-2.0 y Talo le queda corto, nunca default frente a Nakama. |
 | **Pterodactyl** | MIT (`LICENSE.md`, 1137 B — verificado leyendo; el API dice `NOASSERTION` porque el texto va dentro de un *code fence* de Markdown) | [pterodactyl/panel](https://github.com/pterodactyl/panel) | PHP/Laravel + Docker | Panel de game servers más usado. Deploy, consola, recursos, usuarios por servidor. Bare-metal/Docker. ⚠️ rama default `1.0-develop`. 9.533★ |
-| 🆕 **Agones** | **Apache-2.0** | [agones-dev/agones](https://github.com/agones-dev/agones) | Go + Kubernetes CRDs | **La pieza que faltaba.** Orquestación y autoescalado de game servers dedicados sobre K8s (`Fleet`/`GameServer`/`FleetAutoscaler`). Complementa a Pterodactyl, no lo reemplaza: panel para operar hosts, Agones para capacidad elástica. 🔴 renombrado desde `googleforgames/agones`. 7.106★ |
+| 🆕 **Agones** | **Apache-2.0** — 🆕 **+ grpc-gateway vendorizado** (`proto/grpc-gateway/LICENSE.txt` y `sdks/rust/proto/grpc-gateway/LICENSE.txt`, enumerados 2026-11-21 cycle 6: hay que propagar el aviso) | [agones-dev/agones](https://github.com/agones-dev/agones) | Go + Kubernetes CRDs | **La pieza que faltaba.** Orquestación y autoescalado de game servers dedicados sobre K8s (`Fleet`/`GameServer`/`FleetAutoscaler`). Complementa a Pterodactyl, no lo reemplaza: panel para operar hosts, Agones para capacidad elástica. 🔴 renombrado desde `googleforgames/agones`. 7.106★ |
 
 ### 🔴 Plataformas evaluadas y descartadas, con motivo
 
 | Plataforma | Problema verificado |
 |------------|--------------------|
 | 🟢 ~~`namazustudios/elements`~~ | **FILA RETIRADA DE ESTA TABLA — el descarte era incorrecto.** Decía "AGPL-3.0 (`LICENSE.txt`, 16726 B), copyleft de red, fuera de la ruta permisiva". El archivo, con **esos mismos 16726 B**, dice *"Mozilla Public License Version 2.0"*. **AGPL-3.0 son ~34.500 B** — y este mismo KB anotaba 34523 B para la AGPL de Grafana, así que **el dato que refutaba la etiqueta ya estaba escrito al lado**. Movido a la tabla de plataformas base. Nuevo slug: `NamazuStudios/elements`. |
+| 🆕 **Open Game Backend** (`rivet-gg/opengb`) | 🔴 **No se agrega a la tabla de arriba porque dejó de existir como producto de gaming** (verificado 2026-11-21 cycle 6). Figura en la prensa de backends como la alternativa Apache-2.0 a Nakama. Es una **cadena de renames de 3 saltos**, cada eslabón invisible para el API y servido por `raw`: su README dice *"Moved to `rivet-gg/toolchain`"* → ese repo está **archivado** y apunta a `rivet-gg/rivet` → ése es el redirect de **organización** (`rivet-gg` → `rivet-dev`) y el canónico es [rivet-dev/rivet](https://github.com/rivet-dev/rivet) (6.970★, Apache-2.0, `LICENSE` 11350 B, commit del 2026-11-21). **Y lo que hay al llegar ya no es un backend de juego:** es *"the orchestrator for agentic workloads"*, con hermanos [agentos](https://github.com/rivet-dev/agentos) (4.912★, sandboxes WASM) y [agents](https://github.com/rivet-dev/agents) (1.652★). ⇒ **la alternativa Apache-2.0 a Nakama en orquestación sigue siendo Agones.** Ver `intel/trends.md` nº 18. |
 | [pelican-dev/panel](https://github.com/pelican-dev/panel) | 🔴 **Agravado: el repo ya no existe.** En octubre era "vivo pero sin archivo de licencia"; hoy `repo:` → `NOT_FOUND` y `raw` → 404. Usar `pterodactyl/panel`. |
 | [grafana/grafana](https://github.com/grafana/grafana) | 🔴 **AGPL-3.0** (`LICENSE`, 34523 B), **no Apache-2.0** como publicaba este KB. Sigue siendo utilizable, pero como servicio expuesto a terceros arrastra obligaciones. Alternativas: Apache Superset (Apache-2.0), Metabase (AGPL-3.0 core + comercial). |
 
@@ -86,15 +87,37 @@ cliente de Godot y Unity. MIT completo, sin tier cerrado.
 
 ## Juegos open source para fork + AI
 
-⚠️ **En gaming, un solo `LICENSE` casi nunca cubre código *y* assets.** Las tres
-filas de abajo tienen grants distintos por capa, verificados leyendo la cabecera de
-cada archivo. Forkear el repo y quedarse con los assets es el error caro.
+⚠️ **En gaming, un solo `LICENSE` casi nunca cubre código *y* assets.** Las filas
+de abajo tienen grants distintos por capa, verificados leyendo la cabecera de cada
+archivo. Forkear el repo y quedarse con los assets es el error caro.
+
+🆕 **2026-11-21 (cycle 6) — y la advertencia de arriba no era sólo para juegos
+completos: aplica a los *plugins* que esta página recomienda.** Enumerando los
+archivos de licencia (canal nuevo: `gh api search/code -f q='repo:<slug>
+filename:LICENSE'`), **[limbonaut/limboai](https://github.com/limbonaut/limboai)
+—el plugin de behavior trees que la ruta recomendada de abajo usa— tiene TRES
+grants, no uno**: `LICENSE.md` (1103 B, **MIT**, el código),
+`LOGO_LICENSE.md` (212 B, **CC BY 4.0**) y `demo/LICENSE_ASSETS.md` (280 B,
+**CC BY 4.0**, los PNG/SVG de `assets/`). Esta KB lo publicaba como "MIT" plano.
+⇒ **el código se puede relicenciar; forkear el proyecto demo como punto de
+partida arrastra atribución CC BY 4.0** — y el demo es justo lo que un equipo
+forkea el primer día. Mismo patrón que Luanti, pero en una dependencia de 3.137★
+que llevábamos un mes recomendando sin la nota.
+
+🆕 **La lección de nombre de archivo, con testigo nuevo.** `OpenLiberty` publica
+su grant **sólo en `LICENCE`** (ortografía británica, sin `S`): una sonda que
+pida `LICENSE` recibe 404 y la fila se publica como "sin licencia". Con este
+caso, los repos reales de esta KB cubren **seis** de las 11 variantes de nombre
+de la lista de sondas: `License.txt` (HY-World, recastnavigation), `license.txt`
+(LÖVE), `COPYING` (SuperTuxKart), `LICENSE.md` (pterodactyl, stride, ml-agents,
+limboai), `LICENSE-MIT`+`LICENSE-APACHE` (c2pa) y ahora **`LICENCE`**.
 
 | Juego | Licencia del **código** | Licencia de los **assets** | Repo | Por qué útil |
 |-------|------------------------|---------------------------|------|--------------|
 | **Luanti** (ex-Minetest) | **LGPL-2.1-or-later** (`doc/lgpl-2.1.txt`, 26406 B) | **CC-BY-SA 3.0** (`LICENSE.txt`, 8793 B — cubre sólo texturas y sonidos) | [luanti-org/luanti](https://github.com/luanti-org/luanti) | Mundo voxel completo. Base ideal para PCG con AI y NPCs agénticos. 🔴 **Corrección 2026-11-20:** el pass anterior decía que `minetest/minetest` *"sigue resolviendo"*. Resuelve **por redirect**: `repo:minetest/minetest` → `NOT_FOUND` en la API, y `raw` del slug viejo da 200 en `HEAD`/`master` y **404 en `main`**. El único slug canónico es `luanti-org/luanti` (**13.882★, commit de hoy** — la más activa de las tres). |
 | **0 A.D.** | **GPL-2.0-or-later** (🆕 precisado 2026-11-21: `LICENSE.txt` dice *"GPL version 2 (or later)"*, y agrega subdirectorios **MIT** y **Apache-2.0** vendorizados) | **CC-BY-SA** (`LICENSE.txt`, 3049 B, agregado por directorio) | 🔴 [0ad/0ad](https://github.com/0ad/0ad) — **ARCHIVADO** | RTS completo, AI de unidades mejorable con ML, **pero el repo de GitHub está `archived: true` y su propia descripción dice `[DEPRECATED] Git mirror … migrated to gitea.wildfiregames.com on August 20th 2024`.** Último commit 2024-08-17. **El juego está vivo; su presencia en GitHub está muerta.** Para forkear hay que ir al Gitea propio del proyecto, fuera de GitHub. 2.827★ |
 | **SuperTuxKart** | **GPL-3.0-or-later** (`COPYING`, 35245 B) | Mezcla **GPL / CC-BY / CC-BY-SA / dominio público** | [supertuxkart/stk-code](https://github.com/supertuxkart/stk-code) | Juego de carreras completo. AI de oponentes mejorable con RL. |
+| 🆕 **OpenLiberty** (2026-11-21 cycle 6) | **MIT** — ⚠️ el grant está **sólo en `LICENCE`** (1066 B, ortografía británica); `LICENSE` devuelve 404 | 🔴 **ninguno: el juego no trae assets, los carga** | [openfw-game/OpenLiberty](https://github.com/openfw-game/OpenLiberty) (493★, GDScript) | Mundo abierto en **Godot** que carga modelos y texturas de la era 3D de **GTA**. Es la única base de esta tabla con un engine **MIT** y mundo abierto completo ⇒ la mejor para PCG y NPCs agénticos **sin arrastrar copyleft**. 🔴 **El riesgo no es de licencia, es de contenido:** el grant cubre el *motor de carga*; los assets de GTA son de Take-Two y **no vienen en el repo**. Usable con assets propios; **inviable** como entregable que dependa de los originales. |
 
 Las tres son copyleft en el código: sirven como **banco de pruebas y demo**, no
 como base de un producto propietario. Para eso, Godot + assets propios.
@@ -165,7 +188,7 @@ del cliente.
 ```
 Godot Engine (MIT)
     ↓ plugin
-LimboAI (MIT) — behavior tree, decisión determinista
+LimboAI (MIT el código — ⚠️ logo y assets del demo bajo CC BY 4.0) — behavior tree, decisión determinista
     ↓ BTAction con HTTP local
 Ollama con Llama 3.1 8B / Gemma 3n
     ↓
@@ -320,3 +343,20 @@ con control negativo en ambos sentidos. **Correcciones de este pass:** `MonoGame
 Revalidadas de octubre: `local-llm-npc` (CC-BY-4.0) y `grafana` (AGPL-3.0), ambas
 ahora confirmadas por el segundo canal. Ver `agents/top.md` para el método, el
 checksum de bytes y los grants bloqueantes.*
+
+---
+*Pass 2026-11-21 (cycle 6): canal de verificación nuevo
+(`gh api search/code -f q='repo:<slug> filename:LICENSE'` → **enumeración** de
+archivos de licencia, gap declarado "sin canal" en los dos passes anteriores).
+**Correcciones de este pass en esta página:** `limbonaut/limboai` deja de ser
+"MIT" plano y pasa a **MIT el código + CC BY 4.0 el logo y los assets del
+demo**; `agones-dev/agones` gana la nota de grpc-gateway vendorizado;
+`heroiclabs/nakama` confirmado (vendoriza gopher-lua, benigno);
+`recastnavigation` confirmado zlib **en la librería** pero no en `RecastDemo`
+(vendoriza imgui/implot). **Filas nuevas:** `openfw-game/OpenLiberty` (MIT en
+`LICENCE`, mundo abierto Godot) en juegos para fork, y **Open Game Backend
+explícitamente descartado** con la cadena de renames trazada y el pivot de Rivet
+a infraestructura de agentes documentado. **Trap nuevo del método:** el cuerpo
+de un 404 de `raw` son **14 bytes** — todo byte-count < 50 es un no-hallazgo, no
+una licencia. Ver `agents/top.md` para el método completo y
+`compose/patterns.md` Receta 17 para el procedimiento.*

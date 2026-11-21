@@ -11,7 +11,79 @@ updated: 2026-11-21
 
 ---
 
-## 🆕 2026-11-21
+## 🆕 2026-11-21 — pass cycle 6 (≈1 h después del cycle 5)
+
+> ⏱️ **Una hora no es un intervalo de medición. Este pass no reporta un solo
+> delta de ★** y no reescribe ninguna cifra heredada. Se anota explícitamente
+> porque un archivo append-only tiene la tentación de inventar movimiento para
+> tener algo que escribir. **No hubo nada que medir. Hubo algo que descubrir.**
+
+**Canal nuevo, y es el cambio real:**
+`gh api search/code -f q='repo:<slug> filename:LICENSE'` → **enumera** los
+archivos de licencia de cualquier repo de terceros. Gap declarado *"CONFIRMADO
+sin canal"* en los dos passes anteriores, que probaron
+`gh api repos/<o>/<r>/contents` (bloqueado) y no probaron `search/code`.
+
+### Repos nuevos en el radar (★ leídas hoy, sin delta)
+
+| Repo | Licencia (bytes, status HTTP verificado) | ★ | Forks | `pushed_at` | Rama default |
+|------|------------------------------------------|---|-------|-------------|--------------|
+| [gamedev-skills/awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) | **Apache-2.0** (11395) + `NOTICE` (883) | **9.929** | 1.013 | 2026-11-12 | `main` |
+| [rivet-dev/rivet](https://github.com/rivet-dev/rivet) | **Apache-2.0** (11350) | **6.970** | 328 | **2026-11-21** | `main` |
+| [rivet-dev/agentos](https://github.com/rivet-dev/agentos) | **Apache-2.0** | **4.912** | 281 | **2026-11-21** | `main` |
+| [cranebeaker/coop-anything](https://github.com/cranebeaker/coop-anything) | **MIT** (1085) | 2.185 | 298 | 2026-11-18 | `main` |
+| [rivet-dev/agents](https://github.com/rivet-dev/agents) | **Apache-2.0** | 1.652 | — | 2026-11-20 | `main` |
+| [RainBowLuoCS/Gamer](https://github.com/RainBowLuoCS/Gamer) | **Apache-2.0** (11358) | 1.189 | 23 | 2026-11-16 | `main` |
+| [shinkuan/Akagi](https://github.com/shinkuan/Akagi) | **Apache-2.0** | 1.151 | — | 2026-11-18 | ⚠️ **`v3`** |
+| [thedivergentai/Game-Dev-Agentic-Skills](https://github.com/thedivergentai/Game-Dev-Agentic-Skills) | 🔴 **LGPL-3.0** (7652) | 983 | 62 | 2026-10-16 | `main` |
+| [Station-Sciences/bot-crossing](https://github.com/Station-Sciences/bot-crossing) | **MIT** (1069) | 906 | 286 | 2026-10-30 | `main` |
+| [Calix-L/DanKS](https://github.com/Calix-L/DanKS) | **Apache-2.0** (11348) | 833 | 36 | 2026-10-31 | `main` |
+| [jaylfc/taOS](https://github.com/jaylfc/taOS) | 🔴 **AGPL-3.0** (34523) | 609 | 48 | 2026-11-20 | ⚠️ `master` |
+| [THUSI-Lab/GameScaling](https://github.com/THUSI-Lab/GameScaling) | **Apache-2.0** — 🟢 **pesos Qwen3.5** | 604 | 35 | 2026-11-19 | `main` |
+| [openfw-game/OpenLiberty](https://github.com/openfw-game/OpenLiberty) | **MIT** en ⚠️ **`LICENCE`** (1066) | 493 | 46 | 2026-10-13 | `main` |
+| [op7418/guizang-game-skill](https://github.com/op7418/guizang-game-skill) | 🔴 **AGPL-3.0** (34524) | 431 | 71 | 2026-11-11 | `main` |
+| [Eurekaleo/awesome-ai-for-games](https://github.com/Eurekaleo/awesome-ai-for-games) | **MIT** (1082) | 391 | 17 | 2026-11-19 | `main` |
+| [AIGeeksGroup/Code2Games](https://github.com/AIGeeksGroup/Code2Games) | 🔴 **ninguno** (11 sondas → 404) | 89 | — | 2026-10-17 | `main` |
+
+### 🔴 El evento del pass: `rivet-gg/opengb` ("Open Game Backend") dejó de existir como producto de gaming
+
+Cadena de renames de **3 saltos**, y los tres slugs obsoletos devuelven **200 en
+`raw`** mientras ninguno es visible para el API — es decir, **todos parecen
+vivos**:
+`rivet-gg/opengb` → su README dice *"Moved to `rivet-gg/toolchain`"* → ese repo
+está **archivado** y su README apunta a `rivet-gg/rivet` → **ése** es el redirect
+de **organización** (`rivet-gg` → `rivet-dev`) → el canónico es
+[rivet-dev/rivet](https://github.com/rivet-dev/rivet) (6.970★, Apache-2.0,
+`LICENSE` 11350 B, commit de hoy).
+
+**Y lo que hay al llegar no es un backend de juego.** `rivet-dev/rivet` hoy es
+*"the orchestrator for agentic workloads"*; sus hermanos son `agentos` (4.912★,
+sandboxes WASM) y `agents` (1.652★). **La empresa del Open Game Backend
+abandonó gaming y revendió su orquestación de game servers como infraestructura
+de agentes AI.** Es el tercer repo de esta KB que sale del nicho hacia arriba
+(los otros dos: `agency-agents` 169k★ genérico con gaming como 1 de 18
+divisiones, y `Claude-Code-Game-Studios`). Ver `intel/trends.md` nº 18.
+
+🔵 **Dos lecciones de método, y una es nueva:** la firma de rename (`repo:` 422 +
+`raw` del slug viejo 200) **hay que iterarla** —hacen falta **3** iteraciones: `opengb` apunta a `toolchain`, que está
+**archivado** y apunta a `rivet-gg/rivet`, que es el redirect de organización— y
+un rename de **organización** invalida *todos* sus punteros de golpe: es el modo de fallo de rename con mayor radio de daño y el
+único que puede romper una página entera de esta KB en un solo evento.
+
+### ⚠️ Trap nuevo en el método de esta página: **14 bytes**
+
+El cuerpo de un 404 de `raw.githubusercontent.com` son **exactamente 14 bytes**
+(la cadena `404: Not Found`), y `curl` sin `-f` sale con código 0 y lo escribe en
+stdout. Un script que mida bytes sin leer el status anota **"`LICENSE.md`, 14 B"**
+como un archivo que existe. **Todo byte-count < 50 es un no-hallazgo.** Peor: la
+regla heredada *"bytes muy por debajo de la banda ⇒ archivo puntero, seguir el
+puntero"* manda, aplicada a 14 B, a seguir un puntero inexistente. Las sondas de
+este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200: **0 falsos
+positivos en 11 sondas × 13 repos.**
+
+---
+
+## 2026-11-21 — pass cycle 5
 
 24 h desde el pass anterior: **pass de resolución de licencias y descubrimiento**,
 no de medición de crecimiento. Canal: `gh api search/repositories` + lectura de

@@ -7,14 +7,32 @@ updated: 2026-11-21
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-20** (passes previos: 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-21 (cycle 6)** (passes previos: 2026-11-21 cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
 
-## 🔴 Lo que cambió en 24 h — leer esto primero (2026-11-21)
+## 🔴 Lo que cambió en ~1 h — pass cycle 6 (2026-11-21)
+
+> ⏱️ Este pass corre ~1 hora después del cycle 5. **Ninguna cifra de mercado
+> cambió en una hora** y ninguna de las de abajo reemplaza a las de las
+> secciones siguientes: son **instrumentos y datos que faltaban**, no
+> actualizaciones. Las cuatro regiones ganan material propio; donde una región
+> midió cero, se dice que midió cero.
+
+| Cambio | Dato | Consecuencia |
+|--------|------|--------------|
+| 🟢 **Aparece el argumento de valuación, que es el único que habla el idioma del CFO** | **AlixPartners** (*Media & Entertainment Industry Predictions 2026*): las compañías de gaming que integren AI con éxito **sobre IP fuerte** cotizarán a múltiplos **2-3× más altos** que los rezagados **para fin de 2026**. | Es la primera cifra de esta KB que **no** es de adopción ni de compliance. Toda la página venía argumentando *costo* y *riesgo*; esto argumenta **valor de empresa**, y es el argumento que abre una conversación de board, no de equipo técnico. ⚠️ Es una **proyección de consultora**, no una medición: se cita como tesis con atribución, nunca como hecho. |
+| 🟡 **Dimensión del mercado de gen-AI-en-gaming, y NA es ~40% de él** | ~**US$ 2.210 M** el mercado de gen AI en gaming en 2026, con **North America ≈ 40%** (≈ US$ 880 M). Las fuentes **no coinciden** en la participación exacta. | Pone techo a la conversación: el gasto en gen AI de toda la industria es **~0,8% de los ~US$ 190-200 MM de la industria**. ⇒ **la oportunidad de AI Studios no es vender AI: es vender la integración de AI en el pipeline existente**, que es la parte grande. Coherente con KPMG: las integraciones más profundas están **en el back-end**, no en contenido generado de cara al jugador. |
+| 🔴 **El costo laboral de 2026 tiene cifra agregada** | **más de 10.000 despidos globales en la industria en el primer semestre de 2026** (recuento de prensa sectorial). | La KB tenía casos (Ubisoft 166 el 19-nov) y la cifra de GDC (34% despedidos en 2 años, 54% aún sin empleo). **Ahora tiene el agregado del año**, que es el número que va a estar en la sala antes de que uno hable. Se usa igual que los otros: **no hay evidencia publicada de causalidad con la AI**, y decirlo desactiva la objeción sin negarla. |
+| 🟡 **Hay un instrumento nuevo que esta KB no estaba siguiendo** | **Omdia**, *AI in Games: State of the Market 2H26* y *Trends to Watch 2026: Games Tech*. Omdia lista el **backlash de AI** como tendencia clave del año y cubre la emergencia de **herramientas de creación de juegos con AI para consumidores** y las decisiones **build-vs-buy**. | Es la primera casa de research de la industria (no legal, no encuesta de devs) que entra a esta KB. **Es de pago y no se pudo leer**: se anota como instrumento a conseguir, con lo que su resumen público dice, y **no se le atribuye ninguna cifra**. |
+| 🟡 **BCG puso número al crecimiento de la industria** | **BCG**, *Video Gaming Report 2026: The Next Era of Growth*. | Mismo tratamiento: instrumento identificado, no leído, sin cifras atribuidas. Sirve para saber **qué deck va a tener el cliente sobre la mesa**. |
+
+---
+
+## 🔴 Lo que cambió en 24 h — pass cycle 5 (2026-11-21)
 
 | Cambio | Dato | Consecuencia |
 |--------|------|--------------|
@@ -156,7 +174,45 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
-#### 🆕 2026-11-21 — NA dejó de tener sólo políticas de tienda: ahora tiene una obligación de *runtime*
+#### 🆕 2026-11-21 (cycle 6) — tres piezas que faltaban: el múltiplo, el tamaño del mercado y la brecha regulador-industria
+
+- 🟢 **El argumento de valuación es un argumento de North America.** La tesis de
+  **AlixPartners** (múltiplos **2-3×** para quien integre AI sobre IP fuerte, a
+  fin de 2026) se dirige a un mercado de capitales que está acá: los publishers
+  cotizantes y el venture. **Es el único argumento de esta página que se puede
+  llevar a un board y no a un equipo.** Atribuido como proyección, no como dato.
+- 🟡 **Tamaño: NA ≈ 40% de un mercado de gen AI en gaming de ~US$ 2.210 M en
+  2026** (≈ US$ 880 M; las fuentes difieren en la participación exacta). Leído
+  junto a KPMG —*"las integraciones más profundas están en el back-end, no en
+  contenido generado de cara al jugador"* (Scott Purdy)— da la forma de la
+  oferta: **el dinero de NA está en pipeline, herramientas y ops, no en NPCs
+  generativos**. Que es exactamente lo contrario de donde está el entusiasmo de
+  producto, y coherente con el 3% de declaraciones de Steam que corresponden a
+  generación **en runtime**.
+- 🔴 **La brecha regulador-industria tiene cifra, y es grande** (sector *gambling*
+  regulado de NA, no videojuegos): **58% de los reguladores duda de que la
+  industria pueda autorregular su uso de AI**, y **sólo 13% conoce algún operador
+  licenciado con una política interna de AI responsable** (KPMG). **Índice de
+  madurez de gobernanza de AI: 30 sobre 100** (SIGMA, *State of AI in Gaming
+  2026*, informe benchmark inaugural). ⇒ **la gobernanza es el producto
+  faltante del mercado, no la capacidad técnica**, y hay un número para decirlo:
+  87% de los operadores no tiene política escrita. Para AI Studios es una oferta
+  de *AI governance as a deliverable* con demanda medida.
+- 🟡 **Adopción declarada, con su alcance:** **90%** de los desarrolladores
+  integra AI en su workflow según la encuesta **Google Cloud / Harris Poll**
+  (615 desarrolladores) — ⚠️ **sólo cinco países en la muestra**, así que es
+  comparable con el 40% de GDC únicamente si se dice eso. Globant ya cita
+  públicamente el **97%** del *Google Cloud Games Report* para assets, testing y
+  localización: **las dos cifras son de la misma casa y de la misma familia de
+  instrumentos**, y conviene usar una sola para no competir consigo mismo.
+- ⚫ **Gap medido, no silencio:** no se encontró ninguna regulación **federal**
+  de EE.UU. específica de AI en videojuegos. Lo que hay es (a) leyes **estatales**
+  de *companion chatbots* —ver abajo— y (b) regulación de **gambling**, que es
+  otro sector. Buscado: `AI gaming North America 2026 adoption regulation
+  players`, más seguimiento de ESRB y FTC. **La capa federal no existe; la
+  estatal sí y es la que obliga.**
+
+#### 🆕 2026-11-21 (cycle 5) — NA dejó de tener sólo políticas de tienda: ahora tiene una obligación de *runtime*
 
 Hasta ayer esta sección decía, con razón, que en NA *"lo que manda no es una ley:
 es la política de una tienda"*. **Eso cambió, y no vino de una ley de AI sino de
@@ -258,7 +314,55 @@ declarado; usar con la regla de la muestra de arriba.
 
 ### EMEA
 
-#### 🆕 2026-11-21 — quedan **11 días**, y aparece el matiz de la Comisión que hay que decir en la sala
+#### 🆕 2026-11-21 (cycle 6) — el matiz que cambia **quién** tiene que etiquetar: la **edad de la audiencia**
+
+- 🔴 **El Art. 50 no obliga a todos por igual: el alcance depende de a quién
+  apunta el juego.** Análisis de **WH Partners** (*"Same NPC, Different Rules:
+  How a Player's Age Changes Their Responsibilities Under the AI Act"*): un
+  juego **single-player dirigido a adultos** puede **no** necesitar etiquetar el
+  diálogo de un NPC, mientras el mismo NPC en un título con audiencia de menores
+  sí. ⇒ **El entregable del sprint del 2-dic-2026 no es "etiquetar todo": es
+  determinar, por título, la audiencia y de ahí la obligación.** Esto
+  **reencuadra la Receta 7 por segunda vez**: el inventario necesita una columna
+  más —**clasificación de audiencia por edad**— y esa columna es la que decide
+  si una fila necesita trabajo de ingeniería o sólo un registro. Es también la
+  tercera vez que esta KB se encuentra con lo mismo: **el valor (aquí, "hay que
+  etiquetar") no significa nada sin su alcance (aquí, "a quién le vendés el
+  juego").**
+- 🟡 **El reloj del Omnibus sigue en disputa, y ahora con dos fuentes
+  enfrentadas.** La enmienda **AI Omnibus** habría entrado en vigor el
+  **27-jul-2026**, con Anexo III (alto riesgo) corrido a **2-dic-2027** y Anexo I
+  a **2-ago-2028** (fuente sectorial de iGaming). Otra fuente del mismo sector
+  sostiene que el grueso del Acta, **incluido el Anexo III**, aplica desde
+  **2-ago-2026**. 🔵 **El conflicto que la KB de enterprise registró se
+  mantiene y ahora también aparece dentro de gaming** — el pass del 2026-11-20
+  había anotado que las fuentes de gaming *corroboraban* el calendario
+  post-Omnibus; con esta segunda fuente ya **no hay corroboración limpia**.
+  ⚠️ **Nada de esto mueve el 2-dic-2026 del Art. 50(2)**, que es el deadline que
+  importa y sobre el que no hay disputa. **Para la propuesta: ejecutar contra el
+  2-dic-2026 y tratar el calendario de alto riesgo como abierto**, con la fecha
+  conservadora (2-ago-2026) como supuesto hasta tener fuente primaria.
+- 🟢 **Tres Estados miembro ya obligan o fomentan monitoreo automatizado de
+  jugador: Bélgica, Finlandia e Italia** (KPMG; sector *gambling*). Es el
+  **primer caso de esta KB donde la AI es lo que el regulador PIDE**, no lo que
+  restringe: modelos que marcan *markers of harm* y disparan límites o contacto
+  humano, con efectos medibles reportados por operadores europeos. ⇒ **oferta
+  invertida para EMEA**: en videojuegos la conversación es *cómo cumplir pese a
+  la AI*; en el adyacente regulado es *cómo cumplir usando AI*. Mismo stack de
+  detección conductual que la Receta 3.
+- 🟡 **Malta: la AI Gaming Charter voluntaria tiene fecha disputada.** Una fuente
+  la data como lanzada el **18-sep-2026**; otra la describe aún como
+  **consulta**. La KB ya registraba "consulta abierta, sin guía publicada a
+  sept-2026". **Se deja el conflicto declarado, no se elige una fecha.**
+- ⚫ **Gap medido:** no se encontró **ninguna** cifra de adopción o sentimiento
+  **de jugadores europeos** sobre AI en juegos. Buscado: `AI gaming EMEA Europe
+  2026 adoption regulation players`. Lo que devuelve EMEA es **regulación y
+  comentario legal**, casi nada de demanda. ⇒ **EMEA es, en esta KB, la región
+  con el gancho regulatorio más fuerte y la evidencia de mercado más débil**, y
+  hay que decirlo así en vez de rellenar con el ~85% global de Quantic Foundry,
+  cuya muestra tampoco está desagregada por región.
+
+#### 🆕 2026-11-21 (cycle 5) — quedan **11 días**, y aparece el matiz de la Comisión que hay que decir en la sala
 
 - 🔴 **11 días** al 2-dic-2026. Nada que se empiece hoy como proyecto termina
   antes. **Triage, inventario y plan fechado** (Receta 7, ya reencuadrada).
@@ -367,7 +471,53 @@ declarado; usar con la regla de la muestra de arriba.
 
 ### APAC
 
-#### 🆕 2026-11-21 — APAC tiene ahora **su propia cifra de adopción**, y es 2,2× la "global"
+#### 🆕 2026-11-21 (cycle 6) — Japón mueve su plan de Estado, y aparece el primer repo con un estudio AAA de APAC detrás
+
+- 🟡 **Japón: el Gabinete adoptó un AI Basic Plan nuevo el 14-jul-2026**, que
+  **reemplaza** el plan de diciembre de 2025. Japón mantiene el enfoque por
+  principios, sin penalidades, apoyado en leyes existentes. ⇒ para un título que
+  se publica en Japón el riesgo **no es la multa, es el cambio de política**: el
+  plan de Estado se reescribió en 7 meses. **Cláusula de revisión semestral en
+  la propuesta, no un anexo de compliance cerrado.**
+- 🟡 **Corea, el matiz que faltaba:** el AI Basic Act vigente desde el
+  **22-ene-2026** tiene **período de gracia de al menos un año antes de multas**,
+  y el techo de multa es **KRW 30 millones** cubriendo **sólo tres tipos de
+  incumplimiento**. ⇒ **la exposición económica coreana es baja; la exposición
+  reputacional y de publicación, no.** Para dimensionar: el techo coreano es
+  ~US$ 20 mil contra los **€35 M o 7% de facturación global** del Art. 5 europeo.
+  **Seis órdenes de magnitud de diferencia entre dos jurisdicciones que un mismo
+  título publica el mismo día** — es el argumento más fuerte de esta KB a favor
+  de una **capa de disclosure configurable por jurisdicción** y no de tres
+  implementaciones (Receta 15).
+- 🟡 **Etiquetado de contenido generado: China, Corea, India y Vietnam ya lo
+  exigen.** Vietnam: Ley de AI **vigente desde el 1-mar-2026**. **China: se
+  requiere registro ante la CAC para servicios de AI generativa, y a mediados de
+  2026 había más de 550 servicios registrados.** ⇒ **publicar un NPC con LLM en
+  China no es un problema de etiquetado: es un trámite de registro previo**, y
+  550 registros dicen que el trámite es transitable, no prohibitivo. Es la
+  diferencia entre "no se puede" y "lleva tiempo y papeles": **hay que
+  presupuestarlo como *lead time* regulatorio, no como bloqueo.**
+- 🟢 **Señal de industria nueva, y viene con repo:**
+  [THUSI-Lab/GameScaling](https://github.com/THUSI-Lab/GameScaling) (Apache-2.0,
+  604★, **pesos Apache-2.0 verificados vía Qwen3.5**) acredita trabajo realizado
+  *"while interning at **miHoYo**"*. Es la primera vez que esta KB encuentra un
+  **estudio AAA de APAC** (Genshin Impact, Honkai) detrás de un repo de agentes
+  de juego **permisivo y publicado**. Junto a `op7418/guizang-game-skill`
+  (origen APAC, aunque AGPL-3.0) y `Calix-L/DanKS` (Guandan por RL), **APAC pasó
+  de ser la región con la mejor cifra de adopción a ser también la que
+  contribuye código**. Eso cambia la propuesta: en APAC AI Studios compite con
+  capacidad local real, no llega a llenar un vacío.
+- ⚫ **Gap medido, y es el mismo que el pass anterior, ahora con una segunda
+  confirmación independiente:** no existe regulación de AI **específica de
+  videojuegos** en ningún país de APAC. Todo lo aplicable es **AI horizontal**
+  (China/Corea/Japón/Vietnam) más el *throttle* de aprobación del NPPA chino.
+  🆕 Y en el sector adyacente: un informe sectorial registra actividad
+  regulatoria sobre AI en *gambling* concentrada en **North America y Europa
+  Occidental**, con **CERO registrada en Asia-Pacífico, Europa Central y del
+  Este, y Medio Oriente/África**. **Un cero medido en tres regiones** —se anota
+  como tal y no como falta de datos.
+
+#### 🆕 2026-11-21 (cycle 5) — APAC tiene ahora **su propia cifra de adopción**, y es 2,2× la "global"
 
 | Dato | Valor | Instrumento |
 |------|-------|-------------|
@@ -486,7 +636,52 @@ open source más fuerte del ciclo.**
 
 ### LATAM
 
-#### 🆕 2026-11-21 — la ventaja de LATAM se sostiene, y ahora tiene su contrapeso medido
+#### 🆕 2026-11-21 (cycle 6) — la cifra LATAM se parte por generación, y es el dato más vendible de la región
+
+- 🟢 **México, Generación Z: 51,8% compraría un juego desarrollado con AI**,
+  contra el **48,8% regional** (PGB Latam 2026, presentado en **gamescom latam**).
+  Es la **primera desagregación por cohorte** que tiene esta KB en cualquier
+  región. ⇒ el argumento de "mercado de primer lanzamiento" deja de ser
+  geográfico y se vuelve **geográfico + demográfico**: el segmento más receptivo
+  del mundo a AI de cara al jugador, con dato publicado, es **Gen Z mexicana**.
+  Para un rollout eso es una **cohorte de prueba A/B definible**, no un país
+  entero.
+- 🟡 **Contrapeso, en la misma encuesta y por eso creíble: 40,6% se alarma por la
+  precariedad laboral y los despidos.** ⇒ 51,8% compra y 40,6% se alarma **no se
+  contradicen**: describen un mercado donde la AI en el **producto** se tolera y
+  la AI como **narrativa de reemplazo** no. Es la misma lectura que ya tenía la
+  KB, ahora con la cifra de aceptación más alta y la de alarma al lado.
+- 🟡 **Contexto de adopción general (no de gaming), para la sala:** Brasil y
+  México lideran la adopción de AI en la región con **76% y 70%**
+  respectivamente. ⚠️ Es adopción **empresarial general**, no de estudios de
+  juego: se usa para argumentar *madurez del mercado comprador*, nunca como
+  cifra de la industria. **Un número sin su sector tampoco es un número.**
+- 🟡 **Regulación, estado consolidado y conflicto declarado:** **Brasil** —
+  PL 2338/2023 aprobado por el Senado y **trabado en la Cámara**; una fuente
+  sectorial lo describe ya *"en fase de implementación con la ANPD como
+  autoridad"*, lo cual **contradice** el estado legislativo y se anota como
+  conflicto, no como hecho. **México** — a julio de 2026 **no hay ley general de
+  AI**; una consultora sostiene que la **LFPDPPP** ya cubre el caso, fuente menos
+  confiable y sin cita oficial. **Deloitte (jul-2026):** Colombia, Brasil, Chile
+  y México en **distintas etapas de trámite**, ninguna con ley en vigor. ⇒ **la
+  oferta de compliance en LATAM sigue siendo LGPD + derecho de autor + CONAR, no
+  AI Act.** Sin cambios respecto del pass anterior, ahora con la fuente
+  conflictiva identificada por nombre.
+- ⚫ **Gap medido, tercer pass consecutivo y con instrumento en español:** no se
+  encontró **ninguna** regulación de AI **específica de videojuegos** en LATAM
+  (loot boxes con AI, copyright de assets generados), ni **ningún estudio LATAM
+  concreto** con adopción de AI documentada públicamente, ni **ningún repo de
+  agentes de gaming de origen LATAM** entre los 16 candidatos nuevos de este
+  pass. Buscado con instrumento en español —`AI videojuegos LATAM Brasil México
+  2026 adopción regulación estudios`— precisamente para no medir el sesgo del
+  inglés. **El cero es del mercado, no del instrumento.** Lo que sí existe es
+  demanda medida (PGB Latam) y estudios locales con nombre propio
+  (p. ej. GameCoder Studios, México); lo que no existe es **producción open
+  source de agentes**. ⇒ **LATAM es, en esta KB, consumidor y mercado de prueba,
+  no productor** — y ésa es la oportunidad: **el hueco de producción es
+  exactamente el espacio de un AI Studio local.**
+
+#### 🆕 2026-11-21 (cycle 5) — la ventaja de LATAM se sostiene, y ahora tiene su contrapeso medido
 
 | Dato | Valor | Fuente / instrumento |
 |------|-------|---------------------|
