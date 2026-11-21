@@ -16,6 +16,63 @@ updated: 2026-11-21
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
 
+## 🆕 Plataforma vertical nueva (2026-11-21, cycle 9): **Roblox** — la plataforma de desarrollo que esta página no tenía
+
+Esta KB mencionaba Roblox de pasada (seguridad infantil, coalición con la Attorney
+General Alliance en NA) pero **nunca como plataforma sobre la cual construir**. Es una
+omisión grande: Roblox es, por volumen de creadores, la plataforma de desarrollo de
+juegos más usada del mundo, y su lenguaje (Luau) y su editor (Roblox Studio) son un
+vertical en sí mismos.
+
+| Pieza | Licencia (byte-read) | Repo | Qué aporta |
+|---|---|---|---|
+| **roblox-brain** | **MIT** (`LICENSE`, 1.069 B) | [TabooHarmony/roblox-brain](https://github.com/TabooHarmony/roblox-brain) | Librería de skills con el conocimiento de **Roblox Studio** que a un agente de código le falta: APIs, convenciones y patrones del editor. 199 ★, 20 forks, push 2026-10-15. |
+
+**Cómo encaja en un engagement:** Roblox **no** es open source y su plataforma no se
+self-hostea — es el caso opuesto a Godot. Lo que es open source y permisivo es **la
+capa de conocimiento que vuelve productivo a un agente adentro de Roblox Studio**. El
+patrón de entrega cambia en consecuencia:
+
+- ✅ **Sirve para:** estudios que ya publican en Roblox y quieren acelerar con agentes;
+  marcas que buscan presencia en la plataforma; prototipado social rápido.
+- ⛔ **No sirve para:** cualquier cliente que necesite portabilidad del runtime, control
+  del backend o publicar fuera de Roblox. Ahí la respuesta sigue siendo **Godot + Nakama**.
+- ⚠️ **Dependencia de plataforma:** todo lo construido vive bajo los términos de Roblox,
+  no bajo MIT. **Lo MIT es el pack de skills, no el juego.** Es exactamente la ruta de
+  contaminación inversa a la del cycle 6 (donde el copyleft entraba por el pack de
+  skills): acá el pack es permisivo y **la plataforma es la que impone condiciones**.
+
+---
+
+## ⛔ Plataforma evaluada y **descartada** este pass: SpacetimeDB
+
+| Plataforma | Licencia real | Repo | Por qué se descarta |
+|---|---|---|---|
+| **SpacetimeDB** (Clockwork Labs) | **BSL 1.1** (`LICENSE.txt`, 42.562 B) — **no open source**; Change Date **2031-11-20** → AGPL-3.0 c/ excepción de linking | [clockworklabs/SpacetimeDB](https://github.com/clockworklabs/SpacetimeDB) | 25.570 ★ y push de hoy, así que está **vivo y es serio**: base relacional con la lógica del servidor adentro (módulos Rust/C# a WASM), el modelo de BitCraft. Pero el Additional Use Grant permite **una sola instancia en producción** y prohíbe ofrecer un *Database Service*. Un multijugador comercial sale del grant **al escalar**, es decir, cuando el proyecto va bien. |
+
+⚠️ **Advertencia de venta:** si el cliente llega con un comparativo de blog tipo
+*"SpacetimeDB vs PlayFab vs Nakama 2026"*, llega con una tabla que **no tiene columna
+de licencia**. Mostrarle el `Additional Use Grant` leído —no la insignia de GitHub,
+que dice `NOASSERTION`— es la forma más rápida de reencuadrar la conversación hacia
+Nakama (Apache-2.0) o Talo (MIT).
+
+---
+
+## 🆕 Pipeline de assets con control de gasto — la capa que faltaba en el stack recomendado
+
+El stack de esta página (Godot + Nakama + MCP) cubre engine, backend y tooling, pero
+**no decía nada sobre cuánto cuesta generar los assets**, que en un proyecto con IA
+generativa es una línea de costo real y variable.
+
+| Pieza | Licencia (byte-read) | Repo | Qué aporta |
+|---|---|---|---|
+| **Scenario Skills** | **MIT** (`LICENSE`, 1.070 B) | [scenario-labs/skills](https://github.com/scenario-labs/skills) | Skills que generan imagen, video, audio y **3D** desde cualquier agente, **eligen el modelo adecuado por tarea**, **cotizan el costo antes de gastar** y mantienen consistencia de personaje entre generaciones. 3.961 ★, 350 forks, push 2026-11-21. |
+
+Las dos propiedades que lo hacen entregable a un cliente: **cotizar antes de ejecutar**
+(convierte un costo variable opaco en una estimación previa) y **consistencia de
+personaje** (el defecto que más retrabajo genera en arte generado). Se enchufa encima
+del stack existente sin reemplazar nada.
+
 ## 🆕 🔴 Frontera declarada (2026-11-21, cycle 8): esta página es de **VIDEOJUEGOS**; *"gaming"* en inglés también significa **casino**
 
 **Hallazgo de ingesta que afecta a esta página más que a ninguna otra**, porque

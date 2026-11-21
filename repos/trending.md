@@ -11,6 +11,74 @@ updated: 2026-11-21
 
 ---
 
+## 🆕 2026-11-21 — pass cycle 9
+
+> Sin deltas de ★ (quinto pass del día). Lo que cambia este pass **es el tamaño del
+> universo medido**: 11 repos nuevos y un rechazo de 25.570 ★ que llevaba 8 passes
+> sin ser abierto. Los tres passes anteriores subieron la precisión sobre el catálogo
+> existente; éste descubre que el catálogo **tenía un agujero**.
+
+### 🔴 El repo del pass: `SpacetimeDB`, 25.570 ★, **BSL 1.1 — no open source**
+
+| Campo | Valor | Cómo se obtuvo |
+|---|---|---|
+| [clockworklabs/SpacetimeDB](https://github.com/clockworklabs/SpacetimeDB) | 25.570 ★, 1.121 forks | `gh api search/repositories` |
+| Creado / push | 2023-06-17 / 2026-11-21 | idem |
+| GitHub dice | `NOASSERTION` | idem |
+| Realidad | **BSL 1.1**, `LICENSE.txt` **42.562 B** | byte-read `raw` |
+| Change Date | **2031-11-20** → AGPL-3.0 c/ excepción de linking | byte-read |
+| Tope de uso | **1 (una) instancia en producción** | byte-read |
+
+Base de datos relacional donde la lógica del servidor vive **dentro** de la base
+(módulos en Rust o C# a WASM): el modelo que popularizó BitCraft. Técnicamente es el
+competidor serio de Nakama. **Legalmente está fuera de la ruta permisiva** y el
+motivo no es la conversión a AGPL de 2031 sino el tope de **una instancia** hoy.
+
+⚠️ **Trampa de comparativo:** los blogs de 2026 que comparan *"SpacetimeDB vs PlayFab
+vs Nakama"* lo ponen en la misma tabla que Nakama (Apache-2.0) **sin una columna de
+licencia que marque BSL**. Si el cliente llegó con esa tabla, llegó con un error.
+
+### 🆕 Repos nuevos incorporados al universo medido (11)
+
+Todos verificados hoy por `search/repositories` **y** byte-read de su `LICENSE`.
+Detalle completo en [`agents/top.md`](../agents/top.md).
+
+| Repo | Licencia (bytes) | ★ | Forks | Creado | Último push |
+|---|---|---|---|---|---|
+| [scenario-labs/skills](https://github.com/scenario-labs/skills) | MIT (1.070) | 3.961 | 350 | 2026-08-12 | 2026-11-21 |
+| [CraftJarvis/MineStudio](https://github.com/CraftJarvis/MineStudio) | MIT (1.068) | 423 | 36 | 2024-11-07 | 2026-09-28 |
+| [ukanwat/overtime](https://github.com/ukanwat/overtime) | MIT (1.078) | 403 | 75 | 2026-07-31 | 2026-10-18 |
+| [tettethu/VibeGame](https://github.com/tettethu/VibeGame) | Apache-2.0 (14.096) | 389 | 40 | 2026-08-12 | 2026-11-21 |
+| [isuzu-shiranui/UnityMCP](https://github.com/isuzu-shiranui/UnityMCP) | MIT (1.066) | 344 | 27 | 2025-04-16 | 2026-11-20 |
+| [wellingfeng/UltraGameStudio](https://github.com/wellingfeng/UltraGameStudio) | MIT (1.068) | 344 | 37 | 2026-05-30 | 2026-11-21 |
+| [TabooHarmony/roblox-brain](https://github.com/TabooHarmony/roblox-brain) | MIT (1.069) | 199 | 20 | 2026-05-27 | 2026-10-15 |
+| [satelliteoflove/godot-mcp](https://github.com/satelliteoflove/godot-mcp) | MIT (1.056) | 188 | 23 | 2025-12-21 | 2026-11-16 |
+| [WenyiWU0111/RSIGame](https://github.com/WenyiWU0111/RSIGame) | Apache-2.0 (11.400) | 178 | 16 | 2026-09-28 | 2026-10-30 |
+| [typeonce-dev/ritmo](https://github.com/typeonce-dev/ritmo) | MIT (1.072) | 170 | 7 | 2026-03-28 | 2026-11-21 |
+| [quazaai/UnityMCPIntegration](https://github.com/quazaai/UnityMCPIntegration) | MIT (1.068) | 155 | 34 | 2025-03-17 | **2025-04-15 ⚠️ dormido** |
+
+**Lectura de cohorte:** **7 de los 11 fueron creados en 2026** (`scenario-labs/skills`,
+`VibeGame`, `UltraGameStudio`, `roblox-brain`, `RSIGame`, `ritmo` y `overtime`) y
+6 de los 11 tienen push **de hoy o de ayer**. La categoría *agente que construye el
+juego* se está poblando ahora mismo; la categoría *agente que juega* (Mindcraft,
+GamingAgent, MineStudio) es más vieja y se mueve más lento.
+
+### ⚠️ Un dormido entre los nuevos, marcado a propósito
+
+`quazaai/UnityMCPIntegration` tiene 155 ★ y **no recibe un commit desde 2025-04-15**
+(19 meses). Entra a esta página **marcado**, no recomendado: es exactamente el perfil
+que una búsqueda ordenada por estrellas devuelve arriba y que un equipo apurado toma
+como base viva. Regla heredada del cycle 4 (*runner-up promotion*), aplicada al revés:
+acá el riesgo no es coronar al runner-up, es **coronar a un muerto por inercia de ★**.
+
+### ⛔ Rechazado: `databrickslabs/ontobricks` — homónimo de `Unity`
+
+485 ★, push de hoy, pero expone **Unity Catalog** (metastore de Databricks) por MCP.
+No es el engine. Entró por la búsqueda `unity ai agent mcp`. **Segundo homónimo
+medido de esta KB.**
+
+---
+
 ## 🆕 2026-11-21 — pass cycle 8
 
 > Sin deltas de ★ (cuarto pass del día; una hora no mueve una estrella). Lo que

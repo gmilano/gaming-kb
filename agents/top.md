@@ -54,6 +54,151 @@ updated: 2026-11-21
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
 
+## 🔴 Lo más importante del pass 2026-11-21 (cycle 9): **el backend de 25.570 ★ que esta KB nunca miró, y las dos sondas que esta sesión NO tiene**
+
+### 🔴 Hallazgo nº1: `clockworklabs/SpacetimeDB` — 25.570 ★, ausente de esta KB en 8 passes, y **no es open source**
+
+Medido hoy, no citado:
+
+| Campo | Valor medido | Canal |
+|---|---|---|
+| Slug | [clockworklabs/SpacetimeDB](https://github.com/clockworklabs/SpacetimeDB) | `gh api search/repositories` |
+| Estrellas / forks | **25.570 ★** / 1.121 forks | idem |
+| Creado / último push | 2023-06-17 / **2026-11-21 (hoy)** | idem |
+| `archived` | `false` — vivo | idem |
+| Licencia según GitHub | **`NOASSERTION`** | idem |
+| Licencia **leída byte a byte** | **BSL 1.1** (`LICENSE.txt`, **42.562 B**) | `raw.githubusercontent.com` |
+
+El íncipit del archivo: `SPACETIMEDB BUSINESS SOURCE LICENSE AGREEMENT / Business Source License 1.1`.
+Licensor: Clockwork Laboratories, Inc. Licensed Work: `SpacetimeDB 2.16.2`.
+
+**Los dos parámetros que deciden:**
+
+- **Additional Use Grant:** se permite usar el trabajo *"provided your application or
+  service uses the Licensed Work with **no more than one SpacetimeDB instance in
+  production**"*, y prohíbe ofrecer un *"Database Service"* a terceros.
+- **Change Date: `2031-11-20`. Change License: `AGPL-3.0 with a linking exception`.**
+
+**Veredicto: ⛔ fuera de la ruta permisiva de Globant.** No porque sea copyleft —
+no lo es todavía— sino porque el grant de uso **limita producción a UNA instancia**.
+Un juego multijugador comercial que escale horizontalmente está fuera del grant el
+día que levanta la segunda instancia, y la conversión de 2031 es a AGPL (con
+excepción de linking), no a una licencia permisiva.
+
+**Por qué esto importa más que una fila rechazada:** los comparativos de terceros que
+circulan en 2026 (*"SpacetimeDB vs PlayFab vs Nakama"*) lo listan **al lado de Nakama
+(Apache-2.0) y de Talo (MIT) sin marcar que es BSL**. Un equipo que elija por tabla
+comparativa de blog elige una licencia no-open-source creyendo que compara iguales.
+Nakama y Talo siguen siendo las dos opciones recomendadas de esta KB; SpacetimeDB
+queda registrado como **rechazo medido**, no como silencio.
+
+#### 🆕 9º eje de partición de un grant: **por subdirectorio, declarado en la licencia base — y con la cláusula de conflicto contradiciéndose**
+
+`LICENSE.txt` trae un preámbulo de 28 líneas que los 8 passes anteriores no podían
+ver porque nadie había abierto el repo. Dice, textual:
+
+- §2 *"Subdirectory-Specific Licenses ... If a subdirectory contains its own LICENSE
+  or LICENSE.txt file, the terms in that file **apply exclusively** to all files and
+  subfolders within that subdirectory."*
+- y acto seguido: *"In the event of any conflict between this base license and a
+  subdirectory's license, **the base license will govern** for that subdirectory's
+  contents."*
+
+**Las dos frases no pueden ser ambas verdaderas.** Si la licencia del subdirectorio
+aplica *exclusively*, no puede a la vez ceder ante la base en caso de conflicto.
+Para una auditoría esto no es trivia: significa que **no se puede resolver el grant
+de un subdirectorio de este repo leyendo sólo ese subdirectorio**, y que la lectura
+más conservadora (BSL gobierna todo) es la única defendible ante un cliente.
+
+**Y el mismo texto aparece dos veces con distinto tamaño:** `licenses/BSL.txt` tiene
+**40.980 B** — exactamente el mismo cuerpo menos el preámbulo de 28 líneas (29 líneas
+de `diff`). Dos archivos de licencia, dos byte-counts, un solo grant: el checksum de
+bytes **tríaga, no dicta** (regla heredada del cycle 7, revalidada aquí).
+
+### 🔴 Hallazgo nº2: dos de las tres sondas de verificación de esta KB **no funcionan en esta sesión**, y una de ellas miente en silencio
+
+Medición directa, repo real contra slug inventado:
+
+| Sonda | Repo real (`godotengine/godot`) | Slug inventado (`zzz-definitely-not-a-real-repo-9988/nope`) | ¿Discrimina? |
+|---|---|---|---|
+| `curl -sI https://github.com/<slug>` | **403** | **403** | ❌ **NO. Da el mismo código a lo real y a lo inventado.** |
+| `gh api repos/<slug>` | 403 `access ... not enabled for this session` | 403 idem | ❌ no habilitada |
+| `gh api search/repositories` | devuelve el repo con ★/licencia/`archived`/`pushed_at` | no devuelve nada | ✅ **sí** |
+| `raw.githubusercontent.com/.../LICENSE` | **200**, 1.149 B de texto real | **404**, cuerpo de **14 B** | ✅ **sí** |
+
+**Consecuencia operativa:** la instrucción *"verificá cada URL con `curl -sI`"* es
+**inejecutable en este entorno** y, peor, es *silenciosamente* inejecutable: devuelve
+403 para todo, y un 403 se puede confundir con "existe pero es privado". Los dos
+canales que sí discriminan son `gh api search/repositories` y el byte-read por `raw`.
+**Toda fila nueva de este pass se verificó con esos dos, nunca con `curl -sI`.**
+
+⚠️ El cuerpo de 404 de `raw` pesa **14 B** — es el *trap de los 14 bytes* que esta KB
+documentó en el cycle 6. Sigue vivo y sigue siendo la forma más fácil de registrar
+un archivo de licencia inexistente como si fuera uno diminuto.
+
+### ⛔ Gap de canal declarado (no silenciado): **WebFetch no resuelve ningún host general en esta sesión**
+
+Tres intentos, tres `ENOTFOUND`: `github.blog`, `es.kotaku.com`, `www.pocketgamer.biz`.
+No es que las páginas no existan: **el entorno no resuelve hosts fuera de la política
+de red de la sesión**. Por lo tanto, en este pass:
+
+- Todo dato de **repositorio** es de primera mano (`search/repositories` + byte-read).
+- Todo dato de **prensa / informes de mercado** viene de *snippets* de búsqueda, **no
+  de la fuente primaria**. Donde dos fuentes discrepan, abajo se registran **las dos**
+  y se dice que no se pudo dirimir, en vez de elegir la que suena mejor.
+
+Para cerrar este gap hay que habilitar `github.blog`, los sitios de prensa de la
+industria y los dominios de los informes en la configuración de red de la sesión.
+
+### 🆕 Filas nuevas de este pass — 11 repos, **las 11 con licencia leída byte a byte**
+
+Ninguno de estos 11 estaba en la KB antes de hoy (verificado contra el índice de 145
+slugs ya presentes). Estrellas, `archived` y `pushed_at` medidos hoy 2026-11-21.
+
+| Agente / herramienta | Repo | Licencia (byte-read) | ★ | Último push | Para qué sirve |
+|---|---|---|---|---|---|
+| **Scenario Skills** | [scenario-labs/skills](https://github.com/scenario-labs/skills) | **MIT** (`LICENSE`, 1.070 B) | **3.961** | 2026-11-21 | Skills para que un agente genere imagen, video, audio y **3D** eligiendo modelo y **cotizando el costo antes de gastar**, con consistencia de personaje. El repo más grande de los nuevos y el único que ataca el control de gasto del pipeline de assets. 350 forks. |
+| **MineStudio** | [CraftJarvis/MineStudio](https://github.com/CraftJarvis/MineStudio) | **MIT** (`LICENSE`, 1.068 B, rama `master`) | 423 | 2026-09-28 | Paquete para desarrollar agentes de Minecraft: datos, modelos, entrenamiento e inferencia en una sola API. Complementa a Mindcraft (que esta KB ya lista) por el lado del *training*, no del *prompting*. |
+| **VibeGame** | [tettethu/VibeGame](https://github.com/tettethu/VibeGame) | **Apache-2.0 + avisos de terceros embebidos** (`LICENSE`, 14.096 B — ver nota) | 389 | 2026-11-21 | Framework multi-agente auto-evolutivo con engine AI-native: convierte lenguaje natural en un juego jugable. Creado 2026-08-12 y ya en 389 ★. |
+| **UnityMCP (isuzu)** | [isuzu-shiranui/UnityMCP](https://github.com/isuzu-shiranui/UnityMCP) | **MIT** (`LICENSE`, 1.066 B) | 344 | 2026-11-20 | El **Editor de Unity sirve MCP él mismo por HTTP**: no hay un segundo proceso puente que levantar. Arquitectura distinta a la de `CoplayDev/unity-mcp`, y la razón por la que vale listarlo aparte. |
+| **UltraGameStudio** | [wellingfeng/UltraGameStudio](https://github.com/wellingfeng/UltraGameStudio) | **MIT** (`LICENSE`, 1.068 B) | 344 | 2026-11-21 | Agente de codificación para game dev: flujos de engine, código de gameplay y generación de assets en un solo agente. |
+| **roblox-brain** | [TabooHarmony/roblox-brain](https://github.com/TabooHarmony/roblox-brain) | **MIT** (`LICENSE`, 1.069 B) | 199 | 2026-10-15 | Librería de skills con el conocimiento de **Roblox Studio** que a un agente de código le falta. **Primera entrada de Roblox como plataforma de desarrollo en esta KB** (ver `verticals/solutions.md`). |
+| **godot-mcp (satelliteoflove)** | [satelliteoflove/godot-mcp](https://github.com/satelliteoflove/godot-mcp) | **MIT** (`LICENSE`, 1.056 B) | 188 | 2026-11-16 | Edición de escena, **inyección de input**, **playtesting determinista** y estado de juego en vivo para el agente. El *playtesting determinista* es lo que lo separa del `godot-mcp` de Coding-Solo que esta KB ya lista: es la pieza que falta para QA reproducible (Receta 9). |
+| **RSIGame** | [WenyiWU0111/RSIGame](https://github.com/WenyiWU0111/RSIGame) | **Apache-2.0** (`LICENSE`, 11.400 B — ver nota de procedencia) | 178 | 2026-10-30 | Desarrollo de juegos agéntico y autónomo con **auto-mejora recursiva**. Creado 2026-09-28: el más joven de la tabla. |
+| **ritmo** | [typeonce-dev/ritmo](https://github.com/typeonce-dev/ritmo) | **MIT** (`LICENSE`, 1.072 B) | 170 | 2026-11-21 | Toolkit *agent-first* de game dev: ECS, assets, efectos, sonido y música. Pensado desde el día uno para que lo maneje un agente, no una persona. |
+| **overtime** | [ukanwat/overtime](https://github.com/ukanwat/overtime) | **MIT** (`LICENSE`, 1.078 B) | 403 | 2026-10-18 | Le das un *brief* a un agente de código, no un chat, y trabaja solo a través de sesiones. Incluye como ejemplo una ciudad open-world construida en un engine real. **Herramienta genérica**: se lista por el patrón de brief-en-vez-de-chat, no como herramienta de gaming. |
+| **UnityMCPIntegration (quaza)** | [quazaai/UnityMCPIntegration](https://github.com/quazaai/UnityMCPIntegration) | **MIT** (`LICENSE`, 1.068 B) | 155 | **2025-04-15 ⚠️** | Control de Unity por agentes. **⚠️ Último push hace 19 meses.** Se lista para que quede registrado que está dormido: es el tipo de repo que una búsqueda por estrellas sigue devolviendo arriba y que no hay que tomar como base viva. |
+
+**Nota sobre `VibeGame` (los 2.696 B de más):** el Apache-2.0 estándar pesa ~11.350 B;
+este archivo pesa 14.096 B. Byte-read del excedente: **no son términos adicionales**,
+es una sección `Third-Party Notices` anexada **dentro del propio `LICENSE`**, después
+del `APPENDIX` de Apache, con texto MIT embebido para las dependencias vendorizadas.
+Es decir: el inventario de terceros que el cycle 6 encontró en `THIRD_PARTY_NOTICES.md`
+acá vive **adentro del archivo de licencia**. El grant base sigue siendo Apache-2.0 y
+el repo es permisivo. **Regla: una desviación de byte-count obliga a leer, no a
+rechazar** — acá la desviación era benigna y el rechazo automático habría sido un
+falso positivo.
+
+**Nota de procedencia sobre `RSIGame`:** su `LICENSE` Apache **no es la plantilla en
+blanco**. Donde el template dice `Copyright [yyyy] [name of copyright owner]`, este
+archivo dice `Copyright 2025 Google LLC` / `Copyright 2025 Qwen` /
+`Copyright 2026 OpenGame contributors`. No es un defecto: Apache-2.0 **obliga** a
+preservar los avisos de las obras de las que se deriva. Lo que dice es que RSIGame es
+**trabajo derivado** de código de Google y de Qwen, y que quien lo forkee hereda ese
+deber de atribución. **Señal de procedencia utilizable: el `LICENSE` de un derivado
+permisivo delata sus padres.**
+
+### ⛔ Candidato nuevo **rechazado** este pass, con motivo medido
+
+| Candidato | Repo | Qué es | Motivo del rechazo |
+|---|---|---|---|
+| **ontobricks** | [databrickslabs/ontobricks](https://github.com/databrickslabs/ontobricks) | 485 ★, `NOASSERTION`, push 2026-11-21 | **Homónimo de canal.** Apareció en la búsqueda `unity ai agent mcp` porque convierte tablas de **Unity Catalog** —el metastore de Databricks— en un grafo de conocimiento expuesto por MCP. **No tiene ninguna relación con el engine Unity.** Es el equivalente, dentro de GitHub, del homónimo *gaming = casino* que el cycle 8 encontró en la prensa: **"Unity" también es ambiguo, y la ambigüedad entra por el buscador de repos.** |
+
+> **Regla nueva (nº14):** antes de aceptar una fila que llegó por búsqueda de texto,
+> comprobar que el término que la trajo significa en ese repo lo que significa acá.
+> Dos homónimos ya medidos en esta KB: **`gaming`** (videojuego vs casino, en prensa) y
+> **`Unity`** (engine vs Unity Catalog de Databricks, en GitHub).
+
 ## 🔴 Lo más importante del pass 2026-11-21 (cycle 8): **un archivo de licencia puede estar ROTO**, y los dos canales en los que esta KB más confía **se contradicen entre sí**
 
 Siete passes construyeron un método para **leer** un grant: checksum de bytes

@@ -12,6 +12,72 @@ updated: 2026-11-21
 
 ---
 
+## 🆕 2026-11-21 — pass cycle 9
+
+> **Quinto pass del día.** Igual que en los cycles 5-8, **no se reportan deltas de
+> ★**: una hora no mueve una estrella de forma interpretable, y ninguna cifra
+> heredada se reescribe. Lo que aporta este pass es **cobertura nueva, por primera
+> vez en tres passes**: 11 repos que esta KB no tenía, más el rechazo medido del
+> backend de 25.570 ★ que llevaba 8 passes sin ser mirado.
+
+### 🔴 El evento del pass: `SpacetimeDB` existía, era enorme, y nadie lo había abierto
+
+[clockworklabs/SpacetimeDB](https://github.com/clockworklabs/SpacetimeDB) — **25.570 ★**,
+1.121 forks, push de **hoy**, `archived=false`. GitHub lo reporta como `NOASSERTION`.
+El byte-read de `LICENSE.txt` (**42.562 B**) resuelve: **Business Source License 1.1**,
+Change Date **2031-11-20**, Change License **AGPL-3.0 con excepción de linking**, y un
+Additional Use Grant que permite **una sola instancia en producción**.
+
+**⛔ Rechazado para la ruta permisiva.** El detalle que lo mata no es el copyleft
+futuro: es el tope de **una instancia**, que un multijugador comercial rompe el día
+que escala. Nakama (Apache-2.0) y Talo (MIT) siguen siendo las recomendaciones.
+
+**Lo que esto dice del método:** ocho passes de forensia de licencias cada vez más
+fina sobre el catálogo ya listado, y el agujero más caro era de **cobertura**, no de
+precisión. Un repo de 25,5k ★ ausente del índice no genera ninguna contradicción que
+las Recetas 10/14/17/20/21 puedan cazar, porque esas recetas auditan lo que está
+escrito. **Un silencio no se contradice a sí mismo.**
+
+### 🆕 11 repos nuevos, todos con licencia leída byte a byte
+
+Tabla completa, con ★, `pushed_at` y bytes de licencia, en
+[`agents/top.md`](../agents/top.md). Resumen de lo que mueve la aguja:
+
+| Repo | Licencia | ★ | Por qué entra |
+|---|---|---|---|
+| [scenario-labs/skills](https://github.com/scenario-labs/skills) | MIT (1.070 B) | 3.961 | Skills de generación de imagen/video/audio/3D que **cotizan el costo antes de gastar**. Único de los nuevos que ataca el control de gasto del pipeline de assets. |
+| [CraftJarvis/MineStudio](https://github.com/CraftJarvis/MineStudio) | MIT (1.068 B) | 423 | Training de agentes de Minecraft. Complementa a Mindcraft por el lado del entrenamiento. |
+| [ukanwat/overtime](https://github.com/ukanwat/overtime) | MIT (1.078 B) | 403 | Brief en vez de chat; agente que persiste entre sesiones. Genérico, no gaming-específico. |
+| [tettethu/VibeGame](https://github.com/tettethu/VibeGame) | Apache-2.0 (14.096 B) | 389 | Engine AI-native + multi-agente auto-evolutivo. Creado hace 3 meses. |
+| [isuzu-shiranui/UnityMCP](https://github.com/isuzu-shiranui/UnityMCP) | MIT (1.066 B) | 344 | El Editor **sirve MCP él mismo por HTTP**: sin proceso puente. |
+| [wellingfeng/UltraGameStudio](https://github.com/wellingfeng/UltraGameStudio) | MIT (1.068 B) | 344 | Agente de codificación para game dev end-to-end. |
+| [TabooHarmony/roblox-brain](https://github.com/TabooHarmony/roblox-brain) | MIT (1.069 B) | 199 | **Primera entrada de Roblox** en esta KB. |
+| [satelliteoflove/godot-mcp](https://github.com/satelliteoflove/godot-mcp) | MIT (1.056 B) | 188 | **Playtesting determinista** + inyección de input: la pieza que le faltaba a la Receta 9. |
+| [WenyiWU0111/RSIGame](https://github.com/WenyiWU0111/RSIGame) | Apache-2.0 (11.400 B) | 178 | Auto-mejora recursiva aplicada a game dev. |
+| [typeonce-dev/ritmo](https://github.com/typeonce-dev/ritmo) | MIT (1.072 B) | 170 | ECS *agent-first*. |
+| [quazaai/UnityMCPIntegration](https://github.com/quazaai/UnityMCPIntegration) | MIT (1.068 B) | 155 | **⚠️ Dormido: push 2025-04-15, 19 meses.** Se lista para marcarlo, no para usarlo. |
+
+### 🔴 Defecto de instrumento medido este pass: **`curl -sI` da 403 a lo real y a lo falso**
+
+`godotengine/godot` → **403**. Un slug inventado → **403**. La sonda que el prompt de
+esta KB pide usar para verificar URLs **no discrimina nada en este entorno**, y falla
+en silencio. Los dos canales que sí discriminan, y con los que se verificó todo lo de
+arriba: `gh api search/repositories` y el byte-read por `raw.githubusercontent.com`
+(200 + bytes reales vs 404 + cuerpo de 14 B).
+
+⛔ **Gap de canal declarado:** `WebFetch` no resuelve **ningún** host general en esta
+sesión (`github.blog`, `es.kotaku.com`, `www.pocketgamer.biz` → `ENOTFOUND`). Los datos
+de repos son de primera mano; los de prensa, de *snippets* de búsqueda.
+
+### ⛔ Rechazo nuevo: el homónimo entró por el buscador de repos
+
+[databrickslabs/ontobricks](https://github.com/databrickslabs/ontobricks) (485 ★) llegó
+a la búsqueda `unity ai agent mcp` porque expone **Unity Catalog** (el metastore de
+Databricks) por MCP. **Nada que ver con el engine Unity.** Segundo homónimo medido de
+esta KB, después de *gaming* = casino: **`Unity` es ambiguo dentro de GitHub**.
+
+---
+
 ## 🆕 2026-11-21 — pass cycle 8
 
 > **Cuarto pass del día.** Igual que en los cycles 5, 6 y 7, **no se reportan

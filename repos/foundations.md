@@ -33,6 +33,107 @@ updated: 2026-11-21
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
 
+## 🔴 El hallazgo del cycle 9 (2026-11-21): **el agujero no era de precisión, era de COBERTURA** — un backend de 25.570 ★ que esta página nunca listó
+
+Ocho passes de forensia de licencias sobre el catálogo existente, cada uno más fino
+que el anterior. Y el repo más grande del nicho de backends de juego **no estaba en
+ninguna fila de este archivo**: nadie lo había abierto.
+
+### `clockworklabs/SpacetimeDB` — ⛔ **fuera de la ruta permisiva**, con motivo medido
+
+| Campo | Valor medido hoy |
+|---|---|
+| Repo | [clockworklabs/SpacetimeDB](https://github.com/clockworklabs/SpacetimeDB) |
+| ★ / forks | **25.570** / 1.121 |
+| Creado / último push / `archived` | 2023-06-17 / **2026-11-21** / `false` |
+| GitHub reporta | `NOASSERTION` |
+| **Licencia real (byte-read)** | **BSL 1.1** — `LICENSE.txt`, **42.562 B** |
+| Change Date → Change License | **2031-11-20** → **AGPL-3.0 con excepción de linking** |
+| Additional Use Grant | *"no more than **one SpacetimeDB instance in production**"*, y prohibido ofrecer un *Database Service* |
+
+**Qué es:** una base de datos relacional donde la lógica del servidor corre **dentro
+de la base** (módulos Rust o C# compilados a WASM), eliminando la capa de servidor de
+juego tradicional. Es el modelo que popularizó BitCraft. Técnicamente, el rival serio
+de Nakama.
+
+**Por qué queda afuera:** no por el copyleft de 2031 — para entonces hay excepción de
+linking y no obligaría a abrir el código del juego. Queda afuera **por el tope de hoy**:
+*una* instancia en producción. Un multijugador comercial que escale horizontalmente
+sale del grant el día que levanta la segunda instancia. Para Globant eso es un riesgo
+que aparece **en el éxito del proyecto**, no en su fracaso: el peor momento posible.
+
+**Recomendación sin cambios:** [heroiclabs/nakama](https://github.com/heroiclabs/nakama)
+(Apache-2.0) por defecto; [TaloDev/backend](https://github.com/TaloDev/backend) (MIT)
+cuando el cliente no acepta Apache-2.0; [NamazuStudios/elements](https://github.com/NamazuStudios/elements)
+(MPL-2.0) como tercera opción. **SpacetimeDB no entra en esa lista**, y a partir de
+hoy está registrado como rechazo, no como ausencia.
+
+#### 🆕 9º eje de partición de un grant: **por subdirectorio, con cláusula de conflicto autocontradictoria**
+
+El preámbulo de 28 líneas de `LICENSE.txt` dice que un subdirectorio con su propio
+`LICENSE` manda *"exclusively"* sobre su contenido — **y en el párrafo siguiente** que
+ante conflicto *"the base license will govern"*. Las dos no pueden ser ciertas a la
+vez. Consecuencia para auditoría: **el grant de un subdirectorio de este repo no se
+puede resolver leyendo ese subdirectorio**, y la única lectura defendible ante un
+cliente es la conservadora (BSL gobierna todo).
+
+Dato complementario: `licenses/BSL.txt` contiene **el mismo cuerpo legal con 40.980 B**
+— exactamente el archivo raíz menos ese preámbulo. **Dos byte-counts, un solo grant:
+el checksum tríaga, el íncipit dicta** (regla del cycle 7, revalidada acá).
+
+---
+
+## 🆕 Repos fundacionales incorporados este pass (cycle 9)
+
+Verificados por `gh api search/repositories` **y** byte-read de `LICENSE`.
+
+| Repo | Licencia (byte-read) | ★ | Capa | Por qué es fundacional |
+|---|---|---|---|---|
+| [scenario-labs/skills](https://github.com/scenario-labs/skills) | **MIT** (`LICENSE`, 1.070 B) | 3.961 | Pipeline de assets | Skills para generar imagen, video, audio y **3D** desde cualquier agente, eligiendo modelo por tarea y **cotizando el costo antes de ejecutar**. Es la primera pieza de esta KB que trata el **presupuesto de generación** como parte del pipeline y no como sorpresa de fin de mes. 350 forks. |
+| [CraftJarvis/MineStudio](https://github.com/CraftJarvis/MineStudio) | **MIT** (`LICENSE`, 1.068 B, rama `master`) | 423 | Entrenamiento de agentes | Datos + modelos + entrenamiento + inferencia para agentes de Minecraft en una API. Minecraft sigue siendo el banco de pruebas estándar de agentes encarnados; esta página ya listaba el lado *prompting* (Mindcraft) y le faltaba el lado *training*. |
+| [tettethu/VibeGame](https://github.com/tettethu/VibeGame) | **Apache-2.0** (`LICENSE`, 14.096 B — incluye avisos de terceros embebidos) | 389 | Engine AI-native | Engine donde el bucle de construcción lo maneja un sistema multi-agente auto-evolutivo. Creado 2026-08-12. Categoría distinta a "MCP sobre un engine existente": acá el engine **nace** para el agente. |
+| [typeonce-dev/ritmo](https://github.com/typeonce-dev/ritmo) | **MIT** (`LICENSE`, 1.072 B) | 170 | ECS *agent-first* | ECS + assets + efectos + sonido + música diseñados para que el consumidor sea un agente. El contrapunto chico y legible de VibeGame. |
+
+### ⚠️ Nota de método sobre los 14.096 B de `VibeGame`
+
+Apache-2.0 estándar ≈ 11.350 B. El excedente de **2.696 B** se leyó, no se asumió:
+es una sección `Third-Party Notices` anexada **dentro del propio `LICENSE`**, después
+del `APPENDIX`, con texto MIT embebido para dependencias vendorizadas. **No hay
+términos adicionales.** El repo es permisivo.
+
+> **Regla (nº15):** una desviación de byte-count **obliga a leer, no a rechazar**.
+> El cycle 4 usó el checksum para cazar 4 licencias mal declaradas; acá el mismo
+> checksum habría producido un **falso positivo** si se lo hubiera aplicado como
+> veredicto. El inventario de terceros, que el cycle 6 encontró en un
+> `THIRD_PARTY_NOTICES.md` aparte, también puede vivir **adentro del `LICENSE`**.
+
+### 🔎 Señal de procedencia: el `LICENSE` de un derivado permisivo delata a sus padres
+
+[WenyiWU0111/RSIGame](https://github.com/WenyiWU0111/RSIGame) (Apache-2.0, 11.400 B,
+178 ★) **no usa la plantilla en blanco**: donde el template dice
+`Copyright [yyyy] [name of copyright owner]`, el archivo dice `Copyright 2025 Google LLC`,
+`Copyright 2025 Qwen`, `Copyright 2026 OpenGame contributors`. Apache-2.0 **obliga** a
+conservar esos avisos, así que no es un defecto: es la declaración de que RSIGame es
+trabajo derivado de código de Google y de Qwen, y de que **quien lo forkee hereda ese
+deber de atribución**. Técnica reutilizable en cualquier auditoría.
+
+### 🔴 Las sondas: cuál sirve y cuál no, medido en esta sesión
+
+| Sonda | Repo real | Slug inventado | ¿Sirve? |
+|---|---|---|---|
+| `curl -sI https://github.com/<slug>` | 403 | **403** | ❌ **no discrimina** |
+| `gh api repos/<slug>` | 403 (no habilitada en la sesión) | 403 | ❌ |
+| `gh api search/repositories` | devuelve ★/licencia/`archived`/`pushed_at` | nada | ✅ |
+| `raw.githubusercontent.com/.../LICENSE` | 200 + bytes reales | 404 + cuerpo de **14 B** | ✅ |
+
+Todas las filas nuevas de arriba se verificaron con las dos últimas.
+⛔ **Gap declarado:** `WebFetch` no resuelve hosts generales en esta sesión
+(`github.blog`, `es.kotaku.com`, `www.pocketgamer.biz` → `ENOTFOUND`), así que el
+editorial de GitHub sobre proyectos open source de gaming **no pudo leerse** y no se
+usó como fuente.
+
+---
+
 ## 🔴 El hallazgo del cycle 8 (2026-11-21): **un `LICENSE` puede ser un archivo DAÑADO**, y el manifiesto puede contradecirlo
 
 Esta página verifica grants en bytes desde el cycle 3. Todos sus canales dan por

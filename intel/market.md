@@ -14,6 +14,102 @@ updated: 2026-11-21
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
 
+## 🔴 Lo que cambió — pass cycle 9 (2026-11-21): **la cifra insignia de LATAM de esta KB se midió sobre un panel que excluye a Brasil**
+
+Este pass no agrega un dato a LATAM: **corrige el dato con el que esta KB venía
+vendiendo LATAM**. También le pone muestra al 94% que circula en NA/EMEA, y le pone
+números al informe-faro que el cycle 8 identificó como del *otro* gaming.
+
+### 🔴 La corrección: el 48,8% es de **cinco países hispanoamericanos**, y Brasil no es uno de ellos
+
+Desde el cycle 4 esta KB afirma que LATAM acepta la IA jugador-facing mucho más que
+el resto del mundo (**48,8%** vs ~85% de rechazo global), y de ahí deriva la tesis
+comercial más fuerte del archivo: *LATAM es el mercado racional de primer lanzamiento*.
+La cifra es real. **Su alcance, no.**
+
+| | PGB **Latam** 2026 | PGB **Brasil** 2026 |
+|---|---|---|
+| Muestra | **7.202 respuestas** | **>7.000 personas** |
+| Países | **Argentina, Chile, Colombia, México, Perú** | Brasil |
+| Campo | presentado en gamescom latam 2026 (São Paulo) | **5–13 de marzo de 2026** |
+| Autor | Pesquisa Game Brasil / Go Gamers | idem |
+| Compraría un juego hecho con IA | **48,8 %** | **39,3 %** |
+| Teme despidos / precarización por IA | **40,6 %** | — |
+
+**Brasil está fuera del panel del 48,8 %** — y Brasil es el mercado más grande y más
+maduro de la región, con penetración de videojuegos por encima del 70% de la
+población. Cuando se le pregunta a Brasil por separado, la aceptación cae a **39,3 %**:
+**unos 9,5 puntos menos**.
+
+**Qué hay que cambiar en el discurso comercial:**
+
+- ❌ Ya no: *"LATAM acepta la IA en juegos"*.
+- ✅ Ahora: *"**Hispanoamérica** (AR/CL/CO/MX/PE, n=7.202) muestra 48,8% de intención
+  de compra; **Brasil, medido aparte (n>7.000), muestra 39,3%**. La ventaja regional
+  es real pero **no es homogénea, y el mercado más grande puntúa más bajo**."*
+- ✅ Para un engagement **brasileño**, la cifra que corresponde citar es 39,3 %, no 48,8 %.
+- ⚠️ Y en ambos paneles convive con **40,6 % que teme despidos**: aceptación de compra
+  y ansiedad laboral **no se cancelan**, coexisten en la misma muestra.
+
+> **La regla de método del cycle 5 —"un número sin su muestra no es un número"— se
+> aplicó por primera vez contra la cifra favorita de esta propia KB, y la cifra no
+> pasó entera.** El error no fue inventar el dato: fue heredarlo sin su panel.
+
+### 🔴 El 94% ahora tiene instrumento, y **no es una encuesta**
+
+El dato que domina los titulares de 2026 (*"el 94% de los estudios usa IA"*) viene del
+**Vivrato AI Adoption Report (VAIA)**:
+
+- **101 conversaciones confidenciales con líderes senior de estudio**, abril–septiembre 2026.
+- Estudios con sede **mayormente en Norteamérica y Europa**.
+- Es un **estudio de entrevistas estructuradas, no una encuesta online**.
+- El 94% = *"usa IA en **al menos una** de nueve etapas de producción"*.
+- **52% puntúa la profundidad de integración en ≤ 3/10.**
+- **Europa reporta adopción más profunda que Norteamérica** (inversión de lo que se
+  suele asumir).
+
+**Esto cierra el rango 29%–90% que esta KB venía registrando** (tendencia nº21): el
+techo es alto porque **pregunta a líderes, no a developers**, y porque el umbral es
+*"al menos una etapa"*. Y choca de frente con el dato fresco de esta semana:
+
+| Fuente | Fecha | Pregunta | Cifra |
+|---|---|---|---|
+| Vivrato VAIA (n=101 **líderes**) | abr–sep 2026 | ¿usa IA en ≥1 de 9 etapas? | **94 %** |
+| Encuesta GDC (**trabajadores**) | **13-nov-2026** | ¿usás IA en tu trabajo? | **40 %** |
+| idem | idem | ¿la genAI es mala noticia? | **55 % sí** |
+
+**La brecha 94 vs 40 no es contradicción: es la distancia entre lo que la empresa hace
+y lo que la persona promedio hace.** Para una venta, importa porque el patrocinador
+(líder) y el usuario (equipo) **no están en el mismo punto**, y el 55% dice que el
+usuario además **no quiere estar ahí**.
+
+### 🔴 El informe-faro de "AI in Gaming 2026" ahora tiene números — y sigue siendo de casino
+
+El cycle 8 declaró la frontera del homónimo (*gaming* = videojuego ≠ casino). Este pass
+la confirma **con la muestra del informe**: *"The State of AI in Gaming 2026"* es del
+**UNLV International Gaming Institute (AiR Hub) + KPMG**, publicado el **9 de abril de
+2026**, y mide **empresas de juego de azar**:
+
+| Métrica | Valor |
+|---|---|
+| Muestra | **83 empresas de juego + 113 reguladores** |
+| AI Maturity Index global | **45 / 100** |
+| Operadores *land-based* vs *online* | **39** vs **54** |
+| **Gobernanza de IA** (la más baja de todas las categorías) | **30 / 100** |
+| Brecha estrategia − gobernanza | **27 puntos** — los autores la llaman *"the most notable finding"* |
+| Uso de genAI | **80 % o 81,5 %** según la fuente — ⚠️ **no se pudo dirimir** |
+
+**Uso correcto en Globant:** este informe **no** describe el mercado de videojuegos y
+no debe citarse en un pitch de game studio. **Sí** es munición de primer nivel para la
+práctica de **iGaming / casino**, y la brecha de 27 puntos entre estrategia y gobernanza
+es, literalmente, una oferta de consultoría descrita por sus propios clientes.
+
+⛔ **Gap de canal declarado:** `WebFetch` no resuelve hosts generales en esta sesión
+(`ENOTFOUND` en 3 de 3). **Todas las cifras de prensa e informes de este pass vienen de
+snippets de búsqueda, no de la fuente primaria.** Donde las fuentes discrepan (80% vs
+81,5% de genAI en casino; 60% vs ~90% de estudios chinos) **se registran ambas y se
+declara que no se dirimió**, en lugar de elegir la más conveniente.
+
 ## 🔴 Lo que cambió — pass cycle 7 (2026-11-21)
 
 > Tercer pass del día. **Ninguna cifra heredada se reescribe por antigüedad.** Lo
@@ -194,6 +290,42 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+
+#### 🆕 cycle 9 (2026-11-21) — el informe que todos citan es de casino, y la brecha líder/trabajador es de 54 puntos
+
+**1. *"The State of AI in Gaming 2026"* (UNLV IGI AiR Hub + KPMG, 9-abr-2026) es de
+juego de azar, no de videojuegos.** Muestra: **83 empresas de juego + 113 reguladores**.
+AI Maturity Index **45/100**; *land-based* **39** vs *online* **54**; **gobernanza
+30/100**, la categoría más baja; **brecha estrategia−gobernanza de 27 puntos**, que los
+autores llaman el hallazgo más notable. Uso de genAI: **80% u 81,5%** según fuente
+(⚠️ no dirimido).
+→ **Oportunidad NA, pero para la práctica de iGaming/casino de Globant, no para game
+studios.** Un sector que se autodeclara con estrategia muy por delante de su gobernanza
+está describiendo una oferta de *AI governance* en sus propios términos. El desajuste
+reportado entre reguladores (que priorizan riesgo de juego problemático y resultados
+injustos) y operadores (que lo ponen último) es el gancho de conversación.
+
+**2. La brecha entre quien firma y quien usa está medida.** Vivrato VAIA (**101
+líderes senior**, abr–sep 2026, sedes mayormente NA y Europa): **94%** usa IA en ≥1 de
+9 etapas, pero **52% puntúa la integración en ≤3/10**. Encuesta GDC del **13-nov-2026**:
+**40%** de los trabajadores usa IA y **55% la considera mala noticia**.
+→ **Cómo vender en NA:** el patrocinador ya dijo que sí (94%) y ya sabe que no está
+integrado (52% en ≤3/10). **La venta no es "adoptá IA", es "convertí el piloto en
+pipeline"** — y tiene que incluir cómo se trata al 55% que no la quiere, o el proyecto
+se gana al comité y se pierde en el equipo.
+
+**3. Señal de riesgo de marca, medida:** Take-Two **despidió a su head of AI y a parte
+del equipo de IA** meses después de que su CEO declarara que abrazaba la IA generativa,
+y la compañía afirma que la genAI tiene *"cero participación"* en GTA 6.
+→ **Lectura para un pitch:** en NA, anunciar IA **y** recortar personal en la misma
+ventana es un riesgo reputacional conocido por los compradores. La propuesta de Globant
+debe separar explícitamente **capacidad** de **reducción de headcount**, y conviene que
+lo haga por escrito en la propuesta.
+
+**4. Dato de adopción que este pass NO pudo confirmar:** no se encontró una cifra 2026
+de adopción de IA por *jugadores* en NA comparable a la de LATAM (PGB) o a la de China
+(Niko). **Gap declarado**, no silencio: el argumento NA se sostiene con datos de
+*industria*, no de *jugador*.
 
 #### 🆕 2026-11-21 (cycle 8) — el informe-faro de "AI in gaming" de NA **es de casino**, y un incumbente muerto que sigue primero en las búsquedas
 
@@ -416,6 +548,56 @@ declarado; usar con la regla de la muestra de arriba.
 
 ### EMEA
 
+
+#### 🆕 cycle 9 (2026-11-21) — **el sprint del Art. 50(2) es MÁS ANGOSTO de lo que esta KB venía diciendo**
+
+Corrección de alcance, no de fecha. El **2-dic-2026 (quedan 11 días)** sigue siendo
+real, pero esta KB lo venía presentando como un sprint que alcanza a casi todo el
+catálogo. Las fuentes de este pass acotan el alcance en cuatro puntos:
+
+1. **El plazo del 2-dic-2026 cubre sólo el deber de *marcado legible por máquina* del
+   PROVEEDOR (Art. 50(2))**, y sólo para sistemas **puestos en el mercado antes del
+   2-ago-2026**.
+2. **Sistemas puestos en el mercado desde el 2-ago-2026: sin período de gracia.**
+   Cumplen desde el lanzamiento. No hay "ventana de diciembre" para lo nuevo.
+3. **Los deberes del *deployer* NO fueron pospuestos**: rigen desde el 2-ago-2026.
+4. 🔑 **El contenido sintético ya generado antes del 2-ago-2026 no debe marcarse
+   retroactivamente.** Esto **saca trabajo del sprint**: no hay que volver sobre los
+   assets viejos ya generados.
+
+**La consecuencia que cambia la Receta 7:** un estudio de videojuegos es, casi siempre,
+**deployer** de un modelo generativo de un tercero, **no provider**. Lo que le aplica
+entonces es avisar que se interactúa con IA (Art. 50(1)) y etiquetar deepfakes
+(Art. 50(4)) — **no** el marcado técnico del proveedor del 50(2), que es el que vence
+el 2 de diciembre. **Triar provider vs deployer ANTES de correr el sprint** evita
+vender once días de pánico por un deber que puede no aplicar al cliente.
+
+**Contexto adicional medido este pass:**
+
+- Guidelines finales de la Comisión sobre transparencia: ~**30-jul-2026**. Código de
+  Buenas Prácticas de Transparencia (junio 2026) declarado **adecuado**.
+- Los firmantes del Código deben montar un **mecanismo interoperable después de
+  diciembre** → marcar a las apuradas ahora puede tener que rehacerse. Conviene elegir
+  el mecanismo mirando ese requisito.
+- La Comisión sostiene que **en principio los videojuegos con IA no tienen obligación
+  bajo el AI Act**: la mayoría de la IA de juego (pathfinding, balanceo, entrenamiento
+  de NPC) es **riesgo mínimo**.
+- Lo que **sí** está prohibido (Art. 5, no "alto riesgo"): **NPCs diseñados para empujar
+  gasto in-game**. Multas hasta **35 M€ o 7% de la facturación global**.
+- Pendiente: **Digital Fairness Act**, propuesta esperada en **Q4-2026**, apuntando a
+  diseño adictivo y mecánicas aleatorias, con protecciones específicas para menores.
+- Lado casino (frontera del homónimo): la **UKGC subió el rating de riesgo de los
+  proveedores de software de juego de bajo a medio el 30-jul-2026**, citando documentos
+  falsos y deepfakes usados para eludir KYC.
+
+**Oportunidad EMEA reencuadrada:** el entregable que vende no es "cumplí con el Art. 50
+antes del 2 de diciembre" sino **"te digo en qué artículos caés y en cuáles no"**. Para
+la mayoría de los estudios la respuesta honesta reduce el trabajo — y es justamente por
+eso que genera confianza para el proyecto siguiente.
+
+**Dato de adopción EMEA:** Vivrato VAIA encuentra que **Europa reporta adopción más
+profunda que Norteamérica** (n=101 líderes, abr–sep 2026). Es el único dato comparativo
+NA/EMEA que esta KB tiene, y apunta en contra de la intuición habitual.
 
 #### 🆕 2026-11-21 (cycle 8) — **4ª confirmación independiente del 2-dic-2026**, y el host primario **no resuelve**: lo que este pass puede y no puede afirmar
 
@@ -677,6 +859,52 @@ con OSCAL y el Anexo IV.
 ### APAC
 
 
+#### 🆕 cycle 9 (2026-11-21) — dos cifras chinas que no se pueden conciliar, y un regulador que acelera
+
+**1. La adopción china tiene dos números incompatibles, de la misma casa.** Niko
+Partners aparece citado con **60% de los estudios chinos usando IA en sus pipelines**
+(informe 2025) y, por otro lado, con **"casi el 90% de los developers en China usando
+herramientas de genAI"**. Las definiciones (estudio vs developer, "IA" vs "genAI") y
+los años probablemente expliquen la diferencia, **pero con lo disponible en esta sesión
+no se pudo dirimir**.
+→ **Se registran las dos.** Para un pitch: usar **60%** si se habla de estudios y se
+quiere una cifra defendible; **no** usar el ~90% sin la aclaración de que mide
+developers y herramientas genAI.
+
+**2. El regulador chino está acelerando, no frenando.** Aprobaciones de la NPPA **+19%
+interanual YTD**; Niko proyecta **más de 2.000 juegos aprobados en el año**. Lotes
+mensuales medidos: **154 en abril**, **158 en mayo**, **197 en julio** (⚠️ el dato de
+julio es de fuente secundaria). Mercado chino proyectado **+4% en 2026**, hacia
+**59.800 M USD en 2030**.
+→ La narrativa de "China traba los juegos" está **desactualizada**; el cuello de botella
+de 2026 es la saturación de IP, no la licencia.
+
+**3. Etiquetado obligatorio, ya vigente.** Las *Measures for Labeling AI-Generated
+Content* se publicaron en **marzo de 2025** y rigen **desde septiembre de 2025**. China
+lleva **más de un año** con etiquetado de contenido generado por IA en vigor — **antes
+que la UE**.
+→ **Reutilización directa:** un estudio que ya publica en China **ya tiene** maquinaria
+de etiquetado. Esa maquinaria es el punto de partida más barato para el Art. 50 europeo.
+**Vender el camino China → UE, no dos proyectos separados.**
+
+**4. Producto de referencia:** Tencent abrió la **beta abierta de *Honor of Kings:
+World* en China el 10-abr-2026**, extendiendo una IP saturada hacia un género nuevo. El
+analista de Niko apunta además **fatiga de open-world/anime** en el mercado.
+→ Para un cliente APAC: la presión competitiva no está en *si* usar IA, está en
+**diferenciar una IP madura** — que es un problema de contenido y de live-ops, los dos
+lugares donde los agentes rinden.
+
+**5. Marco regulatorio por país (lo medido este pass):**
+
+| País | Instrumento | Estado |
+|---|---|---|
+| China | *Measures for Labeling AI-Generated Content* | **Vigente desde sep-2025** |
+| Japón | *Act on Promotion of R&D and Utilization of AI-Related Technologies* | **Mayo 2025** — ley **promotora**, de marco, no restrictiva ni específica de gaming |
+| Corea | Marco de IA: sistemas de alto impacto, **divulgación y etiquetado de genAI**, supervisión humana | Vigente; **no se encontró dato de adopción específico de gaming** |
+
+⛔ **Gap declarado:** no se encontraron cifras 2026 de adopción de IA en gaming para
+**Japón ni Corea**. Es ausencia de dato medida, no cobertura.
+
 #### 🆕 2026-11-21 (cycle 8) — Corea pone cifra a lo que pierde, y China deja de ser un caso de adopción para ser un caso de **certidumbre regulatoria**
 
 🔵 **Corea, dato nuevo y vendible por su signo:** la participación coreana en el
@@ -931,6 +1159,72 @@ open source más fuerte del ciclo.**
 
 ### LATAM
 
+
+#### 🔴 cycle 9 (2026-11-21) — **CORRECCIÓN: el 48,8% que esta KB usa para vender LATAM no incluye a Brasil**
+
+Es la corrección más importante de este pass y toca el argumento comercial más fuerte
+del archivo. Desde el cycle 4 esta página sostiene que LATAM es **el mercado racional
+de primer lanzamiento** para IA jugador-facing, apoyada en un 48,8% de aceptación
+frente a ~85% de rechazo global. **La cifra es real; su alcance estaba mal.**
+
+| | PGB **Latam** 2026 | PGB **Brasil** 2026 |
+|---|---|---|
+| Muestra | **7.202 respuestas** | **>7.000 personas** |
+| Países | **Argentina, Chile, Colombia, México, Perú** | **Brasil** |
+| Campo | presentado en **gamescom latam 2026** (São Paulo) | **5–13 de marzo de 2026** |
+| Autor | Pesquisa Game Brasil / Go Gamers | idem |
+| **Compraría un juego hecho con IA** | **48,8 %** | **39,3 %** |
+| Teme despidos / precarización por IA | **40,6 %** | — |
+
+**Brasil —el mercado más grande y más maduro de la región, con penetración >70% de la
+población— está fuera del panel del 48,8%.** Medido aparte, da **39,3%**: unos **9,5
+puntos menos**.
+
+**Cómo corregir el pitch:**
+
+- ❌ **No decir más:** *"LATAM acepta la IA en juegos (48,8%)"*.
+- ✅ **Decir:** *"**Hispanoamérica** (AR/CL/CO/MX/PE, n=7.202): **48,8%** de intención
+  de compra. **Brasil, medido aparte (n>7.000): 39,3%**."*
+- ✅ **En un engagement brasileño la cifra correcta es 39,3%.** Citar 48,8% en São Paulo
+  es citar un panel que excluye a ese cliente — y es verificable en un minuto.
+- ⚠️ **La aceptación convive con ansiedad laboral en la misma muestra: 40,6% teme
+  despidos.** No son dos públicos distintos; son las mismas personas. Un lanzamiento
+  LATAM con IA necesita mensaje de empleo, no sólo de producto.
+
+**La ventaja regional sigue existiendo, y sigue siendo estructural:** incluso 39,3% en
+Brasil está muy por encima del rechazo ~85% que esta KB registra a nivel global. Lo que
+se cae no es la tesis, es **la homogeneidad de la tesis**. LATAM deja de ser un bloque
+y pasa a ser **dos mercados con números propios**.
+
+> Esta corrección la produjo la regla de método del cycle 5 —*"un número sin su muestra
+> no es un número"*— aplicada **a la cifra favorita de esta propia KB**. El dato llevaba
+> cinco passes citado sin su panel.
+
+**Contexto regional adicional (medido este pass):**
+
+- **Brasil y México lideran la adopción general de IA en LATAM (76% y ~70%)**, pero
+  ⚠️ esa cifra mide **usuarios digitales en general, no developers ni estudios**. No
+  usarla como proxy de adopción en gaming.
+- **Consolas 19,5% / PC 17,5%** de preferencia regional (PGB Latam, vs 16,4% en 2025).
+- **México: 51,8% de sus jugadores son Generación Z**, segundo detrás de Perú.
+- Decreto brasileño firmado el **14-oct-2026** mencionado en fuentes de comercio
+  exterior ⚠️ **sin que se pudiera confirmar su contenido** en esta sesión.
+
+⛔ **Gaps LATAM declarados (medidos, no silenciados):**
+
+1. **No existe cifra de adopción de IA por *estudios* de Brasil, México o Argentina.**
+   Se buscó explícitamente en español; lo que vuelve es consumo y percepción de
+   jugadores. El dato de 94% (Vivrato) es de estudios **con sede en NA y Europa** y
+   **no cubre LATAM**.
+2. **Cero repos de gaming AI con origen LATAM** entre los 11 nuevos de este pass. Es un
+   cero **medido** sobre el universo buscado, no una ausencia por no haber mirado.
+3. La UNDP advierte que LATAM y el Caribe **van rezagados en adopción de IA** en general.
+
+→ **Lo que estos tres gaps significan comercialmente:** en LATAM la demanda del
+*jugador* está medida y es favorable, pero la capacidad del *estudio* no está medida
+por nadie. Globant, que opera desde la región, está en posición de ser **quien produce
+ese dato** — un informe de adopción de IA en estudios latinoamericanos no existe hoy y
+sería el único activo de su tipo en la conversación.
 
 #### 🆕 2026-11-21 (cycle 8) — la brecha de adopción de LATAM **por fin tiene su cifra**, y es una razón para vender, no una excusa
 

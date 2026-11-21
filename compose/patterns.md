@@ -1304,6 +1304,161 @@ hay que enumerar por rama en más de 20 repos.
 
 ---
 
+## 🆕 Receta 22: **Triaje provider vs deployer** — el paso 0 que le falta a la Receta 7
+
+**Problema que resuelve:** la Receta 7 arranca un sprint de marcado del Art. 50(2) con
+el reloj del 2-dic-2026 encima. Las fuentes del cycle 9 muestran que ese plazo es
+**mucho más angosto** de lo que el pánico de calendario sugiere, y correr el sprint sin
+triar antes puede significar **vender once días de urgencia por un deber que no le
+aplica al cliente**.
+
+**Los cuatro hechos que acotan el alcance:**
+
+1. El plazo 2-dic-2026 cubre **sólo el marcado legible por máquina del PROVEEDOR
+   (Art. 50(2))**, y **sólo** para sistemas puestos en el mercado **antes del 2-ago-2026**.
+2. Sistemas puestos en el mercado **desde el 2-ago-2026: sin gracia**, cumplen al lanzar.
+3. Los deberes del **deployer NO se pospusieron**: rigen desde el 2-ago-2026.
+4. El **contenido sintético generado antes del 2-ago-2026 NO se marca retroactivamente**.
+
+### Implementación
+
+**Fase 0 — ¿El cliente es provider o deployer?** (una pregunta, cambia todo el proyecto)
+
+| Si el cliente... | Entonces es | Y le aplica |
+|---|---|---|
+| Entrena/ajusta y **pone en el mercado** un modelo generativo propio | **Provider** | Art. 50(2): marcado legible por máquina. **Es el único que mira el reloj del 2-dic.** |
+| Usa un modelo de un tercero (API o pesos) dentro de su juego | **Deployer** | Art. 50(1) avisar que se interactúa con IA; Art. 50(4) etiquetar deepfakes. **No** el 50(2) del proveedor. |
+| Ambas cosas en distintos componentes | **Las dos** | Triar **por componente**, no por empresa |
+
+> La mayoría de los estudios de videojuegos cae en la **segunda fila**. Decirlo de
+> entrada reduce el alcance del proyecto — y es exactamente por eso que gana el proyecto
+> siguiente.
+
+**Fase 1 — Inventario con fecha de puesta en el mercado.** Para cada sistema con IA:
+`nombre | provider o deployer | fecha de puesta en el mercado | ¿antes del 2-ago-2026? | artículo aplicable`.
+La columna de fecha decide si hay prórroga o si la obligación ya venció al lanzar.
+
+**Fase 2 — Clasificación de riesgo (y la buena noticia).** La Comisión sostiene que
+**en principio los videojuegos con IA no tienen obligación** bajo el AI Act: pathfinding,
+balanceo y entrenamiento de NPC son **riesgo mínimo**. Marcarlos como tales, por escrito
+y con fundamento, **es parte del entregable**.
+
+**Fase 3 — El control que sí es urgente y no es de transparencia:** buscar **NPCs
+diseñados para empujar gasto in-game**. Eso no es "alto riesgo", es **prohibido por el
+Art. 5**, con multas de hasta **35 M€ o 7%** de facturación global, y **no tiene plazo de
+gracia ninguno**. Si aparece algo así en el inventario, **sube de prioridad por encima
+de todo el sprint de marcado**.
+
+**Fase 4 — Elegir el mecanismo de marcado mirando a 2027, no a diciembre.** Los
+firmantes del Código de Buenas Prácticas de Transparencia (junio 2026, declarado
+adecuado por la Comisión; guidelines finales ~30-jul-2026) deben montar un **mecanismo
+interoperable después de diciembre**. Un marcado elegido a las apuradas ahora puede
+tener que rehacerse: conviene verificarlo contra ese requisito **antes** de implementarlo.
+
+**Qué entregar:** una tabla de una página por sistema — *artículo aplicable, fecha que
+manda, qué hay que hacer, qué explícitamente no hay que hacer*. La última columna
+(incluido *"los assets generados antes del 2-ago-2026 no se re-marcan"*) suele ser la
+que más tiempo ahorra.
+
+---
+
+## 🆕 Receta 23: *Gate* de **Business Source License y Change Date** en la selección de infraestructura
+
+**Problema que resuelve:** las Recetas 10/14/15/20/21 cazan copyleft y ausencia de
+licencia. **Ninguna caza una licencia *source-available* con tope de uso**, que es el
+modo en que hoy se distribuye la infraestructura de juego más atractiva técnicamente.
+El caso medido: `clockworklabs/SpacetimeDB`, **25.570 ★**, que GitHub reporta como
+`NOASSERTION` y que en realidad es **BSL 1.1 con tope de UNA instancia en producción**.
+
+**Por qué los gates anteriores no lo ven:** BSL no es copyleft (no obliga a abrir nada),
+no es ausencia de licencia (el archivo está completo y es explícito), y su byte-count
+(42.562 B) no coincide con ninguna firma conocida. Pasa los tres filtros existentes.
+
+### Implementación
+
+**Paso 1 — Disparadores.** Marcar para lectura manual **cualquier** dependencia de
+infraestructura cuyo `spdx_id` sea `NOASSERTION`, o cuyo `LICENSE` contenga alguna de:
+
+```
+Business Source License
+Change Date
+Additional Use Grant
+Licensed Work
+Change License
+Functional Source License
+Elastic License
+Server Side Public License
+```
+
+**Paso 2 — Extraer los tres parámetros que deciden** (no el nombre de la licencia):
+
+| Parámetro | Pregunta | SpacetimeDB (medido 2026-11-21) |
+|---|---|---|
+| **Additional Use Grant** | ¿Qué uso se permite HOY? | **Máximo 1 instancia en producción**; prohibido ofrecer *Database Service* |
+| **Change Date** | ¿Cuándo cambia? | **2031-11-20** |
+| **Change License** | ¿A qué cambia? | **AGPL-3.0 con excepción de linking** |
+
+**Paso 3 — La prueba que importa: proyectar el grant contra el ÉXITO del proyecto.**
+No preguntar *"¿puedo usarlo?"* sino **"¿sigo adentro del grant cuando esto escale?"**.
+SpacetimeDB se usa legítimamente con una instancia; **el día que el juego anda bien y se
+levanta la segunda, el proyecto sale del grant**. Un riesgo que se dispara con el éxito
+es peor que uno que se dispara con el fracaso: llega cuando ya no hay tiempo de migrar.
+
+**Paso 4 — Chequear partición por subdirectorio.** El `LICENSE.txt` de SpacetimeDB
+declara licencias por subdirectorio (§2) **y** que ante conflicto gobierna la base —
+**las dos cosas a la vez**, lo cual es contradictorio. Ante una cláusula así, documentar
+la lectura **conservadora** (la base gobierna todo) como la única defendible.
+
+**Paso 5 — Sustituir, no negociar.** Alternativas ya verificadas por esta KB:
+
+| En lugar de | Usar | Licencia | Nota |
+|---|---|---|---|
+| SpacetimeDB | [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | **Apache-2.0** | Default de esta KB |
+| idem | [TaloDev/backend](https://github.com/TaloDev/backend) | **MIT** (`LICENSE`, 1.074 B) | Si el cliente no acepta Apache-2.0 |
+| idem | [NamazuStudios/elements](https://github.com/NamazuStudios/elements) | **MPL-2.0** (`LICENSE.txt`, 16.726 B) | Copyleft **por archivo**: hostearlo no obliga a abrir el juego |
+
+**Qué entregar:** por cada dependencia marcada, una ficha de cinco líneas — *grant de
+hoy, Change Date, Change License, en qué escenario de crecimiento se rompe, con qué se
+reemplaza*. La cuarta línea es la que convence a un CTO.
+
+---
+
+## 🆕 Receta 24: QA determinista con `godot-mcp` + inyección de input — la pieza que le faltaba a la Receta 9
+
+**Problema que resuelve:** la Receta 9 mide agentes que juegan con LMGame Bench, pero
+su bucle de QA sobre Godot dependía de MCP de edición de escena, **sin una forma
+reproducible de inyectar input ni de leer estado de juego en vivo**. Sin determinismo no
+hay regresión: una corrida que no se puede repetir no sirve como test.
+
+**La pieza nueva, verificada hoy:**
+[satelliteoflove/godot-mcp](https://github.com/satelliteoflove/godot-mcp) — **MIT**
+(`LICENSE`, 1.056 B), 188 ★, 23 forks, push 2026-11-16. Aporta tres cosas que el
+`godot-mcp` de Coding-Solo que esta KB ya lista no tiene: **inyección de input**,
+**playtesting determinista** y **estado de juego en vivo** para el agente.
+
+### Implementación
+
+1. **Engine:** [godotengine/godot](https://github.com/godotengine/godot) (MIT).
+2. **Capa MCP de QA:** `satelliteoflove/godot-mcp` (MIT) — inyección de input + estado.
+3. **Semilla fija por corrida.** Fijar la semilla del RNG del juego **y** registrarla en
+   el artefacto de la corrida. Sin esto, lo demás no es determinista aunque el input lo sea.
+4. **Guion de input como dato, no como código:** una lista de `(frame, acción)`. El agente
+   produce el guion; el runner lo reproduce. Un fallo se reporta **como guion**, y el
+   equipo lo vuelve a correr idéntico.
+5. **Aserciones sobre estado de juego en vivo**, no sobre píxeles: posición, vida,
+   inventario, estado de máquina. Las aserciones de píxel rompen con cada cambio de arte.
+6. **Comportamiento del agente:** behaviour tree (como [bitbrain/beehave](https://github.com/bitbrain/beehave), MIT)
+   para la exploración, y el LLM sólo para **proponer guiones nuevos** — nunca dentro del
+   bucle determinista, o el determinismo se pierde.
+7. **Medición:** LMGame Bench (Receta 9) para puntuar al agente; esta receta para que la
+   corrida **se pueda repetir**.
+
+**Entregable:** una suite de guiones de input versionada junto al juego, donde cada bug
+reportado trae su guion y su semilla. **El valor que se vende no es "un agente juega":
+es "cualquier fallo que el agente encuentre se reproduce en un comando".**
+
+---
+
 ## Tabla resumen
 
 | Patrón | Stack principal | Esfuerzo | ROI esperado |

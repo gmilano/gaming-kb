@@ -672,6 +672,97 @@ R14 (ejes de alcance de un grant) aplicada al **alcance de un número**.
 compradores y plataformas propias. **Se atiende como vertical separado**, con la
 frontera escrita en `verticals/solutions.md`, no mezclándolo con videojuegos.
 
+### 26. 🆕 🔴 La cifra insignia de una KB puede ser correcta y estar mal usada: **48,8% es hispanoamérica, no LATAM**
+
+El dato más citado de este archivo sobre LATAM —48,8% de jugadores dispuestos a comprar
+juegos hechos con IA— proviene de **PGB Latam 2026: 7.202 respuestas de Argentina, Chile,
+Colombia, México y Perú**. **Brasil no está en ese panel.** Medido por separado
+(**PGB Brasil 2026, >7.000 personas, campo 5–13 de marzo de 2026**), Brasil da **39,3%**.
+
+- Brasil es el mercado más grande y maduro de la región (penetración >70%).
+- La diferencia es de **~9,5 puntos**, y va en contra del mercado más valioso.
+- En ambos paneles convive con **40,6% que teme despidos y precarización**.
+
+**Lo que la tendencia dice, más allá de LATAM:** una cifra heredada de pass en pass
+**se endurece sin ganar evidencia**. Esta llevaba cinco passes citada sin su panel.
+El control que la cazó no fue una fuente nueva: fue **volver a pedirle la muestra a un
+número que ya estaba adentro**.
+
+> **Regla de método (nº16): auditar periódicamente las cifras propias, no sólo las
+> entrantes.** El riesgo de una KB madura no es incorporar un dato falso, es
+> **conservar un dato verdadero fuera de su alcance**.
+
+### 27. 🆕 🔴 El sprint regulatorio europeo es **más angosto** de lo que la industria (y esta KB) venía diciendo
+
+El 2-dic-2026 es real, pero cubre mucho menos de lo que sugiere el pánico de calendario:
+
+| Afirmación corriente | Lo que dicen las fuentes de este pass |
+|---|---|
+| "Todo debe estar marcado el 2-dic-2026" | El plazo cubre **sólo el marcado legible por máquina del *proveedor* (Art. 50(2))** y **sólo** para sistemas puestos en el mercado **antes del 2-ago-2026** |
+| "Lo nuevo tiene hasta diciembre" | ❌ Lo puesto en el mercado desde el **2-ago-2026 no tiene gracia alguna**: cumple desde el lanzamiento |
+| "Los deployers también tienen prórroga" | ❌ **Los deberes del deployer no se pospusieron**: rigen desde 2-ago-2026 |
+| "Hay que marcar los assets ya generados" | ❌ **El contenido sintético generado antes del 2-ago-2026 no se marca retroactivamente** |
+
+Y por encima de todo: la Comisión sostiene que **en principio los videojuegos con IA no
+tienen obligación bajo el AI Act** — pathfinding, balanceo y entrenamiento de NPC son
+**riesgo mínimo**. Lo prohibido de verdad (Art. 5, no "alto riesgo") es el **NPC diseñado
+para empujar gasto in-game**, con multas de hasta **35 M€ o 7%** de facturación global.
+
+**Consecuencia de ingeniería:** la mayoría de los estudios son **deployers**, no
+providers, del modelo generativo. Les aplica avisar que se interactúa con IA (50(1)) y
+etiquetar deepfakes (50(4)), **no** el marcado del 50(2) que vence en diciembre.
+**Triar provider vs deployer es ahora el paso 0** (ver Receta 22).
+
+### 28. 🆕 🟢 La adopción declarada se partió por **jerarquía**, y los dos lados están medidos
+
+| Instrumento | Quién responde | Pregunta | Resultado |
+|---|---|---|---|
+| Vivrato VAIA (n=**101**, abr–sep 2026, entrevistas) | **líderes senior de estudio** | ¿usa IA en ≥1 de 9 etapas? | **94 %** |
+| idem | idem | profundidad de integración | **52 % puntúa ≤ 3/10** |
+| Encuesta GDC (**13-nov-2026**) | **trabajadores** | ¿usás IA en tu trabajo? | **40 %** |
+| idem | idem | ¿la genAI es mala noticia? | **55 % sí** |
+
+**94 vs 40 no es una contradicción: es la distancia entre la empresa y la persona.** Y
+el 52% en ≤3/10 dice que, del lado del líder, **el 94% es amplitud, no profundidad**.
+
+Esto **cierra el rango 29%–90%** que la tendencia nº21 registraba sin explicar: el techo
+lo produce preguntarle a líderes con umbral *"al menos una etapa"*; el piso, preguntarle
+a trabajadores por su propio uso. **El rango no era ruido: era la jerarquía.**
+
+⚠️ Vivrato cubre estudios con sede **en NA y Europa**, y reporta **Europa más profunda
+que Norteamérica**. **No cubre LATAM ni APAC.**
+
+### 29. 🆕 🔴 Un repo de 25.570 ★ puede faltar entero, y ninguna auditoría de licencias lo detecta
+
+`clockworklabs/SpacetimeDB` —el competidor técnico serio de Nakama— estuvo **ausente de
+esta KB durante ocho passes**. Las Recetas 10, 14, 17, 20 y 21 auditan grants cada vez
+con más finura, y **ninguna podía encontrarlo**, porque todas auditan **lo que ya está
+escrito**.
+
+> **Un silencio no se contradice a sí mismo.**
+
+Cuando por fin se lo abrió, el resultado justificaba el esfuerzo: **BSL 1.1**
+(`LICENSE.txt`, 42.562 B), Change Date **2031-11-20** → AGPL-3.0 con excepción de
+linking, y un Additional Use Grant que permite **una sola instancia en producción**.
+GitHub lo reporta como `NOASSERTION`, que no es un veredicto sino su ausencia.
+
+**La tendencia:** a medida que una KB madura, **el error se corre de la precisión hacia
+la cobertura**. Hace falta un control de inventario —"¿qué repos grandes del nicho no
+están en ninguna fila?"— distinto de los controles de licencia.
+
+### 30. 🆕 🟡 Los homónimos son ahora un modo de falla **de dos canales**, no uno
+
+| Homónimo | Canal | Caso medido |
+|---|---|---|
+| **`gaming`** = videojuego ≠ casino | prensa / informes | *"The State of AI in Gaming 2026"* (UNLV IGI + KPMG, 9-abr-2026) mide **83 empresas de juego de azar + 113 reguladores** |
+| **`Unity`** = engine ≠ Unity Catalog | **GitHub** | `databrickslabs/ontobricks` (485 ★) aparece en la búsqueda `unity ai agent mcp` porque expone el **metastore de Databricks** por MCP |
+
+El primero contamina la inteligencia de mercado; el segundo, el catálogo de repos.
+**Ambos entran por búsqueda de texto y ninguno es detectable sin abrir el artefacto.**
+
+> **Regla (nº14):** antes de aceptar una fila que llegó por búsqueda, verificar que el
+> término que la trajo **significa ahí lo que significa acá**.
+
 ## En el radar (emergente, 2026-2027)
 
 | Tendencia | Señal verificada | Estado |
