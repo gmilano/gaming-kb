@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 🏗️ Repos fundacionales — Gaming
@@ -19,7 +19,7 @@ updated: 2026-11-20
 >
 > **★ de esta página: 100% releídas el 2026-11-20.** Ya no queda ninguna heredada.
 
-## 🔴 Las dos correcciones de este pass, y por qué el checksum de bytes las caza
+## 🔴 Las dos correcciones del pass 2026-11-20, y por qué el checksum de bytes las caza
 
 Ver `agents/top.md` para la tabla de bandas canónicas. Resumen aplicable aquí:
 una fila "MIT" con **3882 B** y una fila "MIT" con **1563 B** no pueden ser MIT
@@ -36,9 +36,9 @@ una fila "MIT" con **3882 B** y una fila "MIT" con **1563 B** no pueden ser MIT
 |------|--------------------------|-------------|---|
 | [godotengine/godot](https://github.com/godotengine/godot) | **MIT** (`LICENSE.txt`, 1149) | Motor completo 2D/3D. Ecosistema AI más rico: LimboAI, Beehave, godot_rl_agents, godot-ai, godot-mcp. ⚠️ default `master`. **97k ★ anotadas en oct → 120.483 reales**: la fila más desactualizada de la KB. | **120.483** |
 | [o3de/o3de](https://github.com/o3de/o3de) | 🟡 **Apache-2.0 *o* MIT, a elección** (`LICENSE.txt`, 1475 — es un **puntero**, no el texto) | Open 3D Engine (ex-Amazon Lumberyard). AAA-grade, sin royalties. ⚠️ default **`development`**. Ver advertencia Qt abajo. | 9.894 |
-| [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | 🔴 **Ms-PL** (`LICENSE.txt`, 3882) — **no MIT** | Framework C# cross-platform. Para equipos .NET añadiendo AI. ⚠️ default **`develop`**. | 14.663 |
+| [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | 🔴 **Ms-PL** (`LICENSE.txt`, 3882) — **no MIT**, 🆕 **confirmado 2026-11-21 leyendo la cabecera**: *"Microsoft Public License (Ms-PL)"* (el checksum de ayer acertó) | Framework C# cross-platform. Para equipos .NET añadiendo AI. ⚠️ default **`develop`**. | 14.663 |
 | [stride3d/stride](https://github.com/stride3d/stride) | **MIT** (`LICENSE.md`, 1304) | Engine C# cross-platform (ex-Xenko). Alternativa .NET madura a Unity. ⚠️ default `master`. Commit de hoy. | 7.957 |
-| [love2d/love](https://github.com/love2d/love) | **zlib** para LÖVE — ⚠️ `license.txt` (74927) es **agregado** | LÖVE 2D: Lua, ligero, ideal para prototipos. El archivo agrega ENet (MIT), FreeType, GLAD y texto LGPL/GPL de dependencias: el grant de LÖVE es zlib, el del binario depende de qué se enlace. **Minúsculas: `license.txt`, no `LICENSE.txt`** (404). | 8.981 |
+| [love2d/love](https://github.com/love2d/love) | **zlib** para LÖVE — ⚠️ `license.txt` (74927) es **agregado** · 🆕 **confirmado por lectura directa 2026-11-21**: la línea 8 del archivo dice `License: zlib` para LOVE, y debajo vienen ENet (MIT/Expat), FreeType, GLAD (MIT), glslang (BSD-3), SPIRV-Cross (Apache-2.0 o MIT) y más | LÖVE 2D: Lua, ligero, ideal para prototipos. El archivo agrega ENet (MIT), FreeType, GLAD y texto LGPL/GPL de dependencias: el grant de LÖVE es zlib, el del binario depende de qué se enlace. **Minúsculas: `license.txt`, no `LICENSE.txt`** (404). | 8.981 |
 
 ### 🟡 O3DE: dos matices que esta página no decía
 
@@ -53,6 +53,45 @@ una fila "MIT" con **3882 B** y una fila "MIT" con **1563 B** no pueden ser MIT
    mencionar que el editor enlaza **Qt bajo LGPL-3.0**. Sin royalties ≠ sin
    obligaciones. Para distribuir el **editor** modificado hay que resolver Qt;
    para distribuir sólo el **runtime del juego**, normalmente no.
+
+## 🆕 La fila que este pass vuelve **más permisiva**: C2PA es MIT *o* Apache-2.0
+
+El stack de Content Credentials es la pieza central de la Receta 7 (marcado del
+Art. 50(2) del EU AI Act). Esta KB lo publicaba como **Apache-2.0**. Son **dos
+licencias a elección**, y los dos archivos están presentes en los dos repos:
+
+| Repo | `LICENSE-MIT` | `LICENSE-APACHE` | Grant real |
+|------|---------------|------------------|-----------|
+| [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) | 200, **1083 B** | 200, **11335 B** | **MIT *o* Apache-2.0** |
+| [contentauth/c2pa-python](https://github.com/contentauth/c2pa-python) | 200, **1083 B** | 200, **11335 B** | **MIT *o* Apache-2.0** |
+
+Importa para engagement: un cliente con **política de sólo-MIT** —que existe, y
+es la razón por la que esta KB mantiene `Unity-MCP` de Murzak como alternativa
+Apache— **puede tomar C2PA bajo MIT** y cumplir el Art. 50(2) sin excepción
+legal. Lo estábamos ocultando, igual que con O3DE. **Es el tercer caso de la KB
+en que el repo era *más* libre de lo publicado** (O3DE, `elements`, C2PA), contra
+cinco en que era menos. El sesgo del error no es uniforme: **leer mal una
+licencia perjudica al cliente en las dos direcciones, y la dirección "más
+permisivo de lo que creíamos" nunca dispara una alarma**, porque nadie se queja
+de una restricción que no existe.
+
+### 🆕 Por qué `UnrealMLAgents` figuraba sin licencia resoluble
+
+`AlanLaboratory/UnrealMLAgents` (port de ML-Agents a Unreal, 91★) devuelve
+`NOASSERTION`. Su `LICENSE` son **609 B** y dicen, en este orden:
+
+```
+Copyright © 2025 Stephane Capponi and individual contributors. All Rights Reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); …
+```
+
+Es **Apache-2.0** (fila correcta en esta KB), y lo que rompe al clasificador es
+el *"All Rights Reserved."* **arriba** del grant. Es el mismo mecanismo que la KB
+de enterprise documentó en `Tencent/LoopForge` (MIT detrás de un preámbulo
+corporativo): **un preámbulo propietario sobre un grant permisivo produce
+`NOASSERTION`, y leer sólo el badge convierte un repo Apache-2.0 en "sin
+licencia"**. 609 B está **por debajo** de la banda Apache (~11.350) ⇒ archivo
+puntero, hay que seguir el puntero — la regla asimétrica de ayer, aplicada.
 
 ## Multiplayer Backends
 
@@ -116,11 +155,21 @@ que el rename de `casbin` en la KB de enterprise.
 | [grafana/grafana](https://github.com/grafana/grafana) | 🔴 **AGPL-3.0** (`LICENSE`, 34523) — **no Apache-2.0** | Dashboards de player analytics. Corrección de octubre **revalidada por el 2º canal** (SPDX = `AGPL-3.0`). Copyleft de red: exponer el dashboard a terceros puede obligar a liberar modificaciones. Alternativas: Apache Superset (Apache-2.0), Metabase (AGPL-3.0 core / comercial). | 78.014 |
 
 > **Por qué `pterodactyl` explica el mecanismo de `NOASSERTION`.** Su `LICENSE.md`
-> es MIT **envuelto en un bloque de código Markdown**. El detector de GitHub no
+> es MIT **envuelto en un bloque de código Markdown**, y la línea de copyright
+> dice *"Pterodactyl® Copyright © Dane Everitt"*. El detector de GitHub no
 > matchea, devuelve `NOASSERTION`, y un pass que confiara sólo en el API habría
-> publicado "sin licencia" un repo MIT limpio de 9.533★. **Es el falso positivo
+> publicado "sin licencia" un repo MIT limpio de 9.536★. **Es el falso positivo
 > simétrico de las 4 correcciones** — y la razón de que los dos canales sean
 > obligatorios y ninguno suficiente.
+>
+> 🆕 **2026-11-21 — releído en bytes y medido en escala:** de los **16** repos de
+> esta KB con badge `NOASSERTION`/`null`, **7 son permisivos**, 8 restrictivos y
+> 3 no tienen grant. ⇒ `NOASSERTION` **no es señal útil en ninguna dirección**
+> (~44% permisivo); es sólo *"el clasificador no pudo decidir"*. Censo completo
+> en `repos/trending.md` (2026-11-21).
+> ⚠️ **El `®` tiene consecuencia propia:** MIT concede derechos de **copyright**,
+> no de **marca**. Un panel re-brandeado para un cliente puede usar el código y
+> **no** el nombre "Pterodactyl" ni su logo.
 
 ## 🔴 Filas retiradas
 

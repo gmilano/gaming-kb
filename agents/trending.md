@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # Agentes trending — Gaming AI
@@ -9,6 +9,105 @@ updated: 2026-11-20
 > **Archivo APPEND-ONLY.** Cada pass agrega una sección fechada arriba y conserva
 > la historia completa debajo. La historia es el dato: sin ella no hay tendencia,
 > sólo una foto.
+
+---
+
+## 🆕 2026-11-21
+
+Un día desde el pass anterior, así que **este pass no mide crecimiento: resuelve
+licencias y descubre.** Las ★ de abajo se releyeron hoy (`repo:` sobre las 83
+URLs de la KB + 14 candidatos nuevos); los deltas de 24 h se reportan sólo donde
+son grandes en términos relativos.
+
+### 🔴 La categoría de orquestación tiene un techo 4× más alto del que publicamos ayer
+
+Ayer esta KB abrió la tier *"orquestación de agentes para game dev"* y la coronó
+con `Donchitos/Claude-Code-Game-Studios` (40.485★, MIT, 5.305 forks), leyéndolo
+como *"la demanda es un pipeline de estudio con roles"*. La lectura era correcta;
+**el techo estaba mal medido**.
+
+| Repo | ★ | Forks | Licencia | Alcance de gaming |
+|------|---|-------|----------|-------------------|
+| 🆕 [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) | **169.646** | **27.561** | MIT | **1 división de 18** (Game Development: cross-engine + Unity + Unreal + Godot + Blender + Roblox) |
+| [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) | 40.485 | 5.305 | MIT | 100% gaming (49 agentes + 72–75 skills) |
+| [WhiteTowerAI/ohmygame](https://github.com/WhiteTowerAI/ohmygame) | 2.571 (+85 en 24 h, **+3,4%/día**) | 313 | Apache-2.0 | 100% gaming |
+| [EL4CTEO/blender-skills](https://github.com/EL4CTEO/blender-skills) | 2.596 (+67 en 24 h) | 250 | MIT | arte 3D |
+| 🆕 [zenstory-ai/novel-to-game](https://github.com/zenstory-ai/novel-to-game) | 1.175 | — | MIT | 100% gaming, **pipeline novela→juego**, targets WeChat/Douyin/TapTap |
+| [genex-games/genex-desktop](https://github.com/genex-games/genex-desktop) | 902 | 110 | MIT | 100% gaming |
+| 🆕 [SummerEngine/summer](https://github.com/SummerEngine/summer) | 110 | 10 | MIT | engine **diseñado** para agentes |
+| 🆕 [aigengame/godot-agent](https://github.com/aigengame/godot-agent) | 58 | — | MIT | build+verify de Godot por agente |
+
+**El repo de agentes por rol más grande del mundo es genérico y trae gaming
+adentro**: 169.646★ y 27.561 forks, contra 40.485★ del especializado. El patrón
+que el mercado premia es **catálogo horizontal con división vertical**, no
+catálogo vertical. Para AI Studios: el inventario de agentes de gaming **ya es
+commodity MIT**; el diferencial defendible es el **harness, la evaluación y la
+integración con el engine del cliente**.
+
+⚠️ **Y el nº1 de gaming está quieto:** `Claude-Code-Game-Studios` tiene
+`pushed_at` = **2026-11-09**, 12 días sin commits. La fila de ayer no lo decía.
+
+### 🟢 Agentes nuevos con licencia leída en bytes (9)
+
+| Repo | ★ | Licencia (archivo, bytes) | Qué aporta que la KB no tenía |
+|------|---|---------------------------|-------------------------------|
+| [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) | 169.646 | MIT | El catálogo horizontal (~230 agentes) con división de gaming |
+| [zenstory-ai/novel-to-game](https://github.com/zenstory-ai/novel-to-game) | 1.175 | MIT (`LICENSE`, 1081) | **IP existente → juego**: despiece de novela, diseño, build, *blind-play*. Único repo de la KB que apunta a **mini-juegos de WeChat/Douyin/TapTap** |
+| [MinLL/SkyrimNet-GamePlugin](https://github.com/MinLL/SkyrimNet-GamePlugin) | 386 | 🔴 propia (`LICENSE`, 3745) **con `SkyrimNetApi.psc` MIT** | NPCs que hablan, recuerdan **y actúan**, con voz en tiempo real, en un juego con base de jugadores real |
+| [christos-antono/NPCTalk](https://github.com/christos-antono/NPCTalk) | 232 | MIT (`LICENSE`, 1078) | La capa **TTS self-hosted** que faltaba junto a `npcpy`/LLMUnity |
+| [fennaraOfficial/fennara-godot-ai](https://github.com/fennaraOfficial/fennara-godot-ai) | 321 | MIT (`LICENSE.md`, 1064) | Chat AI **embebido en el editor** de Godot, no sólo MCP |
+| [Sagesheep/NarrativeEngine-P](https://github.com/Sagesheep/NarrativeEngine-P) | 131 | MIT (`LICENSE`, 1065) | **Memoria de campaña larga** con NPCs persistentes (TTRPG) |
+| [zoyluoblue/mc_aiplayer](https://github.com/zoyluoblue/mc_aiplayer) | 141 | MIT (`LICENSE`, 1063) | Agente que **juega** Minecraft como mod Fabric server-side |
+| [SummerEngine/summer](https://github.com/SummerEngine/summer) | 110 | MIT (`LICENSE`, 1070 + `NOTICE`, 1652) | Primer engine **diseñado para agentes**, no adaptado |
+| [aigengame/godot-agent](https://github.com/aigengame/godot-agent) | 58 | MIT (`LICENSE`, 1066) | Loop build→verify de Godot por CLI/skill/MCP |
+
+### 🔴 Dos licencias destapadas dentro de tablas que esta KB ya publicaba
+
+1. **`AnkleBreaker-Studio/unity-mcp-server` (549★) y `unity-mcp-plugin` (258★)**
+   figuraban como `NOASSERTION` en la tabla de líderes de Unity. Son
+   **"AnkleBreaker Open License v1.0"** (3068 B, idéntica en los dos): íncipit
+   literal de MIT, y después **atribución obligatoria en el producto**
+   (*"Made with AnkleBreaker MCP"* + logo) y **prohibición de reventa** del
+   software o de cualquier derivado como herramienta/producto/servicio.
+   Permitido explícitamente: uso interno comercial, integración como componente
+   **gratuito**, y *"consulting, support, or training services around the
+   Software"*. **"Open License" no es open source** — es una licencia con
+   restricción de campo de uso.
+2. **`Tencent-Hunyuan/HY-World-2.0` (2.900★)**: ayer escribimos "no publica
+   ningún archivo de licencia". **Sí lo publica: `License.txt`** (mayúscula L,
+   minúscula t), 16.858 B, licencia comunitaria de Tencent que **no se aplica en
+   la Unión Europea, Reino Unido ni Corea del Sur**. Corrección completa en
+   `agents/top.md`.
+
+### 📐 `NOASSERTION` medido en los 16 repos de la KB: 7 permisivos / 8 restrictivos / 3 sin grant
+
+Aplicando la regla T60 que llegó de la KB de enterprise. El resultado importa
+porque **es una moneda al aire**: `NOASSERTION` no sirve ni para descartar ni
+para priorizar. Nuevos permisivos destapados: `love2d/love` (zlib),
+`AlanLaboratory/UnrealMLAgents` (Apache-2.0 con *"All Rights Reserved."* arriba
+del grant, que es lo que rompe al clasificador), **`contentauth/c2pa-rs` y
+`c2pa-python` = MIT *o* Apache-2.0** (los dos archivos presentes, 1083 y 11335 B)
+— más permisivos de lo que la Receta 7 asumía.
+
+### ⛔ Candidatos nuevos rechazados (para no re-gastar la búsqueda)
+
+| Candidato | Licencia leída | Motivo |
+|-----------|----------------|--------|
+| [mannychen0225/Agent-Hive-Workbench](https://github.com/mannychen0225/Agent-Hive-Workbench) | **ninguna** (`LICENSE` 404 en todas las variantes) | 119★, commit de hoy, "Open Source Office Agent & Game Platform Beta 2026". Sin archivo no hay permiso. |
+| [letuhao/lore-weave](https://github.com/letuhao/lore-weave) | **AGPL-3.0** | Co-autor AI para world-building con RAG de canon. Útil conceptualmente; copyleft de red lo saca de la ruta permisiva. |
+| [beralee/PtcgDeckAgent](https://github.com/beralee/PtcgDeckAgent) | Apache-2.0 | Grant limpio, pero 61★ y alcance muy estrecho (simulación de reglas de PTCG en Godot 4.6). Señal, no ruta. |
+| [parkerluxu/Awesome-agent-cases](https://github.com/parkerluxu/Awesome-agent-cases) | MIT | 26★. Canal de descubrimiento (tiene una colección de casos de agentes en game dev), no código. |
+
+### Método y control negativo de este pass
+
+- `gh api search/repositories -f q='repo:<slug>'` sobre **las 83 URLs heredadas**
+  → 1 `NOT_FOUND` esperado (`JonTelep/awesome-ai-game-generation`, el rename ya
+  documentado) y 0 renames nuevos. **La tasa de ~1/21 de ayer no se repitió en
+  24 h**, que es lo que corresponde: los renames son un fenómeno de meses.
+- Control negativo: `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422
+  *"the listed users and repositories cannot be searched"*. ✅
+- Lista de sondas de licencia ampliada a 11 nombres de archivo tras el fallo de
+  `License.txt`. **Cinco** variantes distintas aparecen realmente en esta KB.
 
 ---
 

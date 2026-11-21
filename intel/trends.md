@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # Tendencias — Gaming AI
@@ -292,6 +292,78 @@ Riesgo reputacional del pass convertido en titular, con fecha.
 
 ---
 
+### 13. 🆕 🔴 La adopción de gen AI se partió por región, y la encuesta que todos citan no puede verla
+
+La cifra que circula —**40% de los profesionales usa gen AI**, GDC *State of the
+Game Industry*, publicada el **12-nov-2026**— esconde el hallazgo:
+
+| Corte | 2025 → 2026 |
+|-------|-------------|
+| **EE.UU.** | 36% → **38%** (GDC lo declara dentro del margen de error) |
+| **Fuera de EE.UU.** | 37% → **44%** (+7 pts) |
+| **Japón solo** (CESA 2026, 1.349 respuestas) | — → **85,8%**, con **63% de uso diario** |
+
+Y el detalle de instrumento que lo cierra: **la muestra de GDC es 63%
+estadounidense, contra 54% en la edición anterior**, con **3% de Japón**. ⇒ **la
+encuesta se volvió más estadounidense exactamente mientras lo que se movía era el
+resto del mundo.** GDC lo reconoce a medias: atribuye el alza no-estadounidense a
+compañías de free-to-play y móvil y advierte que el tamaño de muestra limita la
+conclusión.
+
+**Qué hacer con esto, concretamente:** dejar de usar una cifra de adopción
+"global". Hay dos mercados: uno donde la adopción está estancada en ~38% y **55%
+de la industria dice que la gen AI le hace daño**, y otro donde está en 85,8% con
+63% de uso diario. **El mismo pitch no sirve para los dos**, y hasta este pass
+esta KB tenía escrito sólo el primero. Ver `intel/market.md` → *un número sin su
+muestra no es un número*.
+
+### 14. 🆕 🔴 La transparencia se mueve del cartel al *runtime* (y eso es ingeniería, no legal)
+
+Tres obligaciones distintas, tres lugares distintos donde se cumplen — y la
+tercera es nueva en esta KB:
+
+| Obligación | Dónde se cumple | Costo de implementación |
+|------------|-----------------|------------------------|
+| Ficha de AI en Steam | **Fuera del juego**, en la store | Un formulario |
+| Art. 50(2) EU AI Act (marcado de salidas) | **En el build**: metadata/C2PA en los assets | Pipeline de firma |
+| 🆕 **Leyes estatales de *companion chatbots* (NA)** | **Dentro de la sesión de juego** | 🔴 **Reloj de sesión + flag de minoría + canal de aviso + log** |
+
+Connecticut (Public Act 26-15) pide recordar que se habla con una AI **≥1×/hora
+a menores y ≥1×/3 horas a adultos**, con protocolo de crisis y derivación al
+**988**; Washington (HB 2225, vigente **1-ene-2027**) pide recordatorios
+periódicos con intervalo más corto para menores **y trae acción privada**; Idaho
+(S 1297) opera desde **1-jul-2027**.
+
+🟡 **Y la pregunta que nadie respondió todavía:** si un **NPC** cuenta como
+*companion chatbot*. El *Harvard JSEL* (ago-2026) la plantea y la deja abierta.
+⇒ **la tendencia no es "hay que cumplir": es que el costo de prepararse es de
+días y el de equivocarse es el proyecto.** Receta 13.
+
+### 15. 🆕 🟡 Los instrumentos de medición de AI en gaming cambiaron bajo nuestros pies
+
+No es una tendencia de mercado; es una de **datos**, y envenena las otras si no
+se dice:
+
+1. **Valve reescribió el formulario de declaración de AI el 17-ene-2026**,
+   restringiéndolo a contenido AI **que el jugador ve u oye** y sacando las
+   herramientas de desarrollo. ⇒ el **49,9% de octubre-2026 mide menos cosas**
+   que el 26,4% de octubre-2025: **la serie tiene un corte** y la subida real es
+   mayor que la aparente.
+2. **Dos censos, dos números**: ~49,9% (censo de releases de octubre) vs
+   **30,8%** (censo de Sulka Haro sobre 53.597 releases, primeros 7 meses de
+   2026). No se contradicen: **miden ventanas y universos distintos**.
+3. **CESA cambió la unidad**: 51% (2025) era sobre **54 empresas**; 85,8% (2026)
+   es sobre **1.349 personas**.
+
+🔴 **Dato nuevo con filo comercial, del mismo censo de Steam:** los juegos que
+**declaran** AI promedian **77% de reviews positivas** contra **83%** de los que
+no declaran. Pero **los devs con ≥10 lanzamientos en 2026 declaran en 68% de sus
+juegos, contra 37% de los devs de un solo lanzamiento**. ⇒ la penalización de 6
+puntos **puede estar midiendo volumen y no AI**: quien publica en masa declara
+mucho más. Sin control por género, precio ni presupuesto, **la lectura honesta
+es "hay correlación, la causa no está establecida"** — y sirve igual, porque el
+cliente la va a encontrar y conviene que la oiga bien contada primero.
+
 ## En el radar (emergente, 2026-2027)
 
 | Tendencia | Señal verificada | Estado |
@@ -305,9 +377,13 @@ Riesgo reputacional del pass convertido en titular, con fecha.
 | **Modding asistido por AI** | [rehan-remade/universal-modder](https://github.com/rehan-remade/universal-modder), MIT, **9.809★ (★ ahora verificada)** | Categoría con volumen propio |
 | 🆕 **Práctica PROHIBIDA, no alto riesgo, en la UE** | La Comisión Europea citó como ejemplo de práctica prohibida (Art. 5) los **NPCs generados por AI diseñados a empujar al jugador a gastar más**; comentario legal extiende a optimización de engagement sobre menores | 🔴 **Régimen distinto: lo prohibido no se gestiona, se cancela.** Primera conversación si el cliente tiene NPC conversacional conectado a la tienda |
 | 🆕 **Digital Fairness Act** | Borrador previsto para **Q4-2026**: diseño adictivo y mecánicas aleatorizadas (loot boxes) | Anunciado; convierte el monetization design en materia regulada |
-| 🆕 **World model 3D sin grant** | [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0), 2.891★, se autodenomina open source y **no publica archivo de licencia** | 🔴 No construible. Mismo patrón que `chongdashu/unreal-mcp` |
+| 🔴 **World model 3D con licencia *territorial*** — **corregido 2026-11-21** | [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0), 2.900★. **Sí publica grant**: `License.txt` (⚠️ mayúscula L, minúscula t), 16.858 B, *Tencent HY-WORLD 2.0 Community License*, release 15-abr-2026 | 🔴 **No es "sin licencia" — es una licencia no-OSI que se cae por región:** *"THIS LICENSE AGREEMENT DOES NOT APPLY IN THE EUROPEAN UNION, UNITED KINGDOM AND SOUTH KOREA"*. Usable en NA/LATAM/APAC-ex-Corea, **inusable en EMEA y Corea**. **No** es el patrón de `unreal-mcp`: ahí no hay archivo. |
 | 🆕 **Reescritura de engines en Rust** | [horizon-rust/horizon](https://github.com/horizon-rust/horizon), **11.515★**, Minecraft Java en Rust | 🔴 **LGPL-3.0**: aparecerá en listas de trending de gaming y **no es permisivo** |
 | **Pesos con licencia distinta al código** | Matrix-Game y MineWorld publican pesos en HF | 🔴 **No verificable desde aquí** (ver gaps) |
+| 🆕 **Catálogo horizontal de agentes con división de gaming** | [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents), MIT, **169.646★ / 27.561 forks**, ~230 agentes en 18 divisiones, una de ellas Game Development (Unity/Unreal/Godot/Blender/Roblox) | 🟢 **4,2× el repo de orquestación específico de gaming** (40.485★). El inventario de agentes **ya es commodity**: el diferencial es harness, evaluación e integración con el engine |
+| 🆕 **IP existente → juego, por pipeline de agentes** | [zenstory-ai/novel-to-game](https://github.com/zenstory-ai/novel-to-game), MIT, 1.175★: despiece de novela → diseño → build → *blind-play*, con salida a **WeChat/Douyin/TapTap** | 🟢 Primer repo de la KB cuyo *surface* de distribución es **APAC exclusivamente** |
+| 🆕 **El mod como vía a producción** | [MinLL/SkyrimNet-GamePlugin](https://github.com/MinLL/SkyrimNet-GamePlugin), 386★: NPCs con voz, memoria y acción en Skyrim. Licencia propia **con su API Papyrus en MIT** | 🟡 **Integrable, no forkeable.** La implementación de NPC-LLM con más horas de jugador reales de esta KB |
+| 🆕 **Engines diseñados para agentes, no adaptados** | [SummerEngine/summer](https://github.com/SummerEngine/summer) (MIT, 110★) y [aigengame/godot-agent](https://github.com/aigengame/godot-agent) (MIT, 58★): el engine expone MCP + CLI + skills de build/verify | 🟡 Muy temprano. Señal de dirección, no ruta recomendable todavía |
 
 ## 🔴 Retirado del radar
 - **Aivill** (`SKYHUBDev/Aivill`) estaba listado en julio como "villanos adaptativos

@@ -1,13 +1,96 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # Repos trending — Gaming AI
 
 > **Archivo APPEND-ONLY.** Cada pass agrega una sección fechada arriba y conserva
 > la historia completa debajo.
+
+---
+
+## 🆕 2026-11-21
+
+24 h desde el pass anterior: **pass de resolución de licencias y descubrimiento**,
+no de medición de crecimiento. Canal: `gh api search/repositories` + lectura de
+bytes por `raw.githubusercontent.com/<slug>/HEAD/<archivo>` con una lista de
+**11 nombres de archivo** (ampliada hoy, ver abajo por qué).
+
+### 🟢 Trending verificado este pass
+
+| Repo | Licencia (archivo, bytes) | ★ | Qué es |
+|------|---------------------------|---|--------|
+| [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) | **MIT** | **169.646** (27.561 forks) | ~230 agentes por rol en 18 divisiones; **Game Development** es una de ellas, con Unity/Unreal/Godot/Blender/Roblox. El techo real de la categoría de orquestación. |
+| [zenstory-ai/novel-to-game](https://github.com/zenstory-ai/novel-to-game) | **MIT** (`LICENSE`, 1081) | 1.175 | Skill-pack novela→juego: despiece del libro, diseño de mecánicas y arte, build, *blind-play*. **Targets de distribución APAC** (WeChat/Douyin/TapTap). |
+| [MinLL/SkyrimNet-GamePlugin](https://github.com/MinLL/SkyrimNet-GamePlugin) | 🔴 **propia, no OSI** (`LICENSE`, 3745), **con `SkyrimNetApi.psc` MIT** | 386 | NPCs AI para Skyrim con voz en tiempo real, memoria y acción. Commit de hoy. |
+| [fennaraOfficial/fennara-godot-ai](https://github.com/fennaraOfficial/fennara-godot-ai) | **MIT** (`LICENSE.md`, 1064) | 321 | Chat AI nativo en el editor de Godot + MCP. Commit de hoy. |
+| [christos-antono/NPCTalk](https://github.com/christos-antono/NPCTalk) | **MIT** (`LICENSE`, 1078) | 232 | Voz para NPCs de cualquier juego: skills + servidor Fish Audio self-hosted. |
+| [zoyluoblue/mc_aiplayer](https://github.com/zoyluoblue/mc_aiplayer) | **MIT** (`LICENSE`, 1063) | 141 | Agente autónomo que juega Minecraft (mod Fabric server-side, MC 1.21.3). |
+| [Sagesheep/NarrativeEngine-P](https://github.com/Sagesheep/NarrativeEngine-P) | **MIT** (`LICENSE`, 1065) | 131 | Dungeon Master AI self-hosted; memoria de campaña larga. |
+| [SummerEngine/summer](https://github.com/SummerEngine/summer) | **MIT** (`LICENSE`, 1070 + `NOTICE`, 1652) | 110 | Engine **construido para agentes**: MCP server + CLI + skills de build/verify. |
+| [aigengame/godot-agent](https://github.com/aigengame/godot-agent) | **MIT** (`LICENSE`, 1066) | 58 | Build+verify de proyectos Godot por agente. |
+
+### 📐 Los 16 badges `NOASSERTION`/`null` de esta KB, resueltos
+
+Regla aplicada: la de la KB de **enterprise** (pase 16, T60) — *`NOASSERTION` es
+la ausencia de un veredicto, no un veredicto; resolver leyendo bytes **en las dos
+direcciones***. Hasta hoy esta KB lo trataba como *"detector de licencias
+compuestas"*, que es la mitad correcta.
+
+| Repo | Badge del API | Grant real leído en bytes | Dirección |
+|------|---------------|---------------------------|-----------|
+| [pterodactyl/panel](https://github.com/pterodactyl/panel) | NOASSERTION | **MIT** (`LICENSE.md`, 1137) — el `®` de *"Pterodactyl®"* en la línea de copyright rompe el match | 🟢 permisivo |
+| [love2d/love](https://github.com/love2d/love) | NOASSERTION | **zlib** para LÖVE (`license.txt` **minúsculas**, 74.927 B: es un agregado de ~20 dependencias) | 🟢 permisivo |
+| [AlanLaboratory/UnrealMLAgents](https://github.com/AlanLaboratory/UnrealMLAgents) | NOASSERTION | **Apache-2.0** (`LICENSE`, 609 B) — ⚠️ con *"All Rights Reserved."* **arriba** del grant: eso es lo que rompe al clasificador | 🟢 permisivo |
+| [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) | NOASSERTION | 🆕 **MIT *o* Apache-2.0** (`LICENSE-MIT` 1083 + `LICENSE-APACHE` 11335, los dos presentes) | 🟢 **más** permisivo de lo publicado |
+| [contentauth/c2pa-python](https://github.com/contentauth/c2pa-python) | Apache-2.0 | 🆕 **MIT *o* Apache-2.0** (idem, 1083 + 11335) | 🟢 **más** permisivo de lo publicado |
+| [o3de/o3de](https://github.com/o3de/o3de) | NOASSERTION | Apache-2.0 *o* MIT (ya corregido ayer) | 🟢 permisivo |
+| [Unity-Technologies/ml-agents](https://github.com/Unity-Technologies/ml-agents) | NOASSERTION | Apache-2.0 (`LICENSE.md`, 572 B puntero) | 🟢 permisivo |
+| [supertuxkart/stk-code](https://github.com/supertuxkart/stk-code) | NOASSERTION | **GPL-3.0-or-later** (`COPYING`, **35.245 B** — cae en la banda GPL-3.0 ~35.200 del checksum de ayer) | 🔴 copyleft |
+| [luanti-org/luanti](https://github.com/luanti-org/luanti) | NOASSERTION | **código LGPL-2.1+**, **texturas/sonidos CC-BY-SA 3.0**, Lua MIT — los tres en `LICENSE.txt` (8793 B) | 🔴 copyleft (código) |
+| [0ad/0ad](https://github.com/0ad/0ad) | NOASSERTION | **GPL-2.0-or-later** + MIT/Apache-2.0 por subdirectorio (`LICENSE.txt`, 3049 B, agregado) · **ARCHIVADO** | 🔴 copyleft |
+| [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0) | NOASSERTION | 🔴 **Tencent Community License** (`License.txt`, 16.858 B) **que no se aplica en EU / UK / Corea del Sur** | 🔴 no OSI + territorial |
+| [Tencent-Hunyuan/Hunyuan-GameCraft-1.0](https://github.com/Tencent-Hunyuan/Hunyuan-GameCraft-1.0) | NOASSERTION | Licencia comunitaria Tencent, no OSI (sin commits desde 2025-11-28) | 🔴 no OSI |
+| [electricsheephq/WorldOS](https://github.com/electricsheephq/WorldOS) | NOASSERTION | **"WorldOS Source-Available Commercial EULA v1.0"** (`LICENSE`, 10.598 B), que **se autodeclara** *"not OSI open source"* con `SPDX-License-Identifier: LicenseRef-WorldOS-Source-Available-Commercial-1.0` | 🔴 source-available |
+| [AnkleBreaker-Studio/unity-mcp-server](https://github.com/AnkleBreaker-Studio/unity-mcp-server) · [plugin](https://github.com/AnkleBreaker-Studio/unity-mcp-plugin) | NOASSERTION | **"AnkleBreaker Open License v1.0"** (3068 B): atribución obligatoria en el producto + **prohibición de reventa** | 🔴 restricción de campo de uso |
+| [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | NOASSERTION | **Ms-PL** (`LICENSE.txt`, 3882 B, cabecera leída: *"Microsoft Public License (Ms-PL)"*) — confirma el hallazgo de ayer **por lectura directa**, no sólo por checksum | 🟡 compuesto binario/fuente |
+| [PostHog/posthog](https://github.com/PostHog/posthog) | NOASSERTION | MIT Expat + carve-out `ee/` (confirmado) | 🟡 carve-out |
+| [chongdashu/unreal-mcp](https://github.com/chongdashu/unreal-mcp) · [SKYHUBDev/Aivill](https://github.com/SKYHUBDev/Aivill) · [mannychen0225/Agent-Hive-Workbench](https://github.com/mannychen0225/Agent-Hive-Workbench) | `null` | **ningún archivo de licencia en ninguna de las 11 variantes** | ⚫ sin grant |
+
+**Conteo: 7 permisivos, 8 restrictivos, 3 sin grant.** Un `NOASSERTION` de esta
+KB tiene ~44% de probabilidad de ser permisivo. ⇒ **no es evidencia**, en ninguna
+dirección, y no puede usarse como filtro.
+
+### 🧪 Defecto de instrumento encontrado dentro de este pass
+
+La primera sonda de licencia de hoy pedía 9 nombres de archivo y **falló en
+`Tencent-Hunyuan/HY-World-2.0`**, cuyo grant está en `License.txt`. El pass
+anterior había cometido **el mismo fallo** y publicó *"ningún archivo de
+licencia"* en 4 archivos de esta KB — a pesar de que esta misma KB **ya había
+documentado el trap** para `recastnavigation/License.txt`.
+
+> **La lección no estaba en el lugar donde se usa.** Estaba en prosa, en una
+> sección sobre pathfinding, y la lista de sondas no la incorporó. Corregido: la
+> lista es ahora
+> `LICENSE LICENSE.txt LICENSE.md License.txt license.txt LICENCE COPYING COPYING.txt LICENSE-MIT LICENSE-APACHE NOTICE`
+> y **5 de esas variantes aparecen realmente** en los repos de esta KB
+> (`License.txt`, `license.txt`, `COPYING`, `LICENSE.md`, `LICENSE-MIT`+`LICENSE-APACHE`).
+> Una sonda de un solo nombre falla en **5 de 16** repos.
+
+### 📋 Censo de verificación de este pass
+
+- **83 URLs heredadas** re-consultadas en `repo:`: 82 resuelven, 1 `NOT_FOUND`
+  esperado (`JonTelep/awesome-ai-game-generation`, rename ya documentado ayer).
+  **0 renames nuevos, 0 repos archivados nuevos, 0 desapariciones nuevas.**
+- **14 candidatos nuevos** evaluados: 9 admitidos, 4 rechazados con motivo
+  (`Agent-Hive-Workbench` sin grant, `lore-weave` AGPL-3.0, `PtcgDeckAgent`
+  alcance estrecho, `Awesome-agent-cases` es lista), 1 promovido a tabla de
+  bloqueantes (`SkyrimNet`, admitido **como integración**, no como fork).
+- **16 badges** `NOASSERTION`/`null` resueltos por bytes (tabla arriba).
+- Control negativo del canal: `repo:gmilano/control-does-not-exist-xyz-999` →
+  HTTP 422. ✅
 
 ---
 

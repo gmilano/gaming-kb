@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # Patrones de composición — Gaming AI
@@ -265,7 +265,7 @@ diciembre de 2026**. El reloj de alto riesgo (Anexo III) es **otro** y vence el
 
 ---
 
-### 🔴 REENCUADRE OBLIGATORIO — actualizado 2026-11-20: quedan **12 DÍAS**
+### 🔴 REENCUADRE OBLIGATORIO — actualizado **2026-11-21: quedan 11 DÍAS**
 
 Esta receta se escribió el 2026-10-26 como un **sprint de 3-5 semanas** contra el
 2-dic-2026. **Hoy es 2026-11-20 y ese entregable ya no cabe.** Proponerlo tal cual
@@ -662,6 +662,181 @@ cluster y la observabilidad.
 
 ---
 
+## 🆕 Receta 13: Capa de disclosure por reloj de sesión para NPCs con LLM (NA, vigente 1-ene-2027)
+
+**Para qué.** Las leyes estatales de *companion chatbots* de EE.UU. obligan a
+**recordar periódicamente, dentro de la sesión**, que se está hablando con una
+AI. Es la primera obligación que toca el **runtime** de un NPC, y no se resuelve
+con un cartel en la store ni con metadata en el build.
+
+**Las fechas, que son el motor del proyecto:**
+
+| Estado | Instrumento | Vigencia | Cadencia exigida |
+|--------|-------------|----------|------------------|
+| Washington | HB 2225 (24-mar-2026) | **1-ene-2027** | Recordatorios periódicos en sesiones largas, **intervalo más corto para menores**. Trae **acción privada** |
+| Connecticut | SB 5 → Public Act 26-15 (27-may-2026) | 🟡 1-oct-2026 *o* 1-ene-2027 (las fuentes discrepan — **verificar en el texto antes de comprometer fecha**) | **≥1×/hora a menores, ≥1×/3 h a adultos** + protocolo de crisis con derivación al **988** |
+| Idaho | S 1297 *Conversational AI Safety Act* (31-mar-2026) | **1-jul-2027** | Marco de seguridad de AI conversacional |
+
+**Stack (todo MIT/Apache-2.0, nada nuevo que comprar):**
+
+```
+Godot 4.x (MIT)
+  └── LimboAI (MIT) o Beehave (MIT, rama godot-4.x)   ← el BT que ya gobierna el NPC
+        └── nodo BTCondition "DisclosureDue"           ← lee el reloj de sesión
+  └── autoload SessionClock.gd                         ← monotónico, persiste en save
+  └── autoload AudienceFlag.gd                         ← menor / adulto / desconocido
+  └── canal de presentación (3 opciones, ver abajo)
+  └── log append-only de disclosures mostradas         ← la evidencia
+NPC: npcpy (MIT) · LLMUnity (Apache-2.0) · NPCTalk (MIT, si hay voz)
+```
+
+**Cómo se cablea, en orden:**
+
+1. **`SessionClock`**: tiempo acumulado de *interacción con el NPC*, no de
+   partida. Reloj **monotónico** (no `Time.get_unix_time`, que el jugador puede
+   mover), persistido en el save para que cerrar y reabrir no reinicie la cuenta.
+2. **`AudienceFlag`**: tres estados, no dos. **`desconocido` se trata como
+   menor** — es la opción barata y es la que defiende. Fuente: edad de la cuenta
+   de plataforma si está disponible, declaración propia si no.
+3. **`DisclosureDue`** como **condición del Behavior Tree**, no como timer
+   suelto: así el aviso se dispara **entre turnos de diálogo** y no corta una
+   línea a mitad. Umbral: 60 min si `menor|desconocido`, 180 min si `adulto`.
+4. **Canal de presentación**, de menos a más invasivo —elegir uno y documentar
+   por qué:
+   - **diegético**: el NPC lo dice en personaje (*"recordá que soy una
+     construcción"*). Preserva inmersión; ⚠️ **riesgo**: si el texto lo genera el
+     LLM, el aviso puede no salir. **Debe ser texto fijo**, nunca generado.
+   - **banner no modal** de 3–5 s. Neutro y auditable. **Default recomendado.**
+   - **modal con confirmación**. Sólo si el cliente quiere la defensa más fuerte.
+5. **Log append-only** (timestamp, id de sesión, flag de audiencia, canal,
+   versión del texto). Es lo único que, llegado el caso, **prueba** el
+   cumplimiento. Sin log, no hay defensa.
+6. **Protocolo de crisis (Connecticut)**: clasificador de intención sobre la
+   entrada del jugador → si hay señal de riesgo de suicidio, autolesión o
+   violencia, **cortar el personaje** y mostrar recurso con **988**. Esto **no**
+   lo decide el LLM del NPC: es una ruta separada, determinista y registrada.
+
+**Esfuerzo:** 1–2 semanas sobre un NPC que ya existe. 3–5 días si el NPC ya corre
+sobre un Behavior Tree (Receta 1).
+
+🟡 **Lo que hay que decirle al cliente, textual, porque es la parte honesta:**
+**ninguna de las tres leyes dice que un NPC de videojuego sea un *companion
+chatbot*.** El *Harvard Journal of Sports & Entertainment Law* (ago-2026)
+plantea la pregunta y la deja abierta. ⇒ esto **no se vende como "cumplimiento"**:
+se vende como **preparación de bajo costo frente a una definición que todavía se
+está escribiendo**. El reloj, el flag y el log cuestan días; rehacer el sistema
+de diálogo de un juego ya lanzado, no.
+
+🟢 **Reutilización:** el `SessionClock` + `AudienceFlag` son exactamente lo que
+pide el **disclosure a nivel de sesión** que Bird & Bird describe como
+alternativa europea cuando marcar contenido efímero en tiempo real **no es
+técnicamente factible**. **La misma pieza sirve en NA y en EMEA**, por razones
+legales distintas. Construirla una vez.
+
+---
+
+## 🆕 Receta 14: Auditoría de **alcance** de licencias — los 6 ejes (extiende la Receta 10)
+
+**Para qué.** La Receta 10 responde *"¿esta fila dice la licencia correcta?"*.
+Esta responde la pregunta que de verdad decide un entregable: ***"¿qué licencia
+tiene esta parte, en este formato, en este territorio, para este uso?"***. Un
+inventario con un solo campo `license` por repo **no puede representar 6 de los
+16 repos `NOASSERTION` de esta KB**.
+
+**Los 6 ejes, con el repo testigo verificado y la pregunta que hay que hacer:**
+
+| # | Eje | Testigo | Pregunta al cliente |
+|---|-----|---------|---------------------|
+| 1 | **Directorio** | `PostHog/posthog` (`ee/`), `SkyworkAI/Matrix-Game` (`Matrix-Game-4/` Apache-2.0 vs raíz MIT) | ¿Qué subárbol vamos a usar y a distribuir? |
+| 2 | **Tipo de medio** | `luanti-org/luanti`: código LGPL-2.1+, texturas/sonidos CC-BY-SA 3.0, Lua MIT — **en un solo archivo** | ¿Nos llevamos los assets o sólo el código? |
+| 3 | **Archivo** | `MinLL/SkyrimNet-GamePlugin`: mod propietario con `SkyrimNetApi.psc` en **MIT** | ¿Integramos contra una API o empaquetamos el producto? |
+| 4 | **Territorio** | `Tencent-Hunyuan/HY-World-2.0`: *no aplica en EU, UK ni Corea del Sur* | ¿En qué jurisdicciones se publica el juego? |
+| 5 | **Campo de uso** | `AnkleBreaker-Studio/unity-mcp-server`: prohibida la reventa como herramienta/producto/servicio; permitido el consulting alrededor | ¿El software es el valor principal del entregable o un componente? |
+| 6 | **Binario vs fuente** | `MonoGame/MonoGame` Ms-PL §3(D): binario libre, **fuente sólo bajo Ms-PL** | ¿Entregamos binario o código fuente al cliente? |
+
+**Procedimiento (medio día sobre un stack ya inventariado):**
+
+```bash
+# 1. Badge + metadatos en una llamada (NO es prueba de licencia)
+gh api -X GET search/repositories -f q="repo:$SLUG"   --jq '.items[]|"\(.full_name)|\(.stargazers_count)|\(.license.spdx_id)|\(.archived)|\(.pushed_at)|\(.default_branch)"'
+
+# 2. Lectura de bytes con las 11 variantes de nombre (HEAD resuelve la rama default solo)
+for f in LICENSE LICENSE.txt LICENSE.md License.txt license.txt LICENCE          COPYING COPYING.txt LICENSE-MIT LICENSE-APACHE NOTICE; do
+  curl -s -o /tmp/l -w "$f %{http_code} %{size_download}\n"     "https://raw.githubusercontent.com/$SLUG/HEAD/$f"
+  head -c 200 /tmp/l   # ← la cabecera, para identificar la familia
+done
+```
+
+**Los tres discriminadores que convierten bytes en veredicto:**
+
+1. **Bytes dentro de una banda canónica** (MIT ~1.100 · Ms-PL ~3.900 · Apache
+   ~11.350 · MPL ~16.700 · CC-BY ~18.650 · LGPL-2.1 ~26.400 · AGPL ~34.500 ·
+   GPL-3.0 ~35.200) ⇒ familia confirmada.
+2. **Bytes muy por debajo** de la banda ⇒ **archivo puntero**: seguir el puntero
+   (`ml-agents` 572 B, `UnrealMLAgents` 609 B, `o3de` 1475 B — los tres son
+   permisivos, ninguno contiene su licencia).
+3. 🆕 **Bytes fuera de TODA banda** ⇒ **archivo compuesto**: buscar los
+   **encabezados de sección**, no leer la cabecera del archivo
+   (`luanti` 8793 B, `love2d` 74.927 B, `0ad` 3049 B, `AnkleBreaker` 3068 B).
+   ⚠️ **Éste es el eje que atrapa al lector apurado:** las primeras líneas del
+   `LICENSE.txt` de Luanti hablan de **CC-BY-SA** porque la sección de arte va
+   primera; el código, LGPL-2.1+, está en la línea 114.
+
+**Salida del ejercicio:** no una columna `license`, sino
+`license · scope · formato · territorio · campo_de_uso · notas`. Es la forma
+mínima que puede representar el stack real de un juego.
+
+🟢 **Por qué es entregable facturable y no higiene interna:** sobre las tablas de
+esta propia KB, el método produjo en dos passes **4 reclasificaciones correctas
+sobre 4 alertas**, **1 rechazo revertido** (`elements` era MPL-2.0, no AGPL-3.0),
+**3 repos más permisivos de lo publicado** (O3DE, `elements`, C2PA) y **2
+licencias propias escondidas detrás de un badge** (AnkleBreaker, HY-World 2.0).
+Sin una sola dependencia nueva y sin acceso privilegiado.
+
+---
+
+## 🆕 Receta 15: *Gate* de licencia por región en el pipeline de build
+
+**Para qué.** Descubrimos este pass que **una licencia puede caerse por
+jurisdicción**: la de `HY-World 2.0` declara que **no se aplica en la Unión
+Europea, el Reino Unido ni Corea del Sur**. Un estudio con un solo build y varias
+tiendas **no tiene hoy ninguna forma de notar eso** hasta que lo nota legal.
+
+**Patrón, 2–3 días:**
+
+1. **Manifiesto por componente** (YAML junto al lockfile), un registro por
+   dependencia con los 6 campos de la Receta 14. Mínimo viable:
+   ```yaml
+   - slug: Tencent-Hunyuan/HY-World-2.0
+     license: LicenseRef-Tencent-HY-World-2.0-Community
+     osi: false
+     territory_excluded: [EU, UK, KR]
+     scope: weights+code
+     deliverable: binary-only
+   ```
+2. **Gate en CI**: el job de release recibe la lista de **mercados de
+   lanzamiento** y falla si algún componente excluye uno de ellos. Es un `for`
+   sobre dos listas; no hace falta herramienta.
+3. **Sustituto declarado por adelantado**, no buscado en la crisis. Para world
+   models: `SkyworkAI/Matrix-Game` (MIT en raíz, **Apache-2.0 en
+   `Matrix-Game-4/`**, que es la versión que un estudio usaría) y
+   `microsoft/mineworld` (MIT). ⚠️ **la licencia de los *pesos* sigue sin
+   verificar** en los dos casos (`huggingface.co` no resuelve en este entorno,
+   4º pass): el gate cubre el código, **no los pesos**, y eso hay que escribirlo
+   en el manifiesto como riesgo abierto, no omitirlo.
+4. **Lo mismo para el campo de uso**: si el entregable al cliente es la
+   herramienta misma, `AnkleBreaker Open License` §3 la bloquea; si es consulting
+   alrededor, está expresamente permitida. **El gate necesita saber qué se
+   factura**, y por eso este paso se decide con el equipo comercial, no con el
+   de ingeniería.
+
+🟢 **Dónde encaja en la rotación:** este gate es la pieza que faltaba entre la
+Receta 10 (¿la etiqueta es correcta?) y la Receta 14 (¿cuál es el alcance?). La
+secuencia completa es **10 → 14 → 15**: verificar, acotar, **y hacer que el
+pipeline lo recuerde solo**.
+
+---
+
 ## Tabla resumen
 
 | Patrón | Stack principal | Esfuerzo | ROI esperado |
@@ -677,16 +852,29 @@ cluster y la observabilidad.
 | 9 · **QA con agentes, medido** | GamingAgent/LMGame Bench (MIT, ⚠️ congelado hace 1 año) + MCP | 1-4 semanas | QA con número defendible, no anécdota |
 | 🆕 10 · **Auditoría de licencias** | 2 canales + checksum de bytes (sin dependencias) | **2-4 días** | 🟢 **4/4 de acierto sobre las tablas de esta KB.** Entregable propio y auditable |
 | 🆕 11 · **Pipeline de estudio con agentes** | Claude-Code-Game-Studios (MIT, 40.377★) + MCP de engine + blender-skills | 1-2 días setup, **3-6 sem de calibración** | Cubrir roles, no acelerar tareas |
-| 🆕 12 · **Capacidad elástica de game servers** | Agones (Apache-2.0, 7.106★) + Nakama/Talo + Open Match | 2-3 semanas (K8s listo) | Escalar sin sobreaprovisionar |
+| 🆕 12 · **Capacidad elástica de game servers** | Agones (Apache-2.0, 7.107★) + Nakama/Talo + Open Match | 2-3 semanas (K8s listo) | Escalar sin sobreaprovisionar |
+| 🆕 13 · **Disclosure por reloj de sesión (NPC con LLM)** | Godot + LimboAI/Beehave (MIT) + `SessionClock` + log append-only + NPCTalk (MIT) | **1-2 semanas** (3-5 días si ya hay BT) | 🔴 **Vigencia externa 1-ene-2027 (WA) · cadencia 1 h/3 h (CT)**. Preparación, no cumplimiento: la definición de "companion chatbot" para NPCs sigue abierta |
+| 🆕 14 · **Auditoría de ALCANCE de licencias (6 ejes)** | 2 canales + 11 nombres de archivo + 3 discriminadores de bytes | **medio día** sobre stack inventariado | 🟢 Sobre esta KB: 4/4 reclasificaciones, 1 rechazo revertido, 3 repos **más** permisivos, 2 licencias propias destapadas |
+| 🆕 15 · **Gate de licencia por región en CI** | Manifiesto YAML de 6 campos + job de release + sustitutos predeclarados | **2-3 días** | 🟢 Evita descubrir en el lanzamiento que un componente **no se licencia** en el mercado de destino |
 
 ### Cuál proponer según la región del engagement
 
 | Región | Receta de entrada | Por qué |
 |--------|-------------------|---------|
-| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 7 reencuadrada (inventario), luego 10** | Fecha legal dura **a 12 días** y un segundo reloj en 2-dic-2027. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
-| **North America** | **6** y **9**, luego 2 y **10** | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 52% de los devs ve la gen AI como daño (y ~85% de los jugadores la rechaza). **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". |
-| **APAC** | **8** y **11**, luego 7 adaptada y **10** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; HY-World 2.0 no publica licencia). |
-| **LATAM** | **1**, **3**, **5** y **12** | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad, y Ubisoft acaba de ponerle titular. |
+| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 7 reencuadrada (inventario), luego 10, luego 15** · 🆕 **11 días** | Fecha legal dura **a 12 días** y un segundo reloj en 2-dic-2027. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
+| **North America** | 🆕 **13** primero si hay NPC conversacional, luego **6** y **9**, luego 2 y **10** | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 🆕 **55%** de los devs ve la gen AI como daño (GDC nov-2026; era 52%) y ~85% de los jugadores la rechaza. 🆕 **Adopción estadounidense estancada: 36%→38%, dentro del margen de error** ⇒ acá se vende *primer paso*, no escala. 🆕 **Y ya hay obligación de runtime: Receta 13.** **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". |
+| **APAC** | **8** y **11**, luego 7 adaptada, **10** y 🆕 **15** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; 🔴 **HY-World 2.0 sí publica licencia — `License.txt` — y excluye EU, UK y Corea**). 🆕 **Adopción japonesa 85,8% con 63% de uso diario (CESA 2026, 1.349 respuestas)** ⇒ acá no se vende adopción: se vende **gobernanza, escala y evaluación de calidad de salidas** (la preocupación nº1 declarada es precisión/calidad, 51,9%). |
+| **LATAM** | **1**, **3**, **5** y **12** (y **13** sólo si se publica en EE.UU.) | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad (PGB Latam 2026), y Ubisoft acaba de ponerle titular. 🆕 **El único compliance con fecha en LATAM es publicitario, no de producto: guía CONAR de Brasil en vigor desde el 1-jun-2026** (el PL 2338/2023 sigue trabado en la Cámara ⇒ **no hay ley general de AI en vigor**). |
+
+---
+*Pass **2026-11-21**: recetas nuevas **13** (capa de disclosure por reloj de
+sesión para NPCs con LLM — la primera obligación de NA que toca el runtime),
+**14** (auditoría de **alcance** de licencias por 6 ejes, con repo testigo
+verificado por eje) y **15** (gate de licencia **por región** en CI, nacido del
+hallazgo de que la licencia de HY-World 2.0 no se aplica en EU/UK/Corea). Receta
+**7** actualizada a **11 días**. Receta **10** extendida con el tercer
+discriminador de bytes (*fuera de toda banda ⇒ archivo compuesto*). Tabla por
+región actualizada con los cortes de adopción de GDC nov-2026 y CESA 2026.*
 
 ---
 *Repos y licencias verificados el **2026-11-20 en dos canales**

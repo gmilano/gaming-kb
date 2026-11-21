@@ -1,13 +1,13 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-20
+updated: 2026-11-21
 ---
 
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-20** (passes previos: 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-21** (passes previos: 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Método de este pass — dos canales, y el segundo es nuevo:**
 > 1. `gh api search/repositories -f q='repo:<slug>'` → existencia + **SPDX** +
@@ -25,7 +25,118 @@ updated: 2026-11-20
 > sigue sin servir como prueba de existencia (403/200 del proxy, no del repo).
 > Control negativo: `gmilano/this-repo-does-not-exist-control-xyz` → `NOT_FOUND`. ✅
 
-## 🔴 Lo más importante de este pass: el *checksum de bytes* de una licencia
+## 🔴 Lo más importante de este pass: **un grant sin su alcance no es un grant**
+
+El pass del 2026-11-20 derivó el *checksum de bytes* y cazó 4 filas mal
+clasificadas. Este pass aplica la regla que llegó de la KB de **enterprise**
+(pase 16, regla T60) — ***`NOASSERTION` no es un veredicto, es la ausencia de
+uno, y hay que resolverlo leyendo bytes en las DOS direcciones*** — a los **16
+repos de esta KB** que el API marca `NOASSERTION` o `null`.
+
+**Resultado medido, no supuesto: el reparto es ~50/50.**
+
+| Resolución del badge | Repos | Conclusión |
+|----------------------|-------|-----------|
+| 🟢 **Permisivo detrás del badge** | `pterodactyl/panel` (MIT), `love2d/love` (zlib), `AlanLaboratory/UnrealMLAgents` (Apache-2.0), `contentauth/c2pa-rs` + `c2pa-python` (**MIT *o* Apache-2.0**), `o3de/o3de` (Apache-2.0 *o* MIT), `Unity-Technologies/ml-agents` (Apache-2.0) | 7 |
+| 🔴 **Restrictivo o bloqueante detrás del badge** | `supertuxkart/stk-code` (GPL-3.0-or-later), `luanti-org/luanti` (código LGPL-2.1+), `0ad/0ad` (GPL-2.0-or-later), `Tencent-Hunyuan/HY-World-2.0` (licencia Tencent **con exclusión territorial**), `Tencent-Hunyuan/Hunyuan-GameCraft-1.0` (idem), `electricsheephq/WorldOS` (EULA source-available), `AnkleBreaker-Studio/unity-mcp-server` + `unity-mcp-plugin` (licencia propia, **prohibición de reventa**) | 8 |
+| 🟡 **Compuesto / carve-out** | `MonoGame/MonoGame` (Ms-PL), `PostHog/posthog` (MIT + `ee/`) | 2 |
+| ⚫ **Sin grant de ningún tipo** | `chongdashu/unreal-mcp`, `SKYHUBDev/Aivill`, `mannychen0225/Agent-Hive-Workbench` | 3 |
+
+**La conclusión operativa es más fuerte que "verificar siempre".** Si
+`NOASSERTION` fuera mala señal, serviría como filtro barato. **No lo es: es una
+moneda al aire**, así que **no es evidencia en ninguna dirección** y no puede
+usarse ni para descartar ni para priorizar. Es sólo un marcador de *"el
+clasificador no pudo decidir"*, y lo que impide decidir es casi siempre una de
+seis cosas — las **seis dimensiones por las que un grant se puede partir**, y
+**esta KB tiene un ejemplo verificado de cada una**:
+
+| Eje de partición | Repo testigo de esta KB | Qué cambia en la práctica |
+|------------------|------------------------|---------------------------|
+| **Por directorio** | `PostHog/posthog` (`ee/`), `SkyworkAI/Matrix-Game` (`Matrix-Game-4/` es Apache-2.0, la raíz MIT) | Hay que saber **qué subárbol** se va a usar antes de poder responder "¿qué licencia tiene?" |
+| **Por tipo de medio** | `luanti-org/luanti`: **código LGPL-2.1+**, **texturas y sonidos CC-BY-SA 3.0**, Lua embebido MIT — **los tres en UN archivo** | Forkear y quedarse los assets es un grant distinto del de forkear el código |
+| **Por archivo** | `MinLL/SkyrimNet-GamePlugin` (🆕 abajo): mod **propietario**, pero `SkyrimNetApi.psc` es **MIT** y se puede compilar contra él en cualquier mod, abierto o cerrado | El inverso de PostHog: **repo cerrado con un archivo abierto**. Integrarse es legal; forkear no |
+| **Por territorio** | `Tencent-Hunyuan/HY-World-2.0`: *"THIS LICENSE AGREEMENT DOES NOT APPLY IN THE EUROPEAN UNION, UNITED KINGDOM AND SOUTH KOREA"* | **La licencia misma tiene región.** Un engagement EMEA no puede usarlo; NA, LATAM y APAC-ex-Corea sí |
+| **Por campo de uso** | `AnkleBreaker-Studio/unity-mcp-server`: prohibida la **reventa** como herramienta/producto/servicio; permitido el uso interno comercial y el **consulting alrededor** | Afecta directamente al modelo de negocio de una consultora, no al código |
+| **Por binario vs fuente** | `MonoGame/MonoGame` Ms-PL §3(D): el binario se distribuye libre; **cualquier porción en fuente sólo bajo Ms-PL** | El mismo repo es permisivo o viral según **el formato del entregable** |
+
+> **Regla nueva de la rotación (para copiar a toda la familia de KBs):**
+> **la pregunta "¿qué licencia tiene este repo?" está mal formulada.** La bien
+> formulada es **"¿qué licencia tiene *esta parte*, en *este formato*, en *este
+> territorio*, para *este uso*?"**. Un inventario que guarda un solo campo
+> `license` por repo **no puede representar** 6 de los 16 repos `NOASSERTION` de
+> esta KB. Mínimo: `license` + `scope` + `notes`.
+
+## 🔴 La corrección de este pass: el trap de mayúsculas que esta KB ya había documentado, y le volvió a pasar
+
+El pass anterior escribió, en 4 archivos, que `Tencent-Hunyuan/HY-World-2.0`
+*"no publica ningún archivo de licencia (`LICENSE`, `.txt`, `.md` → 404)"* y lo
+puso como caso de *"se autodenomina open source sin publicar grant"*.
+
+**Falso. El archivo existe y se llama `License.txt`** — mayúscula L, minúscula t:
+
+| Sonda | Resultado |
+|-------|-----------|
+| `LICENSE`, `LICENSE.txt`, `LICENSE.md` | 404 |
+| **`License.txt`** | **200, 16.858 B** |
+
+El contenido es la **TENCENT HY-WORLD 2.0 COMMUNITY LICENSE AGREEMENT**, release
+date **15-abr-2026**, y su primera cláusula es territorial (ver el eje "por
+territorio" arriba). Es decir: el repo **sí** tiene grant, **no** es OSI, y
+además **excluye tres jurisdicciones**. Las dos afirmaciones del pass anterior
+("no hay archivo") y la conclusión ("sin archivo no hay permiso") eran ambas
+incorrectas, por la misma causa.
+
+**Lo caro no es el error: es que la causa estaba documentada en esta misma
+página.** La sección de pathfinding dice, textualmente, que el grant de
+`recastnavigation` está en **`License.txt`** y que *"una sonda que pida
+`LICENSE.txt` devuelve 404 y la fila se publica como 'sin licencia'"*. El pass
+documentó el trap y, dos secciones más abajo, **publicó una fila exactamente
+así**, porque la **lista de sondas** no se actualizó junto con la lección.
+
+> **Regla de método, nueva y mecánica:** una lección sobre nombres de archivo
+> **no vale escrita en prosa**; vale **dentro de la lista de sondas**. La lista
+> de este pass, usada en los 16 repos, es:
+> `LICENSE LICENSE.txt LICENSE.md License.txt license.txt LICENCE COPYING COPYING.txt LICENSE-MIT LICENSE-APACHE NOTICE`
+> — y los casos reales de esta KB cubren **cinco** de esas variantes:
+> `License.txt` (HY-World, recastnavigation), `license.txt` minúscula (LÖVE),
+> `COPYING` (SuperTuxKart), `LICENSE.md` (pterodactyl, stride, ml-agents),
+> `LICENSE-MIT`+`LICENSE-APACHE` (c2pa). **Un probe de un solo nombre falla en 5
+> de 16 repos de esta página.**
+
+## 🆕 Agentes nuevos verificados este pass
+
+Todos con `repo:` + `raw` el **2026-11-21**. Licencia leída en bytes, no inferida
+del badge.
+
+| Nombre | Repo | Licencia | Descripción | ★ |
+|--------|------|----------|-------------|---|
+| 🆕 **agency-agents** | [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) | **MIT** | **El catálogo de agentes por rol más grande que existe: ~230 agentes** en ~18 divisiones, una de ellas **Game Development** con subsecciones Unity, Unreal, Godot, Blender y Roblox Studio. Incluye scripts de conversión a Claude Code, Cursor, Copilot y Gemini CLI. **27.561 forks.** | **169.646** |
+| 🆕 **novel-to-game** | [zenstory-ai/novel-to-game](https://github.com/zenstory-ai/novel-to-game) | **MIT** (`LICENSE`, 1081) | Skill-pack de agentes que convierte **una novela en un juego**: lectura y despiece del libro → diseño de mecánicas y arte → build de código → *blind-play* de aceptación. Targets: web, película interactiva y **mini-juegos de WeChat / Douyin / TapTap**. 🟢 **Origen y distribución APAC** (ver `intel/market.md`). | 1.175 |
+| 🆕 **SkyrimNet Game Plugin** | [MinLL/SkyrimNet-GamePlugin](https://github.com/MinLL/SkyrimNet-GamePlugin) | 🔴 **propia, no OSI** (`LICENSE`, 3745) — **pero con `SkyrimNetApi.psc` bajo MIT** | NPCs AI para Skyrim que hablan, recuerdan, reaccionan y **actúan**, con voz en tiempo real. Es la implementación de NPC-LLM **con más horas de jugador reales** de esta página. Commit de hoy. **Integrable, no forkeable** (§4 prohíbe reverse engineering; `FatelessAiEngine.dll` se licencia aparte). | 386 |
+| 🆕 **NPCTalk** | [christos-antono/NPCTalk](https://github.com/christos-antono/NPCTalk) | **MIT** (`LICENSE`, 1078) | Hace hablar a **cualquier NPC de cualquier juego**: skills + servidor de voz self-hosted (Fish Audio). Cubre la capa TTS que `npcpy` y LLMUnity no traen. | 232 |
+| 🆕 **fennara-godot-ai** | [fennaraOfficial/fennara-godot-ai](https://github.com/fennaraOfficial/fennara-godot-ai) | **MIT** (`LICENSE.md`, 1064) | Chat AI **nativo dentro del editor de Godot** + tooling de agente con MCP. Alternativa a `godot-ai` cuando se quiere la ventana de chat embebida. Commit de hoy. | 321 |
+| 🆕 **NarrativeEngine-P** | [Sagesheep/NarrativeEngine-P](https://github.com/Sagesheep/NarrativeEngine-P) | **MIT** (`LICENSE`, 1065) | Dungeon Master AI self-hosted para campañas TTRPG largas: memoria con jerarquía y NPCs persistentes. El patrón de **memoria de campaña** reutilizable fuera del TTRPG. | 131 |
+| 🆕 **mc_aiplayer** | [zoyluoblue/mc_aiplayer](https://github.com/zoyluoblue/mc_aiplayer) | **MIT** (`LICENSE`, 1063) | Agente autónomo que **juega** Minecraft como mod Fabric server-side (MC 1.21.3). La contraparte *dentro del juego* de los world models de Minecraft que esta página ya listaba. | 141 |
+| 🆕 **summer** | [SummerEngine/summer](https://github.com/SummerEngine/summer) | **MIT** (`LICENSE`, 1070 + `NOTICE`, 1652) | *"The game engine built for AI"*: engine + MCP server + CLI + skills para que un agente **construya y verifique** proyectos. Muy temprano (110★) pero es la primera vez que aparece un engine **diseñado** para agentes y no adaptado. ⚠️ el `NOTICE` declara material de terceros en `library/s…`: leerlo antes de redistribuir. | 110 |
+| 🆕 **godot-agent** | [aigengame/godot-agent](https://github.com/aigengame/godot-agent) | **MIT** (`LICENSE`, 1066) | Automatización de Godot para que un agente **construya y verifique** vía CLI, Agent Skill o MCP. Señal temprana del mismo patrón que `summer`. | 58 |
+
+**Lectura para engagement — el dato más grande de este pass.** El repo de
+orquestación que la KB coronó ayer, `Claude-Code-Game-Studios` (40.485★), **no
+es el techo de la categoría: es el 24% de ella.** `agency-agents` tiene
+**169.646★ y 27.561 forks** siendo *genérico*, con gaming como **una división
+entre 18**. El mercado no está premiando catálogos de agentes **de gaming**:
+está premiando catálogos de agentes **horizontales con una división de gaming**.
+Para AI Studios eso cambia la propuesta: el diferencial defendible no es tener
+"los agentes de gaming" —hay 230 gratis, MIT, con 27k forks— sino **el harness,
+la evaluación y la integración con el engine del cliente**. Honestidad
+obligatoria, igual que ayer: **las ★ miden interés, no producción**, y un repo
+de Markdown es baratísimo de marcar.
+
+⚠️ **`Claude-Code-Game-Studios`: `pushed_at` = 2026-11-09, 12 días sin commits.**
+No es abandono, pero el repo nº1 de la categoría **no tuvo actividad esta
+semana** y la fila de ayer no lo decía.
+
+## 📐 Regla heredada y revalidada: el *checksum de bytes* de una licencia
 
 Este KB venía anotando los **bytes** de cada archivo de licencia. Nadie los usaba.
 **Son un checksum**: los textos de licencia tienen longitud canónica, así que una
@@ -87,7 +198,7 @@ No lo es:
 | **`CoplayDev/unity-mcp`** | **16.087** | **MIT** | 2026-11-17 | ⚠️ **`beta`** |
 | `IvanMurzak/Unity-MCP` | 4.672 | Apache-2.0 | 2026-11-19 | `main` |
 | `CoderGamester/mcp-unity` | 2.018 | MIT | 2026-10-11 | `main` |
-| `AnkleBreaker-Studio/unity-mcp-server` | 549 | NOASSERTION | 2026-10-23 | `main` |
+| `AnkleBreaker-Studio/unity-mcp-server` | 549 | 🔴 **AnkleBreaker Open License v1.0** (resuelto 2026-11-21 — ver abajo) | 2026-10-23 | `main` |
 | `jackwrichards/UnityMCP` | 528 | NOASSERTION | 2025-03-18 | `main` |
 | `isuzu-shiranui/UnityMCP` | 344 | MIT | 2026-11-20 | `main` |
 | `FunplayAI/funplay-unity-mcp` | 330 | MIT | 2026-11-19 | `main` |
@@ -224,7 +335,8 @@ legal.**
 | Nombre | Repo | Grant declarado | Grant real verificado | Problema |
 |--------|------|-----------------|----------------------|----------|
 | 🆕 **horizon** | [horizon-rust/horizon](https://github.com/horizon-rust/horizon) | aparece en trending de game-dev | **LGPL-3.0** (SPDX del API) | Reescritura de Minecraft Java en Rust, **11.515★** y subiendo: va a aparecer en toda lista de trending. LGPL-3.0 exige poder relinkear: incompatible con un binario de juego cerrado sin cuidado de arquitectura. |
-| 🆕 **HY-World 2.0** | [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0) | "open-source SOTA world model" en el README | **Ningún archivo de licencia en HEAD** (`LICENSE`, `.txt`, `.md` → 404) | 2.891★ y se autodenomina open source **sin publicar grant**. Sin archivo no hay permiso. Mismo patrón que `unreal-mcp`. |
+| 🔴 **HY-World 2.0** — **corregido 2026-11-21** | [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0) | "open-source SOTA world model" en el README; el pass anterior escribió **"ningún archivo de licencia"** | **TENCENT HY-WORLD 2.0 COMMUNITY LICENSE AGREEMENT** (`License.txt` — ⚠️ **mayúscula L, minúscula t**, 16.858 B, release 15-abr-2026) | **El archivo existe; la sonda no lo pedía.** No es OSI, y su **primera cláusula es territorial**: *"THIS LICENSE AGREEMENT DOES NOT APPLY IN THE EUROPEAN UNION, UNITED KINGDOM AND SOUTH KOREA"*. ⇒ **inusable en un engagement EMEA o coreano, usable en NA / LATAM / APAC-ex-Corea.** 2.900★. **No** es el mismo patrón que `unreal-mcp`: ahí no hay archivo; acá sí lo hay y dice cosas. |
+| 🔴 **unity-mcp-server / unity-mcp-plugin** (AnkleBreaker) | [AnkleBreaker-Studio/unity-mcp-server](https://github.com/AnkleBreaker-Studio/unity-mcp-server) · [unity-mcp-plugin](https://github.com/AnkleBreaker-Studio/unity-mcp-plugin) | API devuelve `NOASSERTION`; el README se presenta como herramienta abierta de 268 tools | **"AnkleBreaker Open License v1.0"** (`LICENSE`, **3068 B en los dos repos**, leída completa) | 🔴 **"Open License" no es open source.** Arranca con el íncipit literal de MIT (*"Permission is hereby granted, free of charge…"*) y los 3068 B ya la delatan contra la banda MIT de ~1.100 — es el **impostor de íncipit MIT** que nombró la KB de enterprise, acá con dos restricciones que pegan en el modelo de negocio de una consultora: **§2 atribución obligatoria en el producto** (*"Made with AnkleBreaker MCP"* + logo, en about/splash/credits, también en uso comercial) y **§3 prohibición de reventa**: no se puede vender ni sublicenciar el software **ni un derivado** como herramienta, producto o servicio, ni envolverlo en *"a thin service layer"* y cobrarlo. ✅ **Sí** permite: uso interno comercial gratis, integrarlo como **componente gratuito** de un producto con valor propio sustancial, y **"consulting, support, or training services around the Software"**. ⇒ para un engagement, la línea es **quién es el valor principal del entregable**: asesorar sobre él, permitido; facturarlo como la herramienta, no. 549★ + 258★ |
 | 🆕 **MonoGame** | [MonoGame/MonoGame](https://github.com/MonoGame/MonoGame) | **MIT** (así lo publicaba este KB en 2 archivos) | **Ms-PL** (`LICENSE.txt`, 3882 B, leído completo) | Ms-PL es OSI y permisivo **para binarios**, pero §3(D): si distribuís **cualquier porción en código fuente, sólo podés hacerlo bajo Ms-PL**. Un entregable de *fuente* a cliente no se puede relicenciar MIT/Apache. §3(B) termina tu licencia de patente si demandás a un contribuidor. **Corrección de este pass.** |
 | 🆕 **PostHog** | [PostHog/posthog](https://github.com/PostHog/posthog) | **MIT** (así lo publicaba este KB en 3 lugares) | **MIT Expat fuera de `ee/`; `ee/` bajo PostHog Enterprise License** (`ee/LICENSE`, 2176 B) | El texto es **palabra por palabra el mismo patrón que Onyx** en la KB de enterprise: *"All content that resides under the `ee/` directory … is licensed under the license defined in `ee/LICENSE`"*. No bloquea self-host, pero "PostHog es MIT" es **falso como entrada de inventario**. |
 | unreal-mcp | [chongdashu/unreal-mcp](https://github.com/chongdashu/unreal-mcp) | Badge "License: MIT" en el README | **Ningún archivo de licencia**; SPDX del API = `NONE` | Un badge no es un grant. **2.120★** y **sin commits desde 2025-04-22**: el repo sin licencia más popular del nicho Unreal. Legalmente "all rights reserved". |
@@ -260,14 +372,26 @@ legal.**
 
 Una ausencia medida vale más que un silencio.
 
-- **`huggingface.co` → no resuelve DNS. Tercer pass consecutivo.** Consecuencia
+- **`huggingface.co` → no resuelve DNS. CUARTO pass consecutivo (2026-11-21).** Consecuencia
   concreta e inmutable desde julio: **ninguna licencia de pesos ha sido verificada
   nunca por esta KB** — ni Matrix-Game 4.0, ni los checkpoints de MineWorld, ni
   `tencent/HY-World-2.0`. En un world model, los pesos son la mitad del entregable.
   Es el gap más viejo y más caro de la KB. **Vía a probar el próximo pass:** la KB
   de enterprise leyó una spec bloqueada vía `raw.githubusercontent.com`; buscar si
   el model card está espejado en un repo de GitHub.
-- **Listado de directorios de un repo:** sigue sin canal. Por eso el grant partido
+  🆕 **Vía probada y agotada este pass:** `WebFetch` tampoco resuelve
+  `gamedevreports.substack.com`, `www.aiandgames.com`, `www.pcgamer.com` ni
+  `www.gamingonlinux.com`. Los únicos hosts que resuelven son `github.com` y
+  `raw.githubusercontent.com`. ⇒ **toda la evidencia de prensa y encuestas de
+  esta KB viene de snippets de búsqueda, no de la fuente primaria**, y se
+  cross-chequea corriendo búsquedas independientes sobre la misma cifra. Dicho
+  explícitamente porque cambia el peso de las secciones de `intel/`: los repos
+  están leídos en bytes, **los números de mercado no**.
+- **Listado de directorios de un repo: CONFIRMADO sin canal, 2º pass.**
+  `gh api repos/<owner>/<repo>/contents` devuelve
+  *"GitHub access to this repository is not enabled for this session"* —
+  el scope de GitHub de esta sesión cubre `search/*` y `raw`, no la API de
+  contenidos. Probado hoy contra `SkyworkAI/Matrix-Game`. Por eso el grant partido
   de Matrix-Game se verifica por sonda de rutas conocidas y no por enumeración, y
   por eso no puedo afirmar que `Matrix-Game-4/` sea el único subdirectorio con
   licencia propia.
@@ -276,7 +400,18 @@ Una ausencia medida vale más que un silencio.
   bloqueado y tuvo que dejar 20 filas sin verificar.
 
 ---
-*Este pass: 4 correcciones de licencia (2 nuevas, 2 revalidadas por 2º canal),
+*Pass 2026-11-21 (cycle 5): 16 badges `NOASSERTION`/`null` resueltos por lectura
+de bytes con reparto medido 7 permisivos / 8 restrictivos / 3 sin grant;
+1 corrección 🔴 (HY-World 2.0 **sí** tiene `License.txt`, con exclusión
+territorial EU/UK/Corea); 1 licencia propia destapada en una tabla de líderes
+(AnkleBreaker Open License v1.0: atribución en producto + prohibición de
+reventa); 2 refinamientos a permisivo (`c2pa-rs` y `c2pa-python` son **MIT o
+Apache-2.0**, no sólo Apache-2.0); 9 agentes nuevos verificados; typología de
+**6 ejes de partición de grant** con un repo testigo de esta KB por eje;
+83 filas heredadas revalidadas en `repo:`. 2026-11-21.*
+
+---
+*Pass 2026-11-20: 4 correcciones de licencia (2 nuevas, 2 revalidadas por 2º canal),
 1 rechazo revertido, 2 renames documentados, 1 repo desaparecido, 6 filas nuevas,
 7 repos con rama default ≠ `main`/`master` señalados, 1 regla de checksum derivada
 y validada 4/4 sobre datos preexistentes, 38 repos verificados en dos canales con
