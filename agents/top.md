@@ -7,8 +7,9 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-22 (pass cycle 11)**. Passes previos: 2026-11-22
-> (cycle 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20, 2026-10-26, 2026-07-02.
+> Última actualización: **2026-11-22 (pass cycle 12)**. Passes previos: 2026-11-22
+> (cycles 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20, 2026-10-26,
+> 2026-07-02.
 >
 > 🔴 **Lo que este pass cambia de raíz:** los seis passes anteriores afinaron
 > *cómo leer una licencia*. Este pass descubre que **la lista de repos sobre la
@@ -53,6 +54,196 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 12): **la organización no es el repo, el repo no es el producto, y el derivado puede ser MENOS libre que su padre**
+
+Los once passes anteriores aprendieron a leer *una licencia*. Este pass mide tres
+casos donde la licencia estaba bien leída y **la unidad de análisis estaba mal
+elegida**. En los tres, la enumeración (canal 3) encuentra lo que la sonda no
+podía ni preguntar.
+
+> **Canales de esta sesión — medidos, no supuestos:**
+> 1. `gh api search/repositories -f q='repo:<slug>'` → ✅ **funciona**. Existencia,
+>    SPDX, ★, `archived`, `pushed_at`, `forks`, `default_branch`.
+> 2. `raw.githubusercontent.com/<slug>/<rama>/<archivo>` → ✅ **funciona**. El
+>    grant en bytes.
+> 3. `gh api search/code -f q='repo:<slug> filename:LICENSE'` → ✅ **funciona**.
+>    Controles positivos: `TaloDev/backend`→1, `godotengine/godot`→3,
+>    `filename:LICENSE godot`→5.632. Control negativo de (1):
+>    `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422. ✅
+>
+> ⛔ **Caídos en esta sesión** (gap declarado, no silenciado):
+> `gh api repos/<owner>/<repo>` → **HTTP 403** (el scope de GitHub de esta sesión
+> cubre `search/*` y `raw`, no `repos/*`). `curl -sI https://github.com/<slug>`
+> → devuelve `HTTP/1.1 200 Connection Established` **del proxy**, no del repo:
+> sigue sin servir como prueba. `huggingface.co` → **no resuelve**
+> (`curl` = 000, WebFetch = `ENOTFOUND`, dos sondas independientes).
+
+---
+
+### 🔴 Hallazgo nº1: `QwenLM/Qwen3` — 27.758 ★, 2.113 forks, y **cero archivos de licencia en el repo**
+
+NVIDIA publicó que **ACE ya soporta Qwen3-8B como SLM on-device** para NPCs en
+juegos de PC. Es decir: el modelo abierto que el stack de NPC más citado de la
+industria te invita a correr **dentro del juego, en la máquina del jugador**.
+Esta KB nunca lo había listado como fundacional.
+
+Medición del grant, con los tres canales:
+
+| Canal | Resultado |
+|---|---|
+| Badge SPDX (`search/repositories`) | **`NONE`** |
+| `raw` × 3 ramas (`main`/`master`/`dev`) × 3 nombres (`LICENSE`, `LICENSE.txt`, `Qwen3_LICENSE`) | **9 × HTTP 404** |
+| 🆕 Enumeración (`search/code … filename:LICENSE`) | **`total_count` = 0** |
+
+No es que la sonda tuviera mal el nombre: **no hay ningún archivo de licencia en
+el repositorio.** Y sin embargo el grant existe. Está en el `README.md`,
+líneas 395-398, verbatim:
+
+```
+## License Agreement
+
+All our open-weight models are licensed under Apache 2.0.
+You can find the license files in the respective Hugging Face repositories.
+```
+
+> **📐 Regla de método nº14 (nueva, para copiar a toda la familia de KBs):
+> cuando la enumeración devuelve CERO archivos de licencia, el repo no está
+> necesariamente sin grant — hay que leer el `README`.** El grant puede estar
+> *declarado* en GitHub y *alojado* en otro lado. Escribir "sin licencia" ahí es
+> un falso negativo, y es el error más caro que puede cometer esta KB: descarta
+> un fundacional de 27.758 ★ que sí se puede usar.
+
+⚠️ **Lo que este pass NO puede afirmar:** que los archivos de Hugging Face digan
+Apache-2.0. `huggingface.co` no resuelve en esta sesión (dos sondas). Lo
+verificable hoy es que **el propietario declara Apache-2.0 para los pesos
+abiertos, en su propio repo**. Para producción: leer la *model card* del tamaño
+exacto que se embarque (8B ≠ 235B ≠ los derivados `-Instruct`), porque esta KB ya
+documentó que **el grant se parte por variante de modelo**.
+
+---
+
+### 🔴 Hallazgo nº2: `LumioGames/LGUI` — **PolyForm Shield**, familia de licencia nueva en esta KB, y el padre MIT escondido adentro
+
+`LumioGames/LGUI` (148 ★, 21 forks, push 2026-11-19) se presenta como *"Game UI
+framework for AI agents"*. Badge: `NOASSERTION`. Enumeración: **8 archivos de
+licencia**. Leídos todos, byte a byte:
+
+| Ruta | Bytes | Grant |
+|---|---|---|
+| `LICENSE` (raíz) | 8.363 | 🟡 **PolyForm Shield 1.0.0 + Additional Permission** |
+| `plugin/LICENSE` | 8.363 | 🟡 el mismo |
+| `plugin/editor/LICENSE` | 1.092 | 🟢 **MIT** — *FairyGUI Editor Online* |
+| `scripts/fairygui-dom/upstream/LICENSE.txt` | 1.086 | 🟢 **MIT** — *FairyGUI, 2021* |
+| `plugin/framework/backends/unity/package/FairyGUI/LICENSE` | 1.099 | 🟢 **MIT (MIT)** — *fairygui.com, 2015* |
+| `plugin/framework/backends/h5/vendor/FairyGUI-LICENSE.txt` | — | 🟢 MIT (familia FairyGUI) |
+| `plugin/framework/backends/unity/package/LICENSE` | — | 🟢 MIT (familia FairyGUI) |
+| `tests/fixtures/unity/puerts-3.0.3/LICENSE.txt` | 3.473 | 🟢 **BSD 3-Clause** detrás de preámbulo corporativo de Tencent |
+
+**La cláusula que decide, citada:**
+
+> *"**Your own products.** You may use, change and distribute the software as
+> part of your own games, applications, websites and other products, including
+> commercial ones … **as long as the product itself is not a UI framework, UI
+> toolkit, UI editor or game development tool.**"*
+>
+> *"**What competes.** … a product competes with the software if it is a UI
+> framework, UI toolkit, UI editor, UI asset pipeline **or game development
+> tool** …"*
+
+> 🔴 **Traducción al negocio de Globant, y es una línea que esta KB no tenía:**
+> el **mismo repo** es 🟢 **verde para un juego de cliente** y 🔴 **rojo para un
+> acelerador reutilizable de Globant**. Si LGUI entra en un entregable de
+> engagement, está permitido y es comercial. Si entra en el *toolkit interno que
+> se revende de cuenta en cuenta*, es exactamente lo que la licencia llama
+> *"game development tool"* y hay que pedir licencia aparte. **El eje ya no es
+> la licencia ni la región: es el TIPO DE ENTREGABLE.**
+
+**Y la salida, que sólo aparece por enumeración:** LGUI es un envoltorio
+PolyForm sobre **FairyGUI, que es MIT**. El padre está vivo y listado:
+
+| Repo padre | ★ | Licencia | Push |
+|---|---|---|---|
+| [fairygui/FairyGUI-unity](https://github.com/fairygui/FairyGUI-unity) | **2.978** | 🟢 **MIT** | 2026-02-03 ⚠️ ~9 meses |
+| [fairygui/FairyGUI-cocoscreator](https://github.com/fairygui/FairyGUI-cocoscreator) | 627 | 🟢 **MIT** | 2024-08-05 ⚠️ dormido |
+| [fairygui/FairyGUI-Editor](https://github.com/fairygui/FairyGUI-Editor) | 802 | 🔴 **sin grant** (`NONE`) | 2024-03-11 ⚠️ |
+
+> 📐 **Regla de método nº15: la regla "el LICENSE de un derivado delata a sus
+> padres" también corre al revés.** Esta KB la usaba para *sospechar* de un
+> derivado permisivo. Aquí sirve para lo contrario: **el derivado es MÁS
+> restrictivo que el padre, y la enumeración encuentra el padre permisivo
+> adentro.** Antes de aceptar un grant condicional, enumerar: el componente que
+> de verdad se necesita puede estar vendorizado con licencia mejor.
+>
+> ⚠️ Matiz obligatorio: FairyGUI-unity lleva ~9 meses sin push y el **editor no
+> tiene grant**. Tomar el padre es más libre pero **menos mantenido**, y el
+> editor — la pieza que hace usable al framework — **no está licenciada**.
+
+---
+
+### 🔴 Hallazgo nº3: corrección a esta KB — **"Talo: MIT completo, sin tier cerrado" necesita un alcance**
+
+`repos/foundations.md` y `verticals/solutions.md` recomiendan Talo desde hace
+varios passes y afirman *"MIT completo, sin tier cerrado"*. Esta KB listaba
+**1 de los 5 repos** de la organización. Enumerados los cinco:
+
+| Repo | ★ | Licencia (bytes) | Archivos de licencia (enumerados) | Push |
+|---|---|---|---|---|
+| [TaloDev/godot](https://github.com/TaloDev/godot) | **251** | 🟢 **MIT** (1.074) | 4 — todos MIT | 2026-11-16 |
+| [TaloDev/backend](https://github.com/TaloDev/backend) | 105 | 🟢 **MIT** (1.074) | 1 | 2026-11-21 |
+| [TaloDev/unity](https://github.com/TaloDev/unity) | 43 | 🟢 **MIT** (1.074) | 2 | 2026-11-16 |
+| [TaloDev/hosting](https://github.com/TaloDev/hosting) | 36 | 🔴 **SIN GRANT** | **0** | 2026-10-14 |
+| [TaloDev/frontend](https://github.com/TaloDev/frontend) | 21 | 🟢 **MIT** (1.074) | 1 | 2026-11-17 |
+
+Dos correcciones concretas:
+
+1. **El repo más estrellado de Talo no es el backend: es el plugin de Godot**
+   (251 ★ vs 105 ★, 2,4×). La puerta de entrada real del producto es el cliente,
+   no el servidor — y era el que faltaba en la tabla.
+2. 🔴 **`TaloDev/hosting` — el "self-hosting starter pack" — no tiene ningún
+   archivo de licencia.** Cero por enumeración, no por sonda fallida. Es decir:
+   el producto es MIT, pero **el camino de despliegue que el propio proyecto
+   documenta no está otorgado.** Para un cliente que elige Talo *precisamente
+   por self-hosting*, el gate no está en el producto: está en el runbook.
+   **Mitigación:** usar `TaloDev/backend` (MIT, que sí cubre el servidor) con IaC
+   propia, y no copiar `hosting/`.
+
+`TaloDev/godot` vendoriza, todos MIT y todos leídos: `addons/talo/LICENSE`
+(1.074), `addons/gdUnit4/LICENSE` (1.069, Mike Schulze 2023),
+`addons/GDQuest_GDScript_formatter/LICENSE` (1.072, GDQuest). **Cadena limpia.**
+
+---
+
+### 📏 Ampliación del checksum de bytes de esta KB — tres valores medidos este pass
+
+| Licencia | Bytes medidos | Nota |
+|---|---|---|
+| **BSD 3-Clause** (detrás de preámbulo Tencent) | **3.473** | 🆕 primera medición en esta KB. El preámbulo corporativo **no cambia** que el grant es permisivo — mismo patrón que la KB de enterprise documentó en Tencent/LoopForge. |
+| **PolyForm Shield 1.0.0 + Additional Permission** | **8.363** | 🆕 familia nueva. Cae **entre** Apache-2.0 (~11.350) y MIT (~1.100): un lector que sólo mire el tamaño no la distingue de nada conocido. |
+| **LGPL-3.0 "suplemento"** | **7.652** | Revalidado por enumeración: `search/code` devuelve **1** archivo en `thedivergentai/Game-Dev-Agentic-Skills` — el suplemento, sin la GPL-3.0 base (~35.200) que incorpora. El cycle 11 ya lo había visto por sonda; **ahora está probado por enumeración.** |
+
+---
+
+### 🆕 Agentes nuevos incorporados este pass — 4 filas, las 4 con licencia leída byte a byte y enumerada
+
+| Agente / pack | Repo | Licencia (3 canales) | Qué es | ★ |
+|---|---|---|---|---|
+| **Talo — plugin Godot** | [TaloDev/godot](https://github.com/TaloDev/godot) | 🟢 **MIT** (1.074; 4 archivos, 4 MIT) | Cliente Godot de Talo: leaderboards, stats, auth, game saves, analytics. **El repo más estrellado de Talo y la puerta de entrada real.** Vendoriza gdUnit4 y el formatter de GDQuest, ambos MIT | **251** |
+| **GodotPrompter** | [jame581/GodotPrompter](https://github.com/jame581/GodotPrompter) | 🟢 **MIT** (1.083; 1 archivo) | Gestión y ejecución de prompts **dentro del editor de Godot**. 63 forks. Cubre el hueco entre "MCP para el engine" y "pack de skills del agente": el prompt vive en el proyecto, versionado | **983** |
+| **blender-game-skills** | [majidmanzarpour/blender-game-skills](https://github.com/majidmanzarpour/blender-game-skills) | 🟢 **MIT** (1.073; 1 archivo) | Skills de agente para el **pipeline de assets en Blender** orientado a juego. Par del `threejs-game-skills` del mismo autor que esta KB ya lista. ⚠️ push 2026-09-24 (~2 meses) | 195 |
+| **LGUI** | [LumioGames/LGUI](https://github.com/LumioGames/LGUI) | 🟡 **PolyForm Shield 1.0.0 + Additional Permission** (8.363; **8 archivos**, 6 de ellos MIT/BSD vendorizados) | Framework de **UI de juego manejable por agentes**: pantallas y layouts generados. 🟡 **Condicional: verde en un juego de cliente, ROJO dentro de un acelerador reutilizable de Globant.** El padre MIT (`fairygui/FairyGUI-unity`, 2.978 ★) está vendorizado adentro | 148 |
+
+---
+
+### ⛔ Rechazos **medidos** de este pass — se publican porque el silencio se lee como cobertura
+
+| Candidato | ★ | Medición | Motivo del rechazo |
+|---|---|---|---|
+| [Yuki001/game-dev-skills](https://github.com/Yuki001/game-dev-skills) | 123 | Badge `NONE`; `raw` 404 en `LICENSE` y `LICENSE.md`; **enumeración = 0**; `README.md` = 200 (5.774 B) **y no declara licencia** | 🔴 **Sin grant en ninguno de los tres canales.** A diferencia de Qwen3, acá la regla nº14 se aplicó y **no salvó al repo**: el README existe y no dice nada. Sin otorgamiento = todos los derechos reservados. **No usar.** |
+| [anthill-platform/anthill](https://github.com/anthill-platform/anthill) | **4** | MIT real, pero `pushed_at` = **2018-10-05**, `created_at` = 2016, 2 forks, 0 issues | 🔴 Una guía de backends de 2026 lo describe como *"actively maintained"*. **El API dice 8 años sin un commit.** Caso 8º de *recomendación-por-blog vs medición*: la licencia estaba bien, la vitalidad era falsa. **No es alternativa a Nakama ni a Talo.** |
+| [Cynthia-wlan9509/offline-game-revival](https://github.com/Cynthia-wlan9509/offline-game-revival) | 112 | 🟢 MIT (1.073), enumeración = 1, push 2026-11-16 | 🟡 **Licencia limpia, caso de uso no recomendable para engagement.** "Revive juegos móviles dados de baja como offline" toca servidores y binarios de terceros: el riesgo no es de licencia del repo, es de **derechos sobre el juego revivido**. Se mide y se lista para que no se vuelva a evaluar; no se recomienda. |
+
+---
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 11): **la licencia NO se hereda de la organización** — la Farama Foundation publica MIT, GPL-2.0 y *nada* a la vez
 

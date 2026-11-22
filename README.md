@@ -35,8 +35,13 @@ gaming-kb/
 - **Toda licencia de esta KB está leída en bytes del archivo del repo**, no
   tomada del badge de la API. Las reglas de método viven en `agents/top.md` y el
   procedimiento ejecutable en `compose/patterns.md` → **Receta 20**.
-  🔴 **Tres cosas que esta KB aprendió a no confiar: el badge no es el grant, el
-  conteo de bytes no es el grant, y la rama default no es el repo.**
+  🔴 **Cuatro cosas que esta KB aprendió a no confiar: el badge no es el grant,
+  el conteo de bytes no es el grant, la rama default no es el repo, y —desde el
+  cycle 12— *el repo no es la organización*.** Un producto MIT puede tener al
+  lado un repo auxiliar sin ningún grant (`TaloDev/hosting`), y un repo con
+  **cero** archivos de licencia puede tener el grant **declarado en el README y
+  alojado afuera** (`QwenLM/Qwen3`). **`enumeración = 0` es ambiguo, no
+  negativo:** el procedimiento para resolverlo es la **Receta 30**.
 - **Las oportunidades de `intel/market.md` están organizadas bajo un único
   encabezado `## Opportunities by region`** con una subsección por región
   (North America / EMEA / APAC / LATAM). **Los gaps se escriben como gaps**: un

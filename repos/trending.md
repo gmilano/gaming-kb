@@ -11,6 +11,41 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 12
+
+**El barrido de este pass cambió de eje otra vez: por ORGANIZACIÓN y por
+VENDORIZACIÓN, no por repo.** Dos de los tres hallazgos no eran repos faltantes:
+eran **repos hermanos** del que ya estaba listado, con licencia distinta.
+
+| Repo | Licencia (bytes + enumeración) | Qué es | ★ | Push |
+|---|---|---|---|---|
+| [QwenLM/Qwen3](https://github.com/QwenLM/Qwen3) | 🟡 badge `NONE` · **enumeración = 0** → 🟢 **Apache-2.0 declarado en `README.md`**, archivos en Hugging Face | 🆕 **La capa de SLM que esta KB no tenía.** NVIDIA publicó soporte de **Qwen3-8B on-device en ACE** para NPCs de PC. 2.113 forks | **27.758** | 2026-01-09 |
+| [TaloDev/godot](https://github.com/TaloDev/godot) | 🟢 **MIT** (1.074) — **4 archivos, 4 MIT** | Cliente Godot de Talo. **Más estrellado que el backend que esta KB sí listaba** | **251** | 2026-11-16 |
+| [fairygui/FairyGUI-unity](https://github.com/fairygui/FairyGUI-unity) | 🟢 **MIT** | El padre permisivo **vendorizado dentro de LGUI**. Framework de UI para Unity. ⚠️ ~9 meses sin push | **2.978** | 2026-02-03 |
+| [LumioGames/LGUI](https://github.com/LumioGames/LGUI) | 🟡 **PolyForm Shield 1.0.0** (8.363) — **8 archivos** | UI de juego para agentes. Condicional por **tipo de entregable** | 148 | 2026-11-19 |
+| [TaloDev/unity](https://github.com/TaloDev/unity) | 🟢 **MIT** (1.074) — 2 archivos | Paquete Unity de Talo | 43 | 2026-11-16 |
+| ⛔ [TaloDev/hosting](https://github.com/TaloDev/hosting) | 🔴 **SIN GRANT — enumeración = 0** | *"Self-hosting starter pack"* dentro de un producto MIT. **El runbook no está otorgado** | 36 | 2026-10-14 |
+| ⛔ [anthill-platform/anthill](https://github.com/anthill-platform/anthill) | MIT real | Un blog de 2026 lo llama *"actively maintained"*. **Último commit: 2018-10-05** | **4** | 2018-10-05 |
+
+### 📏 Tres valores nuevos para el checksum de bytes
+
+| Licencia | Bytes medidos | Dónde |
+|---|---|---|
+| **BSD 3-Clause** tras preámbulo Tencent | **3.473** | `puerts-3.0.3` vendorizado en LGUI. El preámbulo corporativo **no altera** el grant permisivo |
+| **PolyForm Shield 1.0.0 + Additional Permission** | **8.363** | `LumioGames/LGUI`. ⚠️ Cae **entre** MIT (~1.100) y Apache-2.0 (~11.350): por tamaño **no se distingue de nada conocido** |
+| **LGPL-3.0 (suplemento sin su GPL-3.0 base)** | **7.652** | `thedivergentai/Game-Dev-Agentic-Skills`. El cycle 11 lo vio por sonda; este pass lo **prueba por enumeración** |
+
+### 🔧 Canales de esta sesión
+
+✅ `search/repositories` · ✅ `raw.githubusercontent.com` · ✅ `search/code`
+(controles positivos: `TaloDev/backend`→1, `godotengine/godot`→3,
+`filename:LICENSE godot`→5.632).
+⛔ `gh api repos/<o>/<r>` → **403** · ⛔ `curl -sI github.com` → `200 Connection
+Established` **del proxy** · ⛔ **`huggingface.co` no resuelve** (`curl` 000 +
+WebFetch `ENOTFOUND`).
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 11
 
 **El barrido de este pass cambió de eje: por CATEGORÍA, no por nombre.** Buscar

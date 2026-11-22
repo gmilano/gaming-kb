@@ -7,7 +7,7 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22 cycle 10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22 cycles 11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Doble canal obligatorio en esta página.** El SPDX del API
 > (`gh api search/repositories -f q='repo:<slug>'`) y la lectura del archivo en
@@ -32,6 +32,92 @@ updated: 2026-11-22
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El hallazgo del cycle 12 (2026-11-22): **el modelo que NVIDIA te invita a correr dentro del juego no tiene licencia en su repo**, y la capa de SLM on-device faltaba entera
+
+Once passes listaron engines, backends, frameworks de servidor y entornos de RL.
+**Ninguno listó el modelo.** Y resulta que es la capa donde la regulación que
+esta KB vende (Art. 50 EU, obligación federal de runtime en NA) se vuelve
+tratable: un SLM on-device **no envía la conversación del jugador a ningún
+lado**.
+
+### 🆕 La capa nueva: SLM on-device para NPC
+
+NVIDIA publicó que **ACE soporta Qwen3-8B como SLM on-device** para NPCs en
+juegos de PC, además de su propia línea Nemotron (Nemotron 3 Nano 4B y, en
+cobertura posterior, Nemotron 3.5 Bolt E4B sobre RTX Spark). Eso convierte al
+repo de Qwen en fundacional para gaming, no en una curiosidad de NLP.
+
+| Repo | ★ | Forks | Licencia — **tres canales** | Push |
+|---|---|---|---|---|
+| [QwenLM/Qwen3](https://github.com/QwenLM/Qwen3) | **27.758** | 2.113 | 🟡 Badge `NONE` · `raw` **9×404** (3 ramas × 3 nombres) · **enumeración `search/code` = 0 archivos** · 🟢 **grant declarado en `README.md` §*License Agreement*: *"All our open-weight models are licensed under Apache 2.0"*, archivos en Hugging Face** | 2026-01-09 |
+
+> 📐 **Regla de método nº14 para esta página: enumeración = 0 NO significa "sin
+> licencia".** Significa "el grant no vive en un archivo de este repo". El
+> siguiente paso obligatorio es **leer el `README`** antes de escribir el
+> rechazo. Esta página estuvo a un paso de descartar un fundacional de 27.758 ★
+> por un falso negativo.
+
+⛔ **Gap declarado:** `huggingface.co` **no resuelve en esta sesión** (dos sondas
+independientes: `curl` → 000, WebFetch → `ENOTFOUND`). Por lo tanto **este pass
+NO verificó el texto Apache-2.0 de los pesos**; verificó que el propietario lo
+declara en su propio repo. Antes de embarcar: leer la *model card* del tamaño
+exacto, porque esta KB ya documentó que **el grant se parte por variante**.
+
+---
+
+### 🆕 La organización Talo, completa — y la corrección a lo que esta página afirmaba
+
+Esta página listaba `TaloDev/backend` y escribía *"MIT completo, sin tier
+cerrado"*. Enumerada la organización, **eran 5 repos, no 1**, y uno de ellos no
+tiene grant:
+
+| Repo | ★ | Licencia (bytes) | Archivos de licencia (enumerados) | Push | Qué es |
+|---|---|---|---|---|---|
+| [TaloDev/godot](https://github.com/TaloDev/godot) | **251** | 🟢 **MIT** (1.074) | **4** — `LICENSE`, `addons/talo` (1.074), `addons/gdUnit4` (1.069, MIT), `addons/GDQuest_GDScript_formatter` (1.072, MIT) | 2026-11-16 | Plugin Godot: leaderboards, stats, auth, game saves. **Más estrellado que el backend (2,4×): es la puerta de entrada real** |
+| [TaloDev/backend](https://github.com/TaloDev/backend) | 105 | 🟢 **MIT** (1.074) | 1 | 2026-11-21 | El servidor self-hosteable (ya listado abajo) |
+| [TaloDev/unity](https://github.com/TaloDev/unity) | 43 | 🟢 **MIT** (1.074) | 2 | 2026-11-16 | Paquete Unity |
+| [TaloDev/frontend](https://github.com/TaloDev/frontend) | 21 | 🟢 **MIT** (1.074) | 1 | 2026-11-17 | Dashboard de gestión |
+| [TaloDev/hosting](https://github.com/TaloDev/hosting) | 36 | 🔴 **SIN GRANT** | **0** | 2026-10-14 | *"Self-hosting starter pack for Talo"* |
+
+> 🔴 **Corrección publicada:** *"MIT completo, sin tier cerrado"* es cierto **del
+> producto** y falso **de la organización**. `TaloDev/hosting` — el starter pack
+> de self-hosting, es decir **la razón misma por la que un cliente elige Talo en
+> vez de un backend gestionado** — no tiene ningún archivo de licencia. Cero por
+> enumeración, no por sonda fallida.
+>
+> **Mitigación operativa:** el servidor (`TaloDev/backend`) **sí** es MIT y es lo
+> que se despliega. Lo que no está otorgado es el *runbook*. Desplegar con IaC
+> propia y **no copiar `hosting/`** al repo del cliente.
+
+---
+
+### 🟡 Framework de UI para agentes: el derivado es menos libre que el padre
+
+| Repo | ★ | Licencia (bytes) | Archivos | Lectura |
+|---|---|---|---|---|
+| [LumioGames/LGUI](https://github.com/LumioGames/LGUI) | 148 | 🟡 **PolyForm Shield 1.0.0 + Additional Permission** (8.363) | **8** | Verde en un juego de cliente; **rojo dentro de un acelerador reutilizable** (la licencia nombra *"game development tool"* como producto competidor) |
+| [fairygui/FairyGUI-unity](https://github.com/fairygui/FairyGUI-unity) | **2.978** | 🟢 **MIT** | — | **El padre vendorizado dentro de LGUI.** Sin condiciones. ⚠️ push 2026-02-03 (~9 meses) |
+| [fairygui/FairyGUI-cocoscreator](https://github.com/fairygui/FairyGUI-cocoscreator) | 627 | 🟢 **MIT** | — | Variante Cocos Creator. ⚠️ push 2024-08-05 |
+| [fairygui/FairyGUI-Editor](https://github.com/fairygui/FairyGUI-Editor) | 802 | 🔴 **`NONE`** | — | ⚠️ **El editor — la pieza que hace usable al framework — no tiene grant.** Push 2024-03-11 |
+
+> 📐 **Regla de método nº15: la enumeración también encuentra ESCAPES, no sólo
+> trampas.** Esta página usaba la provenance para *sospechar*. Acá sirve al
+> revés: un grant condicional en la raíz puede tener adentro, vendorizado, al
+> padre permisivo que de verdad se necesita. **El trade-off es mantenimiento:**
+> el padre es más libre y está más dormido, y su editor no está licenciado.
+
+---
+
+### 📏 Tres valores nuevos para el checksum de bytes de esta KB
+
+| Licencia | Bytes | Dónde se midió |
+|---|---|---|
+| **BSD 3-Clause** tras preámbulo corporativo de Tencent | **3.473** | `puerts-3.0.3` vendorizado en LGUI. El preámbulo *"Tencent is pleased to support the open source community"* **no altera** el grant: el cuerpo es BSD-3 literal. Mismo patrón que la KB de enterprise midió en Tencent/LoopForge |
+| **PolyForm Shield 1.0.0 + Additional Permission** | **8.363** | `LumioGames/LGUI`. ⚠️ Cae **entre** MIT (~1.100) y Apache-2.0 (~11.350): **por tamaño no se distingue de nada conocido**, hay que leer la cabecera |
+| **LGPL-3.0 (suplemento sin la GPL-3.0 base)** | **7.652** | `thedivergentai/Game-Dev-Agentic-Skills`. El cycle 11 lo vio por sonda; este pass lo **prueba por enumeración** (`search/code` = 1 archivo, y los 6 nombres de la GPL base dan 404) |
+
+---
 
 ## 🔴 El hallazgo del cycle 11 (2026-11-22): **faltaba una CAPA entera, no un repo** — cinco frameworks de game server, 24.000 ★ sumadas, ninguno listado en 11 passes
 
@@ -498,6 +584,10 @@ puntero, hay que seguir el puntero — la regla asimétrica de ayer, aplicada.
 | [googleforgames/open-match](https://github.com/googleforgames/open-match) | **Apache-2.0** (`LICENSE`, 11345) | Framework de matchmaking de Google. Algoritmos plug-in: entra un modelo propio. ⚠️ 4 meses sin commits (2026-07-12). | 3.427 |
 | [colyseus/colyseus](https://github.com/colyseus/colyseus) | **MIT** (`LICENSE`, 1075) | Server multijugador Node.js/TypeScript. Ideal para web games. ⚠️ default `master`. | 7.565 |
 | [TaloDev/backend](https://github.com/TaloDev/backend) | **MIT** (`LICENSE`, 1074) | Backend self-hostable: auth, stats, leaderboards, saves, event tracking, exports CSV, canales realtime, live config, presencia, relaciones. Steamworks + Google Play Games + Apple Game Center. Clientes Godot y Unity. **MIT completo, sin tier cerrado.** ⚠️ default **`develop`**. Commit de hoy. | 105 |
+| 🆕 [TaloDev/godot](https://github.com/TaloDev/godot) | **MIT** (`LICENSE`, 1074) — **4 archivos enumerados, 4 MIT** (`addons/talo` 1.074, `addons/gdUnit4` 1.069, `addons/GDQuest_GDScript_formatter` 1.072) | Cliente **Godot** de Talo. 🔴 **Tiene 2,4× las ★ del backend: es la puerta de entrada real del producto, y esta página no lo listaba.** 16 forks. | **251** |
+| 🆕 [TaloDev/unity](https://github.com/TaloDev/unity) | **MIT** (`LICENSE`, 1074) — 2 archivos | Paquete **Unity** de Talo. Se distribuye por el Unity Asset Store (`TaloDev/unity-package` quedó **archivado** 2025-04-10). | 43 |
+| 🆕 [TaloDev/frontend](https://github.com/TaloDev/frontend) | **MIT** (`LICENSE`, 1074) | Dashboard de gestión de Talo. Completa el stack self-hosteable: servidor + clientes + consola, todo MIT. | 21 |
+| 🆕 ⛔ [TaloDev/hosting](https://github.com/TaloDev/hosting) | 🔴 **SIN GRANT — enumeración = 0 archivos de licencia** | *"Self-hosting starter pack for Talo"*. 🔴 **El producto es MIT; el camino de despliegue que el propio proyecto documenta NO está otorgado.** Para un cliente que elige Talo *por* self-hosting, el gate está en el runbook, no en el servidor. **Mitigación: desplegar `TaloDev/backend` con IaC propia y no copiar `hosting/`.** | 36 |
 | 🟢 [NamazuStudios/elements](https://github.com/NamazuStudios/elements) | **MPL-2.0** (`LICENSE.txt`, 16726) — **no AGPL-3.0** | **Re-admitido este pass.** Esta KB lo había descartado por "copyleft de red"; es MPL-2.0, copyleft **por archivo**: hostearlo **no** obliga a liberar tu código. Backend self-hosted con REST/WebSockets y OAuth2/OIDC. **Chico (22★)**: alternativa a considerar, no default. Commit de hoy. | 22 |
 | [supabase/supabase](https://github.com/supabase/supabase) | **Apache-2.0** (`LICENSE`, 11338) | BaaS para juegos asíncronos: profiles, inventarios, leaderboards, UGC. `pgvector` para RAG sin servicio externo. **80k ★ anotadas → 115.201 reales.** | **115.201** |
 
@@ -579,6 +669,7 @@ listan porque son los únicos puntos de partida permisivos del nicho.
 | 🆕 [THUSI-Lab/GameScaling](https://github.com/THUSI-Lab/GameScaling) | **Apache-2.0** (11358) — 🟢 **y los pesos también** | *Continued pre-training* para agentes embodied en mundos virtuales diversos: 8 checkpoints 0,8B–27B desde Qwen3.5, evaluación en 4 benchmarks de juego. **El único modelo de esta KB con grant de pesos verificado.** ⚠️ sin código de entrenamiento. 35 forks. | 604 |
 | 🆕 [Calix-L/DanKS](https://github.com/Calix-L/DanKS) | **Apache-2.0** (11348) + `NOTICE` (453) | Agente de **Guandan** (掼蛋) por RL a escala chica. Patrón útil: **información imperfecta + juego por equipos**, el caso que los agentes LLM todavía no resuelven. 🔵 APAC. | 833 |
 | 🆕 [Station-Sciences/bot-crossing](https://github.com/Station-Sciences/bot-crossing) | **MIT** (`LICENSE`, 1069) | *"A video game for AI agents"*: **el juego como entorno de evaluación**, no el agente. 286 forks. La pieza viva que `lmgame-org/GamingAgent` (congelado desde 2025-11-16) dejó de ser. | 906 |
+| 🆕 [QwenLM/Qwen3](https://github.com/QwenLM/Qwen3) | 🟡 **badge `NONE` · enumeración = 0 archivos** → 🟢 **Apache-2.0 declarado en `README.md` §*License Agreement*** (*"All our open-weight models are licensed under Apache 2.0"*; archivos en Hugging Face, host que **no resuelve en esta sesión**) | 🆕 **La capa de SLM que esta página no tenía.** NVIDIA publicó soporte de **Qwen3-8B como SLM on-device en ACE** para NPCs de PC: es el modelo que corre **en la máquina del jugador**, no en una nube. Por eso es fundacional para gaming y no sólo para NLP — y por eso desarma de raíz la obligación de *runtime* que esta KB documenta en NA. 2.113 forks. ⚠️ Leer la *model card* del tamaño exacto antes de embarcar: esta KB ya midió que **el grant se parte por variante de modelo**. | **27.758** |
 
 | 🆕 ⛔ [MineDojo/NitroGen](https://github.com/MineDojo/NitroGen) | ⛔ **`NVIDIA License`** (`LICENSE`, **4729**) — **uso NO COMERCIAL (§ 3.3) y VIRAL (§ 3.2)** | Foundation model de agente **generalista** de NVIDIA: behaviour cloning sobre **40.000 h de gameplay en +1.000 juegos**, wrapper Gymnasium, pesos en HF (`nvidia/NitroGen`), **oral en CVPR 2026** (arXiv 2601.02427). § 3.3: *"only may be used or intended for use **non-commercially**… non-commercial research purposes only"*; § 3.2 obliga a arrastrar esa limitación a todo derivado; § 3.7 arrastra el **Meta OPT-IML 175B License Agreement**; § 3.4 termina el grant ante un reclamo de patente. ⛔ **Fuera para todo entregable, incluido un PoC pago.** 🔴 El paper dice *"we open-source the dataset, simulator, and pre-trained weights"*: **"open-source" en un abstract de CVPR no es un grant.** | 2.251 |
 

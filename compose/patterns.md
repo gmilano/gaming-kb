@@ -7,8 +7,15 @@ updated: 2026-11-22
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22
-> cycle 10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22
+> cycles 11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Las del cycle 12 son la 29** (NPC on-device: la arquitectura que *apaga*
+> la obligación de topología de datos en vez de documentarla), la **30** (triage
+> cuando la enumeración devuelve **cero** — el resultado ambiguo que la Receta 17
+> no cubría), la **31** (stack indie 100% MIT con Talo, y el repo del propio
+> proyecto que hay que dejar afuera) y la **32** (gate por **tipo de entregable**:
+> el eje que PolyForm Shield introduce y que ningún gate anterior detecta).
 >
 > **Dieciocho recetas.** Las del cycle 6 son la **16** (gate de licencia para
 > packs de skills y prompts — la ruta de contaminación por `cp -r` que el gate
@@ -23,6 +30,239 @@ updated: 2026-11-22
 > concretos de este ciclo: una fecha límite regulatoria en la UE, world models
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
 > benchmark publicado de agentes que juegan.
+
+## 🆕 Receta 29: **NPC conversacional sin topología de datos** — SLM on-device que apaga la obligación en vez de documentarla
+
+**El problema que resuelve.** Las Recetas 7 y 13 enseñan a *cumplir*: marcar el
+contenido (Art. 50(2) UE) y recordar al jugador que habla con una AI por reloj
+de sesión (NA). Las dos asumen el patrón *"el NPC llama a un LLM hosteado"*. El
+cycle 10 midió que la obligación que más duele en NA no es de transparencia sino
+de **topología de datos** — a dónde va la conversación del jugador. **Esta receta
+elimina el hecho en vez de controlarlo: si nada sale del equipo, no hay ruta de
+datos que auditar.**
+
+**Piezas, todas verificadas este pass:**
+
+| Pieza | Repo / producto | Licencia (medida) | Rol |
+|---|---|---|---|
+| SLM on-device | [QwenLM/Qwen3](https://github.com/QwenLM/Qwen3) (27.758 ★) | 🟡 **badge `NONE`, enumeración = 0** → Apache-2.0 **declarado en `README.md` §*License Agreement*** | El modelo que corre en la GPU del jugador. **NVIDIA publicó soporte de Qwen3-8B en ACE para despliegue on-device** |
+| Runtime de NPC | NVIDIA **ACE** (+ línea Nemotron: 3 Nano 4B; 3.5 Bolt E4B sobre RTX Spark) | Apache-2.0 en el SDK abierto — ⚠️ ver `agents/top.md`, los grants de ACE están partidos por componente | ASR + decisión + TTS + animación |
+| Engine | Godot (MIT) / Unreal / Unity | ver tabla de engines | Host |
+| Memoria de NPC | SQLite local / `beehave` (MIT, 3.330 ★) | MIT | Estado persistente **sin servidor** |
+| Marcado | `contentauth/c2pa-rs` (MIT **o** Apache-2.0) | permisiva | Sólo para el contenido que **se embarca**, no para lo efímero en runtime (ver Receta 27) |
+
+**Cableado:**
+
+```
+Jugador ──voz/texto──> [ ASR local (ACE) ]
+                              │
+                              v
+                  [ SLM 4–8B on-device  ]  ← Qwen3-8B o Nemotron Nano
+                   (contexto + persona)      ningún byte sale del equipo
+                              │
+                              v
+          [ memoria local SQLite ] ──> [ árbol de comportamiento (beehave) ]
+                              │
+                              v
+                      [ TTS local (ACE) ] ──> animación facial
+```
+
+**Qué verificar antes de prometerlo (y esto es la mitad de la receta):**
+
+1. ⚠️ **Leer la *model card* del tamaño exacto que se embarca.** Esta KB ya midió
+   que **el grant se parte por variante de modelo**. 8B ≠ 235B ≠ los `-Instruct`.
+   ⛔ **Este pass NO pudo leerlas: `huggingface.co` no resuelve en esta sesión**
+   (dos sondas). Lo verificado es que el propietario declara Apache-2.0 en su
+   propio README.
+2. ⚠️ **Diseñar las DOS rutas.** Un jugador con GPU vieja cae a ruta hosteada —
+   y para ese segmento **la obligación de topología de datos vuelve entera**. El
+   *fallback* no es un detalle de performance: es el 50% del análisis legal.
+3. ⚠️ **Dependencia de hardware:** la ruta ACE es NVIDIA. Para consola o móvil,
+   esta receta no aplica tal cual.
+4. 🟢 **Lo que sí sigue aplicando:** el Art. 50(2) europeo **no** desaparece por
+   correr local — la obligación de *informar que se habla con una AI* es de
+   transparencia, no de datos. On-device apaga la obligación **de NA**, no la
+   **de la UE**. Decir lo contrario en una sala es un error caro.
+
+**Para quién se vende:** cliente con jugadores en EE.UU. + NPC conversacional en
+el roadmap. Es la mitigación **más barata** del catálogo, porque no es un control
+que haya que operar: es la ausencia del hecho que dispara el control.
+
+---
+
+## 🆕 Receta 30: **Triage de licencia cuando la enumeración devuelve CERO** — el árbol de decisión que faltaba
+
+**Por qué existe.** La Receta 17 enseñó a enumerar en vez de sondear. Este pass
+encontró que **la enumeración tiene un resultado ambiguo que la receta no
+cubría**: `total_count = 0`. Tres repos lo devolvieron, y los tres veredictos
+son distintos. Resolverlo mal, en cualquiera de las dos direcciones, es caro.
+
+**El árbol, con los tres casos medidos:**
+
+```
+gh api -X GET search/code -f q='repo:<slug> filename:LICENSE' --jq '.total_count'
+│
+├─ > 0 ──> leer TODOS los archivos por raw (Receta 17). Ojo: el de la raíz
+│          puede ser MÁS restrictivo que los vendorizados.
+│          → LumioGames/LGUI: 8 archivos. Raíz PolyForm Shield (condicional),
+│            adentro FairyGUI MIT ×3 + puerts BSD-3. LA SALIDA ESTABA ADENTRO.
+│
+└─ = 0 ──> ⚠️ NO escribir "sin licencia" todavía. Leer el README:
+           curl -s https://raw.githubusercontent.com/<slug>/HEAD/README.md \
+             | grep -n -i -A3 'license\|licence\|apache\|MIT'
+           │
+           ├─ el README DECLARA un grant ──> 🟢 el grant existe, alojado afuera.
+           │   → QwenLM/Qwen3 (27.758 ★): README §"License Agreement" →
+           │     Apache-2.0, archivos en Hugging Face.
+           │     ⚠️ Anotar DÓNDE vive y verificarlo ahí antes de producción.
+           │
+           └─ el README NO dice nada ──> 🔴 sin grant = todos los derechos
+               reservados. NO USAR.
+               → Yuki001/game-dev-skills (123 ★): README 200 OK, 5.774 B,
+                 cero menciones de licencia.
+               → TaloDev/hosting (36 ★): el producto es MIT, ESTE repo no.
+```
+
+> 📐 **La regla, para copiar a toda la familia de KBs:** *enumeración = 0* es
+> **ambiguo, no negativo**. Tiene tres desenlaces —grant alojado afuera / grant
+> inexistente / repo auxiliar que nadie licenció— y **sólo el README los
+> distingue**. Un falso negativo acá cuesta un fundacional de 27.758 ★; un falso
+> positivo otorga lo que nadie otorgó.
+
+**Control de la organización, y por qué es obligatorio.** El mismo pass midió
+que **la licencia no se hereda de la organización** (regla del cycle 11, ahora
+confirmada en un segundo caso): en `TaloDev`, **cuatro repos son MIT y el quinto
+no tiene grant** — y el quinto es justamente el *self-hosting starter pack*.
+
+```bash
+# enumerar la ORGANIZACIÓN, no sólo el repo que te pasaron
+gh api -X GET search/repositories -f q='user:<org>' -f per_page=30 \
+  --jq '.items[]|.full_name+" ★"+(.stargazers_count|tostring)+" "+(.license.spdx_id//"NONE")'
+# luego, para cada uno con NONE: el árbol de arriba
+```
+
+> 🔴 **El sesgo que esto corrige:** se enumera el repo **que te mandaron**, que
+> casi siempre es el producto. El gate suele estar en el **repo auxiliar** —
+> el runbook, el instalador, los fixtures — que nadie mira y nadie licenció.
+
+---
+
+## 🆕 Receta 31: **Stack indie 100% MIT con Talo** — y el repo que hay que dejar afuera
+
+**Para quién.** Indie / mid-core que necesita cuentas, saves en la nube,
+leaderboards, stats y analytics, quiere **self-hosting real** y no puede aceptar
+Apache-2.0 ni un tier cerrado. Es el escalón por debajo de Nakama
+(Apache-2.0, 13.763 ★), con menos superficie y **licencia más permisiva**.
+
+| Pieza | Repo | Licencia (bytes, enumerada) | ★ |
+|---|---|---|---|
+| Servidor | [TaloDev/backend](https://github.com/TaloDev/backend) | 🟢 **MIT** (1.074) — 1 archivo | 105 |
+| Cliente Godot | [TaloDev/godot](https://github.com/TaloDev/godot) | 🟢 **MIT** (1.074) — **4 archivos, 4 MIT**: `addons/talo` 1.074, `addons/gdUnit4` 1.069, `addons/GDQuest_GDScript_formatter` 1.072 | **251** |
+| Cliente Unity | [TaloDev/unity](https://github.com/TaloDev/unity) | 🟢 **MIT** (1.074) — 2 archivos | 43 |
+| Consola | [TaloDev/frontend](https://github.com/TaloDev/frontend) | 🟢 **MIT** (1.074) | 21 |
+| ⛔ **Despliegue** | [TaloDev/hosting](https://github.com/TaloDev/hosting) | 🔴 **SIN GRANT — enumeración = 0** | 36 |
+| Engine | Godot | 🟢 MIT | — |
+| Orquestación (si hace falta escalar) | [agones-dev/agones](https://github.com/agones-dev/agones) | 🟢 Apache-2.0, **gobernanza CNCF desde mar-2026** | 7.1k |
+
+**Cableado:**
+
+```
+Godot (MIT) ──addons/talo (MIT)──> TaloDev/backend (MIT, self-hosted)
+                                           │
+                        ┌──────────────────┼──────────────────┐
+                        v                  v                  v
+                 auth + players      leaderboards        event tracking
+                 cloud saves         stats/live config   → export CSV
+                                           │
+                                   TaloDev/frontend (MIT): consola
+```
+
+> 🔴 **La instrucción operativa que esta receta existe para dar:**
+> **NO copiar `TaloDev/hosting` al repo del cliente.** Es el *"self-hosting
+> starter pack"* — exactamente lo que un equipo clonaría primero — y **no tiene
+> ningún archivo de licencia** (cero por enumeración, no por sonda fallida).
+> Desplegar `TaloDev/backend`, que **sí** es MIT, con IaC propia (Compose o
+> Helm escritos por el equipo). El producto es MIT; **el runbook no está
+> otorgado.**
+
+**Corrección publicada respecto de lo que esta KB decía:** *"Talo: MIT completo,
+sin tier cerrado"* es cierto **del producto** y **falso de la organización**. Y
+el repo más estrellado de Talo **no es el backend: es el plugin de Godot**
+(251 ★ vs 105 ★) — la puerta de entrada real, que esta KB no listaba.
+
+**Cuándo NO usar Talo:** si hace falta matchmaking, realtime authoritative o
+chat social a escala, el escalón correcto sigue siendo **Nakama** (Apache-2.0).
+Talo cubre *metadata del jugador*, no *simulación multijugador*.
+
+---
+
+## 🆕 Receta 32: **Gate de "tipo de entregable"** — el eje de licencia que ningún gate anterior de esta KB detecta
+
+**Por qué ninguna receta previa lo ve.** Los gates de las Recetas 15 (por
+región) y 16 (packs de skills) preguntan *qué licencia tiene* y *a dónde va*.
+**PolyForm Shield pregunta algo que ningún gate mira: QUÉ TIPO DE PRODUCTO estás
+construyendo.** `LumioGames/LGUI` permite uso comercial dentro de *"tus propios
+juegos, aplicaciones, sitios y productos"* y prohíbe que el resultado sea
+*"un UI framework, UI toolkit, UI editor, UI asset pipeline **o game development
+tool**"*.
+
+> 🔴 **Por qué esto es específicamente peligroso para Globant:** el modelo de un
+> estudio de servicios es **convertir el trabajo de cuenta en activo
+> reutilizable**. Una licencia que permite lo primero y prohíbe lo segundo **se
+> rompe en el momento exacto en que el proyecto sale bien** — cuando alguien
+> propone empaquetar lo que funcionó y revenderlo. Y para entonces el código ya
+> está adentro.
+
+**Implementación — el campo nuevo es `deliverable_type`:**
+
+```bash
+# gate-deliverable.sh — corre en CI junto a los gates de las Recetas 15 y 16
+# El repo declara qué ES, no sólo a dónde va.
+#   DELIVERABLE_TYPE = client_game | internal_accelerator | product | tool
+
+CONDITIONAL_LICENSES="PolyForm|Shield|Business Source|BUSL|Commons Clause|Elastic License"
+
+hits=$(grep -rilE "$CONDITIONAL_LICENSES" --include='LICENSE*' --include='*.md' . || true)
+
+if [ -n "$hits" ]; then
+  case "$DELIVERABLE_TYPE" in
+    client_game)
+      echo "🟡 AVISO: licencia condicional presente. Permitida en un juego de cliente."
+      echo "$hits"
+      echo "   → registrar en el BOM del entregable: NO puede migrar a un acelerador."
+      ;;
+    internal_accelerator|product|tool)
+      echo "🔴 BLOQUEO: licencia condicional en un entregable de tipo '$DELIVERABLE_TYPE'."
+      echo "$hits"
+      echo "   → PolyForm Shield nombra 'game development tool' como producto competidor."
+      echo "   → Opción A: pedir licencia separada al titular."
+      echo "   → Opción B: sustituir por el PADRE permisivo si está vendorizado (ver abajo)."
+      exit 1
+      ;;
+  esac
+fi
+```
+
+**Opción B, que es la que casi siempre resuelve — buscar el padre adentro:**
+
+```bash
+# enumerar TODOS los archivos de licencia del repo condicional
+gh api -X GET search/code -f q='repo:<slug> filename:LICENSE' --jq '.items[].path'
+# LumioGames/LGUI → 8 archivos. La raíz es PolyForm Shield.
+# Adentro: FairyGUI MIT (1.086 / 1.092 / 1.099 B) y puerts BSD-3 (3.473 B).
+```
+
+| Si necesitás | Tomá | Licencia | Costo del cambio |
+|---|---|---|---|
+| UI de juego **dentro de un acelerador Globant** | [fairygui/FairyGUI-unity](https://github.com/fairygui/FairyGUI-unity) (2.978 ★) | 🟢 **MIT**, sin condiciones | ⚠️ ~9 meses sin push, y el **editor** ([fairygui/FairyGUI-Editor](https://github.com/fairygui/FairyGUI-Editor), 802 ★) **no tiene grant** |
+| UI de juego **en un juego de cliente** | [LumioGames/LGUI](https://github.com/LumioGames/LGUI) (148 ★) | 🟡 PolyForm Shield — **permitido acá** | Mantenido (push 2026-11-19), pero queda marcado en el BOM |
+
+> 📐 **Regla general: un grant condicional en la raíz no es un rechazo — es una
+> instrucción para enumerar.** El componente permisivo que de verdad se necesita
+> puede estar vendorizado adentro. El trade-off es casi siempre el mismo: **más
+> libre, menos mantenido.**
+
+---
 
 ## 🆕 Receta 27: **Memo de factibilidad del Art. 50(2) para contenido generado en runtime** — la salida que la Receta 7 no tenía
 

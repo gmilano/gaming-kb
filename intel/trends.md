@@ -6,9 +6,158 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22 cycle 10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22 cycles 11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 12 (2026-11-22)
+
+### 🔴 Corrección central de este pass: **el caso de uso nº1 de AI en gaming no es el NPC, y esta KB lo venía ordenando al revés**
+
+La encuesta de Unity 2026 parte la adopción por tarea: **código 62% · narrativa
+44% · comportamiento de NPC 40% · market research 37% · playtesting automatizado
+35%**. El NPC generativo está **22 puntos por debajo** del asistente de código.
+
+Esto no es un matiz de ranking. Reordena el riesgo de todo el portafolio:
+
+| Caso de uso | % devs | Art. 50(2) EU | Obligación de runtime NA | Rechazo del jugador |
+|---|---|---|---|---|
+| Asistencia de código | **62%** | ❌ no aplica | ❌ no aplica | ❌ invisible |
+| Narrativa / escritura | 44% | 🟡 si el output se embarca | ❌ | 🟡 |
+| **NPC** | 40% | 🔴 **sí** | 🔴 **sí** | 🔴 **alto** |
+| Market research | 37% | ❌ | ❌ | ❌ |
+| **Playtesting automatizado** | 35% | ❌ **no aplica** | ❌ **no aplica** | ❌ **invisible** |
+
+> 🟢 **La fila que hay que vender primero es la última, no la del medio.** El
+> playtesting automatizado es el único caso de uso **sin exposición regulatoria
+> ni de cara al jugador**, y ya lo usa un tercio de la industria. El NPC
+> generativo es el que arrastra las tres columnas rojas a la vez.
+
+Y hay una **segunda brecha** en los mismos datos: GDC 2026 (2.300+ respondentes)
+mide **36%** de uso de genAI, pero **30% en estudios vs 58% en editoras, soporte
+y marketing/PR**. 🔴 **La adopción es más alta fuera del estudio que dentro** —
+el comprador más probable no es el director técnico del estudio.
+
+---
+
+### 🆕 Tendencia 29: **el NPC se está yendo del datacenter a la GPU del jugador, y eso apaga obligaciones, no sólo costos**
+
+NVIDIA sumó **soporte de Qwen3-8B** (open-weight) como SLM **on-device** en ACE,
+además de su línea propia (Nemotron 3 Nano 4B; Nemotron 3.5 Bolt E4B sobre RTX
+Spark en cobertura de oct-2026). El primer título embarcado con NPC ACE —
+**Mecha BREAK** — corre un Nemotron-4 4B **en la máquina local**.
+
+> 🔴 **Por qué esto es regulatorio y no sólo técnico:** esta KB documentó en el
+> cycle 10 que la obligación que rompe el patrón *"el NPC llama a un LLM
+> hosteado"* es de **topología de datos**, no de transparencia. Un SLM on-device
+> **no tiene topología de datos**: la conversación del jugador no sale del
+> equipo. **La arquitectura apaga la obligación en vez de documentarla.**
+>
+> Es, por lejos, la mitigación más barata que esta KB puede ofrecer hoy a un
+> cliente con jugadores en EE.UU.: no es un control, es la ausencia del hecho
+> que dispara el control.
+
+⚠️ **Contrapeso honesto:** dependencia de hardware (la ruta ACE es NVIDIA), un
+SLM de 4–8B **no es un modelo frontera** y el jugador con GPU vieja queda fuera o
+cae a una ruta hosteada — con lo cual la obligación **vuelve para ese segmento**.
+Hay que diseñar las dos rutas, no una.
+
+---
+
+### 🆕 Tendencia 30: **la licencia dejó de vivir en el repositorio**
+
+Tres casos medidos este pass, y los tres rompen la sonda que esta KB perfeccionó
+durante once passes:
+
+| Caso | Lo que ve la sonda | Dónde está realmente el grant |
+|---|---|---|
+| `QwenLM/Qwen3` (27.758 ★) | badge `NONE`, 9×404, **enumeración = 0** | **`README.md` §*License Agreement*** → Apache-2.0, archivos en **Hugging Face** |
+| `TaloDev/hosting` (36 ★) | **enumeración = 0** | **en ningún lado** — el producto es MIT, el runbook no está otorgado |
+| `Yuki001/game-dev-skills` (123 ★) | **enumeración = 0**, README sin licencia | **en ningún lado** |
+
+> 📐 **La regla que sale de los tres juntos:** *enumeración = 0* es **ambiguo**,
+> y los tres resultados posibles son muy distintos entre sí — grant alojado
+> afuera / grant inexistente / repo auxiliar que nadie licenció. **Resolverlo
+> exige leer el README antes de escribir el veredicto, en los dos sentidos.**
+> Escribir "sin licencia" sin ese paso descartó por poco un fundacional de
+> 27.758 ★; escribir "MIT" por herencia de la organización habría otorgado un
+> runbook que nadie otorgó.
+
+---
+
+### 🆕 Tendencia 31: **aparece una familia de licencia que segmenta por TIPO DE ENTREGABLE, no por uso ni por región**
+
+`LumioGames/LGUI` llega con **PolyForm Shield 1.0.0 + Additional Permission**
+(8.363 B) — familia nueva para esta KB. Permite uso comercial dentro de *"tus
+propios juegos, aplicaciones, sitios y productos"* y prohíbe que el producto
+resultante sea *"un UI framework, UI toolkit, UI editor, UI asset pipeline **o
+game development tool**"*.
+
+> 🔴 **El eje es nuevo.** Esta KB ya tenía licencias que segmentan por **uso**
+> (no comercial), por **región** (los world models de Tencent excluyen UE/UK/
+> Corea), por **rama**, por **subdirectorio** y por **variante de modelo**.
+> Ésta segmenta por **qué tipo de cosa construís**: el **mismo repo** es verde
+> en el juego de un cliente y rojo dentro de un acelerador reutilizable de
+> Globant.
+>
+> ⚠️ **Es el eje más peligroso para una consultora**, porque el modelo de
+> negocio de un estudio de servicios es precisamente **convertir el trabajo de
+> cuenta en activo reutilizable**. Una licencia que permite lo primero y prohíbe
+> lo segundo **se rompe en el momento exacto en que el proyecto sale bien**.
+
+🟢 **Y la contratendencia que la acompaña:** la enumeración encontró adentro de
+LGUI al padre **FairyGUI, MIT** (2.978 ★). El envoltorio restrictivo vendoriza
+al original permisivo. **Cuando un grant condicional aparece, enumerar antes de
+rechazar o de aceptar: el componente que se necesita puede estar adentro con
+mejor licencia** — al precio de menos mantenimiento (FairyGUI-unity lleva ~9
+meses sin push y su **editor no tiene grant**).
+
+---
+
+### 🆕 Tendencia 32: **un AAA japonés negando AI generativa en público convierte el "backend-only" en una oferta vendible**
+
+**Capcom negó oficialmente** haber implementado AI generativa en el contenido de
+sus juegos, y el patrón japonés que describe el barrido es **AI sólo en el
+backend**. Combinado con el desglose de Unity (código 62% / NPC 40%), dos
+fuentes independientes apuntan al mismo lugar: **el valor está donde el jugador
+no mira**.
+
+> 🟢 En Japón el freno **no es legal** — la *AI Promotion Act* no tiene
+> penalidades — **es reputacional**. Por eso una garantía contractual de *"cero
+> AI de cara al jugador"*, con gate de CI que la sostenga, es un entregable con
+> comprador identificado, y no una limitación del alcance.
+
+---
+
+### 🔴 Corrección a esta KB: **el argumento LATAM necesita sus cuatro cifras, no dos**
+
+Esta KB vendía LATAM con el **48,8%** que compraría juegos hechos con AI. El
+estudio PGB Latam 2026 (**n = 7.202**) tiene dos cifras más que esta KB no
+usaba: **25,7%** lo pensaría antes de comprar, y 🆕 **35,8% teme caída de calidad
+y productos "sin alma"** (cero menciones en once passes).
+
+> 🔴 **El 48,8% y el 35,8% no son bandos opuestos: son la misma población
+> poniendo una condición.** La tendencia real de LATAM no es *"aceptación de
+> AI"*, es **"aceptación condicionada a que no se note"**. Eso mueve el
+> entregable de *contenido generativo visible* a **gate de calidad percibida**
+> — y vuelve a coincidir, por tercera vez en este pass, con pipeline y QA.
+
+---
+
+### ⛔ Gaps de canal y de dato declarados este pass (no silenciados)
+
+| Gap | Medición |
+|---|---|
+| `huggingface.co` | **No resuelve**: `curl` → 000, WebFetch → `ENOTFOUND`. Dos sondas. **Ninguna licencia de pesos fue verificada este pass.** |
+| `gh api repos/<owner>/<repo>` | **HTTP 403** en esta sesión (scope cubre `search/*` y `raw`). ★/`archived`/`pushed_at` se obtuvieron vía `search/repositories`, que **sí** funciona |
+| `curl -sI https://github.com/<slug>` | Devuelve `200 Connection Established` **del proxy**. Sigue sin servir como prueba de existencia — 4ª confirmación |
+| Adopción de AI por estudios **de EMEA** | ⛔ **Sin cifra.** La afirmación del cycle 11 (*"Europa integra más profundo que NA"*) sigue apoyada en **una sola fuente** |
+| Adopción / sentimiento de jugadores **de APAC** | ⛔ **Sin cifra** en este barrido |
+| Adopción de AI por estudios **de NA** | ⛔ **Sin cifra.** El *State of AI in Gaming 2026* de **KPMG** apareció **sólo como fragmento** y **no se cita** |
+| Adopción de AI por estudios **de LATAM** | ⛔ **Sin cifra.** Pista nombrada para el próximo pass: **Abragames**, gamescom latam |
+| Títulos embarcados con NPC **ACE** | 🟡 **Sólo Mecha BREAK corroborado.** PUBG/inZOI degradados a *"Krafton leveraging AI"*; NARAKA y MIR5 **sin corroborar y no publicados** |
+
+---
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 11 (2026-11-22)
 

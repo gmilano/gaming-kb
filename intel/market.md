@@ -7,12 +7,224 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22 cycle 10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22 cycles 11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🔴 Lo que cambió — pass cycle 12 (2026-11-22): **la cifra de adopción que esta KB nunca tuvo desglosada, y una contradicción entre dos búsquedas sobre ACE que se resuelve hacia abajo**
+
+### 🔵 1. La encuesta de Unity 2026 trae el **desglose por tarea** — esta KB tenía el total, no el reparto
+
+Esta KB citaba porcentajes de adopción agregados. La encuesta de Unity de 2026
+los parte por **para qué** se usa la AI, y el reparto cambia el discurso de venta:
+
+| Uso | % de desarrolladores |
+|---|---|
+| Asistencia de **código** | **62%** |
+| **Narrativa** y escritura | 44% |
+| **Comportamiento de NPC** | 40% |
+| *Market research* | 37% |
+| **Playtesting automatizado** | 35% |
+
+> 🔴 **Lo que esto obliga a corregir en la sala:** el uso nº1 **no es el NPC**.
+> Es el código — exactamente la capa donde viven los packs de skills y el
+> tooling MCP que esta KB lista desde el cycle 4. El NPC generativo está
+> **22 puntos por debajo** del asistente de código. Vender "AI en gaming"
+> empezando por el NPC es empezar por el **tercer** caso de uso, y además por el
+> único que arrastra el Art. 50(2), la obligación federal de runtime en NA y el
+> rechazo del jugador que esta KB ya mide.
+>
+> ✅ **La consecuencia comercial es directa:** el primer entregable vendible es
+> **pipeline y QA**, no el NPC. Y el playtesting automatizado (35%) es la única
+> de las cinco filas **sin exposición regulatoria de cara al jugador**.
+
+Corroboración independiente de la dirección, no del número: la encuesta *State
+of the Game Industry* de GDC 2026 (2.300+ respondentes) mide **36%** de uso de
+genAI, con una brecha por empleador de **30% en estudios vs 58% en editoras,
+soporte y marketing/PR** — es decir, la adopción es más alta **fuera** del
+estudio que dentro.
+
+---
+
+### 🟡 2. NVIDIA ACE: **dos búsquedas de este mismo pass se contradicen, y esta KB publica la versión conservadora**
+
+Esta KB cita ACE en 8 archivos. Nunca tuvo una lista de **títulos embarcados**.
+Al construirla, las dos pasadas dieron resultados distintos:
+
+| Afirmación | Pasada A (barrido de tendencias) | Pasada B (verificación dirigida) | Qué se publica |
+|---|---|---|---|
+| ACE *live* en **PUBG: BATTLEGROUNDS** e **inZOI** | ✅ afirmado | 🟡 degradado: NVIDIA describe a **Krafton** *"leveraging AI"* para compañeros interactivos en PUBG e historias personalizadas en inZOI — **no** confirma features de NPC ACE embarcadas | 🟡 **"Krafton usa AI en PUBG e inZOI"**, sin afirmar ACE embarcado |
+| ACE *live* en **NARAKA: BLADEPOINT** y **MIR5** | ✅ afirmado | ⛔ **cero resultados** que mencionen ninguno de los dos junto a ACE | ⛔ **No se publica.** Sin corroborar |
+| Primer juego embarcado con NPC ACE | — | ✅ **Mecha BREAK**, con un Nemotron-4 4B Instruct corriendo **on-device** | ✅ **Mecha BREAK** |
+
+> 📐 **Regla de método nº16: cuando dos pasadas del mismo pass se contradicen, se
+> publica la intersección y se nombra la diferencia.** Una lista de cuatro
+> títulos embarcados es un activo comercial potente — y es exactamente por eso
+> que no se puede escribir con una sola fuente. Esta KB ya se quemó con el
+> informe-faro de "AI in gaming" que resultó ser de casino.
+
+🆕 **Lo que sí es nuevo, verificado y accionable:** **ACE soporta Qwen3-8B**
+(SLM open-weight) para despliegue **on-device**, además de la línea propia
+Nemotron (Nemotron 3 Nano 4B; en cobertura de 2026-10-28, Nemotron 3.5 Bolt E4B
+sobre RTX Spark). Ver `repos/foundations.md`: el repo de Qwen3 **no tiene archivo
+de licencia** y declara Apache-2.0 en su README.
+
+---
+
+### Datos nuevos por región — este pass
+
+#### North America
+
+- 🆕 **Connecticut: el calendario de la PA 26-15 se resuelve como FASES, no como
+  desacuerdo entre fuentes.** `compose/patterns.md` marcaba *"1-oct-2026 **o**
+  1-ene-2027 — las fuentes discrepan"*. Un análisis de la *Harvard Journal of
+  Sports & Entertainment Law* (ago-2026) describe la ley como de **entrada en
+  vigor por etapas a partir del 1-oct-2026**. 🟢 **Las dos fechas pueden ser
+  correctas: son etapas distintas de la misma ley.** La discrepancia señalada
+  era de lectura, no de fuentes.
+- 🔴 **Y la pregunta abierta que importa más que la fecha:** el mismo análisis
+  deja explícito que **no está resuelto si un sistema de AI *dentro de un juego*
+  cae en el alcance** de los estatutos de *companion chatbot*, y advierte que
+  **no todas las leyes estatales de chatbot incluyen exclusión para
+  videojuegos.** Para un NPC conversacional en un título con jugadores en EE.UU.,
+  eso convierte el alcance en un **análisis estado por estado**, no en un
+  interruptor.
+- 🆕 **Privacidad biométrica como segundo frente, independiente de la AI:** el
+  análisis de comportamiento de jugador — *eye tracking*, entrada facial,
+  monitoreo anti-cheat — puede disparar obligaciones bajo leyes biométricas
+  estatales (**Texas, Illinois, Washington**). Es un vector que no pasa por
+  ninguna norma de AI y que esta KB sólo tenía mencionado al pasar.
+- 🔵 **Carril casino, que esta KB mantiene separado del videojuego:** la
+  **New York State Gaming Commission aprobó el 9-oct-2026** una propuesta para
+  restringir el uso de AI y sistemas automatizados por parte de licenciatarios
+  (prohibiría generar promociones personalizadas o apuestas sugeridas con AI);
+  al **10-nov-2026** el aviso formal que abre el período de comentarios **aún no
+  se había publicado** en el *NY State Register*. El mismo día, la
+  **Massachusetts Gaming Commission** pidió a **todos** los operadores de
+  apuestas deportivas del estado que informaran cómo usan AI y ML en marketing.
+  ⚠️ **Ninguna de las dos aplica a videojuegos.** Se registran porque siguen
+  alimentando el patrón que esta KB midió: *la actividad regulatoria de AI en
+  "gaming" en NA está concentrada en el carril casino*, y por eso los informes
+  que dominan las búsquedas no sirven para un cliente de videojuegos.
+- ⛔ **Gap medido, no silenciado:** **no se encontró ninguna cifra de adopción de
+  AI por estudios o jugadores específica de Norteamérica para 2026.** El informe
+  *State of AI in Gaming 2026* de **KPMG** existe y aparece en los resultados
+  **sólo como fragmento**: no se pudo leer y **no se cita**.
+
+#### EMEA
+
+- 🟢 **Cuarta y quinta corroboración del calendario del Art. 50, y una
+  reconciliación:** fuentes de este pass sitúan las **Guías finales del Art. 50
+  aprobadas el 20-jul-2026**, con las versiones lingüísticas *pendientes de
+  adopción formal*. El cycle 11 registró la **adopción formal el 5-nov-2026**.
+  🟢 **No hay conflicto: aprobación del contenido en julio, adopción formal de
+  las versiones lingüísticas en noviembre.** Las dos fechas describen pasos
+  distintos del mismo instrumento, y conviene decirlo así en la sala para no
+  parecer impreciso.
+- 🟢 Confirmado de nuevo, sexta vez: Art. 50 **aplica desde el 2-ago-2026**, con
+  período de gracia hasta el **2-dic-2026** para el marcado de salidas
+  generativas en sistemas **ya en el mercado**. La obligación de informar que se
+  interactúa con AI **no aplica cuando el uso es evidente**.
+- 🆕 **El vector *deepfake*, que esta KB tenía poco desarrollado:** el contenido
+  generado que pueda pasar por una **persona, lugar o evento real** cae bajo el
+  régimen de marcado, y **alcanza a estudios de fuera de la UE si el contenido se
+  distribuye allí**. La Comisión sugiere juicio **caso por caso** según realismo,
+  contexto y audiencia — no una regla general. Para un título con parecidos
+  faciales, estadios o ciudades reales, es un frente aparte del NPC.
+- 🆕 **Y el matiz de copyright que afecta al entregable, no al cumplimiento:**
+  donde el contenido es **enteramente generado por AI**, la protección por
+  derecho de autor puede ser limitada o inexistente. Un cliente que genera arte
+  o narrativa al 100% con AI **puede no poder defender ese activo**. Es un
+  argumento a favor del pipeline asistido (humano en el loop) y en contra del
+  *fully generative*, y no viene de ninguna norma de AI.
+- 🔵 **Las tiendas y plataformas exigen disclosure por contrato**, al margen de
+  la ley — para muchos clientes eso llega antes y pega más fuerte que el AI Act.
+- ⛔ **Gap medido:** **no se encontró ninguna cifra de adopción de AI por
+  estudios europeos** en este barrido. La afirmación del cycle 11 (*"Europa
+  integra más profundo que Norteamérica"*, vía el desglose regional de Vivrato)
+  **no fue corroborada ni refutada este pass**: queda apoyada en una sola fuente.
+
+#### APAC
+
+- 🔴 **Capcom negó oficialmente haber implementado AI generativa en el contenido
+  de sus juegos.** Es el primer **desmentido explícito de un AAA** que registra
+  esta KB, y no es un detalle: el barrido describe un patrón japonés de
+  **"AI sólo en el backend"** — herramientas internas, pipeline, QA — con el
+  contenido de cara al jugador deliberadamente fuera.
+  > 🟢 **Para la sala, es la mejor noticia del pass:** el desglose de Unity
+  > (código 62% / NPC 40%) y la postura japonesa dicen **lo mismo desde dos
+  > lados distintos**. En APAC-Japón, el entregable que se puede vender hoy es
+  > **pipeline y QA**; el NPC generativo tiene un incumbente negándolo en
+  > público.
+- 🆕 **Corea — las dos cifras que le faltaban al AI Basic Act de esta KB:** las
+  multas administrativas llegan a **KRW 30 millones** y hay un **período de
+  gracia de al menos un año** antes de que empiecen a aplicarse, desde la
+  vigencia del **22-ene-2026**. 🔵 Eso reencuadra Corea: la fecha ya pasó, **la
+  sanción todavía no muerde**, y la ventana para llegar en regla sigue abierta.
+- 🆕 **Corea, producto:** se describen funciones de **compañero AI** llegando al
+  **modo arcade de PUBG en el 1er semestre de 2026** — consistente con el
+  "Krafton leveraging AI" de la sección de ACE, y con el hecho de que **ninguna
+  de las dos fuentes lo llama una feature de ACE**.
+- 🆕 **China, escala del régimen:** más de **550 servicios de AI generativa
+  registrados ante el regulador** a mediados de 2026, bajo el apilado
+  PIPL + CSL + DSL + Medidas de Recomendación Algorítmica + Disposiciones de
+  Síntesis Profunda + Medidas de AI Generativa. 🔵 **El filing ante la CAC es un
+  requisito de entrada, no un trámite posterior**: para un cliente que publique
+  en China, es trabajo de preproducción.
+- 🔵 **Japón sigue siendo el extremo blando:** la *AI Promotion Act* **no tiene
+  penalidades directas**; se apoya en guías voluntarias y autorregulación
+  sectorial. Combinado con el desmentido de Capcom: en Japón **el freno no es
+  legal, es reputacional**.
+- ⛔ **Gap medido:** **no se encontró ninguna fuente sobre adopción o sentimiento
+  de JUGADORES en APAC** en este barrido. La cifra de ingresos de APAC que esta
+  KB usa desde el cycle 6 **no fue re-corroborada aquí**.
+
+#### LATAM
+
+- 🆕 **El estudio PGB Latam 2026 queda completo — esta KB usaba 2 de sus 4
+  cifras.** Muestra: **7.202 personas** de **Argentina, Chile, Colombia, México y
+  Perú**, presentado en **gamescom latam 2026 (São Paulo)**:
+
+  | Cifra | Valor | Estado en esta KB |
+  |---|---|---|
+  | Podría comprar juegos hechos mayoritariamente con AI | **48,8%** | ✅ ya listada (y ya corregida: **no incluye a Brasil**) |
+  | **Lo pensaría antes de comprar** | **25,7%** | 🟡 apenas mencionada |
+  | Teme **despidos y precarización** del trabajo creativo | **40,6%** | ✅ ya listada |
+  | 🆕 Teme **caída de calidad y productos "sin alma"** | **35,8%** | 🆕 **nueva: cero menciones en 11 passes** |
+
+  > 🔴 **Por qué el 35,8% cambia el guion de venta en LATAM:** esta KB vendía
+  > LATAM como *"el mercado de primer lanzamiento racional para AI de cara al
+  > jugador"* apoyada en el 48,8%. Con las cuatro cifras juntas, el retrato es
+  > otro: **la aceptación es alta y condicionada**. El 48,8% que compraría y el
+  > 35,8% que teme un producto "sin alma" **no son grupos opuestos: son la misma
+  > población pidiendo calidad**. La oferta correcta no es "LATAM acepta AI": es
+  > **"LATAM acepta AI si no se nota en la calidad"** — lo que empuja, otra vez,
+  > hacia pipeline/QA antes que hacia contenido generativo visible.
+
+- 🆕 **Volumen regulatorio regional, con instrumento:** el informe *Desafíos
+  regulatorios de la IA en Latam* (2ª edición, nov-2025) analiza **193
+  iniciativas legislativas en 13 jurisdicciones**, con Argentina, Brasil, Chile,
+  Colombia y México entre ellas, y describe la tensión entre **modelo AI-Act
+  europeo** y **moratoria regulatoria**, con Chile, Brasil y Uruguay avanzando
+  marcos. ⚠️ **El informe no contiene nada específico de videojuegos** — se cita
+  como **argumento de volumen**, igual que la KB de enterprise usa los 716
+  instrumentos para justificar OSCAL, y **no** como norma sectorial.
+- ⛔ **Dos ceros medidos, con el instrumento que los midió — no son silencios:**
+  1. **Adopción de AI por estudios latinoamericanos: no se encontró ninguna
+     cifra.** Ni número de estudios, ni normas sectoriales. La pista para el
+     próximo pass está nombrada: **Abragames** (Brasil) y la propia gamescom
+     latam.
+  2. **Repos de gaming-AI de origen LATAM: barrido en español**
+     (`videojuegos IA agente godot`, ordenado por ★) **devuelve un único repo,
+     con 0 ★** (`ricardoalmira89/lumeart`, Apache-2.0, push 2026-11-17).
+     🔴 **Cero efectivo, medido con el instrumento corto en español** — el mismo
+     método con el que la KB de enterprise midió su cero LATAM. **LATAM consume
+     esta tecnología; no la publica.**
+
+---
 
 ## 🔴 Lo que cambió — pass cycle 11 (2026-11-22): **las Guías del Art. 50 se adoptaron formalmente el 5-nov-2026, y traen una excepción escrita para el contenido generado EN TIEMPO REAL dentro de un juego**
 
@@ -660,6 +872,21 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 Oportunidad del pass cycle 12 (2026-11-22): **mapa de alcance estado-por-estado para NPC conversacionales + barrido biométrico**
+
+**El gancho, en una línea:** *"No está resuelto si tu NPC es un companion chatbot
+bajo la ley de tu estado — y no todas las leyes estatales excluyen videojuegos."*
+
+| Qué | Detalle |
+|---|---|
+| **Disparador** | Connecticut PA 26-15 entra **por etapas desde el 1-oct-2026**; el análisis de la *Harvard JSEL* (ago-2026) deja **explícitamente abierto** si un sistema de AI dentro de un juego cae en alcance, y advierte que **no todas** las leyes estatales de chatbot traen exclusión para videojuegos |
+| **Entregable 1** | **Matriz de alcance por estado** para el título: ¿el NPC califica como *companion*? ¿hay exclusión de videojuego en el texto? ¿qué etapa de la ley aplica a la fecha de lanzamiento? |
+| **Entregable 2** | 🆕 **Barrido biométrico, que no pasa por ninguna norma de AI:** inventario de *eye tracking*, entrada facial y telemetría anti-cheat contra las leyes de **Texas, Illinois y Washington**. Vector independiente y casi siempre ignorado en el *kickoff* |
+| **Entregable 3** | 🆕 **Opción de arquitectura que apaga el problema en vez de documentarlo:** mover el NPC a **SLM on-device** (ACE + Qwen3-8B / Nemotron). Si la conversación no sale de la máquina del jugador, la topología de datos que dispara la obligación **deja de existir** — ver `compose/patterns.md`, Receta 29 |
+| **Por qué ahora** | La fecha de la etapa 1 **ya pasó** y el alcance sigue sin estar resuelto: el cliente está expuesto *hoy* y no tiene cómo saberlo |
+| **Lo que NO se vende** | Nada del carril casino (NYSGC 9-oct-2026, Massachusetts 9-oct-2026). **No aplica a videojuegos** y confundirlos quema la credibilidad en la primera reunión |
+
+
 #### 🆕 Cycle 11 (2026-11-22) — Norteamérica mide **menos profundidad de integración que Europa**, y Ubisoft abre su tecnología de NPC a terceros
 
 | Hallazgo | Dato | Qué hacer con él |
@@ -946,6 +1173,22 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 Oportunidad del pass cycle 12 (2026-11-22): **auditoría de parecido real (*deepfake*) y de defendibilidad del activo generado**
+
+**El gancho:** *"El Art. 50 que estás resolviendo cubre tu NPC. No cubre el
+estadio, la ciudad ni la cara que tu pipeline generó — y eso alcanza a tu estudio
+aunque no esté en la UE."*
+
+| Qué | Detalle |
+|---|---|
+| **Disparador 1** | El régimen de marcado alcanza contenido generado que pueda pasar por **persona, lugar o evento real**, con **alcance extraterritorial** si se distribuye en la UE. La Comisión pide juicio **caso por caso** (realismo, contexto, audiencia): no hay regla general que un cliente pueda aplicar solo |
+| **Disparador 2** | 🆕 **Donde el contenido es enteramente generado por AI, la protección de copyright puede ser limitada o inexistente.** No es cumplimiento: es **el activo del cliente**. Un estudio que generó su arte al 100% **puede no poder defenderlo** |
+| **Entregable** | Inventario de assets con parecido real + clasificación por riesgo + **dictamen de defendibilidad** por activo, con la recomendación de arquitectura que sale de ahí: **humano en el loop documentado** convierte un activo indefendible en uno defendible |
+| **Por qué vende** | Las dos piezas se venden al mismo comprador (*legal* + *studio head*) y la segunda **no es un costo de cumplimiento: es protección de propiedad intelectual**. Es el único argumento EMEA de este pass que no es defensivo |
+| **Reconciliación de fechas, para la sala** | Guías del Art. 50 **aprobadas el 20-jul-2026**, **adoptadas formalmente** (versiones lingüísticas) el **5-nov-2026**. 🟢 No es contradicción: son dos pasos del mismo instrumento. Decirlo así evita parecer impreciso |
+| **Y el canal que llega antes que la ley** | Tiendas y plataformas ya exigen disclosure **por contrato**. Para muchos clientes es la obligación que muerde primero |
+
 
 #### 🆕 Cycle 11 (2026-11-22) — las Guías del Art. 50 **se adoptaron formalmente** y abren una excepción para el contenido en tiempo real; Malta propone una Carta de AI (carril casino)
 
@@ -1314,6 +1557,22 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 Oportunidad del pass cycle 12 (2026-11-22): **"AI sólo en el backend" como oferta explícita — con un AAA japonés respaldándola en público**
+
+**El gancho, y es el más fuerte del pass:** *"Capcom negó públicamente usar AI
+generativa en el contenido de sus juegos. Nosotros te entregamos exactamente eso:
+toda la productividad, cero AI de cara al jugador."*
+
+| Qué | Detalle |
+|---|---|
+| **Disparador** | 🔴 **Capcom negó oficialmente** haber implementado AI generativa en el contenido de sus juegos, y el barrido describe un patrón japonés de **AI sólo en el backend** (herramientas internas, pipeline, QA) |
+| **Por qué esto es una oferta y no una renuncia** | Converge con el desglose de Unity desde el otro lado: **código 62% vs NPC 40%**. El caso de uso nº1 de la industria **no toca al jugador**. En Japón eso además **elimina el riesgo reputacional**, que es el freno real (la *AI Promotion Act* **no tiene penalidades**) |
+| **Entregable** | Pipeline + QA automatizado + tooling de engine, con una **garantía contractual de "cero AI de cara al jugador"** y la evidencia técnica para sostenerla (gate de CI que falla si una ruta generativa llega a runtime) |
+| **Corea — reencuadre con cifras nuevas** | AI Basic Act vigente desde el **22-ene-2026**, multas hasta **KRW 30 M**, **período de gracia ≥ 1 año** antes de sancionar. 🟢 **La fecha pasó pero la sanción todavía no muerde: la ventana para llegar en regla sigue abierta**, y ese es el argumento de urgencia honesto |
+| **China — trabajo de preproducción, no posterior** | **+550 servicios de AI generativa registrados** ante el regulador a mediados de 2026. El **filing ante la CAC es requisito de entrada**: si el cliente publica en China, entra en el cronograma desde el día uno |
+| **Gap declarado** | **No se encontró ninguna fuente de adopción o sentimiento de JUGADORES en APAC** este pass |
+
+
 #### 🆕 Cycle 11 (2026-11-22) — China acelera aprobaciones y NetEase embarca narrativa generativa; **cero actividad regulatoria de AI en el carril casino de APAC**
 
 | Hallazgo | Dato | Qué hacer con él |
@@ -1648,6 +1907,23 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 Oportunidad del pass cycle 12 (2026-11-22): **"AI que no se note" — las cuatro cifras del PGB juntas cambian la oferta**
+
+**El gancho, corregido respecto de lo que esta KB venía diciendo:** *"El 48,8%
+de los jugadores de la región compraría un juego hecho con AI. El 35,8% teme
+que salga un producto sin alma. No son dos públicos: es el mismo, y te está
+diciendo el precio de entrada."*
+
+| Qué | Detalle |
+|---|---|
+| **Base** | PGB Latam 2026, **n = 7.202**, Argentina/Chile/Colombia/México/Perú, presentado en gamescom latam 2026 (São Paulo). ⚠️ **Brasil NO está en el panel** — corrección del cycle 9, que se mantiene |
+| **Las cuatro cifras, dichas enteras** | **48,8%** compraría · **25,7%** lo pensaría antes · **40,6%** teme despidos y precarización · 🆕 **35,8%** teme caída de calidad y productos *"sin alma"* |
+| 🔴 **El reencuadre** | Esta KB vendía LATAM como *"mercado racional de primer lanzamiento para AI de cara al jugador"*. Con las cuatro cifras: **la aceptación es alta y CONDICIONADA**. La oferta correcta no es *"LATAM acepta AI"*, es **"LATAM acepta AI si no se nota en la calidad"** |
+| **Entregable que sale de ahí** | **Gate de calidad percibida** en el pipeline generativo: revisión humana obligatoria sobre todo contenido de cara al jugador, con métrica y evidencia. Se vende como **gestión de riesgo de marca**, no como cumplimiento — en LATAM no hay obligación que citar |
+| **Argumento de volumen regulatorio** | **193 iniciativas legislativas en 13 jurisdicciones** (*Desafíos regulatorios de la IA en Latam*, 2ª ed., nov-2025). ⚠️ **Nada específico de videojuegos**: se usa como volumen, no como norma sectorial |
+| **Dos ceros medidos** | ⛔ **Sin cifra de adopción por estudios latinoamericanos** (pista para el próximo pass: Abragames, gamescom latam). ⛔ **Un solo repo de gaming-AI de origen LATAM, con 0 ★** (barrido en español ordenado por estrellas). **LATAM consume esta tecnología; no la publica** |
+
 
 #### 🆕 Cycle 11 (2026-11-22) — LATAM: **no existe una cifra de adopción de AI en videojuegos** para la región en las fuentes de 2026. Es un hueco medido, no una omisión
 

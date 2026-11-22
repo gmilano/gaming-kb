@@ -8,13 +8,109 @@ updated: 2026-11-22
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22 cycle 10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22 cycles 11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
 > (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
 > de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
+
+## 🆕 Movimiento de plataforma (2026-11-22, cycle 12): **Talo no era un repo, era una organización de cinco — y el que faltaba es el que no tiene licencia**
+
+Esta página recomienda Talo desde varios passes con la frase *"MIT completo, sin
+tier cerrado"*, listando **un** repo. Enumerada la organización:
+
+| Repo | ★ | Licencia (bytes) | Archivos de licencia (enumerados) | Push | Rol |
+|---|---|---|---|---|---|
+| [TaloDev/godot](https://github.com/TaloDev/godot) | **251** | 🟢 **MIT** (1.074) | **4** (todos MIT) | 2026-11-16 | 🆕 **Cliente Godot. 2,4× las ★ del backend: es la puerta de entrada real del producto** |
+| [TaloDev/backend](https://github.com/TaloDev/backend) | 105 | 🟢 **MIT** (1.074) | 1 | 2026-11-21 | Servidor self-hosteable (el único que esta página listaba) |
+| [TaloDev/unity](https://github.com/TaloDev/unity) | 43 | 🟢 **MIT** (1.074) | 2 | 2026-11-16 | 🆕 Cliente Unity |
+| [TaloDev/frontend](https://github.com/TaloDev/frontend) | 21 | 🟢 **MIT** (1.074) | 1 | 2026-11-17 | 🆕 Consola de gestión |
+| ⛔ [TaloDev/hosting](https://github.com/TaloDev/hosting) | 36 | 🔴 **SIN GRANT** | **0** | 2026-10-14 | 🆕 *"Self-hosting starter pack"* — **el camino de despliegue no está otorgado** |
+
+> 🔴 **La corrección, dicha sin rodeos:** *"MIT completo, sin tier cerrado"* es
+> cierto **del producto** y **falso de la organización**. El repo sin licencia
+> es precisamente el *starter pack de self-hosting* — es decir, **la razón por
+> la que un cliente elige Talo en lugar de un backend gestionado**, y lo primero
+> que un equipo clonaría.
+>
+> ✅ **Mitigación, y es simple:** desplegar `TaloDev/backend` (MIT, cubre el
+> servidor) con IaC propia. **No copiar `hosting/`** al repo del cliente.
+> Ver `compose/patterns.md`, Receta 31.
+
+**Comparación de la capa, re-medida este pass:**
+
+| Plataforma | Repo | Licencia | ★ | Push | Cuándo elegirla |
+|---|---|---|---|---|---|
+| **Nakama** | [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | 🟢 **Apache-2.0** | **13.763** | 2026-11-18 | Matchmaking, realtime authoritative, chat social a escala. 1.541 forks |
+| **Talo** | [TaloDev/backend](https://github.com/TaloDev/backend) + clientes | 🟢 **MIT** | 105 (+251 cliente Godot) | 2026-11-21 | Metadata del jugador: auth, saves, leaderboards, stats, analytics. **Licencia más permisiva, superficie menor** |
+| ⛔ **Anthill** | [anthill-platform/anthill](https://github.com/anthill-platform/anthill) | MIT | **4** | **2018-10-05** | 🔴 **Descartada.** Ver abajo |
+
+---
+
+### ⛔ Plataforma evaluada y **descartada** este pass: Anthill — *"actively maintained"* según un blog, **8 años sin un commit** según la medición
+
+Una guía de backends de juego de 2026 presenta `anthill-platform/anthill` como
+una alternativa MIT *"actively maintained"* a Nakama. Medido:
+
+| Señal | Valor |
+|---|---|
+| Licencia | 🟢 MIT (real, 1 archivo enumerado) |
+| ★ | **4** |
+| Forks | 2 |
+| Issues abiertos | 0 |
+| `created_at` | 2016-08-12 |
+| **`pushed_at`** | 🔴 **2018-10-05** |
+
+> 🔴 **Octavo caso de *recomendación-por-blog vs medición* en esta KB, y el
+> patrón vuelve a ser el mismo: la licencia estaba bien y la VITALIDAD era
+> falsa.** Un texto que dice *"actively maintained"* es una afirmación sobre el
+> presente escrita en un pasado indeterminado. `pushed_at` no es una opinión.
+>
+> **La sonda que lo caza cuesta una llamada:**
+> `gh api -X GET search/repositories -f q='repo:<slug>' --jq '.items[].pushed_at'`
+
+---
+
+### 🆕 Framework de UI de juego: la plataforma cuya licencia depende de **qué estás construyendo**
+
+Capa que esta página no tenía: **UI de juego manejable por agentes**.
+
+| Plataforma | Repo | Licencia | ★ | Veredicto |
+|---|---|---|---|---|
+| **LGUI** | [LumioGames/LGUI](https://github.com/LumioGames/LGUI) | 🟡 **PolyForm Shield 1.0.0 + Additional Permission** (8.363 B; **8 archivos de licencia**) | 148 | 🟡 **Condicional: verde en un juego de cliente, ROJO dentro de un acelerador reutilizable de Globant** |
+| **FairyGUI (el padre, vendorizado adentro)** | [fairygui/FairyGUI-unity](https://github.com/fairygui/FairyGUI-unity) | 🟢 **MIT** | **2.978** | 🟢 **Sin condiciones.** ⚠️ push 2026-02-03 (~9 meses) |
+| — su editor | [fairygui/FairyGUI-Editor](https://github.com/fairygui/FairyGUI-Editor) | 🔴 **`NONE`** | 802 | 🔴 **La herramienta que hace usable al framework no tiene grant.** Push 2024-03-11 |
+
+**La cláusula, citada:** *"…as long as the product itself is not a UI framework,
+UI toolkit, UI editor **or game development tool**."*
+
+> 🔴 **Eje nuevo para esta página: la licencia segmenta por TIPO DE ENTREGABLE.**
+> Esta KB ya tenía licencias que segmentan por uso, por región, por rama, por
+> subdirectorio y por variante de modelo. Ésta segmenta por **qué tipo de cosa
+> construís** — y es el eje que peor le sienta a una consultora, porque el
+> entregable de cuenta (permitido) y el acelerador reutilizable (prohibido) son
+> **el mismo código en dos momentos del ciclo de vida**. Ver `compose/patterns.md`,
+> Receta 32.
+
+---
+
+### 🆕 La capa de modelo: lo que corre **dentro** del juego, no detrás
+
+| Pieza | Repo / producto | Licencia | Nota |
+|---|---|---|---|
+| **Qwen3** (SLM on-device) | [QwenLM/Qwen3](https://github.com/QwenLM/Qwen3) | 🟡 badge `NONE`, **enumeración = 0** → 🟢 Apache-2.0 **declarado en el README**, archivos en Hugging Face | **27.758 ★.** NVIDIA publicó soporte de **Qwen3-8B en ACE** para despliegue on-device. ⛔ `huggingface.co` **no resuelve en esta sesión**: el texto de los pesos **no fue verificado** |
+| **NVIDIA ACE** | SDK propietario + componentes abiertos | mixta — grants partidos por componente | 🟡 **Títulos embarcados: sólo *Mecha BREAK* corroborado** este pass (Nemotron-4 4B on-device). PUBG e inZOI se degradan a *"Krafton usa AI"*; NARAKA y MIR5 **sin corroborar** |
+
+> 🟢 **Por qué entra en una página de *verticales*:** un SLM on-device no es una
+> optimización de costo. Es la **única configuración** del catálogo en la que la
+> conversación del jugador **no sale de su equipo** — y por lo tanto la
+> obligación estadounidense de topología de datos que esta KB documenta **no
+> tiene hecho que regular**. ⚠️ El Art. 50(2) europeo **sí sigue aplicando**: es
+> transparencia, no datos.
+
+---
 
 ## 🆕 Plataforma vertical nueva (2026-11-22, cycle 11): **GDevelop** — 29.166 ★, badge opaco, grant MIT en las cuatro carpetas
 

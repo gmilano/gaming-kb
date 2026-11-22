@@ -12,6 +12,48 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 12
+
+**Tema del pass: la licencia dejó de vivir en el repositorio.** Tres repos
+devolvieron **`enumeración = 0` archivos de licencia** y los tres veredictos son
+distintos: uno tiene el grant **declarado en el README y alojado en Hugging
+Face** (`QwenLM/Qwen3`, 27.758 ★), otro **no tiene grant en ningún lado**
+(`Yuki001/game-dev-skills`) y el tercero es un **repo auxiliar que nadie
+licenció dentro de un producto MIT** (`TaloDev/hosting`). *Cero* es ambiguo,
+no negativo.
+
+| Agente / pack | Repo | Licencia (byte a byte + enumeración) | Qué es | ★ |
+|---|---|---|---|---|
+| **Talo — plugin Godot** | [TaloDev/godot](https://github.com/TaloDev/godot) | 🟢 **MIT** (1.074) — **4 archivos, 4 MIT** | Cliente Godot de Talo: leaderboards, stats, auth, cloud saves. 🔴 **2,4× las ★ del backend que esta KB sí listaba: la puerta de entrada real era el cliente** | **251** |
+| **GodotPrompter** | [jame581/GodotPrompter](https://github.com/jame581/GodotPrompter) | 🟢 **MIT** (1.083) — 1 archivo | Gestión y ejecución de prompts **dentro del editor de Godot**: el prompt vive en el proyecto, versionado. Cubre el hueco entre MCP-de-engine y pack-de-skills. 63 forks | **983** |
+| **blender-game-skills** | [majidmanzarpour/blender-game-skills](https://github.com/majidmanzarpour/blender-game-skills) | 🟢 **MIT** (1.073) — 1 archivo | Skills de agente para el **pipeline de assets en Blender** orientado a juego. Par del `threejs-game-skills` del mismo autor. ⚠️ push 2026-09-24 | 195 |
+| **LGUI** | [LumioGames/LGUI](https://github.com/LumioGames/LGUI) | 🟡 **PolyForm Shield 1.0.0 + Additional Permission** (8.363) — **8 archivos**, 6 vendorizados MIT/BSD | UI de juego manejable por agentes. 🟡 **Verde en un juego de cliente, ROJO en un acelerador reutilizable**: la licencia nombra *"game development tool"* como producto competidor | 148 |
+| **Qwen3** *(capa de modelo, nueva en esta KB)* | [QwenLM/Qwen3](https://github.com/QwenLM/Qwen3) | 🟡 badge `NONE` · 9×404 · **enumeración = 0** → 🟢 **Apache-2.0 declarado en `README.md` §*License Agreement*** | El SLM que **NVIDIA ACE soporta on-device** para NPCs de PC. Corre en la GPU del jugador: **ninguna conversación sale del equipo**. 2.113 forks | **27.758** |
+
+### ⛔ Rechazos medidos de este pass
+
+| Candidato | ★ | Medición | Motivo |
+|---|---|---|---|
+| [Yuki001/game-dev-skills](https://github.com/Yuki001/game-dev-skills) | 123 | badge `NONE`; `raw` 404; **enumeración = 0**; README 200 (5.774 B) **sin mención de licencia** | 🔴 **Sin grant en los tres canales.** Aquí la regla "leer el README" se aplicó y **no salvó al repo** |
+| [anthill-platform/anthill](https://github.com/anthill-platform/anthill) | **4** | MIT real, `pushed_at` = **2018-10-05**, 2 forks, 0 issues | 🔴 Un blog de 2026 lo llama *"actively maintained"*. **8 años sin un commit.** Licencia bien, vitalidad falsa |
+| [Cynthia-wlan9509/offline-game-revival](https://github.com/Cynthia-wlan9509/offline-game-revival) | 112 | 🟢 MIT (1.073), enumeración = 1, push 2026-11-16 | 🟡 Licencia limpia, **caso de uso no recomendable**: revivir juegos dados de baja toca derechos sobre el juego ajeno, no sobre el repo |
+
+### 🟢 Movimientos de los que esta KB ya listaba
+
+| Repo | ★ cycle 11 | ★ ahora | Nota |
+|---|---|---|---|
+| [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) | 40.377 (2026-11-20) | **40.527** | 5.309 forks. Sigue siendo el líder de la categoría de orquestación |
+| [gamedev-skills/awesome-gamedev-agent-skills](https://github.com/gamedev-skills/awesome-gamedev-agent-skills) | — | **10.042** | Apache-2.0, 1.027 forks |
+| [fennaraOfficial/fennara-godot-ai](https://github.com/fennaraOfficial/fennara-godot-ai) | — | 320 | MIT, push **2026-11-21** — de los más vivos del clúster Godot |
+| [SummerEngine/summer](https://github.com/SummerEngine/summer) | — | 111 | MIT, push 2026-11-20 |
+
+⚠️ **Deltas: sólo el de `Claude-Code-Game-Studios` tiene lectura previa fechada
+(2026-11-20).** Los demás se listan como foto de hoy, sin delta, porque esta KB
+no tiene su valor anterior medido. **Un número sin su medición previa no es un
+crecimiento.**
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 11
 
 **Tema del pass: la licencia no se hereda de la organización.** De los repos de
