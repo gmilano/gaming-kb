@@ -7,12 +7,54 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22 cycles 13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22 cycles 14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🔴 Lo que cambió — pass cycle 15 (2026-11-22): **la primera obligación de este mercado que YA se está litigando — y no es de IA**
+
+Los catorce passes anteriores de esta página siguieron la regulación **de la
+IA**: quién obliga a etiquetar contenido generado, quién obliga a verificar la
+edad, quién prohíbe qué práctica. Este pass mide un eje **anterior, vigente y
+ya accionado en tribunales**: la **accesibilidad del producto**.
+
+Importa por tres motivos que se refuerzan:
+
+1. **Ya está en vigor en dos regiones.** El **CVAA** obliga en EE. UU. desde el
+   **1-ene-2019** para el chat de los juegos; el **EAA** europeo es aplicable
+   desde el **28-jun-2025**. No hay cuenta regresiva que vender: hay un
+   incumplimiento que auditar.
+2. **Ya se litigó.** Las **primeras demandas bajo el EAA se presentaron en
+   Francia en nov-2025**, y Países Bajos y otros Estados miembro planificaron
+   actividad de fiscalización para 2026. Es la primera obligación de esta KB con
+   jurisprudencia en curso, no con fecha futura.
+3. **No se puede comprar la solución.** Como mide `agents/top.md` en este mismo
+   pass, la capa operativa de cara al jugador —accesibilidad, anti-cheat,
+   soporte, moderación de voz— **no tiene oferta open source viva**. La función
+   de accesibilidad se mudó **dentro del motor** (Godot 4.5 vía AccessKit) y los
+   plugins que recomienda cualquier buscador llevan entre 3 y 5 años sin un commit.
+
+> **El cruce que hace vendible esto:** el CVAA pide que el **chat de voz tenga
+> equivalente en texto** y viceversa. La moderación de voz —que esta KB midió
+> este pass como oferta **cero**— necesita exactamente lo mismo: transcribir el
+> audio. **Un solo componente satisface una obligación legal y una necesidad de
+> *trust & safety*.** Ése es el argumento, y no es de compliance: es de coste.
+
+### 🟡 Corrección de registro: la adopción de IA en desarrollo tiene DOS cifras en circulación y no coinciden
+
+| Cifra | Fuente citada | Cómo tratarla |
+|---|---|---|
+| **~90%** de los desarrolladores usa IA en algún punto del pipeline | Google Cloud, vía GamesBeat | Secundaria, redondeada |
+| **97%** de los desarrolladores usa IA para escenarios, *playtesting* y **localización** | *Google Cloud Games Report 2025*, vía Globant | Secundaria, y **la cita es de un competidor directo en el mismo mercado** |
+
+Ambas remiten al mismo origen (Google Cloud) con números distintos y años
+distintos. ⇒ **No citar "97%" en una propuesta.** Si hace falta una cifra de
+adopción, usar *"en torno al 90%, según Google Cloud vía fuentes secundarias"* y
+poner el peso del argumento en el **desglose por tarea** que ya registra el
+cycle 12, no en el total.
 
 ## 🔴 Lo que cambió — pass cycle 14 (2026-11-22): **la primera restricción de este mercado que se decide por JURISDICCIÓN DEL LICENCIANTE, no del cliente**
 
@@ -1220,6 +1262,37 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 Oportunidad del pass cycle 15 (2026-11-22): **auditoría CVAA del chat — la obligación que lleva siete años en vigor y que ningún pass de esta KB había registrado**
+
+**El gancho, en una línea:** *"Tu juego tiene chat de voz. Desde 2019 la FCC
+exige que ese canal tenga equivalente en texto. Y el componente que lo resuelve
+es el mismo que necesitás para moderar la voz."*
+
+| Qué | Detalle |
+|---|---|
+| **Disparador** | El **CVAA** (*Twenty-First Century Communications and Video Accessibility Act*), que fiscaliza la **FCC**, extiende los requisitos de accesibilidad a consolas, juegos y servicios de comunicación avanzada (**ACS**). Según guías de accesibilidad del sector, aplica a títulos publicados **desde el 1-ene-2019** y a títulos anteriores que reciban ***substantial upgrades*** ⇒ **una remasterización o un port reactiva la obligación** |
+| **La regla concreta** | Resumen del IGDA: el **chat de texto** debe ofrecer entrada y salida **de voz**; el **chat de voz** debe ofrecer entrada y salida **de texto**. Es bidireccional, y es exactamente la pieza que un *live service* da por resuelta |
+| **Entregable 1** | **Inventario ACS**: qué canales de comunicación expone el juego (voz, texto, *party chat*, emotes, chat de clan), cuáles tienen equivalente en la otra modalidad y cuáles no. Es un artefacto de dos semanas y no existe en ningún estudio |
+| **Entregable 2** | **Capa STT/TTS bidireccional** construida sobre lo que esta KB ya tiene verificado como permisivo en la capa de voz (cycle 13) + `AccessKit`/`prism` para la salida a lector de pantalla. **No hay producto que comprar**: la única librería de abstracción viva es `ethindp/prism` (**MPL-2.0**) y la archivada es `m1maker/SRAL` |
+| **Entregable 3** | **Doble uso declarado**: la misma transcripción alimenta la moderación de voz. La moderación de **texto** sí tiene oferta permisiva real (`unitaryai/detoxify`, `guardrails-ai`, ambos ya en esta KB) ⇒ **transcribir convierte un problema sin oferta en uno que ya está resuelto** |
+| **Cifras de contexto** | **33%** de los desarrolladores declara estar construyendo funciones de accesibilidad (GDC 2026) y **74%** de los adultos estadounidenses considera que los juegos ofrecen experiencias accesibles (ESA 2026). *Ambas son secundarias, de un resumen estadístico de 2026, sin verificar contra el informe original* |
+| **Lo que NO se promete** | Que esto cubra el EAA europeo. **Son regímenes distintos** y el europeo está en disputa de alcance (ver EMEA) |
+
+> ⚠️ **Antes del contrato:** la fecha del 1-ene-2019 y la regla de *substantial
+> upgrades* provienen de guías de proveedores de accesibilidad, **no del texto de
+> la FCC**. Verificar contra el `47 CFR` con el abogado del cliente. El gancho es
+> sólido; la cláusula contractual necesita fuente primaria.
+
+#### 🆕 Hallazgo regulatorio nº2 del cycle 15 (NA): **doce estados ya legislaron sobre *AI companions*, y nadie sabe si un NPC generativo entra**
+
+| Qué | Detalle |
+|---|---|
+| **El dato** | Según un artículo del *Harvard Journal of Sports and Entertainment Law* (ago-2026), a **julio de 2026 doce estados** habían promulgado legislación dirigida específicamente a **chatbots de IA, *AI companions* y sistemas conversacionales** |
+| **Por qué es un problema para gaming** | Ninguna de esas leyes se escribió pensando en videojuegos, pero **un NPC con LLM es literalmente un sistema conversacional**. El propio artículo deja la pregunta abierta |
+| **El matiz que define el riesgo** | **Connecticut excluye** expresamente los chatbots de juego **limitados a temas del juego**. ⇒ el carve-out existe pero es **estrecho**: un NPC que se mantiene en la ficción está fuera; uno que conversa de cualquier cosa —que es el argumento de venta de los NPCs generativos— **cae adentro** |
+| **Entregable** | **Clasificación de NPCs por amplitud conversacional**, no por tecnología: por cada NPC, si su dominio está acotado por diseño (y demostrable con los *guardrails* en el código) o si es abierto. Es el mismo artefacto del cycle 12 (alcance estado por estado) con un eje nuevo, y es **barato ahora y carísimo después del lanzamiento** |
+| **Adyacente, no es gaming** | En el carril **gambling**: Alberta y Ontario introducen requisitos para **detectar y prevenir bots** en juegos *peer-to-peer*, y Carolina del Norte obliga a **documentar y divulgar** el uso de IA. Se cita como señal de dirección regulatoria. **No se promueve: es apuestas** |
+
 #### 🆕 Oportunidad del pass cycle 14 (2026-11-22): **auditoría de clausura de licencias del pipeline de assets — y la negociación que sí tiene contraparte**
 
 **El gancho, en una línea:** *"Tu pipeline de generación de assets dice MIT en
@@ -1536,6 +1609,35 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 Oportunidad del pass cycle 15 (2026-11-22): **el EAA ya se está litigando — y el alcance para videojuegos está EN DISPUTA, que es precisamente el entregable**
+
+**El gancho, en una línea:** *"La Ley Europea de Accesibilidad es aplicable desde
+junio de 2025, las primeras demandas se presentaron en Francia en noviembre de
+2025, y tus abogados y los nuestros no se ponen de acuerdo sobre si tu juego
+está cubierto. Eso se resuelve con un dictamen, no con una suposición."*
+
+| Qué | Detalle |
+|---|---|
+| **Estado real** | El **EAA es aplicable en toda la UE desde el 28-jun-2025**. Los Estados miembro ya pueden fiscalizar: derecho de reclamo del consumidor, sanciones y multas. **Primeras demandas presentadas en Francia en nov-2025**; Países Bajos y otros planificaron actividad para 2026 |
+| 🔴 **El alcance está CONTESTADO — se publica el desacuerdo, no una conclusión** | **(a)** *Deque* (proveedor de accesibilidad) sostiene que **EN 301 549 aplica a los videojuegos online igual que a web y móvil**. **(b)** El **IGDA Game Accessibility SIG** sostiene que los juegos **en general no están cubiertos**, y que para consola y PC el EAA exige sobre todo **chat de texto junto al chat de voz**, o conversación total en videochat. **(c)** *Sprung Studios* sostiene que el EAA **no regula el contenido del juego**, pero **sí las plataformas y lanzadores** desde los que se accede |
+| **Cómo tratarlo** | (a) es un proveedor con incentivo a ampliar el alcance; (b) es el cuerpo del sector; (c) es intermedia y compatible con (b). ⇒ **Posición de esta KB: tratar (b)+(c) como la lectura de trabajo y (a) como el escenario adverso.** Nunca presentar ninguna como "lo que dice la ley" |
+| **Entregable 1 — el que se vende** | **Dictamen de alcance país por país.** El EAA se transpuso **nacionalmente** y las leyes de implementación difieren entre mercados (Bird & Bird). No existe "cumplimiento EAA" europeo: existe cumplimiento alemán, francés, español. **Es exactamente la forma de entregable que el carácter fragmentado vuelve defendible por horas** |
+| **Entregable 2** | **Auditoría contra EN 301 549 v3.2.1**, que es la versión contra la que hay que medir **hoy**. Priorizar los requisitos de **comunicación bidireccional**, que son los que la lectura (b) sí considera cubiertos y los que coinciden con el CVAA de NA ⇒ **un solo trabajo técnico, dos jurisdicciones** |
+| **Entregable 3** | **Plan de transición a v4.1.1**, que mueve el estándar a **WCAG 2.2** y añade **seis requisitos nuevos**. Es la primera versión escrita pensando en el EAA |
+| **Carve-out a verificar** | Según el IGDA, los juegos **ya en el mercado antes de la fecha límite estarían exentos**. La redacción es ambigua y la fecha exacta no se pudo confirmar. ⇒ **si el cliente tiene catálogo, esto vale más que toda la auditoría junta**: verificarlo es la primera pregunta, no la última |
+
+> 🔴 **GAP DECLARADO, no se vende como resuelto:** **no se pudo confirmar que
+> EN 301 549 v4.1.1 haya sido citada en el Diario Oficial de la UE.** Su efecto
+> legal depende de esa cita; un proveedor la pronostica para **nov-2026** (este
+> mes) y no hay confirmación. **Hasta verificarlo en el DOUE, la versión con
+> efecto es v3.2.1** y v4.1.1 no puede ser un requisito contractual.
+
+> ⚠️ **Contradicción heredada, otra vez presente en los resultados de este pass:**
+> una fuente legal vuelve a fechar las obligaciones del **Art. 50** del AI Act el
+> **2-ago-2026** y otra el **2-ago-2027**. Esta KB ya corrigió esa fecha en passes
+> anteriores. **Séptimo pass consecutivo en que la versión obsoleta reaparece**:
+> no está retrocediendo, y hay que asumir que el cliente la tiene.
 
 #### 🆕 Oportunidad del pass cycle 14 (2026-11-22): **el pipeline de assets viable en Europa es un conjunto más chico, y hay que demostrarlo con la licencia en la mano**
 
@@ -1935,6 +2037,38 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 Pass cycle 15 (2026-11-22): **GAP MEDIDO — la accesibilidad de videojuegos no aparece en APAC, y eso cambia el pitch**
+
+**Qué se buscó, literalmente:** `AI gaming APAC 2026 adoption regulation players
+accessibility Japan Korea China`, en modo extendido.
+
+**Qué devolvió:** regulación general de IA país por país (abajo) y **esports**.
+**Cero** resultados sobre accesibilidad de videojuegos, **cero** sobre adopción
+de IA por desarrolladores de la región y **cero** sobre adopción por jugadores.
+
+⇒ **Esto se escribe como gap, no como silencio.** No significa que APAC no tenga
+normas de accesibilidad —Japón tiene la *Act on Elimination of Disability
+Discrimination* y Corea su propia ley— sino que **no están conectadas con el
+sector de videojuegos en ninguna fuente que esta sesión pueda alcanzar**. La
+consecuencia operativa es directa: **en APAC el gancho de accesibilidad no se
+usa**, porque no hay un instrumento sectorial al que anclarlo ni una obligación
+que el cliente reconozca.
+
+**Lo que sí está medido en APAC y sigue vigente para el pitch:**
+
+| País | Instrumento | Estado medido | Consecuencia |
+|---|---|---|---|
+| **Corea del Sur** | *AI Basic Act* | **En vigor desde el 22-ene-2026**. Período de gracia para sanciones de **al menos 1 año**; tope de multa **KRW 30 millones** | La obligación existe hoy; **el riesgo económico empieza en 2027**. Vende preparación, no urgencia de multa |
+| **China** | Sin ley general de IA, pero **normas específicas obligatorias**: algoritmos de recomendación, *deepfakes*, IA generativa y **etiquetado de contenido generado** | Vigente. Sanciones de hasta **CNY 50 millones** según una fuente secundaria | El régimen más exigente de la región, y el **etiquetado** toca directamente a los NPCs generativos y a los assets generados |
+| **Japón** | *AI Promotion Act* | **Marco de promoción sin sanciones.** El **2º Plan Básico de IA** fue aprobado por el Gabinete el **14-jul-2026**, revisando el de dic-2025 | 🔴 **No se escopea trabajo japonés como compliance.** Es estrategia, no deber exigible. Repetido de passes anteriores y vuelto a confirmar |
+
+**Señal de mercado del período:** los **esports** fueron disciplina en los
+*Asian Games 2026* (**22-sep → 2-oct-2026**), con la Japan Esports Union como
+coorganizadora. Es relevancia de categoría, no un dato de adopción de IA.
+
+> **Regla que se mantiene:** en APAC, **país por país y nunca una plataforma
+> regional**. Los instrumentos son nacionales y no transfieren.
+
 #### 🆕 Oportunidad del pass cycle 14 (2026-11-22): **etiquetado de assets generados para el mercado chino, y el doble bloqueo coreano**
 
 **El gancho, en una línea:** *"China es la única jurisdicción donde la obligación
@@ -2299,6 +2433,68 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 Oportunidad del pass cycle 15 (2026-11-22): **el 48,8% queda CONFIRMADO con fuente nombrada — y la accesibilidad es un cero medido también acá**
+
+**El dato más valioso de esta KB en LATAM queda corroborado por segunda vez y
+ahora con su fuente identificada.** El cycle 4 registró *"48,8% de aceptación del
+jugador latinoamericano"* sin instrumento nombrado. Este pass lo encuentra:
+
+| Dato | Valor | Fuente |
+|---|---|---|
+| Jugadores que **considerarían comprar** un videojuego desarrollado con IA | **48,8%** | **Estudio PGB Latam 2026**, presentado en **gamescom latam** |
+| Temen **despidos** en la industria | **40,6%** | ídem |
+| Temen que los juegos **pierdan calidad** | **35,8%** | ídem |
+
+⇒ **El argumento estructural de LATAM se sostiene y se afina.** Frente al ~85%
+de rechazo global que esta KB registra (Quantic Foundry), LATAM sigue siendo
+**el mercado racional de primer lanzamiento para IA de cara al jugador**. Y
+ahora se sabe que **la objeción latinoamericana no es la calidad del producto
+sino el empleo** (40,6% vs 35,8%) ⇒ el contraargumento no es una demo: es
+**dónde queda el equipo**. Un lanzamiento LATAM con IA visible y sin recorte de
+plantilla anunciado es vendible; uno acompañado de layoffs reproduce acá el
+rechazo del que se estaba escapando.
+
+**Tamaño del mercado, actualizado:**
+
+| Dato | Valor | Fuente |
+|---|---|---|
+| México, jugadores activos | **> 76 millones** | Endeavor, vía prensa mexicana |
+| México, mercado anual | **≈ USD 2.300 millones** | ídem |
+| Posición | **#1 de la región** | ídem |
+
+> 🔴 **GAP MEDIDO — accesibilidad:** se corrió el instrumento **en español**
+> (`AI videojuegos LATAM 2026 adopción regulación accesibilidad industria`), que
+> es la regla de la flota para no confundir ausencia de oferta con ausencia de
+> búsqueda. **Ninguna fuente de la región aborda accesibilidad de videojuegos.**
+> Lo que devolvió fue adopción, percepción del jugador y tamaño de mercado. ⇒
+> **el gancho de accesibilidad no se usa en LATAM**, igual que en APAC, y por la
+> misma razón: no hay instrumento sectorial al que anclarlo.
+
+**Lo que LATAM sí origina y hay que vender en su lugar — la capa de aptitud
+lingüística.** Es la conclusión que la flota ya alcanzó en otras industrias y que
+este pass confirma en gaming con un repo concreto:
+
+| Repo | ★ | Licencia | Para qué |
+|---|---|---|---|
+| [TohmaN233/YN-translation-workshop](https://github.com/TohmaN233/YN-translation-workshop) | 235 | **MIT** | Banco de trabajo de traducción y revisión con IA para ficción larga y **localización de juegos**. Vivo 2026-11-11 |
+
+La **localización** es la tarea donde el propio informe de adopción citado por la
+industria pone a la IA junto a escenarios y *playtesting*, y es la única de las
+tres donde la especificidad regional —es-419 vs es-ES, pt-BR, voseo, variantes
+de doblaje— **es una ventaja estructural y no un descuento por nearshore**.
+
+> ⚠️ **No citar "97% de los desarrolladores usa IA"** en material LATAM: la cifra
+> circula atribuida al *Google Cloud Games Report 2025* **a través de un
+> competidor directo**, y otra fuente da ~90% para el mismo origen. Ver la
+> corrección de registro al inicio de este archivo.
+
+> ⚫ **Regulación LATAM de IA en gaming:** las fuentes de la región sólo registran
+> **mayor supervisión de compras dentro del juego y de funciones de IA**, y
+> *loot boxes*, en términos genéricos y sin instrumento citable. **No hay norma
+> de IA específica de videojuegos medida en LATAM este pass.** Los instrumentos
+> generales (Perú SD 115-2025-PCM en vigor desde el 22-ene-2026, firma uruguaya
+> del Convenio del Consejo de Europa) siguen siendo el marco, y no son sectoriales.
 
 #### 🆕 Oportunidad del pass cycle 14 (2026-11-22): **la capa de assets no tiene pieza local — y eso es exactamente el espacio**
 

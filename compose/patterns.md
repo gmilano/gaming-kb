@@ -7,8 +7,14 @@ updated: 2026-11-22
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22
-> cycles 13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22
+> cycles 14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Las del cycle 15 son la 39** (equivalencia voz↔texto como un solo
+> componente: cumple el CVAA, habilita la accesibilidad y resuelve la moderación
+> de voz, que no tiene oferta open source) **y la 40** (gate de sucesión: la
+> licencia del reemplazo se verifica ANTES de aceptar la migración de un repo
+> archivado).
 >
 > 🆕 **Las del cycle 14 son la 36** (auditoría de **clausura** de licencias: el
 > gate que corre ANTES de los otros, porque la restricción que detecta no vive
@@ -47,6 +53,130 @@ updated: 2026-11-22
 > concretos de este ciclo: una fecha límite regulatoria en la UE, world models
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
 > benchmark publicado de agentes que juegan.
+
+## 🆕 Receta 39: **Equivalencia voz ↔ texto como un solo componente** — la pieza que cumple el CVAA, habilita la accesibilidad y resuelve la moderación de voz
+
+**El problema que resuelve de verdad:** tres necesidades que todo estudio trata
+como tres proyectos distintos —accesibilidad del chat, cumplimiento del CVAA y
+moderación del canal de voz— **se satisfacen con el mismo componente**. Y la
+tercera no tiene oferta open source: medida este pass, la moderación de voz
+arroja **1 candidato de 0 ★**. Transcribir convierte un problema sin oferta en
+uno que esta KB ya tiene resuelto desde el cycle 13.
+
+**Disparador:** el juego tiene chat de voz, o chat de texto, y se distribuye en
+EE. UU. (CVAA, vigente desde el 1-ene-2019) o en la UE (EAA, aplicable desde el
+28-jun-2025, **ya litigado en Francia**).
+
+### Cableado
+
+```
+  Canal de voz del juego
+        │
+        ├─► STT  ──► transcripción ──┬─► 1. SALIDA DE TEXTO del chat de voz   [CVAA]
+        │                            │
+        │                            ├─► 2. unitaryai/detoxify (Apache-2.0)   [moderación]
+        │                            │      + guardrails-ai (Apache-2.0)
+        │                            │
+        │                            └─► 3. captions en pantalla              [EAA / EN 301 549]
+        │
+  Canal de texto del juego
+        │
+        └─► TTS  ──► audio ──────────► 4. SALIDA DE VOZ del chat de texto      [CVAA]
+                                          │
+                                          └─► AccessKit (Apache-2.0 OR MIT) en Godot ≥ 4.5
+                                              o ethindp/prism (MPL-2.0) fuera de Godot
+```
+
+### Piezas, con licencia leída byte a byte
+
+| Pieza | Repo | Licencia | Nota |
+|---|---|---|---|
+| Lector de pantalla (Godot ≥ 4.5) | [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | **Apache-2.0 OR MIT** (9.723 B + 1.023 B) | **Ya viaja en el binario.** Elegir Apache-2.0 por la concesión expresa de patentes |
+| Abstracción TTS / lector, fuera de Godot | [ethindp/prism](https://github.com/ethindp/prism) | **MPL-2.0** (15.504 B) | Copyleft **por archivo**: usable en juego propietario, obliga a publicar las modificaciones de los archivos MPL |
+| Accesibilidad de UI en Unity | [mikrima/UnityAccessibilityPlugin](https://github.com/mikrima/UnityAccessibilityPlugin) | **Apache-2.0** (11.357 B ✅) | ⚠️ 3,5 años sin push: adoptar con los ojos abiertos o construir sobre la API oficial de Unity |
+| Moderación de texto | [unitaryai/detoxify](https://github.com/unitaryai/detoxify) | **Apache-2.0** | Ya en esta KB. Corre local, sin API |
+| Validadores de salida | [guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) | **Apache-2.0** | Ya en esta KB |
+| STT / TTS | *capa de voz del cycle 13* | ver `agents/top.md` | Las licencias de esa capa ya están verificadas y **particionadas por pesos**: el código permisivo no implica pesos permisivos |
+| Captions direccionales — referencia de diseño | [jumpingmushroom/Earshot](https://github.com/jumpingmushroom/Earshot) | **MIT** (1.069 B) | Mod de Valheim: captions de sonidos **con flecha de dirección**. Es el patrón a copiar, no la dependencia a importar |
+
+### Pasos
+
+1. **Inventario ACS** — enumerar cada canal de comunicación (voz, texto, *party*,
+   clan, emotes) y marcar cuál tiene equivalente en la otra modalidad. Dos semanas.
+2. **Elegir el eje por engine, no por librería** — Godot ≥ 4.5 ya trae la
+   primitiva; Unity obliga a decidir entre UAP estancado y la API oficial cuyo
+   sample **no es open source** (Unity Companion License).
+3. **Etiquetado semántico y exclusiones explícitas.** Sin esto la primitiva
+   **lee de más**: hay un caso reportado de un `TextureRect` usado como cursor
+   que el Narrador de Windows 11 leía en voz alta.
+4. **Declarar la atribución de Chromium.** AccessKit incorpora porciones
+   derivadas de Chromium bajo **BSD-3-Clause**: el aviso y el disclaimer deben
+   reproducirse en la distribución binaria.
+5. **Enchufar la transcripción a la moderación** antes de construir nada propio
+   de moderación de voz.
+
+### ⛔ Lo que esta receta NO promete
+
+- **No cubre el EAA entero.** El alcance del EAA para videojuegos está en disputa
+  (ver `intel/market.md`): el IGDA sostiene que los juegos en general no están
+  cubiertos y que lo exigido es sobre todo el chat de texto junto al de voz —que
+  es justamente lo que esta receta entrega—, mientras un proveedor sostiene que
+  aplica todo EN 301 549. **Se entrega la intersección, y se dice.**
+- **No usar v4.1.1 como requisito contractual** hasta verificar su cita en el DOUE.
+- **No cubre exportación web de Godot**: comportamiento no medido, riesgo abierto.
+
+---
+
+## 🆕 Receta 40: **Gate de sucesión** — verificar la licencia del reemplazo ANTES de aceptar la migración de una dependencia archivada
+
+**El problema que resuelve:** esta KB midió **dos** casos en los que el sucesor
+de un repo archivado es **menos libre** que el original, y en ninguno el
+mantenedor menciona la licencia al explicar el cambio:
+
+| Original | Sucesor | Movimiento |
+|---|---|---|
+| [m1maker/SRAL](https://github.com/m1maker/SRAL) — **MIT**, archivado 2026-08-05 | [ethindp/prism](https://github.com/ethindp/prism) — **MPL-2.0** | permisiva → copyleft **por archivo** |
+| `Piper` — **MIT**, archivado *(cycle 13)* | sucesor — **GPL-3.0** | permisiva → copyleft **fuerte** |
+
+El riesgo es de **secuencia**: la migración se decide por razones técnicas (el
+repo está muerto, hay que salir), el reemplazo lo nombra el propio README del
+muerto, y **la licencia se descubre después de que el código ya está integrado**.
+
+### El gate, cinco comprobaciones mecánicas
+
+```bash
+# 1. ¿El repo actual está archivado o muerto?
+gh api -X GET search/repositories -f q="repo:$SLUG" \
+  --jq '.items[] | "archived=\(.archived) pushed=\(.pushed_at)"'
+
+# 2. ¿A quién remite? (el README del archivado nombra al sucesor)
+curl -s "https://raw.githubusercontent.com/$SLUG/main/README.md" | head -40
+
+# 3. Licencia del SUCESOR, leída byte a byte — NO el badge
+curl -s "https://raw.githubusercontent.com/$NEW_SLUG/main/LICENSE" | head -5
+curl -s -o /tmp/l -w '%{size_download}\n' \
+     "https://raw.githubusercontent.com/$NEW_SLUG/main/LICENSE"
+
+# 4. ¿Es Markdown? Entonces el checksum de bytes NO aplica (defecto 6º)
+#    .md o primera línea con '#' ⇒ leer el encabezado, no comparar bytes
+
+# 5. ¿El grant del sucesor es compatible con el tipo de entregable?
+#    (reusa el eje de la Receta 32: librería interna ≠ binario embarcado)
+```
+
+### Criterio de decisión
+
+| Sucesor | Veredicto | Acción |
+|---|---|---|
+| Permisiva (MIT / Apache-2.0 / BSD) | 🟢 Migrar | Registrar la atribución si aplica |
+| **MPL-2.0** | 🟡 Migrar **declarando** | Usable en producto propietario; obliga a publicar las modificaciones de los **archivos MPL**. Ponerlo en la propuesta, no en la integración |
+| **GPL-2.0 / GPL-3.0 / AGPL** | 🔴 No embarcar | Sólo herramienta interna. Si el original archivado era permisivo, **evaluar hacer fork del archivado** antes que migrar |
+| Sin archivo de licencia | ⛔ No migrar | Un sucesor sin grant es peor que un original muerto con grant |
+
+> **La pregunta que hay que hacerse y casi nadie hace:** si el original es
+> permisivo y está archivado pero **funciona**, un fork mantenido puede costar
+> menos que la obligación que impone el sucesor. **Archivado no es lo mismo que
+> inservible** — esta KB ya lo midió con ViZDoom en el cycle 11.
 
 ## 🆕 Receta 36: **Auditoría de CLAUSURA de licencias** — el gate que ningún gate anterior de esta KB detecta
 

@@ -8,13 +8,53 @@ updated: 2026-11-22
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22 cycles 13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22 cycles 14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
 > (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
 > de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
+
+## 🆕 Capa vertical nueva (2026-11-22, cycle 15): **el ENGINE como plataforma de accesibilidad** — la primera vertical de esta página que no se elige, se hereda
+
+Todas las verticales anteriores de esta página son plataformas que el cliente
+**adopta**: Nakama, Agones, Talo, Odoo-equivalentes del sector. Ésta funciona al
+revés: **la plataforma de accesibilidad es el motor que el cliente ya tiene**, y
+lo que cambia entre clientes no es el producto elegido sino **la versión instalada**.
+
+| Plataforma | Qué trae de accesibilidad | Licencia del mecanismo | Estado medido | Qué hay que construir encima |
+|---|---|---|---|---|
+| **Godot ≥ 4.5** | Soporte de **lector de pantalla en nodos `Control`** + *bindings* para exponer cualquier `Node`, vía **AccessKit** | Engine **MIT**; AccessKit **Apache-2.0 OR MIT**, con porciones Chromium **BSD-3-Clause** | 🟡 **Parcial.** En el editor sólo cubre Project Manager, nodos UI estándar e inspector. Verificado funcionando con **Orca** (Linux) y **Narrador de Windows 11** | Etiquetado semántico de la UI del juego; **supresión explícita** de nodos decorativos (hay un caso reportado de un `TextureRect` usado como cursor que el narrador leía en voz alta); captions; equivalencia voz↔texto |
+| **Unity** | *Accessibility APIs* propias, con samples oficiales | Engine propietario; samples bajo **Unity Companion License** (⛔ no open source) | 🟡 API oficial disponible; el único plugin **permisivo** de la comunidad ([UAP](https://github.com/mikrima/UnityAccessibilityPlugin), **Apache-2.0**) lleva **3,5 años sin push** | Lo mismo que en Godot, **más** la decisión de si se adopta UAP sabiendo que está estancado o se construye sobre la API oficial sin poder reutilizar el sample |
+| **Cualquier engine / nativo** | Nada | — | — | [ethindp/prism](https://github.com/ethindp/prism) (**MPL-2.0**, vivo) como capa de abstracción de TTS y lectores. **No usar** [m1maker/SRAL](https://github.com/m1maker/SRAL) (MIT): **archivado**, y su propio README remite a prism |
+
+### 🔴 Las tres consecuencias que cambian una propuesta
+
+1. **La primera pregunta de descubrimiento es la versión del engine.** Un cliente
+   en Godot 4.4 y uno en 4.5 tienen alcances distintos para el mismo entregable.
+   Preguntarlo **antes** de estimar, igual que la KB de *enterprise* concluyó que
+   hay que preguntar la versión de Camel.
+2. **Heredar AccessKit implica una obligación de atribución**, no de copyleft:
+   las porciones derivadas de Chromium son **BSD-3-Clause** y su cláusula 2 exige
+   reproducir aviso y disclaimer **en la distribución binaria**. Barato de
+   cumplir, caro de descubrir en certificación.
+3. **La accesibilidad del engine no es un interruptor.** Es una primitiva que
+   lee lo que encuentra: sin etiquetado semántico y sin exclusiones explícitas,
+   **lee de más** y el resultado es peor que no tener nada.
+
+> 🔴 **GAP de plataforma declarado:** no se pudo medir el comportamiento de la
+> accesibilidad de Godot en **exportación web**. Hay una pregunta abierta en el
+> foro oficial y **ninguna respuesta**. Si el entregable es WebGL, esto es un
+> **riesgo abierto**, no una función asumida.
+
+### ⛔ Las tres sub-verticales de esta capa que **no tienen plataforma que adoptar**
+
+| Sub-vertical | Qué se enumeró | Resultado | Qué se vende en su lugar |
+|---|---|---|---|
+| **Anti-cheat con ML** | 8 repos | **0 vivos y permisivos**; el mayor archivado en 2021 | Detección conductual de anomalías sobre la telemetría del backend (**Nakama**, Apache-2.0), presentada como **detector estadístico**, no como anti-cheat |
+| **Soporte al jugador con LLM** | 5 repos | **0**; todos de 0–1 ★ y ninguno es un agente de soporte | Construcción desde frameworks genéricos (Receta 5), dicho como construcción |
+| **Moderación de VOZ** | 1 repo ([vinifborgess/azure-guardian](https://github.com/vinifborgess/azure-guardian), MIT, **0 ★**, envoltorio de un servicio Azure) | **0** | **Transcribir** y reusar la moderación de **texto**, que sí tiene oferta permisiva real (`unitaryai/detoxify`, `guardrails-ai`) ⇒ **el mismo componente que exige el CVAA** |
 
 ## 🆕 Capa vertical nueva (2026-11-22, cycle 14): **la fábrica de assets** — la plataforma donde la licencia deja de ser metadato del repo y pasa a ser metadato del **artefacto**
 

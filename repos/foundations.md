@@ -7,7 +7,7 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22 cycles 13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22 cycles 14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > 🆕 **Canal 4, agregado el 2026-11-22 (cycle 14):** la sección `## License` del
 > `README.md`, con **cada dependencia que nombra resuelta como un repo más**.
@@ -38,6 +38,70 @@ updated: 2026-11-22
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El hallazgo del cycle 15 (2026-11-22): **la capa de ACCESIBILIDAD faltaba entera — y su repo fundacional ya viaja dentro de todo juego hecho con Godot 4.5**
+
+Catorce passes construyeron esta página alrededor de lo que el estudio produce.
+Falta la base de lo que el jugador **puede usar**. Y no es una capa opcional:
+es la única de esta KB cuya obligación legal **ya está en vigor en NA y EMEA**
+(ver `intel/market.md`).
+
+El repo fundacional de la capa es **`AccessKit`**, y es fundacional en el sentido
+más literal de esta página: **no se elige, se hereda**. Godot 4.5 lo adoptó como
+base del soporte de lector de pantalla ⇒ si el cliente está en Godot 4.5+,
+AccessKit **ya está en su binario**, con o sin decisión de arquitectura.
+
+| Repo | ★ | Licencia (**byte-read**) | Push | Rol fundacional |
+|---|---|---|---|---|
+| [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | 1.567 | **Apache-2.0 OR MIT**, a elección (`LICENSE-APACHE` 9.723 B + `LICENSE-MIT` 1.023 B) ⚠️ badge `BSD-3-Clause` | 2026-11-21 | Infraestructura de accesibilidad para toolkits de UI. **Base del screen reader de Godot 4.5.** Porciones derivadas de Chromium bajo **BSD-3-Clause** (`LICENSE.chromium`, 1.559 B) ⇒ **obligación de atribución en el binario** |
+| [ethindp/prism](https://github.com/ethindp/prism) | 67 | **MPL-2.0** (`master/LICENSE`, 15.504 B, variante Markdown) | 2026-11-21 | Abstracción multiplataforma de TTS y lectores de pantalla, con *backends* propios vía vtable. **Sucesor declarado de SRAL** |
+| [mikrima/UnityAccessibilityPlugin](https://github.com/mikrima/UnityAccessibilityPlugin) | 85 | **Apache-2.0** (`LICENSE`, **11.357 B** ✅ testigo exacto) | ⚠️ 2023-05-13 | *UI Accessibility Plugin* (UAP) para Unity. **El único permisivo del lado Unity** — y lleva 3,5 años sin push |
+| [m1maker/SRAL](https://github.com/m1maker/SRAL) | 21 | **MIT** (`LICENSE`, 1.064 B) | 2026-08-05 | ⛔ **ARCHIVADO.** Se lista porque sigue apareciendo en buscadores: su README remite a `prism` |
+| [lightsoutgames/godot-accessibility](https://github.com/lightsoutgames/godot-accessibility) | 87 | **MIT** (`master/LICENSE`, 1.070 B) | ⛔ 2021-05-19 | 🔴 **No usar.** 5,5 años sin commit; su función la absorbió el engine en 4.5 |
+| [Unity-Technologies/a11y-public-sample](https://github.com/Unity-Technologies/a11y-public-sample) | 26 | ⛔ **Unity Companion License** (`LICENSE.md`, 453 B) | 2026-06-12 | Samples oficiales de las *Accessibility APIs* de Unity. **No es open source**: sólo sirve como referencia de uso, no como código a reutilizar |
+
+> 🔴 **La regla que sale de esta tabla:** en accesibilidad **la decisión la toma
+> la versión del engine, no el arquitecto**. Godot ≥ 4.5 trae la primitiva
+> (parcial); Unity trae APIs propias bajo licencia **no abierta**. La pregunta de
+> descubrimiento no es *"¿qué librería usamos?"* sino **"¿qué versión de engine
+> corre, y qué trae ya?"** — del mismo modo que la KB de *enterprise* concluyó
+> que hay que preguntar la versión de Camel antes de la propuesta.
+
+### 🔵 Cinco incumbentes que faltaban (inventario plano, regla T64)
+
+Un pass gastado en comprobar los nombres obvios de categorías que esta página
+**ya tenía abiertas**. Los cinco son anteriores a esta KB y ninguno estaba:
+
+| Repo | ★ | Licencia (**byte-read**) | Push | Categoría que ya existía aquí |
+|---|---|---|---|---|
+| [SanderMertens/flecs](https://github.com/SanderMertens/flecs) | 8.854 | **MIT** (`master/LICENSE`, 1.131 B) ⚠️ badge `NOASSERTION` | 2026-11-20 | ECS para C/C++. **El repo más grande ausente de esta KB** |
+| [danijar/dreamerv3](https://github.com/danijar/dreamerv3) | 4.004 | **MIT** (1.058 B) | 2026-10-04 | **World models** — sección abierta desde el cycle 1, sin el modelo canónico |
+| [Farama-Foundation/Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment) | 2.463 | ⚠️ **GPL-2.0** (`LICENSE.md`, 17.879 B) | 2026-11-15 | *Agentes que juegan* / evaluación. **Copyleft ⇒ harness interno, nunca embarcado** |
+| [MichaelTMatthews/Craftax](https://github.com/MichaelTMatthews/Craftax) | 476 | **MIT** (1.059 B) | 2026-10-27 | Benchmark de exploración (Crafter + NetHack en JAX), ICML 2024 *spotlight* |
+| [vivekjoshy/openskill.py](https://github.com/vivekjoshy/openskill.py) | 377 | **MIT** (1.068 B) | 2026-05-12 | **Rating multijugador** (Weng-Lin). La KB tenía `open-match` para *matchmaking* y **ningún sistema de rating** |
+
+**Por qué `flecs` tenía badge `NOASSERTION`:** su `LICENSE` es MIT íntegro, pero
+bajo el título lleva una línea extra —`Portions Copyright (c) Meta Platforms,
+Inc. and affiliates`— que rompe la detección. **Mismo mecanismo exacto** que la
+KB de *enterprise* midió en `Tencent/LoopForge`. ⇒ regla cruzada entre industrias:
+**`NOASSERTION` + línea de copyright corporativo adicional = permisiva intacta
+hasta prueba en contrario.**
+
+**Puertos de `openskill` verificados**, para equipos que no son Python:
+[intinig/go-openskill](https://github.com/intinig/go-openskill) (**MIT**, 16 ★,
+push 2026-11-02) y
+[pocketcombats/openskill-java](https://github.com/pocketcombats/openskill-java)
+(**Apache-2.0**, 13 ★, push 2026-03-27).
+
+### ⛔ Lo que se buscó en esta capa y **no existe** — se publica para que el silencio no se lea como cobertura
+
+**Anti-cheat con ML:** 8 candidatos enumerados, **0 utilizables**. El mayor,
+[waldo-vision/optical.flow.demo](https://github.com/waldo-vision/optical.flow.demo)
+(526 ★, **MPL-2.0**, 16.725 B), está **ARCHIVADO desde 2021-11-20**. El segundo,
+[lrq3000/oacs](https://github.com/lrq3000/oacs) (35 ★), **no tiene ningún archivo
+de licencia** y su último push es de **2017-03-10**. Los seis restantes son
+plugins de Minecraft de 0–7 ★, con `null` o GPL-3.0. **No hay base fundacional
+de anti-cheat open source. Es construir o comprar propietario.**
 
 ## 🔴 El hallazgo del cycle 14 (2026-11-22): **la capa de PRODUCCIÓN DE ASSETS faltaba entera** — y es la primera de esta página donde la licencia **no está dentro del repo**
 
@@ -805,7 +869,6 @@ de fallo de rename con mayor radio de daño.
 | [edbeeching/godot_rl_agents](https://github.com/edbeeching/godot_rl_agents) | **MIT** (`LICENSE`, 1071) | Puente Godot ↔ Python para 4 frameworks RL. **900+ → 1.639 (+82%)**: mayor salto relativo de la KB. | 1.639 |
 | 🆕 🟢 [google-deepmind/open_spiel](https://github.com/google-deepmind/open_spiel) | **Apache-2.0** (`LICENSE`, 11358 — canónico) | **El framework de referencia de RL y search/planning en juegos, y faltaba.** Juegos en C++ con wrapper Python; n-jugadores, suma cero, cooperativos y suma general; CFR, Q-learning, SARSA, regret matching, DQN, PPO, A2C. **Es la base correcta para información imperfecta** (póker, Guandan, negociación) donde PPO sobre Gymnasium no alcanza. v1.6.11 publicada 5-ene-2026, push 2026-11-14. ⚠️ default `master`. | 5.603 |
 | 🆕 [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) | **Apache-2.0** (`LICENSE`, 11358) | Motor de física para control y robótica, el estándar de los benchmarks de locomoción. En gaming sirve para **animación procedural y ragdoll/control físico aprendido**, no para gameplay. Commit de hoy. | 18.369 |
-
 | 🆕 🟢 [opendilab/LightZero](https://github.com/opendilab/LightZero) | **Apache-2.0** (`LICENSE`, 11357 — canónico) | **MCTS + familia AlphaZero/MuZero** (incl. sampled y stochastic) en un toolkit unificado. **La capa que faltaba:** PPO/SAC sobre Gymnasium dan políticas **reactivas**; esto hace **búsqueda con modelo aprendido** ⇒ base correcta para **juego de tablero/cartas, oponentes que planifican y dificultad calibrada**. Push 2026-11-19. | 1.663 |
 | 🆕 🟢 [opendilab/DI-engine](https://github.com/opendilab/DI-engine) | **Apache-2.0** (`LICENSE`, 11342) | Plataforma RL general del mismo laboratorio; el catálogo de algoritmos más amplio del inventario, con entornos de juego integrados. **LightZero es su módulo de búsqueda.** ⚠️ **push 2025-12-07 (~11,5 meses)**: vivo pero lento, verificar antes de ponerlo en un roadmap. | 3.645 |
 | 🆕 🟢 [Farama-Foundation/Minigrid](https://github.com/Farama-Foundation/Minigrid) | 🟡 **MIT + Apache-2.0 (composición)** — leer **`docs/LICENSE`** (12.201 B); **`LICENSE` (2.507 B) está DAÑADO**, ver el hallazgo de arriba | Entornos de grilla con llaves, puertas, objetivos y **misiones en lenguaje natural**. El camino barato: **probar la lógica del agente sin pagar un engine 3D**, y migrarlo después por el mismo API Gymnasium. Push 2026-11-14. | 2.543 |
@@ -827,7 +890,6 @@ listan porque son los únicos puntos de partida permisivos del nicho.
 | 🆕 [Calix-L/DanKS](https://github.com/Calix-L/DanKS) | **Apache-2.0** (11348) + `NOTICE` (453) | Agente de **Guandan** (掼蛋) por RL a escala chica. Patrón útil: **información imperfecta + juego por equipos**, el caso que los agentes LLM todavía no resuelven. 🔵 APAC. | 833 |
 | 🆕 [Station-Sciences/bot-crossing](https://github.com/Station-Sciences/bot-crossing) | **MIT** (`LICENSE`, 1069) | *"A video game for AI agents"*: **el juego como entorno de evaluación**, no el agente. 286 forks. La pieza viva que `lmgame-org/GamingAgent` (congelado desde 2025-11-16) dejó de ser. | 906 |
 | 🆕 [QwenLM/Qwen3](https://github.com/QwenLM/Qwen3) | 🟡 **badge `NONE` · enumeración = 0 archivos** → 🟢 **Apache-2.0 declarado en `README.md` §*License Agreement*** (*"All our open-weight models are licensed under Apache 2.0"*; archivos en Hugging Face, host que **no resuelve en esta sesión**) | 🆕 **La capa de SLM que esta página no tenía.** NVIDIA publicó soporte de **Qwen3-8B como SLM on-device en ACE** para NPCs de PC: es el modelo que corre **en la máquina del jugador**, no en una nube. Por eso es fundacional para gaming y no sólo para NLP — y por eso desarma de raíz la obligación de *runtime* que esta KB documenta en NA. 2.113 forks. ⚠️ Leer la *model card* del tamaño exacto antes de embarcar: esta KB ya midió que **el grant se parte por variante de modelo**. | **27.758** |
-
 | 🆕 ⛔ [MineDojo/NitroGen](https://github.com/MineDojo/NitroGen) | ⛔ **`NVIDIA License`** (`LICENSE`, **4729**) — **uso NO COMERCIAL (§ 3.3) y VIRAL (§ 3.2)** | Foundation model de agente **generalista** de NVIDIA: behaviour cloning sobre **40.000 h de gameplay en +1.000 juegos**, wrapper Gymnasium, pesos en HF (`nvidia/NitroGen`), **oral en CVPR 2026** (arXiv 2601.02427). § 3.3: *"only may be used or intended for use **non-commercially**… non-commercial research purposes only"*; § 3.2 obliga a arrastrar esa limitación a todo derivado; § 3.7 arrastra el **Meta OPT-IML 175B License Agreement**; § 3.4 termina el grant ante un reclamo de patente. ⛔ **Fuera para todo entregable, incluido un PoC pago.** 🔴 El paper dice *"we open-source the dataset, simulator, and pre-trained weights"*: **"open-source" en un abstract de CVPR no es un grant.** | 2.251 |
 
 

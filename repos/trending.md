@@ -11,6 +11,49 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 15
+
+**Qué se midió:** la capa operativa de cara al jugador, más un **inventario plano
+contra incumbentes** (regla T64 de la flota).
+
+### Repos fundacionales incorporados
+
+| Repo | ★ | Licencia (byte-read) | Push | Por qué entra |
+|---|---|---|---|---|
+| [SanderMertens/flecs](https://github.com/SanderMertens/flecs) | 8.854 | **MIT** (1.131 B) — badge `NOASSERTION` | 2026-11-20 | El repo más grande ausente de esta KB. ECS para C/C++ |
+| [danijar/dreamerv3](https://github.com/danijar/dreamerv3) | 4.004 | **MIT** (1.058 B) | 2026-10-04 | World model canónico; la sección existía desde el cycle 1 sin él |
+| [Farama-Foundation/Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment) | 2.463 | ⚠️ **GPL-2.0** (17.879 B) | 2026-11-15 | ALE. **Cierra el pendiente del cycle 11**: era éste el repo GPL-2.0 de Farama |
+| [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | 1.567 | **Apache-2.0 OR MIT** | 2026-11-21 | Base del lector de pantalla de Godot 4.5: **se hereda, no se elige** |
+| [MichaelTMatthews/Craftax](https://github.com/MichaelTMatthews/Craftax) | 476 | **MIT** (1.059 B) | 2026-10-27 | Benchmark de exploración en JAX |
+| [vivekjoshy/openskill.py](https://github.com/vivekjoshy/openskill.py) | 377 | **MIT** (1.068 B) | 2026-05-12 | Rating multijugador. La KB tenía matchmaking y **ningún rating** |
+| [TohmaN233/YN-translation-workshop](https://github.com/TohmaN233/YN-translation-workshop) | 235 | **MIT** | 2026-11-11 | Localización de juegos con IA — el ángulo real de LATAM |
+| [ForgeAX/forgeax-engine](https://github.com/ForgeAX/forgeax-engine) | 116 | **Apache-2.0** (11.358 B) | 2026-11-20 | Engine TypeScript *AI-native* |
+| [ethindp/prism](https://github.com/ethindp/prism) | 67 | **MPL-2.0** (15.504 B) | 2026-11-21 | Abstracción de TTS y lectores fuera de Godot |
+
+**Puertos de `openskill` verificados:**
+[intinig/go-openskill](https://github.com/intinig/go-openskill) (**MIT**, 16 ★,
+2026-11-02) · [pocketcombats/openskill-java](https://github.com/pocketcombats/openskill-java)
+(**Apache-2.0**, 13 ★, 2026-03-27).
+
+### 🔧 Instrumentos de este pass — lo que funcionó y lo que no
+
+| Sonda | Estado en esta sesión |
+|---|---|
+| `gh api -X GET search/repositories -f q="repo:<slug>"` | 🟢 **Funciona.** Da ★, SPDX, `archived` y `pushed_at`. **Es la sonda de liveness**, no la de licencia |
+| `raw.githubusercontent.com/<slug>/<branch>/<file>` | 🟢 **Funciona.** Es la sonda de licencia. **Hay que iterar `main` y `master`**: `flecs`, `godot-accessibility`, `prism` y `Earshot` sólo responden en `master` |
+| 404 de `raw` | 🟢 **14 bytes exactos** (`404: Not Found`) — el *trap de los 14 bytes* del cycle 6 sigue vigente: comparar contra el código HTTP, nunca contra "no vacío" |
+| `gh api repos/<owner>/<repo>` | ⛔ **Denegado** (sin cambios respecto de passes anteriores) |
+| `api.github.com/repos/<slug>/contents/` | ⛔ **Devuelve vacío** en esta sesión. La enumeración de archivos de raíz **no está disponible**: hubo que sondear nombres de archivo uno por uno |
+
+> 🔴 **Consecuencia del último punto:** `LICENSE.chromium` de AccessKit —la pieza
+> que explica el badge equivocado— **se encontró sondeando a ciegas**, no
+> enumerando. Si el nombre del archivo no hubiera sido adivinable, el hallazgo se
+> habría perdido. **La lista de sondas de esta KB necesita incluir
+> `LICENSE.<vendor>`** junto a `LICENSE`, `LICENCE`, `COPYING`, `LICENSE-MIT` y
+> `LICENSE-APACHE`.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 14
 
 **El barrido cambió de eje por tercera vez: de *texto y voz* (cycle 13) a

@@ -6,9 +6,105 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22 cycles 13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22 cycles 14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 15 (2026-11-22)
+
+### 🔴 Tendencia 21: **la obligación llegó antes que la oferta — y es la primera vez que pasa en esta KB**
+
+En catorce passes el patrón fue siempre el mismo: existe una oferta open source
+abundante y la regulación corre detrás (etiquetado, edad, disclosure). En la capa
+operativa de cara al jugador **el orden se invierte**.
+
+| Señal | Medición |
+|---|---|
+| **CVAA** (EE. UU., FCC) | Obliga a accesibilidad del chat en juegos desde el **1-ene-2019** |
+| **EAA** (UE) | **Aplicable desde el 28-jun-2025**; **primeras demandas en Francia, nov-2025** |
+| Oferta OSS de accesibilidad | **2 repos vivos y permisivos** de 9 enumerados |
+| Oferta OSS de anti-cheat ML | **0** de 8 |
+| Oferta OSS de soporte al jugador | **0** de 5 |
+| Oferta OSS de moderación de **voz** | **0** de 1 |
+
+⇒ **Consecuencia para el pitch:** en todas las demás capas Globant compite por
+integrar mejor. En ésta **no hay con qué integrar**, y el estudio que lo descubre
+solo lo descubre tarde. **Es la capa con menor competencia open source y mayor
+presión externa de esta KB.**
+
+### 🔴 Tendencia 22: **la función se muda al motor, y eso mata al plugin antes de que nadie lo anuncie**
+
+Godot 4.5 absorbió el lector de pantalla vía **AccessKit**. Resultado medido:
+
+- [lightsoutgames/godot-accessibility](https://github.com/lightsoutgames/godot-accessibility) (MIT, 87 ★): **sin push desde 2021-05-19**, y sigue siendo el primer resultado de todo buscador.
+- [mikrima/UnityAccessibilityPlugin](https://github.com/mikrima/UnityAccessibilityPlugin) (Apache-2.0, 85 ★): **sin push desde 2023-05-13**.
+
+Es la **8ª instancia** del patrón *recomendado-pero-muerto* en esta KB, y
+confirma la regla de la flota con una causa nueva: aquí el proyecto no murió por
+abandono sino **por absorción**. ⇒ **Un plugin cuya función aparece en las notas
+de release del engine entra en cuenta regresiva, aunque su repo siga abierto.**
+
+### 🔴 Tendencia 23: **el camino de salida de una dependencia archivada no es neutral en licencia** (2ª instancia medida)
+
+| Original | Sucesor | Movimiento |
+|---|---|---|
+| [m1maker/SRAL](https://github.com/m1maker/SRAL) — **MIT**, ⛔ archivado 2026-08-05 | [ethindp/prism](https://github.com/ethindp/prism) — **MPL-2.0**, vivo | permisiva pura → **copyleft por archivo** |
+| `Piper` — **MIT**, repo archivado *(registrado en el cycle 13)* | repo sucesor — **GPL-3.0** | permisiva pura → **copyleft fuerte** |
+
+Dos capas sin relación, mismo movimiento, y **en ninguno de los dos casos el
+mantenedor menciona la licencia** al explicar la migración. ⇒ Deja de ser
+anécdota: **al reemplazar un repo archivado, la licencia del sucesor se verifica
+antes de aceptar la migración**, como paso explícito del gate.
+
+### 📏 Tendencia 24 (método): **el checksum de bytes sólo vale contra texto plano** — 5º y 6º defectos medidos
+
+| Defecto | Caso | Efecto |
+|---|---|---|
+| **5º — apéndice podado** | `AccessKit/accesskit`, `LICENSE-APACHE` = **9.723 B** | Apache-2.0 íntegro que termina en `END OF TERMS AND CONDITIONS` sin el bloque *"APPENDIX: How to apply…"*. **Falso negativo** |
+| **6º — variante Markdown** | `ethindp/prism` MPL-2.0 = **15.504 B** vs `waldo-vision` MPL-2.0 = **16.725 B**; `ALE` GPL-2.0 `.md` = **17.879 B** | La misma licencia mide distinto según formato. **Falso negativo** |
+
+**Regla operativa nueva:** si el archivo termina en `.md` o su primera línea
+empieza con `#`, **el testigo no aplica**. Testigos nuevos para la tabla:
+**GPL-2.0 Markdown ≈ 17.880 B**, **MPL-2.0 Markdown ≈ 15.500 B**. Y **tolerancia
+±2 B** sobre el testigo canónico (caso `ForgeAX/forgeax-engine`, Apache-2.0 de
+11.358 B = un salto de línea final).
+
+### 🔵 Tendencia 25: **el badge puede nombrar una licencia REAL del repo equivocado**
+
+`AccessKit/accesskit`: badge `BSD-3-Clause`; grant real **Apache-2.0 OR MIT**;
+el BSD proviene de `LICENSE.chromium`, el código de terceros **vendorizado**.
+
+Es el complemento de la regla T60 de la flota (*`NOASSERTION` no es un veredicto*).
+Acá el badge **sí** afirma, y lo que afirma es un componente. ⇒ **Regla
+completa: el badge nunca es el grant — ni cuando calla ni cuando habla.** El
+grant está en los archivos y, cuando los archivos no bastan, en el `README`.
+
+### 🔵 Tendencia 26 (confirmación cruzada entre KBs): **el preámbulo corporativo derrota al clasificador de licencias**
+
+`SanderMertens/flecs` (8.854 ★): badge `NOASSERTION`, `LICENSE` = **MIT íntegro**
+(1.131 B) con una línea extra —`Portions Copyright (c) Meta Platforms, Inc. and
+affiliates`— bajo el título. **Mecanismo idéntico** al medido por la KB de
+*enterprise* en `Tencent/LoopForge`.
+
+Dos industrias, dos repos sin relación, mismo fallo. ⇒ **`NOASSERTION` + línea de
+copyright corporativo adicional = permisiva intacta hasta prueba en contrario**,
+y es una regla transferible a cualquier KB de la flota.
+
+### 🟡 Corrección de registro: **la cifra de adopción de IA en desarrollo tiene dos valores en circulación**
+
+~**90%** (Google Cloud, vía GamesBeat) frente a **97%** (*Google Cloud Games
+Report 2025*, citado por un competidor directo). Mismo origen declarado,
+números y años distintos. ⇒ **no citar el 97%**; usar *"en torno al 90%, fuente
+secundaria"* y apoyar el argumento en el **desglose por tarea** del cycle 12.
+
+### ⛔ Lo que este pass midió como CERO, por región
+
+- **APAC:** cero fuentes que vinculen accesibilidad y videojuegos; cero datos de adopción regional.
+- **LATAM:** cero fuentes sobre accesibilidad de videojuegos, **medido con el instrumento en español**.
+
+⇒ **El gancho de accesibilidad es NA + EMEA únicamente.** En APAC y LATAM no hay
+instrumento sectorial al que anclarlo, y venderlo igual sería vender una urgencia
+que el cliente no reconoce.
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 14 (2026-11-22)
 

@@ -7,8 +7,8 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-22 (pass cycle 14)**. Passes previos: 2026-11-22
-> (cycles 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
+> Última actualización: **2026-11-22 (pass cycle 15)**. Passes previos: 2026-11-22
+> (cycles 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
 > 2026-10-26, 2026-07-02.
 >
 > 🔴 **Lo que el pass cycle 14 cambia de raíz:** los trece passes anteriores
@@ -71,6 +71,240 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 15): **la capa OPERATIVA de cara al jugador — accesibilidad, anti-cheat, soporte y moderación de voz — es la primera capa de esta KB donde la OBLIGACIÓN ya existe y la OFERTA open source NO**
+
+Catorce passes auditaron lo que el estudio **construye**: NPCs, assets, diálogo,
+voz, world models, backends, pipelines. Este pass mide la capa que el estudio
+**opera después del lanzamiento** y que el jugador vive como producto: que el
+juego se pueda **usar** (accesibilidad), que se pueda **jugar limpio**
+(anti-cheat), que el jugador pueda **pedir ayuda** (soporte) y que el canal de
+voz no sea tóxico (moderación de audio).
+
+El resultado se invierte respecto de las catorce capas anteriores. En todas
+ellas la pregunta era *"¿cuál de estos repos permisivos elijo?"*. Acá la
+enumeración devuelve **casi nada vivo**, mientras la obligación legal **ya está
+en vigor en dos regiones y ya se litigó en una** (Francia, nov-2025).
+
+| Sub-capa | Candidatos enumerados | Vivos **y** permisivos | Veredicto medido |
+|---|---|---|---|
+| Accesibilidad (screen reader / captions) | 9 | **2** | La función **se mudó al motor** |
+| Anti-cheat con ML | 8 | **0** | **Desierto medido** |
+| Soporte al jugador con LLM | 5 | **0** | Sólo proyectos de 0–1 ★ |
+| Moderación de **voz** en juego | 1 | **0** | Sólo propietario |
+
+> **La frase que hay que decir en la propuesta:** en esta capa Globant **no
+> compone, construye** — y el motivo no es que falte madurez, es que la oferta
+> abierta no existe. Decirlo primero es la diferencia entre un alcance honesto y
+> una integración que se descubre imposible en el mes tres.
+
+### 🔴 Hallazgo nº1: `AccessKit/accesskit` — **tres errores anidados en el repo que sostiene la accesibilidad de Godot 4.5**
+
+`AccessKit` es la infraestructura de accesibilidad que Godot 4.5 adoptó para dar
+soporte de lector de pantalla a los nodos `Control`. Es decir: **todo juego
+publicado con Godot 4.5+ que exponga UI accesible está embarcando este repo**.
+Esta KB nunca lo había mirado. Al mirarlo, los tres canales de verificación de
+esta KB se contradicen entre sí:
+
+| Canal | Qué dice | ¿Correcto? |
+|---|---|---|
+| Badge de GitHub (`search/repositories`) | `BSD-3-Clause` | ❌ **No es el grant del proyecto** |
+| Archivos de licencia en la raíz | `LICENSE-APACHE` (9.723 B) + `LICENSE-MIT` (1.023 B) | ✅ |
+| `README.md`, sección *License* | *"licensed under the Apache License, Version 2.0 **or** the MIT license, **at your option**"* | ✅ **Éste es el grant** |
+
+**De dónde sale el `BSD-3-Clause`:** el repo tiene un tercer archivo,
+`LICENSE.chromium` (1.559 B), que empieza
+`// Copyright 2015 The Chromium Authors. All rights reserved.`. El clasificador
+de GitHub eligió **la licencia del código de terceros vendorizado** por encima
+del grant propio del proyecto. El README lo dice explícitamente:
+
+> *"Significant portions of AccessKit are derived from Chromium and are covered
+> by its BSD-style license."*
+
+⇒ **El badge no es una licencia inventada: es una licencia real del repo
+equivocado.** Es el reverso exacto de la regla T60 de la flota (*NOASSERTION no
+es un veredicto*): acá el badge **sí** afirma algo, y lo que afirma es un
+componente, no el producto.
+
+**La consecuencia comercial, que no es teórica:** el grant que Globant usa es
+Apache-2.0 **o** MIT (elegir Apache-2.0 por la concesión expresa de patentes).
+Pero las porciones derivadas de Chromium conservan **BSD-3-Clause**, cuya
+cláusula 2 obliga a reproducir el aviso de copyright y el disclaimer **en la
+distribución binaria**. Un juego hecho con Godot 4.5 que no incluya el aviso de
+Chromium en su pantalla de créditos/licencias **está incumpliendo una obligación
+de atribución**, no de copyleft. Es barato de cumplir y caro de descubrir tarde.
+
+#### 📏 5º defecto medido del *checksum de bytes* de esta KB: **el Apache-2.0 sin apéndice**
+
+`LICENSE-APACHE` de AccessKit mide **9.723 B**, no los **11.357 B** canónicos
+que esta KB usa como testigo de Apache-2.0. No está adulterado: el archivo
+**termina en `END OF TERMS AND CONDITIONS`** y omite el bloque
+*"APPENDIX: How to apply the Apache License to your work"*, que es boilerplate
+instructivo y **no** parte de los términos.
+
+⇒ **Un Apache-2.0 de ~9.7 KB es Apache-2.0 íntegro.** El checksum da aquí un
+**falso negativo**, y la causa es nueva: no es un `LICENSE` roto (cycle 8), ni un
+SPDX short-form (cycle 13), ni mayúsculas (cycle 5) — es **la poda del apéndice**.
+
+#### 📏 6º defecto, encontrado en el mismo pass: **la variante Markdown mueve el byte-count de CUALQUIER licencia**
+
+Dos repos de este pass llevan **la misma** MPL-2.0 y miden distinto, y un tercero
+rompe el testigo de GPL:
+
+| Repo | Licencia | Archivo | Bytes | Causa de la diferencia |
+|---|---|---|---|---|
+| [waldo-vision/optical.flow.demo](https://github.com/waldo-vision/optical.flow.demo) | MPL-2.0 | `LICENSE` | **16.725** | Texto plano (≈ testigo ~16.700 de esta KB ✅) |
+| [ethindp/prism](https://github.com/ethindp/prism) | MPL-2.0 | `master/LICENSE` | **15.504** | **Markdown** (`### 1. Definitions`, `**1.1.**`) |
+| [Farama-Foundation/Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment) | GPL-2.0 | `LICENSE.md` | **17.879** | **Markdown**; además esta KB no tenía testigo de GPL-2.0 |
+
+⇒ **Regla operativa:** el checksum de bytes sólo es válido contra un archivo
+**en texto plano**. Si el nombre del archivo termina en `.md`, o la primera línea
+empieza con `#`, el testigo no aplica y hay que leer el encabezado. Añadir a la
+tabla de testigos: **GPL-2.0 Markdown ≈ 17.880 B**, **MPL-2.0 Markdown ≈ 15.500 B**.
+
+### 🔴 Hallazgo nº2: **la accesibilidad se mudó al motor — y los plugins que todo buscador recomienda llevan entre 3 y 5 años muertos**
+
+Esta es la razón estructural por la que la enumeración devuelve tan poco: la
+función **dejó de ser un plugin** y pasó a ser una primitiva del engine.
+
+| Repo | ★ | Licencia (byte-read) | Último push | Estado medido |
+|---|---|---|---|---|
+| [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | 1.567 | **Apache-2.0 OR MIT** (dual, 9.723 B + 1.023 B) | **2026-11-21** | 🟢 Vivo. **Es la base del screen reader de Godot 4.5** |
+| [ethindp/prism](https://github.com/ethindp/prism) | 67 | **MPL-2.0** (15.504 B, Markdown) | **2026-11-21** | 🟢 Vivo. Sucesor declarado de SRAL |
+| [mikrima/UnityAccessibilityPlugin](https://github.com/mikrima/UnityAccessibilityPlugin) | 85 | **Apache-2.0** (`LICENSE`, 11.357 B ✅ checksum exacto) | ⚠️ 2023-05-13 | 🟡 **3,5 años sin push**. El único plugin de Unity permisivo que existe |
+| [lightsoutgames/godot-accessibility](https://github.com/lightsoutgames/godot-accessibility) | 87 | **MIT** (`master/LICENSE`, 1.070 B) | ⛔ 2021-05-19 | 🔴 **5,5 años sin push** — y es el primer resultado de todo buscador |
+| [m1maker/SRAL](https://github.com/m1maker/SRAL) | 21 | **MIT** (`LICENSE`, 1.064 B) | 2026-08-05 | ⛔ **ARCHIVADO** por su autor |
+| [jumpingmushroom/Earshot](https://github.com/jumpingmushroom/Earshot) | 1 | **MIT** (`master/LICENSE`, 1.069 B) | 2026-10-18 | 🟢 Vivo. Mod de Valheim: *closed captions* de sonidos con **flecha de dirección** |
+| [dominicbytes/game-accessibility-skill](https://github.com/dominicbytes/game-accessibility-skill) | 1 | **MIT** | 2026-10-18 | 🟢 Vivo. *Agent Skill* que hace que un agente de código implemente opciones accesibles |
+| [Unity-Technologies/a11y-public-sample](https://github.com/Unity-Technologies/a11y-public-sample) | 26 | ⛔ **Unity Companion License** (`LICENSE.md`, **453 B**) | 2026-06-12 | 🔴 Badge `NOASSERTION`. **No es open source** |
+
+**La lectura de Godot 4.5** (notas de release oficiales): *"Thanks to AccessKit,
+we added screen reader support to Control nodes"*, con soporte del **editor**
+todavía parcial (sólo Project Manager, nodos UI estándar e inspector). Hay
+reportes de usuarios de que funciona con **Orca** en Linux y con el **Narrador de
+Windows 11** — incluyendo el caso de un `TextureRect` usado como cursor que el
+narrador leía en voz alta, es decir: **la primitiva del engine lee de más si
+nadie la configura**. La accesibilidad del engine no es un interruptor.
+
+#### 🔴 La regla nueva: **el sucesor puede ser MENOS libre que el archivado**
+
+`m1maker/SRAL` (**MIT**, archivado 2026-08-05) remite en su propio README a
+`ethindp/prism` (**MPL-2.0**, vivo). El autor explica el motivo —problemas de
+arquitectura— y no menciona la licencia.
+
+⇒ **Migrar fuera de una dependencia archivada NO es neutral en licencia.** Acá el
+camino de salida cuesta pasar de permisiva pura a **copyleft por archivo**:
+MPL-2.0 es perfectamente usable en un juego propietario (no contamina el binario
+enlazado), pero obliga a **publicar las modificaciones de los archivos MPL** y a
+declararlo. Es manejable; no declararlo no lo es.
+
+**Segunda instancia medida del mismo patrón en esta KB.** El cycle 13 registró
+`Piper`: relicenciado de **MIT a GPL-3.0** al cambiar de repo, con el repo MIT
+archivado. Dos capas distintas, mismo movimiento ⇒ deja de ser una anécdota y
+pasa a ser **un chequeo obligatorio**: al reemplazar un repo archivado, la
+licencia del sucesor se verifica **antes** de aceptar la migración.
+
+### 🔴 Hallazgo nº3: **no existe anti-cheat con ML open source viable — y esto es un resultado, no una búsqueda fallida**
+
+Se enumeró la categoría completa (`anticheat machine learning`, `game-security`,
+`anticheat-plugin`, más la búsqueda general de 2026). **Ocho candidatos. Cero
+utilizables.** Se publica la tabla de rechazos porque, como dice esta KB, *el
+silencio se lee como cobertura*:
+
+| Repo | ★ | Licencia | Estado medido | Motivo del rechazo |
+|---|---|---|---|---|
+| [waldo-vision/optical.flow.demo](https://github.com/waldo-vision/optical.flow.demo) | 526 | **MPL-2.0** (16.725 B) | ⛔ **ARCHIVADO** 2021-11-20 | El proyecto más grande de la categoría lleva **5 años muerto** |
+| [lrq3000/oacs](https://github.com/lrq3000/oacs) | 35 | ⛔ **sin ningún archivo de licencia** | ⛔ push 2017-03-10 | **9,7 años muerto** + sin grant. Sólo tenía puente a OpenArena |
+| [korpys667/MKAC](https://github.com/korpys667/MKAC) | — | **GPL-3.0** | vivo | Copyleft fuerte: inviable en servidor distribuido de cliente |
+| [gtxcinerbaba-hash/ZeyronAC](https://github.com/gtxcinerbaba-hash/ZeyronAC) | 4 | **GPL-3.0** | 2026-08-22 | Copyleft + sólo Minecraft |
+| [KaelusAI/Shard](https://github.com/KaelusAI/Shard) | — | — | vivo | La detección ML **corre en la nube del proveedor**: no es autohospedable |
+| [SoMax1soft/mls-network-plugin](https://github.com/SoMax1soft/mls-network-plugin) | — | no estándar | vivo | El transporte del modelo real **no está en el código público** |
+| [islamyasin07/Ares-AntiCheat-System](https://github.com/islamyasin07/Ares-AntiCheat-System) | 2 | ⛔ `null` | 2025-12-23 | Sin grant |
+| [DevInsilicon/MLAAC](https://github.com/DevInsilicon/MLAAC) | 0 | ⛔ `null` | 2026-02-17 | Sin grant, sin tracción |
+
+**Patrón:** siete de los ocho son **específicos de Minecraft**. La categoría
+existe como ecosistema de plugins de servidores de Minecraft, **no** como
+tecnología reutilizable. El mercado real (Riot Vanguard, BattlEye, Easy
+Anti-Cheat) es **íntegramente propietario y de kernel**.
+
+⇒ **Para un cliente, anti-cheat es "construir o comprar propietario".** No hay
+punto de partida abierto. La única pieza honesta que esta KB puede ofrecer es
+**detección conductual de anomalías sobre la telemetría del backend** —que es lo
+que ya describe la Receta 3 con Nakama— y hay que presentarla como lo que es: un
+detector estadístico, no un anti-cheat.
+
+### 🔴 Hallazgo nº4: **soporte al jugador y moderación de VOZ: dos sub-capas más con oferta cero**
+
+- **Soporte al jugador con LLM:** la enumeración devuelve 5 repos, **todos de
+  0–1 ★**, y ninguno es un agente de soporte: son experimentos de *roleplay*,
+  benchmarks de juegos sociales y perfiles personales. La Receta 5 de esta KB
+  (*Game Support Agent*) sigue siendo **una construcción desde frameworks
+  genéricos**, y así hay que venderla.
+- **Moderación de voz en juego:** 1 solo resultado
+  ([vinifborgess/azure-guardian](https://github.com/vinifborgess/azure-guardian),
+  MIT, **0 ★**), y es un envoltorio sobre un servicio de Azure. La moderación de
+  **texto** sí tiene oferta real —`unitaryai/detoxify` y `guardrails-ai`, ya en
+  esta KB desde el cycle 13— pero **el audio no**. La brecha importa porque el
+  CVAA obliga a que el chat de voz tenga equivalente en texto (ver `intel/market.md`):
+  **el camino regulatorio y el camino técnico coinciden** — transcribir la voz
+  habilita a la vez la accesibilidad y la moderación. Un solo componente, dos
+  obligaciones.
+
+### 🔵 Hallazgo nº5: inventario plano (regla T64) — **5 incumbentes ausentes en 14 passes**
+
+La regla de la flota dice que un vocabulario de consultas con forma de
+*problema* tiene un punto ciego con forma de *producto*. Se gastó una consulta en
+un inventario plano contra los incumbentes obvios de categorías que esta KB
+**ya tiene abiertas**. Cinco faltaban:
+
+| Repo | ★ | Licencia (byte-read) | Push | Por qué importa / categoría que ya existía aquí |
+|---|---|---|---|---|
+| [SanderMertens/flecs](https://github.com/SanderMertens/flecs) | 8.854 | **MIT** (`master/LICENSE`, 1.131 B) — badge `NOASSERTION` | 2026-11-20 | ECS rápido para C/C++. El repo más grande ausente de esta KB |
+| [danijar/dreamerv3](https://github.com/danijar/dreamerv3) | 4.004 | **MIT** (1.058 B) | 2026-10-04 | **El world model canónico.** La KB tiene sección de world models desde el cycle 1 |
+| [Farama-Foundation/Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment) | 2.463 | ⚠️ **GPL-2.0** (`LICENSE.md`, 17.879 B) | 2026-11-15 | ALE, el benchmark más viejo de *agentes que juegan*. **Copyleft: sólo harness interno de evaluación, nunca embarcado** |
+| [MichaelTMatthews/Craftax](https://github.com/MichaelTMatthews/Craftax) | 476 | **MIT** (1.059 B) | 2026-10-27 | Crafter + NetHack en JAX. ICML 2024 *spotlight*. Benchmark de exploración |
+| [vivekjoshy/openskill.py](https://github.com/vivekjoshy/openskill.py) | 377 | **MIT** (1.068 B) | 2026-05-12 | Rating multijugador (Weng-Lin). **La KB tenía `open-match` como matchmaking y ningún sistema de rating.** Puertos: [intinig/go-openskill](https://github.com/intinig/go-openskill) (MIT, 16 ★), [pocketcombats/openskill-java](https://github.com/pocketcombats/openskill-java) (Apache-2.0, 13 ★) |
+
+**`flecs` confirma el mecanismo T60 entre KBs.** Badge `NOASSERTION`, archivo
+`LICENSE` = MIT íntegro de 1.131 B. ¿Por qué falla el clasificador? Porque bajo
+el título lleva **una segunda línea de copyright**:
+`Portions Copyright (c) Meta Platforms, Inc. and affiliates`. Es **exactamente**
+el mecanismo que la KB de *enterprise* midió en `Tencent/LoopForge` (preámbulo
+corporativo que derrota la detección de MIT). Dos industrias, dos repos sin
+relación, mismo fallo del clasificador ⇒ **un `NOASSERTION` con una línea de
+copyright corporativo extra es, hasta prueba en contrario, una permisiva intacta.**
+
+**`ALE` confirma el hallazgo del cycle 11.** Aquel pass midió que la Farama
+Foundation publica MIT, GPL-2.0 y *nada* a la vez, pero **no nombró cuál era el
+GPL-2.0**. Es éste. Queda cerrado el pendiente.
+
+### 🆕 Repos nuevos verificados este pass (cycle 15) — fuera de la capa operativa
+
+| Repo | ★ | Licencia (byte-read) | Push | Descripción |
+|---|---|---|---|---|
+| [ForgeAX/forgeax-engine](https://github.com/ForgeAX/forgeax-engine) | 116 | **Apache-2.0** (`LICENSE`, 11.358 B) | 2026-11-20 | Engine TypeScript *AI-native* pensado para que lo maneje un agente, multiplataforma |
+| [TohmaN233/YN-translation-workshop](https://github.com/TohmaN233/YN-translation-workshop) | 235 | **MIT** | 2026-11-11 | Banco de trabajo de traducción y revisión con IA para ficción larga **y localización de juegos** |
+
+> Nota sobre `forgeax-engine`: **11.358 B**, un byte sobre el testigo canónico de
+> Apache-2.0 (11.357 B). Es un salto de línea final. **Tolerancia ±2 B sobre el
+> testigo = mismo texto**; fuera de eso, leer.
+
+### 📏 Lo que este pass NO puede medir, dicho explícitamente
+
+- **No se pudo confirmar si EN 301 549 v4.1.1 fue citada en el DOUE.** Un
+  proveedor la pronostica para **nov-2026** (este mes). Sin la cita, la versión
+  con efecto legal sigue siendo **v3.2.1**. No usar v4.1.1 como requisito
+  contractual hasta verificar el Diario Oficial.
+- **No se midió cobertura de accesibilidad en exportación web de Godot.** Hay una
+  pregunta abierta en el foro oficial y ninguna respuesta. Si el entregable es
+  WebGL, **esto es un riesgo abierto, no una función asumida**.
+- **No hay dato de adopción de accesibilidad en APAC ni LATAM** (ver
+  `intel/market.md`): se buscó y no hay. Es un cero medido, no un cero asumido.
+- **No se verificó el alcance exacto del CVAA** contra el texto de la FCC: la
+  fecha de 1-ene-2019 y la regla de *substantial upgrades* vienen de guías
+  secundarias de accesibilidad, no del `47 CFR`. **Verificar con el abogado del
+  cliente antes de ponerlo en un contrato.**
+
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 14): **la capa de PRODUCCIÓN DE ASSETS — y el primer eje donde la licencia del código y la licencia de lo que el código PRODUCE son dos objetos distintos**
 

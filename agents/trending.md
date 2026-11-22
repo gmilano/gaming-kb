@@ -12,6 +12,55 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 15
+
+**Tema del pass:** la capa operativa de cara al jugador —accesibilidad,
+anti-cheat, soporte, moderación de voz—. **Primera capa de esta KB donde la
+enumeración devuelve más obligación que oferta.**
+
+### Lo que entró (verificado, licencia leída byte a byte)
+
+| Repo | ★ | Licencia (bytes) | Capa | Último push |
+|---|---|---|---|---|
+| [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | 1.567 | **Apache-2.0 OR MIT** (9.723 + 1.023) | accesibilidad | 2026-11-21 |
+| [ethindp/prism](https://github.com/ethindp/prism) | 67 | **MPL-2.0** (15.504, Markdown) | accesibilidad | 2026-11-21 |
+| [mikrima/UnityAccessibilityPlugin](https://github.com/mikrima/UnityAccessibilityPlugin) | 85 | **Apache-2.0** (11.357 ✅) | accesibilidad | ⚠️ 2023-05-13 |
+| [jumpingmushroom/Earshot](https://github.com/jumpingmushroom/Earshot) | 1 | **MIT** (1.069) | captions | 2026-10-18 |
+| [dominicbytes/game-accessibility-skill](https://github.com/dominicbytes/game-accessibility-skill) | 1 | **MIT** | agent skill | 2026-10-18 |
+| [SanderMertens/flecs](https://github.com/SanderMertens/flecs) | 8.854 | **MIT** (1.131) — badge `NOASSERTION` | ECS | 2026-11-20 |
+| [danijar/dreamerv3](https://github.com/danijar/dreamerv3) | 4.004 | **MIT** (1.058) | world models | 2026-10-04 |
+| [Farama-Foundation/Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment) | 2.463 | ⚠️ **GPL-2.0** (17.879) | eval / QA | 2026-11-15 |
+| [MichaelTMatthews/Craftax](https://github.com/MichaelTMatthews/Craftax) | 476 | **MIT** (1.059) | benchmark | 2026-10-27 |
+| [vivekjoshy/openskill.py](https://github.com/vivekjoshy/openskill.py) | 377 | **MIT** (1.068) | rating / matchmaking | 2026-05-12 |
+| [ForgeAX/forgeax-engine](https://github.com/ForgeAX/forgeax-engine) | 116 | **Apache-2.0** (11.358) | engine AI-native | 2026-11-20 |
+| [TohmaN233/YN-translation-workshop](https://github.com/TohmaN233/YN-translation-workshop) | 235 | **MIT** | localización | 2026-11-11 |
+
+### ⛔ Rechazos **medidos** de este pass — se publican porque el silencio se lee como cobertura
+
+| Repo | ★ | Motivo |
+|---|---|---|
+| [waldo-vision/optical.flow.demo](https://github.com/waldo-vision/optical.flow.demo) | 526 | **ARCHIVADO** 2021-11-20. El mayor proyecto de anti-cheat ML |
+| [lrq3000/oacs](https://github.com/lrq3000/oacs) | 35 | **Sin archivo de licencia** + push 2017-03-10 |
+| [lightsoutgames/godot-accessibility](https://github.com/lightsoutgames/godot-accessibility) | 87 | MIT, pero **sin push desde 2021-05-19**; absorbido por el engine en Godot 4.5 |
+| [m1maker/SRAL](https://github.com/m1maker/SRAL) | 21 | MIT, **ARCHIVADO**; su README remite a `prism` |
+| [Unity-Technologies/a11y-public-sample](https://github.com/Unity-Technologies/a11y-public-sample) | 26 | **Unity Companion License**: no es open source |
+| [korpys667/MKAC](https://github.com/korpys667/MKAC) · [gtxcinerbaba-hash/ZeyronAC](https://github.com/gtxcinerbaba-hash/ZeyronAC) | — · 4 | **GPL-3.0**, sólo Minecraft |
+| [KaelusAI/Shard](https://github.com/KaelusAI/Shard) · [SoMax1soft/mls-network-plugin](https://github.com/SoMax1soft/mls-network-plugin) | — | El modelo real **no está en el código público** / corre en nube del proveedor |
+| [islamyasin07/Ares-AntiCheat-System](https://github.com/islamyasin07/Ares-AntiCheat-System) · [DevInsilicon/MLAAC](https://github.com/DevInsilicon/MLAAC) | 2 · 0 | Licencia `null`, sin tracción |
+| [vinifborgess/azure-guardian](https://github.com/vinifborgess/azure-guardian) | 0 | Único candidato de moderación de voz: envoltorio de un servicio Azure |
+
+### 📏 Recuento del pass
+
+| Métrica | Valor |
+|---|---|
+| Candidatos enumerados en la capa operativa | **23** |
+| Vivos **y** permisivos | **2** |
+| Incumbentes ausentes recuperados (regla T64) | **5** |
+| Licencias leídas byte a byte | **17** |
+| Defectos nuevos del checksum de bytes | **2** (5º y 6º) |
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 14
 
 **La tendencia de este pass no es qué apareció: es DÓNDE se mudó la
