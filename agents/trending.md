@@ -12,6 +12,59 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 16
+
+**Tema del pass:** el **plano de datos del jugador** (telemetría, analítica,
+crash reporting, live-ops). Primera capa de esta KB donde **el líder de la
+categoría prohíbe explícitamente la producción**, y donde la respuesta de la
+comunidad no fue un competidor nuevo sino **un fork del último commit permisivo**.
+
+### Lo que entró (verificado, licencia leída byte a byte)
+
+| Repo | ★ | Licencia (bytes) | Capa | Último push |
+|---|---|---|---|---|
+| [opensnowcat/opensnowcat-collector](https://github.com/opensnowcat/opensnowcat-collector) | 81 | **Apache-2.0** (11.358) | ingesta de eventos | 2026-11-13 |
+| [opensnowcat/opensnowcat-enrich](https://github.com/opensnowcat/opensnowcat-enrich) | 40 | **Apache-2.0** (11.359) | enriquecido | 2026-11-13 |
+| [ClickHouse/ClickHouse](https://github.com/ClickHouse/ClickHouse) | 51.060 | **Apache-2.0** | almacén de eventos | 2026-11-22 |
+| [ClickHouse/ClickStack](https://github.com/ClickHouse/ClickStack) | 10.061 | **MIT** (1.077) | observabilidad | 2026-11-21 |
+| [apache/superset](https://github.com/apache/superset) | 75.615 | **Apache-2.0** | BI | 2026-11-22 |
+| [open-telemetry/opentelemetry-collector](https://github.com/open-telemetry/opentelemetry-collector) | 7.793 | **Apache-2.0** | trazas | 2026-11-20 |
+| [tx7do/go-wind-uba](https://github.com/tx7do/go-wind-uba) | 51 | **MIT** (1.061) | analítica de comportamiento | 2026-11-20 |
+| [mirlan-irokez/rawbbit](https://github.com/mirlan-irokez/rawbbit) | 11 | **Apache-2.0** (11.349) | analítica de juego | 2026-11-09 |
+| [EricSun0218/OpenGameAgent](https://github.com/EricSun0218/OpenGameAgent) | 61 | **MIT** (1.096) | runtime de NPC | 2026-11-17 |
+| [Eurekaleo/awesome-ai-for-games](https://github.com/Eurekaleo/awesome-ai-for-games) | 391 | **MIT** | índice | 2026-11-19 |
+| [SubmitGame/awesome-ai-game-dev-tools](https://github.com/SubmitGame/awesome-ai-game-dev-tools) | 93 | **CC0-1.0** | índice | 2026-11-21 |
+| GitLab: `glitchtip/glitchtip-backend` | — | **MIT** (1.067) | crash reporting | — |
+
+### La señal de tendencia de este pass
+
+- **El gradiente de estrellas invertido, 2ª reproducción en esta KB.** 7.051 ★ en
+  `snowplow/snowplow`, que es documentación y es Apache-2.0; **40 ★ y 31 ★** en
+  `stream-collector` y `enrich`, que son el producto y están bajo SLULA. La primera
+  reproducción fue el clúster `godot-mcp` (cycle 10). **Las estrellas miden
+  atención, no el objeto que vas a instalar.**
+- **La continuación permisiva de una capa madura es un FORK, no un competidor.**
+  OpenSnowcat recibió commits hace nueve días con 81 ★. Nadie escribió un pipeline
+  de eventos nuevo: forkearon el último commit Apache-2.0 y lo sostienen.
+- **El carve-out por directorio llegó a tres vendors distintos** (PostHog `ee/`,
+  Metabase `enterprise/`, OpenReplay `ee/`). Dejó de ser anécdota.
+- **Un repo de 0 ★ puede ser el único de su categoría.** `GameTuner` es la única
+  plataforma de analítica pensada para juegos, es Apache-2.0 y tiene **cero**
+  estrellas en sus diez repos. El filtro por estrellas de un pass anterior la habría
+  descartado sin verla.
+
+### Lo que NO entró, medido
+
+`snowplow/stream-collector` y `snowplow/enrich` (SLULA: producción prohibida) ·
+`getsentry/sentry` (FSL-1.1) · `Countly/countly-server` (AGPL §7 modificada) ·
+`metabase/metabase` (AGPL + comercial) · `openreplay/openreplay` (carve-out `ee/`) ·
+`grafana/grafana` y `rybbit-io/rybbit` (AGPL-3.0) · `CrateBytes/CrateBytes`
+(**archivado** 2025-01-22) · `AIGeeksGroup/Code2Games` (89 ★, **sin licencia**) ·
+`ADM1SH/churn-prediction-scaling` (sin licencia) · `deq-labs/analytics-platform`
+(AGPL-3.0, 0 ★).
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 15
 
 **Tema del pass:** la capa operativa de cara al jugador —accesibilidad,

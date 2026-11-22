@@ -8,13 +8,77 @@ updated: 2026-11-22
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22 cycles 14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22 cycles 15/14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
 > (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
 > de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
+
+## 🆕 Capa vertical nueva (2026-11-22, cycle 16): **el plano de datos del jugador** — la primera vertical de esta página donde la plataforma líder **no se puede desplegar**, y la alternativa viable es un fork
+
+Las verticales anteriores de esta página se eligen: Godot o GDevelop, Nakama o
+Colyseus. Ésta se parece más a la de accesibilidad del cycle 15 —se hereda— pero
+por un motivo distinto: **cualquier juego con live-ops ya tiene un plano de datos**.
+La pregunta nunca es si lo vas a construir; es si el que ya tiene el cliente se
+puede sostener, y bajo qué licencia.
+
+### El stack, con la licencia como criterio de selección
+
+| Función | ✅ Elegir | ⛔ No elegir — y por qué |
+|---|---|---|
+| Ingesta de eventos | [opensnowcat-collector](https://github.com/opensnowcat/opensnowcat-collector) **Apache-2.0**, 81 ★ | `snowplow/stream-collector` — **SLULA: producción prohibida** |
+| Enriquecido | [opensnowcat-enrich](https://github.com/opensnowcat/opensnowcat-enrich) **Apache-2.0**, 40 ★ | `snowplow/enrich` — mismo motivo |
+| Registro de esquemas | [opensnowcat-iglu-server](https://github.com/opensnowcat/opensnowcat-iglu-server) **Apache-2.0** ⚠️ dormido desde 2024-08 | — |
+| Almacén | [ClickHouse](https://github.com/ClickHouse/ClickHouse) **Apache-2.0**, 51.060 ★ | — |
+| BI | [Apache Superset](https://github.com/apache/superset) **Apache-2.0**, 75.615 ★ | `metabase` (AGPL + comercial en `enterprise/`), `grafana` (**AGPL-3.0**) |
+| Crash / errores | **GlitchTip** (GitLab) **MIT**, protocolo Sentry | `getsentry/sentry` — **FSL-1.1**, Apache-2.0 recién a los 2 años de cada versión |
+| Trazas y métricas | [opentelemetry-collector](https://github.com/open-telemetry/opentelemetry-collector) **Apache-2.0** | — |
+| Observabilidad unificada | [ClickStack](https://github.com/ClickHouse/ClickStack) **MIT** | `openreplay` — carve-out `ee/` propietario |
+| Analítica de producto ligera | [go-wind-uba](https://github.com/tx7do/go-wind-uba) **MIT** · [rawbbit](https://github.com/mirlan-irokez/rawbbit) **Apache-2.0** | `countly-server` (**AGPL §7 modificada**), `rybbit` (AGPL-3.0), `posthog` (carve-out `ee/`) |
+| Modelo de eventos de juego | [GameTuner](https://github.com/GameTuner/collector) **Apache-2.0** — como **referencia**, no dependencia | — |
+
+### 🔴 La regla que esta vertical impone y las anteriores no: **el carve-out por directorio es la plantilla de la categoría**
+
+Tres vendors distintos, tres directorios con el mismo papel: PostHog `ee/`,
+Metabase `enterprise/`, OpenReplay `ee/`. Con tres instancias deja de ser anécdota.
+
+> **Reflejo correcto al evaluar cualquier analítica que se anuncie "open source":**
+> listar el árbol buscando `ee/` o `enterprise/` **antes** de leer el `LICENSE`
+> raíz. El `LICENSE` raíz de OpenReplay, de hecho, **apunta a `ee/LICENSE`, que da
+> 404 en `main` y en `dev`** — el archivo real es `ee/LICENSE.md`. El puntero y el
+> destino se verifican por separado.
+
+### 📉 Gap declarado: **no existe una plataforma de live-ops open source y permisiva para juegos**
+
+Buscado y medido en este pass, para que el silencio no se lea como cobertura:
+
+- **Backend de live-ops con economía y eventos**: lo que devuelve la enumeración es
+  `CrateBytes` —**archivado desde 2025-01-22** y AGPL-3.0— y una awesome-list de
+  terceros que lo sigue recomendando. Nakama sigue siendo la pieza viva, y ya está
+  en esta página.
+- **Predicción de churn / LTV lista para producción**: **cero**. Los repos que
+  devuelve la búsqueda son portfolios y notebooks; el más cercano
+  (`ADM1SH/churn-prediction-scaling`) declara en su propio README telemetría
+  **sintética** y webhook **mock**, y no tiene archivo de licencia. **No hay un
+  modelo de churn de juego open source adoptable: hay que entrenarlo sobre el plano
+  de datos del cliente**, que es precisamente por qué el plano de datos se vende
+  primero.
+- **ERP/CRM vertical de estudios**: sigue sin existir (confirmado otra vez este
+  pass; coincide con el gap que el cycle 14 ya declaró).
+
+### 🟢 Por qué esta vertical se vende antes que las otras
+
+Las capas que esta KB fue añadiendo —NPC, assets, voz, accesibilidad— **producen
+eventos o consumen datos del jugador**. Ninguna se puede medir, facturar ni
+defender ante un regulador sin el plano de datos debajo. Y es la única capa donde
+el argumento no es de oportunidad sino de **riesgo ya contraído**: si el cliente
+está corriendo `stream-collector` o `enrich` en producción hoy, está fuera de los
+términos de su licencia hoy, y la migración a OpenSnowcat es un reemplazo
+componente a componente, no una reescritura.
+
+---
 
 ## 🆕 Capa vertical nueva (2026-11-22, cycle 15): **el ENGINE como plataforma de accesibilidad** — la primera vertical de esta página que no se elige, se hereda
 

@@ -11,6 +11,33 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 16
+
+**Tema:** plano de datos del jugador. La búsqueda de *trending* en esta capa
+devolvió menos repos nuevos que **movimientos de licencia** en repos viejos — y
+ése es el dato.
+
+| Repo | Licencia (bytes) | Qué cambió / por qué importa | ★ |
+|---|---|---|---|
+| [opensnowcat/opensnowcat-collector](https://github.com/opensnowcat/opensnowcat-collector) | **Apache-2.0** (11.358) | 🟢 **El hallazgo del pass.** Fork vivo del collector de Snowplow anterior a la relicencia. Commits hace 9 días. 8 forks. | 81 |
+| [opensnowcat/opensnowcat-enrich](https://github.com/opensnowcat/opensnowcat-enrich) | **Apache-2.0** (11.359) | Par del anterior. 9 forks. | 40 |
+| [ClickHouse/ClickStack](https://github.com/ClickHouse/ClickStack) | **MIT** (1.077) | Observabilidad OTel + ClickHouse en un solo stack. Copyright **© DeploySentinel, Inc.**: la licencia delata la adquisición. | 10.061 |
+| [tx7do/go-wind-uba](https://github.com/tx7do/go-wind-uba) | **MIT** (1.061) | 25 modelos de analítica con **telemetría de juego** nombrada explícitamente; Kafka → ClickHouse/Doris, multi-tenant. Push de anteayer. | 51 |
+| [mirlan-irokez/rawbbit](https://github.com/mirlan-irokez/rawbbit) | **Apache-2.0** (11.349) | Analítica de juego autohospedada con **MCP de sólo lectura**; Parquet en tu object storage. Muy temprano (3 forks). | 11 |
+| [EricSun0218/OpenGameAgent](https://github.com/EricSun0218/OpenGameAgent) | **MIT** (1.096) | Runtime de personajes AI-native con estado durable e integraciones Unity/Godot/Unreal. | 61 |
+| [SubmitGame/awesome-ai-game-dev-tools](https://github.com/SubmitGame/awesome-ai-game-dev-tools) | **CC0-1.0** | Índice refrescado a diario con filtro de actividad del último año. Útil como cantera de candidatos. | 93 |
+| [Eurekaleo/awesome-ai-for-games](https://github.com/Eurekaleo/awesome-ai-for-games) | **MIT** | Índice de investigación por etapa del ciclo de vida del juego. | 391 |
+
+### ⛔ Movimientos de licencia que convierten un repo *trending* en inservible
+
+| Repo | ★ | Lo medido |
+|---|---|---|
+| [snowplow/stream-collector](https://github.com/snowplow/stream-collector) · [snowplow/enrich](https://github.com/snowplow/enrich) | 40 · 31 | **SLULA 1.1**: el grant cubre sólo *Non-Production Use* (datos de prueba o sintéticos) o uso no comercial. Relicencia del core: **8-ene-2024**. |
+| [getsentry/sentry](https://github.com/getsentry/sentry) | 45.850 | **FSL-1.1-Apache-2.0**: convierte a Apache-2.0 al **segundo aniversario de cada versión**. |
+| [CrateBytes/CrateBytes](https://github.com/CrateBytes/CrateBytes) | 13 | **`archived=true`**, último push 2025-01-22 — y una awesome-list vigente lo sigue recomendando. |
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 15
 
 **Qué se midió:** la capa operativa de cara al jugador, más un **inventario plano

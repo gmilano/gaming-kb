@@ -7,8 +7,8 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-22 (pass cycle 15)**. Passes previos: 2026-11-22
-> (cycles 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
+> Última actualización: **2026-11-22 (pass cycle 16)**. Passes previos: 2026-11-22
+> (cycles 15, 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
 > 2026-10-26, 2026-07-02.
 >
 > 🔴 **Lo que el pass cycle 14 cambia de raíz:** los trece passes anteriores
@@ -71,6 +71,268 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 16): **el plano de datos del jugador — la primera capa de esta KB donde el proveedor líder prohíbe la producción con todas las letras, y la continuación permisiva es un fork, no un competidor**
+
+Esta KB llevaba 15 passes y 285 slugs sin una sola fila de **telemetría, analítica
+de jugador, crash reporting o live-ops**. No era una capa floja: era una capa
+ausente. El inventario plano (regla T64) lo midió antes de buscar nada: de 20
+incumbentes del plano de datos contrastados contra los 285 slugs de la KB,
+**19 estaban ausentes y sólo `grafana/grafana` aparecía**, y aparecía sin fila
+propia.
+
+Lo que la capa devolvió no es un catálogo de repos: es **una categoría entera que
+se fue del open source entre 2024 y 2026**, y una lección de método que casi
+produce un cero falso en esta misma página.
+
+---
+
+### 🔴 Hallazgo nº1: `snowplow/snowplow` tiene 7.051 ★ y badge **Apache-2.0** — y **no es el pipeline**. Los dos componentes que se despliegan prohíben la producción
+
+El gradiente de estrellas es la trampa completa:
+
+| Repo | ★ | Licencia **leída byte a byte** | ¿Se despliega? |
+|---|---|---|---|
+| [snowplow/snowplow](https://github.com/snowplow/snowplow) | 7.051 | **Apache-2.0** (`LICENSE`, 11.359 B) | ❌ es el repo paraguas / documentación |
+| [snowplow/stream-collector](https://github.com/snowplow/stream-collector) | 40 | ⛔ **SLULA 1.1** (`LICENSE.md`) | ✅ sí — es la ingesta |
+| [snowplow/enrich](https://github.com/snowplow/enrich) | 31 | ⛔ **SLULA 1.1** (`LICENSE.md`) | ✅ sí — es el enriquecido |
+| [snowplow/snowplow-javascript-tracker](https://github.com/snowplow/snowplow-javascript-tracker) | 593 | **BSD-3-Clause** (`LICENSE`, 1.546 B) | ✅ sí — es el SDK de cliente |
+
+**Quien mide "Snowplow" por estrellas y badge concluye Apache-2.0 y se equivoca
+exactamente en los dos componentes que iba a instalar.** El badge del repo de
+7.051 ★ es correcto y es irrelevante.
+
+Y la restricción es mucho más dura de lo que dice el resumen habitual
+("no podés montar un SaaS competidor"). Texto **leído del archivo**, §1.1 de la
+Snowplow Limited Use License Agreement, versión 1.1:
+
+> *"No right to distribute or make available the Software is granted under this
+> License. Licensee is not granted the right to, and Licensee shall not, exercise
+> the License for any Competing Use, and Licensee **may exercise the License only
+> for Non-Production Use or Non-Commercial Use**."*
+
+Y §1.2.2 define el término:
+
+> *"**'Non-Production Use'** means any use of the Software to process **test or
+> synthetic data** to evaluate the sufficiency of the Software for use by
+> Licensee."*
+
+Es decir: para un estudio comercial, **`stream-collector` y `enrich` no se pueden
+correr en producción en absoluto**, ni siquiera para uso interno que no compita
+con Snowplow. La licencia permite evaluarlos con datos sintéticos. Nada más.
+
+**Fecha de la relicencia:** el core pasó a SLULA el **8 de enero de 2024** (v1.0).
+El archivo del repo dice literalmente *"Version 1.1, November, 2024"*; el blog del
+vendor fecha la 1.1 en **diciembre de 2024**. ⚠️ **Se cita el archivo, no el blog**
+— es la regla de manifiesto-antes-que-anuncio de esta KB aplicada a una fecha.
+
+**Un eje de partición del grant que esta KB no tenía: cliente contra servidor.**
+El tracker de JavaScript sigue siendo BSD-3-Clause mientras el pipeline es SLULA.
+La licencia no parte el producto por edición ni por directorio: lo parte **por el
+lado de la red en que corre el binario**. Si tu arquitectura cruza esa línea, tu
+licencia también.
+
+---
+
+### 🔵 Hallazgo nº2 (método, y el más importante del pass): **un slug adivinado que falla NO mide ausencia** — estuve a punto de publicar un cero falso
+
+La continuación permisiva de Snowplow existe y está viva. El camino para
+encontrarla casi la pierde:
+
+- `gh api search/repositories -f q='repo:opensnowcat/enrich'` → **422 Validation Failed**
+- `git ls-remote https://github.com/opensnowcat/enrich` → **NOT_FOUND**
+- `git ls-remote https://github.com/opensnowcat/stream-collector` → **NOT_FOUND**
+
+Tres sondas, tres negativos, y **el proyecto estaba ahí todo el tiempo**: la
+convención de nombres no es `opensnowcat/<componente>` sino
+**`opensnowcat/opensnowcat-<componente>`**. Una búsqueda por palabra clave de la
+organización lo devolvió entero en una sola llamada.
+
+> **Regla nueva (T65): antes de declarar un cero, buscá la ORGANIZACIÓN por
+> palabra clave, no el repo por slug adivinado.** Un 422 o un `NOT_FOUND` sobre un
+> slug que vos inventaste mide tu suposición sobre el nombre, no la existencia del
+> proyecto. Es la misma forma que el descubrimiento de `complyctl-provider-*` por
+> convención de nombres en la KB enterprise, y el complemento del hallazgo del
+> cycle 10 (`422` no distingue borrado de renombrado): aquí no hubo borrado ni
+> renombrado — **el slug nunca fue correcto**.
+
+**OpenSnowcat, medido:**
+
+| Repo | ★ | Licencia **byte a byte** | Último push |
+|---|---|---|---|
+| [opensnowcat/opensnowcat-collector](https://github.com/opensnowcat/opensnowcat-collector) | 81 | **Apache-2.0** (`LICENSE.txt`, 11.358 B) | 2026-11-13 |
+| [opensnowcat/opensnowcat-enrich](https://github.com/opensnowcat/opensnowcat-enrich) | 40 | **Apache-2.0** (`LICENSE.txt`, 11.359 B) | 2026-11-13 |
+| [opensnowcat/opensnowcat-devkit](https://github.com/opensnowcat/opensnowcat-devkit) | 14 | Apache-2.0 (badge) | 2026-10-01 |
+| [opensnowcat/opensnowcat-rdb-loader](https://github.com/opensnowcat/opensnowcat-rdb-loader) | 7 | Apache-2.0 (badge) | 2025-08-08 |
+| [opensnowcat/opensnowcat-iglu-server](https://github.com/opensnowcat/opensnowcat-iglu-server) | 9 | Apache-2.0 (badge) | ⚠️ 2024-08-11 |
+
+Es un fork declarado del Snowplow anterior a la relicencia, y los dos componentes
+que importan recibieron commits **hace nueve días**. El registro de esquemas
+(`iglu-server`) lleva **más de dos años dormido**: se usa, se fija la versión y se
+asume el mantenimiento — está dicho en la Receta 41, no escondido.
+
+---
+
+### 🔴 Hallazgo nº3: la **única** plataforma de analítica hecha a propósito para juegos es Apache-2.0, está completa… y lleva dos años y medio sin un commit
+
+`GameTuner` son **diez repos**, todos con badge Apache-2.0, y cubren el vertical
+entero: tracker de Unity, collector, enricher, loader a BigQuery, ETL, motor de
+consultas, servicio de metadatos, Terraform para GCP y un sink de eventos malos.
+Su propio README se describe como *"a data platform, specialized in mobile gaming,
+built on top of Snowplow Open Source data pipeline"*.
+
+**Y las diez tienen 0 ★ y su último push es de febrero–abril de 2024.**
+
+Licencias leídas byte a byte: `GameTuner/collector` 11.358 B, `GameTuner/enricher`
+11.359 B, `GameTuner/unity-tracker` 11.325 B — las tres, texto completo de
+Apache-2.0.
+
+Procedencia **medida, no supuesta**: el README del collector dice *"is build upon
+Snowplow Scala Stream Collector"*; el unity-tracker es un fork del tracker de Unity
+de Snowplow v0.5.0 y su línea de copyright es **AlgebraAI, 2022–2024** — **no es de
+Nordeus**, que es la atribución que circula. Sólo soporta GCP/pubsub. Sus propios
+autores escribieron en 2024 que el proyecto era *"muy joven, usado en un estudio"*.
+
+> ⚠️ **Límite declarado, y hay que leerlo antes de forkear:** **no medí si el
+> snapshot de Snowplow vendorizado dentro de GameTuner es anterior al 8-ene-2024**,
+> que es la fecha de la relicencia. Si fuera posterior, el `LICENSE` Apache-2.0 del
+> repo es **la afirmación de GameTuner**, no necesariamente una sublicencia válida
+> del código de Snowplow que lleva dentro. Es verificable commit a commit y **no lo
+> hice en este pass**. Usarlo como referencia de esquema es seguro; usarlo como base
+> de fork exige esa verificación primero.
+
+---
+
+### 🔴 Hallazgo nº4: la categoría se fue del open source **en bloque**, y el carve-out por directorio ya es la plantilla de la casa
+
+Ocho incumbentes del plano de datos, licencia leída byte a byte. **Seis no son
+permisivos:**
+
+| Repo | ★ | Licencia **byte a byte** | Veredicto |
+|---|---|---|---|
+| [getsentry/sentry](https://github.com/getsentry/sentry) | 45.850 | ⛔ **FSL-1.1-Apache-2.0** (`LICENSE.md`, 3.785 B) | Apache-2.0 **sólo al segundo aniversario de cada versión** |
+| [Countly/countly-server](https://github.com/Countly/countly-server) | 5.932 | ⛔ **AGPL-3.0 con §7 modificada** (`LICENSE`, 1.025 B) | *"Countly Lite License"*: AGPL **más** prohibición de quitar el logo |
+| [metabase/metabase](https://github.com/metabase/metabase) | 50.470 | ⛔ **AGPL-3.0 + Metabase Commercial** (`LICENSE.txt`, 855 B) | carve-out en `enterprise/` |
+| [openreplay/openreplay](https://github.com/openreplay/openreplay) | 13.170 | ⛔ **multi-licencia + propietaria** (`LICENSE`, 36.511 B) | carve-out en `ee/` |
+| [grafana/grafana](https://github.com/grafana/grafana) | 78.033 | ⛔ **AGPL-3.0** (`LICENSE`) | copyleft de red |
+| [rybbit-io/rybbit](https://github.com/rybbit-io/rybbit) | 13.349 | ⛔ **AGPL-3.0** (badge) | copyleft de red |
+| [ClickHouse/ClickHouse](https://github.com/ClickHouse/ClickHouse) | 51.060 | ✅ **Apache-2.0** (© 2016-2026 ClickHouse, Inc.) | permisiva |
+| [apache/superset](https://github.com/apache/superset) | 75.615 | ✅ **Apache-2.0** | permisiva |
+
+Las cuatro observaciones que salen de esa tabla:
+
+1. **Sentry es el caso más caro de equivocarse** porque todo el mundo lo llama
+   open source y el propio archivo explica por qué no lo es hoy: el grant Apache-2.0
+   *"is effective on the second anniversary"* de cada versión. La versión que querés
+   desplegar es, por construcción, la que todavía no convirtió.
+2. **Countly invierte el sentido del `NOASSERTION`** en la dirección mala: el badge
+   no dice nada y la lectura byte a byte devuelve AGPL **endurecida**, no ablandada.
+   La regla T60 funciona en los dos sentidos y este pass la ejerció en el restrictivo.
+3. **Tercer caso del carve-out por directorio**: PostHog `ee/`, Metabase
+   `enterprise/`, OpenReplay `ee/`. Con tres instancias de distintos vendors
+   **ya no es una peculiaridad: es la plantilla de la categoría.** El reflejo correcto
+   al ver cualquier analítica "open source" es `ls` del árbol buscando `ee/` o
+   `enterprise/` **antes** de leer el `LICENSE` raíz.
+4. **Un puntero de licencia roto, 2º caso en esta KB** (el 1º fue el `LICENSE` que
+   era un fragmento de diff, cycle 8): el `LICENSE` raíz de OpenReplay manda a
+   `ee/LICENSE`, que devuelve **404 en `main` y en `dev`**. El archivo real es
+   `ee/LICENSE.md`. No cambia el veredicto, pero sí mide que **el puntero y el
+   destino se verifican por separado**.
+
+---
+
+### 🟢 Hallazgo nº5: **GlitchTip es MIT — y esta KB no podía verlo porque mide con instrumentos de GitHub**
+
+El reemplazo permisivo de Sentry existe, es compatible con los **SDK de Sentry**
+(mismo protocolo de ingesta) y su licencia es **MIT, 1.067 B, leída byte a byte**.
+
+Vive en **GitLab**. En GitHub, `GlitchTip/GlitchTip` son **3 ★ con último push el
+2022-08-21** — un stub abandonado cuya descripción es literalmente *"Readme config"*.
+
+> **Todas las sondas de esta KB (`gh api search/repositories`, `git ls-remote` sobre
+> github.com, `raw.githubusercontent.com`) tienen forma de GitHub.** Un proyecto
+> alojado en GitLab no aparece como ausente: aparece como **muerto**, que es peor,
+> porque un cero invita a buscar más y un cadáver cierra la pregunta. Primer caso
+> registrado en esta KB. La sonda que funcionó fue
+> `curl https://gitlab.com/<org>/<repo>/-/raw/<branch>/LICENSE`, y funciona en esta
+> sesión.
+
+---
+
+### 🆕 Filas nuevas de este pass (cycle 16) — las permisivas, todas con licencia verificada
+
+| Agente / repo | Repo | Licencia (bytes) | ★ | Último push | Qué aporta |
+|---|---|---|---|---|---|
+| **OpenSnowcat Collector** | [opensnowcat/opensnowcat-collector](https://github.com/opensnowcat/opensnowcat-collector) | **Apache-2.0** (11.358) | 81 | 2026-11-13 | Ingesta de eventos del jugador. **El reemplazo desplegable de `snowplow/stream-collector`**, que la SLULA prohíbe en producción. |
+| **OpenSnowcat Enrich** | [opensnowcat/opensnowcat-enrich](https://github.com/opensnowcat/opensnowcat-enrich) | **Apache-2.0** (11.359) | 40 | 2026-11-13 | Enriquecido y validación contra esquema. Mismo motivo. |
+| **ClickHouse** | [ClickHouse/ClickHouse](https://github.com/ClickHouse/ClickHouse) | **Apache-2.0** | 51.060 | 2026-11-22 | Almacén de eventos de alta cardinalidad. Es donde se implementa el TTL por jurisdicción de la Receta 42. |
+| **ClickStack** | [ClickHouse/ClickStack](https://github.com/ClickHouse/ClickStack) | **MIT** (1.077) | 10.061 | 2026-11-21 | Observabilidad unificada (logs, métricas, trazas, errores) sobre OTel + ClickHouse. ⚠️ El copyright dice **© DeploySentinel, Inc.**: la licencia delata la adquisición, igual que en los derivados que esta KB ya listaba. |
+| **OpenTelemetry Collector** | [open-telemetry/opentelemetry-collector](https://github.com/open-telemetry/opentelemetry-collector) | **Apache-2.0** | 7.793 | 2026-11-20 | Trazas y métricas del servidor de juego. Capa neutral: no te ata a ningún vendor de observabilidad. |
+| **Apache Superset** | [apache/superset](https://github.com/apache/superset) | **Apache-2.0** | 75.615 | 2026-11-22 | BI sobre ClickHouse. **El BI permisivo**: Metabase y Grafana no lo son. |
+| **go-wind-uba** | [tx7do/go-wind-uba](https://github.com/tx7do/go-wind-uba) | **MIT** (1.061) | 51 | 2026-11-20 | Analítica de comportamiento con **25 modelos** (eventos, embudos, retención, atribución, rutas, cohortes y **telemetría de juego** explícitamente), Kafka → ClickHouse/Doris, multi-tenant, reporting en Superset. La ruta ligera cuando el pipeline completo no se justifica. |
+| **Rawbbit** | [mirlan-irokez/rawbbit](https://github.com/mirlan-irokez/rawbbit) | **Apache-2.0** (11.349) | 11 | 2026-11-09 | Analítica de juego autohospedada: eventos por HTTP → NATS JetStream → Parquet particionado en tu propio object storage, **con un MCP de sólo lectura**. ⚠️ 11 ★ y 3 forks: es temprano. El código es Apache-2.0; el producto de pago del mismo autor es otra cosa. |
+| **GlitchTip** | GitLab: `glitchtip/glitchtip-backend` | **MIT** (1.067) | — | — | Crash/error reporting compatible con los SDK de Sentry. **No está en GitHub** (ver hallazgo nº5). |
+| **GameTuner** (10 repos) | [GameTuner/collector](https://github.com/GameTuner/collector) · [enricher](https://github.com/GameTuner/enricher) · [unity-tracker](https://github.com/GameTuner/unity-tracker) | **Apache-2.0** (11.358 / 11.359 / 11.325) | 0 | ⚠️ 2024-02-06 | **Referencia de esquema de eventos de juego móvil**, no dependencia viva. Ver el límite declarado del hallazgo nº3 antes de forkear. |
+
+### 🆕 Fuera de la capa — tres incorporaciones verificadas este pass
+
+| Agente / repo | Repo | Licencia (bytes) | ★ | Último push | Qué aporta |
+|---|---|---|---|---|---|
+| **OpenGameAgent** | [EricSun0218/OpenGameAgent](https://github.com/EricSun0218/OpenGameAgent) | **MIT** (1.096) | 61 | 2026-11-17 | Runtime TypeScript para personajes y mundos AI-native: **estado durable, acciones confiables, memoria y herramientas**, con integraciones Unity, Godot y Unreal. Es la forma de agente que esta KB venía describiendo en las recetas de NPC, empaquetada. Temprano (61 ★) pero MIT limpio y copyright 2026. |
+| **awesome-ai-for-games** | [Eurekaleo/awesome-ai-for-games](https://github.com/Eurekaleo/awesome-ai-for-games) | **MIT** | 391 | 2026-11-19 | Índice de investigación sobre IA a lo largo del ciclo de vida del juego. Fuente de candidatos, **no** de veredictos de licencia. |
+| **awesome-ai-game-dev-tools** | [SubmitGame/awesome-ai-game-dev-tools](https://github.com/SubmitGame/awesome-ai-game-dev-tools) | **CC0-1.0** | 93 | 2026-11-21 | Índice de herramientas, refrescado a diario, con filtro de actividad en el último año. Mismo uso y misma advertencia. |
+
+### ⛔ Rechazos **medidos** de este pass — se publican porque el silencio se lee como cobertura
+
+| Candidato | Medición | Motivo del rechazo |
+|---|---|---|
+| [snowplow/stream-collector](https://github.com/snowplow/stream-collector) · [snowplow/enrich](https://github.com/snowplow/enrich) | SLULA 1.1 §1.1 leída | **Producción prohibida.** Sólo evaluación con datos de prueba o sintéticos. |
+| [getsentry/sentry](https://github.com/getsentry/sentry) | FSL-1.1-Apache-2.0, 3.785 B | Apache-2.0 sólo a los 2 años de cada versión. |
+| [Countly/countly-server](https://github.com/Countly/countly-server) | AGPL-3.0 §7 modificada, 1.025 B | Copyleft de red **más** restricción de marca. |
+| [metabase/metabase](https://github.com/metabase/metabase) | AGPL + Commercial, 855 B | Carve-out `enterprise/`. |
+| [openreplay/openreplay](https://github.com/openreplay/openreplay) | multi-licencia, 36.511 B | Carve-out `ee/` propietario. |
+| [grafana/grafana](https://github.com/grafana/grafana) · [rybbit-io/rybbit](https://github.com/rybbit-io/rybbit) | AGPL-3.0 | Copyleft de red. |
+| [CrateBytes/CrateBytes](https://github.com/CrateBytes/CrateBytes) | **`archived=true`**, último push **2025-01-22**, AGPL-3.0 | **Archivado Y copyleft.** Ver la corrección de regla abajo. |
+| [AIGeeksGroup/Code2Games](https://github.com/AIGeeksGroup/Code2Games) | 89 ★, **sin archivo de licencia** en ninguna rama/ruta probada | Sin grant no hay permiso. |
+| [ADM1SH/churn-prediction-scaling](https://github.com/ADM1SH/churn-prediction-scaling) | 0 ★, licencia `null`, telemetría sintética y webhook mock según su propio README | Prototipo sin grant. |
+| [deq-labs/analytics-platform](https://github.com/deq-labs/analytics-platform) | 0 ★, AGPL-3.0 | Copyleft de red, sin tracción. |
+| [GlitchTip/GlitchTip](https://github.com/GlitchTip/GlitchTip) *(el de GitHub)* | 3 ★, push 2022-08-21, descripción *"Readme config"* | **No es el proyecto.** El proyecto está en GitLab y es MIT. |
+
+### 🔧 Corrección a una regla de esta KB: el *tell* del "archivado pero recomendado" es **más débil** de lo que el cycle anterior afirmó
+
+La regla heredada decía que, en los siete casos registrados, el proyecto muerto
+siempre venía recomendado por **documentación del propio proyecto**, y que una
+fuente independiente nunca cometía ese error.
+
+`CrateBytes` es el **8º caso y rompe esa parte de la regla**: está archivado desde
+el 2025-01-22 y quien lo recomienda es una **awesome-list de terceros**
+([ishandutta2007/Awesome-Game-Live-Operations](https://github.com/ishandutta2007/Awesome-Game-Live-Operations),
+MIT, 3 ★, actualizada el 2026-09-21), no su propia documentación.
+
+> **La parte que sobrevive de la regla:** una recomendación **nunca** es evidencia
+> de vida, venga de donde venga. **La parte que se cae:** que el origen
+> project-adjacent fuera el discriminante. Las listas de terceros se escriben una
+> vez y tampoco se revisan. **El único instrumento de liveness sigue siendo el par
+> `archived` + `pushed_at`**, y hay que correrlo sobre cada fila, incluidas las que
+> llegan por una fuente que parece independiente.
+
+### 📏 Lo que este pass NO puede medir, dicho explícitamente
+
+- **No medí la fecha del snapshot de Snowplow vendorizado dentro de GameTuner.**
+  Es la verificación que decide si su Apache-2.0 es oponible. Está dicho arriba.
+- **`WebFetch` no resuelve ningún host general en esta sesión** (`law.stanford.edu`
+  → `ENOTFOUND`). **2ª medición** del gap declarado en el cycle 9: no es
+  intermitente. Todo lo regulatorio de este pass viene de *snippets* de búsqueda y
+  está etiquetado como secundario donde corresponde.
+- **`gh api users/<org>/repos` está denegado** en esta sesión (403: *"sessions are
+  bound to their configured repositories"*). La vuelta que sí funciona es
+  `gh api search/repositories -f q='user:<org>'`, y es la que destapó GameTuner
+  entero y OpenSnowcat.
+- **Las estrellas de `opensnowcat-devkit`, `-rdb-loader` e `-iglu-server`** se leen
+  del badge de búsqueda; **sólo `-collector` y `-enrich` tienen la licencia leída
+  byte a byte**. Está marcado en la tabla.
+
+---
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 15): **la capa OPERATIVA de cara al jugador — accesibilidad, anti-cheat, soporte y moderación de voz — es la primera capa de esta KB donde la OBLIGACIÓN ya existe y la OFERTA open source NO**
 

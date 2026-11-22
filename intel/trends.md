@@ -6,9 +6,136 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22 cycles 14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22 cycles 15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 16 (2026-11-22)
+
+**Tema:** el plano de datos del jugador. Cinco tendencias, una corrección a una
+regla de esta KB y un conflicto entre KBs que se declara sin cerrar.
+
+### 🆕 T-A · Una categoría madura no se reemplaza: **se forkea en su último commit permisivo**
+
+Medido en la analítica de producto: entre 2024 y 2026, Snowplow (core → SLULA,
+8-ene-2024), Sentry (FSL-1.1), Countly (AGPL §7 modificada), Metabase
+(AGPL + comercial), OpenReplay (carve-out `ee/`), Grafana (AGPL-3.0) y Rybbit
+(AGPL-3.0) salieron de la ruta permisiva. **La respuesta de la comunidad no fue un
+producto nuevo.** Fue `OpenSnowcat`: un fork del último commit Apache-2.0, con 81 ★
+y commits de hace nueve días.
+
+> **Señal operativa:** cuando una capa de infraestructura madura se relicencia, no
+> busques "la alternativa". **Buscá el fork**, y buscalo por el nombre de la
+> organización, no por el del componente. Un producto nuevo en una capa madura
+> tarda años; un fork existe desde el día siguiente.
+
+### 🆕 T-B · **El gradiente de estrellas invertido**, 2ª reproducción en esta KB
+
+`snowplow/snowplow`: **7.051 ★**, Apache-2.0, **no se despliega**.
+`stream-collector` y `enrich`: **40 ★ y 31 ★**, SLULA, **son el producto**.
+
+La 1ª reproducción fue el clúster `godot-mcp` del cycle 10 (el líder por estrellas
+llevaba 7 meses muerto). Con dos instancias independientes en capas distintas, la
+regla se puede enunciar: **las estrellas miden atención acumulada sobre un NOMBRE,
+y el nombre suele vivir en el repo paraguas.** El objeto que vas a instalar está
+en otro repo, con otra licencia y dos órdenes de magnitud menos de estrellas.
+
+### 🆕 T-C · El grant se parte **por el lado de la red**, no sólo por edición o directorio
+
+Snowplow: tracker de cliente **BSD-3-Clause**, pipeline de servidor **SLULA**.
+Esta KB ya tenía ejes de partición por edición, por directorio (`ee/`,
+`enterprise/`), por territorio (los world models de Tencent), por pesos y por ruta
+de importación. **Éste es nuevo: cliente contra servidor.**
+
+> Si tu arquitectura cruza esa línea —y toda telemetría la cruza— **tu auditoría de
+> licencia tiene que cruzarla también**. Verificar el SDK y dar por verificado el
+> backend es exactamente el error que la tabla de arriba produce.
+
+### 🆕 T-D · El **carve-out por directorio** dejó de ser anécdota: es la plantilla de la categoría
+
+Tres vendors sin relación: PostHog `ee/`, Metabase `enterprise/`, OpenReplay `ee/`.
+**Reflejo nuevo:** listar el árbol buscando `ee/` o `enterprise/` **antes** de leer
+el `LICENSE` raíz. Y verificar puntero y destino por separado: el `LICENSE` raíz de
+OpenReplay apunta a `ee/LICENSE`, que **da 404 en `main` y en `dev`**; el archivo
+real es `ee/LICENSE.md`. **2º puntero de licencia roto** en esta KB (el 1º fue el
+`LICENSE` que era un fragmento de diff, cycle 8).
+
+### 🆕 T-E · La adopción de IA generativa y su aceptación **divergen**, tercer año seguido
+
+GDC State of the Game Industry: uso **~27% (2024) → 36% (2026)**; "impacto
+negativo para la industria" **18% (2024) → 30% (2025) → 52% (2026)**.
+
+> **No es ruido de un año: son tres puntos en la misma dirección.** Toda propuesta
+> cuyo valor dependa de que el equipo del cliente *quiera* IA generativa apuesta
+> contra una tendencia de tres años. La capa de medición no pide esa adhesión, y es
+> por eso que se vende primero.
+
+### 🔧 Corrección a una regla de esta KB: el *tell* del "archivado pero recomendado" **es más débil de lo que se afirmó**
+
+La regla heredada decía que, en los 7 casos registrados, el proyecto muerto venía
+recomendado **siempre** por documentación del propio proyecto, y que ése era el
+discriminante.
+
+**`CrateBytes` es el 8º caso y lo rompe:** archivado desde el **2025-01-22**, y
+quien lo recomienda es una **awesome-list de terceros**, actualizada el 2026-09-21.
+
+> **Sobrevive:** una recomendación nunca es evidencia de vida. **Se cae:** que el
+> origen *project-adjacent* fuera el discriminante — las listas de terceros se
+> escriben una vez y tampoco se revisan. **El único instrumento de liveness sigue
+> siendo `archived` + `pushed_at`, corrido sobre cada fila**, incluidas las que
+> llegan por una fuente que parece independiente.
+
+### 🆕 Regla T65 · Un slug **adivinado** que falla no mide ausencia
+
+`repo:opensnowcat/enrich` → 422. `git ls-remote .../opensnowcat/enrich` →
+NOT_FOUND. `.../opensnowcat/stream-collector` → NOT_FOUND. **El proyecto existía**:
+la convención es `opensnowcat/opensnowcat-*`.
+
+> Antes de declarar un cero, **buscá la organización por palabra clave**. Un 422 o
+> un NOT_FOUND sobre un slug que inventaste mide tu suposición sobre el nombre.
+> Complementa al cycle 10 (`422` no distingue borrado de renombrado): aquí no hubo
+> ni borrado ni renombrado — el slug **nunca fue correcto**. Este pass estuvo a un
+> paso de publicar un cero falso sobre la única ruta permisiva de la capa.
+
+### 🆕 Regla T66 · Las sondas de esta KB **tienen forma de GitHub**, y eso puntúa a GitLab como muerto
+
+`GlitchTip` es MIT (1.067 B) y vive en GitLab. En GitHub, `GlitchTip/GlitchTip` son
+3 ★ con último push en 2022.
+
+> **Un cero invita a seguir buscando; un cadáver cierra la pregunta.** Por eso este
+> modo de fallo es peor que la ausencia. Sonda que funciona:
+> `curl https://gitlab.com/<org>/<repo>/-/raw/<branch>/LICENSE`.
+
+### 🔴 Conflicto entre KBs de la flota, **declarado y sin cerrar**: la fecha del Art. 50
+
+La KB *enterprise* registra **dic-2027** y llama obsoleto al "2-ago-2026". Las
+fuentes jurídicas de videojuegos de **nov-2026** recogidas en este pass dicen que
+el Art. 50 **aplica desde el 2-ago-2026**, que **no fue aplazado por el Digital
+Omnibus**, y que los sistemas ya en el mercado tienen hasta el **2-dic-2026** para
+el marcado legible por máquina.
+
+> **No se pudo resolver desde esta sesión**: `WebFetch` no resuelve hosts generales
+> (2ª medición del gap del cycle 9), de modo que **no hubo acceso a EUR-Lex**.
+> **Las dos fechas quedan registradas y ninguna debe citarse a un cliente sobre la
+> base de esta KB.** Lo que no depende de cuál gane: el inventario de contenido
+> generado hay que tenerlo igual.
+
+### 🆕 T-F · La primera norma que apunta al **mecanismo**, no al medio
+
+Las normas de IA que esta KB venía registrando regulan **lo que el juego muestra**
+(divulgación, marcado, *deepfakes*). Las medidas chinas sobre IA antropomórfica
+—en vigor desde el **15-jul-2026**— regulan **lo que el NPC hace con un menor**:
+prohíben ofrecer a menores servicios de IA construidos sobre relaciones virtuales,
+y —a diferencia de otras leyes de *companion AI*— **no excluyen los videojuegos**.
+
+> ⚠️ **Secundaria y sin verificar en fuente** (análisis de Stanford CodeX,
+> 19-nov-2026; el host no resuelve en esta sesión). Si se confirma, es la primera
+> vez que una norma alcanza **el mecanismo que esta KB lleva 16 passes
+> recomendando**, y la consecuencia de diseño es inmediata: los eventos de
+> NPC-compañero son una categoría de dato aparte, con su propia tabla, su propio
+> TTL y su propia partición por jurisdicción (Receta 42).
+
+---
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 15 (2026-11-22)
 

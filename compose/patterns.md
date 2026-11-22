@@ -7,8 +7,18 @@ updated: 2026-11-22
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22
-> cycles 14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22
+> cycles 15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Las del cycle 16 son la 41** (plano de datos del jugador sin una sola
+> licencia restringida — y el motivo por el que se vende antes que las demás capas)
+> **y la 42** (partición de telemetría por jurisdicción y banda etaria: la mitad de
+> almacenamiento que le faltaba a la Receta 33).
+>
+> ⚠️ **Deuda conocida de esta página:** la *Tabla resumen* del final llega sólo
+> hasta la receta 28. Las recetas 29-42 existen como secciones completas y **no
+> están en esa tabla**. No se backfilleó en este pass; queda anotado para que nadie
+> lea la tabla como un índice completo.
 >
 > 🆕 **Las del cycle 15 son la 39** (equivalencia voz↔texto como un solo
 > componente: cumple el CVAA, habilita la accesibilidad y resuelve la moderación
@@ -53,6 +63,176 @@ updated: 2026-11-22
 > concretos de este ciclo: una fecha límite regulatoria en la UE, world models
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
 > benchmark publicado de agentes que juegan.
+
+## 🆕 Receta 41: **Plano de datos del jugador sin una sola licencia restringida** — y el motivo por el que se vende primero
+
+**Problema.** Todas las capas que esta KB fue añadiendo —NPC, assets, voz,
+accesibilidad, QA— **producen eventos o consumen datos del jugador**, y ninguna se
+puede medir, facturar ni defender ante un regulador sin un plano de datos debajo.
+El cliente ya tiene uno. La pregunta nunca es si se construye: es **bajo qué
+licencia corre el que ya tiene**.
+
+🔴 **Y hay una probabilidad alta de que esté fuera de términos hoy.** Si usa el
+pipeline de Snowplow, `stream-collector` y `enrich` están bajo **SLULA 1.1**, cuyo
+§1.1 concede la licencia *"only for Non-Production Use or Non-Commercial Use"*, y
+cuyo §1.2.2 define *Non-Production Use* como procesar **datos de prueba o
+sintéticos para evaluar** el software. No es una cláusula anti-SaaS: **es la
+prohibición de usarlo en producción.** Relicencia del core: **8-ene-2024** — hay
+estudios corriéndolo desde antes que nunca releyeron el archivo.
+
+### El stack, componente a componente, con la licencia leída byte a byte
+
+```
+  SDK en el juego                 ⟶  snowplow-javascript-tracker  BSD-3-Clause (1.546 B)
+        │                             (el tracker SÍ es permisivo — ver nota del eje cliente/servidor)
+        ▼
+  Ingesta HTTP                    ⟶  opensnowcat/opensnowcat-collector   Apache-2.0 (11.358 B)  81★
+        │
+        ▼
+  Validación + enriquecido        ⟶  opensnowcat/opensnowcat-enrich      Apache-2.0 (11.359 B)  40★
+        │   └─ esquemas de evento ⟶  opensnowcat/opensnowcat-iglu-server Apache-2.0  ⚠️ dormido 2024-08
+        ▼
+  Almacén de eventos              ⟶  ClickHouse/ClickHouse               Apache-2.0        51.060★
+        │
+        ├─ BI / exploración       ⟶  apache/superset                     Apache-2.0        75.615★
+        ├─ Trazas del game server ⟶  open-telemetry/opentelemetry-collector Apache-2.0      7.793★
+        ├─ Observabilidad unif.   ⟶  ClickHouse/ClickStack               MIT (1.077 B)     10.061★
+        └─ Crash / errores        ⟶  GlitchTip (GitLab)                  MIT (1.067 B)
+                                      · protocolo compatible con los SDK de Sentry
+```
+
+**Ruta ligera**, si el volumen no justifica el pipeline completo:
+[`tx7do/go-wind-uba`](https://github.com/tx7do/go-wind-uba) (MIT, 1.061 B, 51 ★ —
+25 modelos de analítica con telemetría de juego nombrada explícitamente, Kafka →
+ClickHouse/Doris) o [`mirlan-irokez/rawbbit`](https://github.com/mirlan-irokez/rawbbit)
+(Apache-2.0, 11.349 B, 11 ★ — eventos → NATS JetStream → Parquet en tu object
+storage, con un MCP de sólo lectura que deja a un agente consultar la telemetría).
+
+**Modelo de eventos de juego:** [`GameTuner`](https://github.com/GameTuner/collector)
+(Apache-2.0, 10 repos) como **referencia** de qué instrumentar en un juego móvil
+—ID único multi-dispositivo, latencia de datos offline, eventos de progresión—.
+⚠️ **No como dependencia:** 0 ★ y sin commits desde feb-2024, sólo GCP/pubsub, y
+**antes de forkearlo hay que verificar si el snapshot de Snowplow que lleva dentro
+es anterior al 8-ene-2024** (ver el límite declarado en `repos/foundations.md`).
+
+### ⛔ Lo que NO se pone en este stack, y qué se rompe si se pone
+
+| Tentación | Licencia medida | Qué se rompe |
+|---|---|---|
+| `getsentry/sentry` | **FSL-1.1-Apache-2.0** (3.785 B) | El grant Apache-2.0 es *"effective on the second anniversary"* de **cada versión**: la que querés desplegar es, por construcción, la que aún no convirtió. **Usar GlitchTip, que habla el mismo protocolo.** |
+| `grafana/grafana` · `rybbit-io/rybbit` | **AGPL-3.0** | Copyleft de red. Si el entregable se expone al cliente o a terceros, arrastra. **Usar Superset.** |
+| `metabase/metabase` | **AGPL + Metabase Commercial** (855 B) | Carve-out en `enterprise/`. |
+| `openreplay/openreplay` | multi-licencia, `ee/` propietario (36.511 B) | Carve-out en `ee/`. |
+| `Countly/countly-server` | **AGPL §7 modificada** (1.025 B) | AGPL **más** prohibición de quitar el logo: afecta al *white-label*, que es justo lo que un estudio quiere. |
+| `snowplow/stream-collector` · `snowplow/enrich` | **SLULA 1.1** | Producción prohibida. |
+
+### El checkpoint que convierte esto en una propuesta defendible
+
+**Una cláusula de licencia en la propuesta, por componente, que responda una sola
+pregunta: *¿qué pasa si el cliente redistribuye el entregable?*** Es la diferencia
+entre un stack permisivo y uno que **parece** permisivo, y es barata de escribir
+ahora y carísima de descubrir en la revisión legal del cliente.
+
+⚠️ **Y una advertencia honesta sobre `iglu-server`:** es el registro de esquemas
+—la pieza que define qué es un evento válido— y lleva **más de dos años sin un
+commit**. Se usa, se fija la versión y **se asume el mantenimiento en el
+presupuesto**. Decirlo en la propuesta; no descubrirlo en el mes cuatro.
+
+### Por qué se vende antes que las otras capas
+
+Es la única donde el argumento **no es de oportunidad sino de riesgo ya
+contraído**. No hay que convencer a nadie de adoptar IA generativa —y según la GDC
+2026 el 52% de los desarrolladores ya cree que le hace mal a la industria—: hay que
+mostrar que el pipeline que corre hoy está fuera de los términos de su licencia, y
+que la migración a OpenSnowcat es **un reemplazo componente a componente**, no una
+reescritura.
+
+---
+
+## 🆕 Receta 42: **Partición de telemetría por jurisdicción y banda etaria** — la mitad de almacenamiento que le falta a la Receta 33
+
+**Problema.** La [Receta 33](#) resolvió el dato de edad **en runtime**: no
+persistir `age`, persistir `ageBand` + `isMinor` + la cadencia como parámetro, y
+descartar la fuente. Correcto, y **incompleto**: esos eventos se escriben en algún
+lado, y ahí vuelven a ser un problema, porque el **borrado** que exige Texas
+SB 2420 y la **retención** que exigen otros regímenes se ejecutan sobre **tablas**,
+no sobre variables de sesión.
+
+Y hay un tercer régimen nuevo que cae exactamente sobre esta decisión: las medidas
+chinas sobre **IA antropomórfica**, en vigor desde el **15-jul-2026**, que
+prohíben ofrecer a menores servicios de IA construidos sobre **relaciones
+virtuales** y que —a diferencia de otras leyes de *companion AI*— **no excluyen
+los videojuegos**. *(Fuente secundaria, Stanford CodeX 19-nov-2026, sin verificar
+en origen — ver `intel/market.md` → APAC.)*
+
+### La decisión de esquema, que cuesta barata hoy y carísima después
+
+**Paso 1 — particionar por los dos ejes que mandan los reguladores, no por fecha.**
+
+```sql
+-- ClickHouse (Apache-2.0)
+CREATE TABLE player_events (
+    event_time    DateTime,
+    jurisdiction  LowCardinality(String),  -- 'EU','US-TX','US-CT','CN','BR',...
+    age_band      LowCardinality(String),  -- '<13','13_15','16_17','adult'  (R33: categoría, NUNCA la edad)
+    player_key    String,                  -- seudónimo rotable, no el ID de cuenta
+    event_name    LowCardinality(String),
+    payload       String
+)
+ENGINE = MergeTree
+PARTITION BY (jurisdiction, age_band, toYYYYMM(event_time))
+ORDER BY (event_name, event_time);
+```
+
+> **`PARTITION BY (jurisdiction, age_band, …)` es la receta entera en una línea.**
+> Un `DROP PARTITION` borra exactamente el conjunto que un regulador pide y **nada
+> más**. Con una partición global por fecha, atender ese mismo pedido es un
+> `DELETE` masivo que bloquea la tabla y que nadie puede demostrar que fue
+> completo.
+
+**Paso 2 — TTL por partición, nunca global.** Los regímenes piden plazos distintos
+y uno de ellos obliga a **borrar** lo que otro obliga a **conservar** (el conflicto
+que la R33 ya documentó). Un TTL único de tabla no puede satisfacer a los dos:
+
+```sql
+ALTER TABLE player_events
+  MODIFY TTL event_time + INTERVAL 30 DAY  DELETE WHERE age_band = '<13',
+             event_time + INTERVAL 90 DAY  DELETE WHERE age_band IN ('13_15','16_17'),
+             event_time + INTERVAL 730 DAY DELETE WHERE age_band = 'adult';
+```
+
+**Paso 3 — los eventos de NPC-compañero van a su PROPIA tabla.** Diálogo emocional
+sostenido, memoria del NPC, vínculo persistente: es la categoría que la norma china
+señala y **la primera que un regulador va a pedir**. Mezclada en el flujo general
+es imposible de aislar después; separada, tiene su propio TTL, su propia partición
+y su propia respuesta.
+
+**Paso 4 — la banda etaria es un campo del ESQUEMA, no una convención de nombres.**
+Se declara en `opensnowcat/opensnowcat-iglu-server` (Apache-2.0), de modo que un
+evento sin `age_band` **no valida y no entra**. Es la única forma de que la
+partición no se degrade en seis meses.
+
+**Paso 5 — el consentimiento y el opt-out se resuelven en el SDK**, antes de la
+ingesta. Un evento que no debió recolectarse no se arregla en el almacén.
+
+**Paso 6 — la salida que compra el cliente:** un informe por jurisdicción desde
+**Apache Superset** (Apache-2.0) que un DPO pueda leer sin saber SQL: qué
+categorías de evento existen, de qué bandas etarias, con qué retención y cuándo se
+ejecutó el último borrado.
+
+### ⚠️ El límite honesto, y va en la propuesta
+
+**No existe un estándar de auditoría para telemetría de menores en videojuegos.**
+Los plazos del paso 2 son un punto de partida razonable, **no** un umbral
+normativo: lo fija el regulador aplicable o el asesor legal del cliente. **Decirlo
+por escrito en la propuesta** es lo que separa esta receta de una promesa de
+cumplimiento que nadie puede sostener — y es lo que hace que el equipo legal del
+cliente pase de bloqueante a patrocinador.
+
+**Esfuerzo:** 1-2 semanas sobre un plano de datos que ya existe (Receta 41);
+3-4 semanas si hay que migrarlo primero.
+
+---
 
 ## 🆕 Receta 39: **Equivalencia voz ↔ texto como un solo componente** — la pieza que cumple el CVAA, habilita la accesibilidad y resuelve la moderación de voz
 

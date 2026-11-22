@@ -7,7 +7,7 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22 cycles 14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22 cycles 15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > 🆕 **Canal 4, agregado el 2026-11-22 (cycle 14):** la sección `## License` del
 > `README.md`, con **cada dependencia que nombra resuelta como un repo más**.
@@ -38,6 +38,105 @@ updated: 2026-11-22
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El hallazgo del cycle 16 (2026-11-22): **faltaba el PLANO DE DATOS DEL JUGADOR entero** — y el repo fundacional de la categoría prohíbe la producción en su propia licencia
+
+Quince passes, 285 slugs, cero filas de telemetría, analítica de jugador, crash
+reporting o almacén de eventos. El inventario plano (regla T64) lo midió antes de
+buscar: **de 20 incumbentes del plano de datos, 19 ausentes de esta KB**; el único
+presente era `grafana/grafana`, y sin fila propia.
+
+La capa no estaba floja: faltaba. Y al enumerarla aparece el problema que la
+define: **entre 2024 y 2026 la categoría se fue del open source casi completa**, y
+la ruta permisiva que queda no es un producto nuevo — es un **fork del último
+commit Apache-2.0**.
+
+### ⛔ El fundacional que NO se puede usar, y por qué el badge no lo dice
+
+[`snowplow/snowplow`](https://github.com/snowplow/snowplow) tiene **7.051 ★** y
+badge **Apache-2.0** (`LICENSE`, 11.359 B). Es correcto y es el repo **paraguas**.
+Los dos componentes que realmente se despliegan están en otros repos y bajo otra
+licencia, **leída byte a byte**:
+
+| Componente | Repo | ★ | Licencia | ¿Desplegable? |
+|---|---|---|---|---|
+| Collector | [snowplow/stream-collector](https://github.com/snowplow/stream-collector) | 40 | ⛔ **SLULA 1.1** | ❌ |
+| Enrich | [snowplow/enrich](https://github.com/snowplow/enrich) | 31 | ⛔ **SLULA 1.1** | ❌ |
+| Tracker JS | [snowplow/snowplow-javascript-tracker](https://github.com/snowplow/snowplow-javascript-tracker) | 593 | ✅ **BSD-3-Clause** (1.546 B) | ✅ |
+
+SLULA §1.1, del archivo: *"Licensee **may exercise the License only for
+Non-Production Use or Non-Commercial Use**"*, y §1.2.2 define *Non-Production Use*
+como procesar **datos de prueba o sintéticos para evaluar** el software. Para un
+estudio comercial eso no es una restricción de redistribución: **es la prohibición
+de usarlo**. Relicencia del core: **8-ene-2024**.
+
+> 🆕 **Eje de partición del grant nuevo para esta página: cliente contra servidor.**
+> El tracker sigue BSD-3-Clause y el pipeline es SLULA. No parte por edición ni por
+> directorio: parte **por el lado de la red donde corre el binario**.
+
+### 🆕 Los fundacionales nuevos — la ruta 100% permisiva, componente por componente
+
+| Repo | ★ | Licencia **byte a byte** | Último push | Rol en el plano de datos |
+|---|---|---|---|---|
+| [opensnowcat/opensnowcat-collector](https://github.com/opensnowcat/opensnowcat-collector) | 81 | **Apache-2.0** (`LICENSE.txt`, 11.358 B) | 2026-11-13 | Ingesta HTTP de eventos del jugador |
+| [opensnowcat/opensnowcat-enrich](https://github.com/opensnowcat/opensnowcat-enrich) | 40 | **Apache-2.0** (`LICENSE.txt`, 11.359 B) | 2026-11-13 | Validación contra esquema y enriquecido |
+| [opensnowcat/opensnowcat-iglu-server](https://github.com/opensnowcat/opensnowcat-iglu-server) | 9 | Apache-2.0 (badge) | ⚠️ **2024-08-11** | Registro de esquemas de evento |
+| [opensnowcat/opensnowcat-rdb-loader](https://github.com/opensnowcat/opensnowcat-rdb-loader) | 7 | Apache-2.0 (badge) | 2025-08-08 | Carga a base relacional |
+| [opensnowcat/opensnowcat-devkit](https://github.com/opensnowcat/opensnowcat-devkit) | 14 | Apache-2.0 (badge) | 2026-10-01 | Contenedores para desplegar y probar local |
+| [ClickHouse/ClickHouse](https://github.com/ClickHouse/ClickHouse) | 51.060 | **Apache-2.0** (© 2016-2026 ClickHouse, Inc.) | 2026-11-22 | Almacén de eventos de alta cardinalidad |
+| [apache/superset](https://github.com/apache/superset) | 75.615 | **Apache-2.0** | 2026-11-22 | BI / exploración |
+| [open-telemetry/opentelemetry-collector](https://github.com/open-telemetry/opentelemetry-collector) | 7.793 | **Apache-2.0** | 2026-11-20 | Trazas y métricas del servidor de juego |
+| [ClickHouse/ClickStack](https://github.com/ClickHouse/ClickStack) | 10.061 | **MIT** (1.077 B, © DeploySentinel) | 2026-11-21 | Observabilidad unificada sobre lo anterior |
+| GitLab: `glitchtip/glitchtip-backend` | — | **MIT** (1.067 B) | — | Crash/error reporting (protocolo Sentry) |
+
+⚠️ **`iglu-server` lleva más de dos años sin un commit.** Es el registro de
+esquemas, o sea la pieza que define qué es un evento válido. Se usa, pero se fija
+la versión y **se asume el mantenimiento**. Está dicho aquí y en la Receta 41, no
+escondido en una nota.
+
+### 🎮 El fundacional específico de juego: existe, es Apache-2.0 y tiene **0 ★**
+
+[`GameTuner`](https://github.com/GameTuner/collector) son **diez repos** Apache-2.0
+que cubren el vertical de analítica de **juego móvil** completo: `unity-tracker`,
+`collector`, `enricher`, `bigquery-loader`, `etl`, `query-engine`, `metadata`,
+`terraform-gcp`, `enrich-bad-sink` y `.github`. Licencias leídas byte a byte:
+11.358 / 11.359 / 11.325 B.
+
+**Las diez tienen cero estrellas y su último push es de febrero–abril de 2024.**
+Copyright **AlgebraAI, 2022–2024** (no Nordeus, que es la atribución que circula).
+El `collector` es fork del Snowplow Scala Stream Collector; el `unity-tracker`, del
+tracker de Unity de Snowplow v0.5.0. Sólo GCP/pubsub.
+
+> **Cómo usarlo:** como **referencia del modelo de eventos de juego móvil** —qué se
+> instrumenta, con qué campos, cómo se resuelve el ID único multi-dispositivo y la
+> latencia de datos offline—. ⚠️ **Antes de forkearlo**, verificar commit a commit si
+> el snapshot de Snowplow que lleva dentro es anterior al **8-ene-2024**: si fuera
+> posterior, su `LICENSE` Apache-2.0 es la afirmación de GameTuner y no
+> necesariamente una sublicencia válida. **Este pass no hizo esa verificación.**
+
+### 📏 Una sonda nueva para esta página: **GitLab**
+
+`GlitchTip` es **MIT (1.067 B)** y vive en GitLab. En GitHub, `GlitchTip/GlitchTip`
+son 3 ★ con último push en **2022**. Todas las sondas de esta KB tienen forma de
+GitHub, así que un proyecto en GitLab **no puntúa como ausente sino como muerto**,
+que cierra la pregunta en vez de abrirla. La sonda que funciona en esta sesión:
+
+```bash
+curl -sS https://gitlab.com/<org>/<repo>/-/raw/<branch>/LICENSE
+```
+
+### 🔧 Método: **un slug adivinado que falla no mide ausencia** (regla T65)
+
+`repo:opensnowcat/enrich` → **422**. `git ls-remote .../opensnowcat/enrich` →
+**NOT_FOUND**. `.../opensnowcat/stream-collector` → **NOT_FOUND**. Tres negativos, y
+el proyecto existía: la convención es **`opensnowcat/opensnowcat-*`**. Una búsqueda
+por palabra clave de la organización lo devolvió entero.
+
+> Antes de declarar un cero, buscá **la organización por palabra clave**, no el repo
+> por slug inventado. Complementa al hallazgo del cycle 10 (`422` no distingue
+> borrado de renombrado): aquí **el slug nunca fue correcto**.
+
+---
 
 ## 🔴 El hallazgo del cycle 15 (2026-11-22): **la capa de ACCESIBILIDAD faltaba entera — y su repo fundacional ya viaja dentro de todo juego hecho con Godot 4.5**
 

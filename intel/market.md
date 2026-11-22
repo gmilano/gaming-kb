@@ -7,7 +7,7 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-22 (cycle 15)** (passes previos: 2026-11-22 cycles 14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22 cycles 15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
@@ -1262,6 +1262,49 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 Oportunidad del pass cycle 16 (2026-11-22): **la adopción sube y la aceptación baja, tercer año seguido** — y el plano de datos es lo único que se vende sin tocar esa herida
+
+**El gancho, en una línea:** *"El 36% de la industria ya usa IA generativa y el
+52% de los desarrolladores dice que le hace mal al sector. Lo único que podés
+construir sin pelear esa discusión es la capa que mide, no la que genera."*
+
+**Las cifras, de la GDC State of the Game Industry 2026** (encuesta de industria,
+la fuente más repetida y la más fiable del conjunto de este pass):
+
+| Señal | 2024 | 2025 | 2026 |
+|---|---|---|---|
+| Trabajadores que usan IA generativa | ~27% | — | **36%** |
+| Dicen que el impacto en la industria es **negativo** | 18% | 30% | **52%** |
+
+> **Divergen, no convergen.** Es el tercer año consecutivo de deterioro del
+> sentimiento **mientras la adopción crece**. Cualquier propuesta cuyo valor
+> dependa de que el equipo del cliente *quiera* IA generativa está apostando contra
+> una tendencia de tres años. La capa de datos no pide esa adhesión: mide lo que el
+> juego ya hace.
+
+**⚠️ Conflicto registrado y NO resuelto — divulgación en Steam.** Esta KB publica
+**49,9% (oct-2026)**. Las fuentes de este pass dan **30,8% de los lanzamientos de
+2026** (19,9% en 2025; 10,9% en 2024), sobre ~53.600 lanzamientos. Los dos números
+no se pueden promediar: casi con seguridad tienen **denominadores distintos**
+(catálogo entero contra lanzamientos del año). **No citar ninguno de los dos como
+"el" dato de Steam sin decir el denominador.** La dirección —sube fuerte año a
+año— es lo único que las dos series comparten.
+
+**Regulación, con la etiqueta puesta:** el informe de referencia del año
+(*State of AI in Gaming 2026*, KPMG con UNLV) es del sector **GAMBLING**, no de
+videojuegos — 83 empresas de juego de azar y 113 reguladores. Dice que el **58% de
+los reguladores cree que la industria no puede autorregularse** en IA y que el 70%
+de las empresas declara alguna práctica de IA responsable. **Es trasladable como
+clima regulatorio, no como obligación para un estudio de videojuegos.** Lo mismo
+con la guía de Alberta (ene-2026) sobre detección de bots: es de azar.
+
+Sin verificar: que la ESRB haya empezado a tratar el diálogo de NPC generado como
+contenido sujeto a revisión de clasificación. **Aparece en una guía de terceros y
+no se pudo confirmar en fuente ESRB.** Si fuera cierto cambia el calendario de
+certificación de cualquier juego con NPC generativo, así que **vale la pena
+confirmarlo antes de una propuesta**, no citarlo.
+
+
 #### 🆕 Oportunidad del pass cycle 15 (2026-11-22): **auditoría CVAA del chat — la obligación que lleva siete años en vigor y que ningún pass de esta KB había registrado**
 
 **El gancho, en una línea:** *"Tu juego tiene chat de voz. Desde 2019 la FCC
@@ -1609,6 +1652,65 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 Oportunidad del pass cycle 16 (2026-11-22): **el marcado legible por máquina del Art. 50 vence el 2 de diciembre de 2026 — en diez días** — y hay un conflicto de fecha entre KBs que no se puede cerrar desde esta sesión
+
+**El gancho, en una línea:** *"Si tu juego ya estaba en el mercado, el plazo para
+marcar de forma legible por máquina el contenido generado vence el 2 de diciembre.
+Son diez días, y el entregable realista ya no es cumplir: es el inventario y el
+plan fechado."*
+
+**Lo medido este pass (fuentes jurídicas secundarias, nov-2026, concordantes
+entre sí):**
+
+- El **Art. 50 aplica desde el 2-ago-2026** y **no fue aplazado por el Digital
+  Omnibus**.
+- **Transición para sistemas ya en el mercado: hasta el 2-dic-2026** para el
+  marcado legible por máquina. **Hoy faltan 10 días.**
+- Guidelines finales de la Comisión sobre el Art. 50: **Comunicación C(2026) 5054,
+  aprobada el 20-jul-2026**, adopción formal pendiente.
+- Multas de hasta **15 M€ o el 3%** del volumen de negocio mundial.
+- Alcance extraterritorial: proveedores, *deployers*, importadores y distribuidores
+  que pongan sistemas en el mercado de la UE **o cuya salida se use en la UE** →
+  **un estudio de UK o de EE. UU. que sirve a jugadores europeos está dentro.**
+
+> 🔴 **CONFLICTO ENTRE KBs DE ESTA FLOTA, DECLARADO Y SIN RESOLVER.** La KB
+> *enterprise* registra **dic-2027** como fecha corregida del Art. 50 y califica el
+> "2-ago-2026" de dato obsoleto que reaparece pass tras pass. Las fuentes de
+> videojuegos de **noviembre de 2026** recogidas aquí dicen lo contrario, y son
+> varias e independientes entre sí.
+>
+> **No se puede cerrar desde esta sesión:** `WebFetch` no resuelve hosts generales
+> (2ª medición del gap), así que **no hubo acceso al texto primario en EUR-Lex**.
+> **Acción obligatoria antes de cualquier entregable a un cliente EMEA: leer el
+> texto del Reglamento y el estado del Omnibus en fuente oficial.** Las dos fechas
+> están registradas; **ninguna de las dos debe citarse a un cliente sobre la base
+> de esta KB.** Lo que no depende de cuál gane: el inventario de contenido generado
+> hay que tenerlo igual, y hoy no lo tiene nadie.
+
+> 🟢 **Corroboración INTERNA, que inclina la balanza sin cerrarla:** el análisis
+> del cycle 15 **de esta misma página** ya había establecido, con más precisión que
+> cualquier fuente de este pass, que el **2-dic-2026 cubre sólo el Art. 50(2) y
+> sólo los títulos puestos en el mercado antes del 2-ago-2026** —uno lanzado
+> después **nunca tuvo período de gracia**— y que **el Art. 50(1) vence para todos
+> desde agosto**. Es decir: **la KB de gaming es internamente consistente con
+> agosto de 2026 desde antes de este pass**, y la discrepancia es con la KB
+> *enterprise*, no dentro de ésta. Sigue sin leerse el texto primario, así que la
+> instrucción de arriba no cambia: **verificar en EUR-Lex antes de un entregable.**
+
+**Dónde sigue el desacuerdo sustantivo** (no de fecha): si el diálogo de NPC
+generado requiere etiqueta. Un análisis jurídico polaco sostiene que el test
+depende de **la diversidad etaria real del público del juego** — es decir, *el
+mismo NPC tiene obligaciones distintas según quién juegue*. Otra lectura sostiene
+que el creativo estilizado de un videojuego raramente califica como *deepfake*.
+**Es exactamente el tipo de pregunta que un inventario resuelve y una opinión no.**
+
+**Por qué el plano de datos de este pass es el instrumento:** la obligación es
+demostrar **qué se generó, con qué sistema y cuándo**. Eso es un registro de
+eventos con retención, no un documento. ClickHouse + el registro de esquemas de
+Iglu dan la traza; C2PA (ya en esta KB) da el marcado del artefacto. Las dos
+mitades, y ninguna sirve sola.
+
 
 #### 🆕 Oportunidad del pass cycle 15 (2026-11-22): **el EAA ya se está litigando — y el alcance para videojuegos está EN DISPUTA, que es precisamente el entregable**
 
@@ -2037,6 +2139,57 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 Oportunidad del pass cycle 16 (2026-11-22): **China publicó la primera norma del mundo que apunta al MECANISMO de NPC-compañero, no al contenido generado** — y toca directamente lo que esta KB lleva 16 passes vendiendo
+
+**El gancho, en una línea:** *"Todas las normas de IA que mirabas regulan lo que el
+juego MUESTRA. Ésta regula lo que el NPC HACE con un menor, y los videojuegos no
+están excluidos."*
+
+**Lo medido (fuente secundaria, ver la advertencia):** las medidas chinas sobre
+**IA antropomórfica**, en vigor desde el **15-jul-2026**, incluyen una disposición
+que **prohíbe ofrecer a menores servicios de IA construidos sobre relaciones
+virtuales**. Según el análisis, **otras jurisdicciones con leyes de *companion AI*
+excluyen explícitamente los videojuegos, y el enfoque chino no lo hace**: la
+**interacción emocional sostenida** con el jugador es precisamente lo que puede
+arrastrar a un NPC con IA dentro del alcance.
+
+> ⚠️ **Procedencia y límite:** el análisis es de **Stanford CodeX, 19-nov-2026**
+> —tres días antes de este pass—. **`law.stanford.edu` no resuelve en esta sesión**
+> (`ENOTFOUND`), así que esto viene de *snippets* de búsqueda y **no fue leído en la
+> fuente**. Es un dato **secundario y sin verificar**. Dicho eso: si se confirma, es
+> el hallazgo regulatorio más relevante que esta KB registró para su propio
+> producto estrella, porque **las recetas de NPC-compañero de esta KB son
+> exactamente el objeto regulado**.
+
+**Lo demás de la región, con su matiz:**
+
+- **Corea — AI Basic Act en vigor desde el 22-ene-2026** (ya registrado). **Matiz
+  nuevo de este pass:** el regulador señaló que **2026 funciona como período
+  piloto con aplicación limitada**. Cambia la conversación comercial: el año que
+  viene no es el año de la multa, es **el año de construir la arquitectura antes de
+  que la aplicación empiece**.
+- **Vietnam — ley en vigor desde el 1-mar-2026** (ya registrado).
+- **NPPA:** su supervisión se extendió **más allá de la publicación de juegos hacia
+  la IA y el gobierno del dato**, y mostró flexibilidad tras el rechazo de la
+  industria a varios borradores.
+- ⛔ **Las 3 horas semanales de menores NO deben citarse como vigentes.** La cifra
+  circula en los *trackers* de 2026 pero su fuente se remonta a **2021**. Dato
+  caducado hasta que se verifique en fuente NPPA.
+- **Japón:** no se encontró norma de IA específica para videojuegos. La verificación
+  de edad existe (vía comités de ética en Japón, vía datos de operadora móvil en
+  Corea) pero **no es regulación de IA**. **No vender trabajo japonés como
+  cumplimiento de IA.**
+- ⛔ El informe que afirma **"ninguna actividad regulatoria sobre IA registrada en
+  Asia-Pacífico"** es del sector **gambling**, de fuente única, y **se contradice
+  con la norma china de arriba**. No usarlo.
+
+**Consecuencia para el plano de datos:** si los eventos de NPC-compañero son la
+categoría señalada, tienen que vivir en **su propia tabla con su propio TTL y su
+propia partición por jurisdicción** — no mezclados en el flujo general de
+telemetría. Eso es la Receta 42, y es una decisión de esquema que cuesta barata
+hoy y carísima después.
+
+
 #### 🆕 Pass cycle 15 (2026-11-22): **GAP MEDIDO — la accesibilidad de videojuegos no aparece en APAC, y eso cambia el pitch**
 
 **Qué se buscó, literalmente:** `AI gaming APAC 2026 adoption regulation players
@@ -2433,6 +2586,63 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 Oportunidad del pass cycle 16 (2026-11-22): **la aceptación de IA convive con una objeción LABORAL explícita** — y el problema nº1 que declaran los estudios de la región es el que Globant vende
+
+**El gancho, en una línea:** *"En Latinoamérica el jugador acepta la IA más que en
+ningún otro mercado, y aun así cuatro de cada diez están preocupados por el empleo
+de los desarrolladores. No es contradicción: es el margen exacto en el que se
+comunica un lanzamiento."*
+
+**PGB Latam 2026** — 7.202 encuestados en Argentina, Chile, Colombia, México y
+Perú:
+
+| Señal | Valor |
+|---|---|
+| Consideraría comprar juegos hechos con IA | **~50%** |
+| Preocupados por el efecto en el empleo de desarrolladores | **40,6%** |
+| Lo pensaría dos veces si el juego fue hecho **mayormente** con IA | **25,7%** |
+| Generación Z | ya es **el grupo mayoritario** del público gamer |
+
+> **Esto MATIZA, no contradice, el 48,8% de aceptación que esta KB publica.** La
+> aceptación regional se sostiene. Lo que el pass agrega es que **la objeción no es
+> estética sino laboral**, y que una cuarta parte del mercado castiga
+> específicamente el *"hecho mayormente con IA"*. La conclusión operativa es de
+> comunicación, no de producto: **la IA como herramienta del equipo se tolera; la
+> IA como sustituto del equipo se penaliza**, y la diferencia está en cómo se
+> cuenta.
+
+**Mercado:** la región genera ~**US$ 8.300 M al año**; **México es el mayor mercado
+de Latinoamérica**. Bain (2026) identifica como motores de crecimiento a los
+**adolescentes** y a la **compra directa al desarrollador**, y señala que la IA
+acelera el prototipado y abarata la iteración. (Los 372 M de jugadores que esta
+página ya registra siguen en pie.)
+
+**🔴 El dato más accionable del pass para Globant, y lo dicen los propios estudios
+de la región:** su **problema número uno es la retención de talento** — los
+desarrolladores reciben ofertas de trabajo remoto de empresas internacionales **con
+salarios en dólares**. No es una observación de un analista sobre el mercado: es la
+queja declarada por el lado comprador.
+
+> **Es la variable del modelo nearshore dicha por el cliente.** Un estudio
+> latinoamericano no compra "capacidad de desarrollo barata" —esa es la oferta que
+> le está vaciando el equipo—; compra **capacidad que no se va**. La propuesta que
+> funciona en la región es la que se mide en **continuidad y transferencia de
+> conocimiento**, no en *rate*. Y es, además, el argumento que convierte el plano
+> de datos de este pass en una venta: **un pipeline de telemetría documentado y con
+> esquemas versionados es conocimiento que sobrevive a la rotación**; un modelo de
+> churn entrenado por alguien que se fue, no.
+
+**Regulación:** incipiente. Los propios reguladores de la región **admiten poca
+visibilidad** sobre cómo las empresas usan la IA. No hay instrumento regional de IA
+aplicable a videojuegos que este pass haya podido medir.
+
+> ⛔ **Frontera del homónimo, otra vez:** la prohibición brasileña de **iGaming**
+> (nov-2026) y el endurecimiento regulatorio de Colombia y Perú son del sector
+> **juego de azar**. Aparecen en todas las búsquedas regionales de "gaming" y **no
+> pertenecen a esta página**. Se nombran aquí únicamente para que nadie los importe
+> por error a una propuesta de videojuegos.
+
 
 #### 🆕 Oportunidad del pass cycle 15 (2026-11-22): **el 48,8% queda CONFIRMADO con fuente nombrada — y la accesibilidad es un cero medido también acá**
 
