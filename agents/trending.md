@@ -12,6 +12,60 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 17
+
+**Tema del pass:** la **fábrica** — versionado de binarios, CI de build, caché de
+compilación, seguimiento de producción y automatización de QA. Seis categorías que
+tenían **cero filas en 16 passes**. El hallazgo del pass no es un repo: es que en
+esta capa **la licencia cambia con el tiempo y con el dueño**, y los cuatro canales
+de licencia de esta KB sólo ven el presente.
+
+### Lo que entró (verificado, licencia leída byte a byte)
+
+| Repo | ★ | Licencia (bytes) | Capa | Último push |
+|---|---|---|---|---|
+| [AirtestProject/Airtest](https://github.com/AirtestProject/Airtest) | 9.657 | **Apache-2.0** (11.356) | QA de UI por reconocimiento de imagen (NetEase) | 2026-03-23 |
+| [AirtestProject/Poco](https://github.com/AirtestProject/Poco) | 1.964 | **Apache-2.0** (11.356) | inspección de jerarquía cross-engine | ⚠️ 2024-01-08 (34 meses) |
+| [mozilla/sccache](https://github.com/mozilla/sccache) | 7.968 | **Apache-2.0** (11.358) | caché de compilación | **2026-11-22 (hoy)** |
+| [git-lfs/git-lfs](https://github.com/git-lfs/git-lfs) | 14.610 | **MIT + BSD-3** (2.818) | versionado de binarios | 2026-11-06 |
+| [treeverse/dvc](https://github.com/treeverse/dvc) | 15.993 | **Apache-2.0** (11.340) | versionado de assets grandes | 2026-11-20 |
+| [game-ci/unity-builder](https://github.com/game-ci/unity-builder) | 1.113 | **MIT** (1.097) | CI de Unity | 2026-11-15 |
+| [game-ci/docker](https://github.com/game-ci/docker) | 472 | **MIT** (1.071) | imágenes de runner | **2026-11-22 (hoy)** |
+| [game-ci/unity-test-runner](https://github.com/game-ci/unity-test-runner) | 271 | **MIT** (1.097) | tests de Unity en CI | 2026-11-15 |
+| [JetBrains/teamcity-unreal-engine-plugin](https://github.com/JetBrains/teamcity-unreal-engine-plugin) | 21 | **Apache-2.0** (11.357) | CI de Unreal (única permisiva medida) | 2026-08-19 |
+| [ynput/ayon-core](https://github.com/ynput/ayon-core) | 79 | **Apache-2.0** (11.357) | pipeline de producción (cliente) | 2026-11-21 |
+
+### Movimientos de licencia detectados por el **canal 5** (`git log --follow -- LICENSE`)
+
+| Repo | Movimiento | Fecha | Consecuencia |
+|---|---|---|---|
+| [ynput/ayon-backend](https://github.com/ynput/ayon-backend) | 🔴 Apache-2.0 → **FSL-1.1-ALv2** (commit `97627e27`) | **2025-01-27** | última release Apache: **1.6.1**; la 1.7.0 convierte el **2027-01-30** |
+| [ynput/ayon-frontend](https://github.com/ynput/ayon-frontend) | 🔴 **FSL-1.1-ALv2** (3.744 B) | — | mismo corte que el backend |
+| [treeverse/dvc](https://github.com/treeverse/dvc) | 🟡 copyright `Iterative, Inc.` → **`Treeverse.`** (commit `046d2fd7`), grant **sin cambios** | **2025-12-01** | dueño nuevo cuyo producto insignia es **BSL-1.1** |
+| [cgwire/zou](https://github.com/cgwire/zou) | 🟢 AGPL-3.0 **desde el commit inicial** | 2017-03-26 | estabilidad confirmada, 9 años |
+| [AirtestProject/Airtest](https://github.com/AirtestProject/Airtest) | 🟢 Apache-2.0 **desde el commit inicial** | 2018-01-24 | estabilidad confirmada, 8 años |
+
+### Lo que NO entró, y por qué (rechazos medidos)
+
+| Repo | ★ | Motivo |
+|---|---|---|
+| [alttester/AltTester-Unity-SDK](https://github.com/alttester/AltTester-Unity-SDK) | 128 | **GPL-3.0** (35.043 B) **dentro del build** + server batch con suscripción Pro |
+| [cgwire/kitsu](https://github.com/cgwire/kitsu) + [cgwire/zou](https://github.com/cgwire/zou) | 774 + 202 | **AGPL-3.0** (34.520 B): adoptable, no derivable |
+| [treeverse/lakeFS](https://github.com/treeverse/lakeFS) | 5.590 | **BSL-1.1** (7.475 B) — valor nuevo del checksum |
+| [ynput/OpenPype](https://github.com/ynput/OpenPype) | 301 | MIT pero **archivado** (2024-09-18, 26 meses) y todavía recomendado por terceros |
+| [game-ci/unity-actions](https://github.com/game-ci/unity-actions) | 1.097 | MIT pero **44 meses sin commit**; es el que devuelven las guías |
+| [team-zomsa/aplib.net](https://github.com/team-zomsa/aplib.net) | 9 | **AGPL-3.0** por short-form (709 B, Utrecht University; el API dice `NOASSERTION`) + 29 meses dormido |
+
+### Lo que se buscó y **no existe** (se publica para que el silencio no se lea como cobertura)
+
+- CI de Unreal open source y permisiva equivalente a `game-ci`: **no existe**. Horde
+  (Epic) se publica bajo EULA de UE y su CI **no soporta Git ni SVN, sólo Perforce**.
+- Repo de la arquitectura de referencia de QA con Bedrock de AWS: **anunciado, no
+  publicado**.
+- Reemplazo vivo de Poco para inspección de jerarquía cross-engine permisiva: **no hay**.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 16
 
 **Tema del pass:** el **plano de datos del jugador** (telemetría, analítica,

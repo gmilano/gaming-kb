@@ -7,12 +7,130 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22 cycles 15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 17)** (passes previos: 2026-11-22 cycles 16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🔴 Lo que cambió — pass cycle 17 (2026-11-22): **la capa de fábrica tiene una geografía propia, y no es la del resto de esta KB** — más la resolución del conflicto de Steam que este archivo dejó abierto
+
+Los 16 passes anteriores mapearon este mercado por **regulación** (quién obliga a
+etiquetar, a verificar edad, a marcar contenido). Este pass mapea otra cosa: **de
+dónde sale el software con el que se fabrica un juego**, y el mapa no coincide.
+
+### 🟢 1. Resolución del conflicto de Steam que el cycle 16 registró como NO resuelto
+
+El cycle 16 publicó: *"49,9% (oct-2026) contra 30,8% de los lanzamientos de 2026 …
+no se pueden promediar … no citar ninguno sin decir el denominador"*. **El
+denominador está medido y los dos números son compatibles:**
+
+| Cifra | Ventana | Qué cuenta |
+|---|---|---|
+| **1,7%** | enero 2024 | lanzamientos **del mes** (primer mes de la obligación) |
+| **10,9%** | año 2024 | lanzamientos **del año** |
+| **19,9% / ~24%** | año 2025 | lanzamientos **del año** |
+| **26,4%** | octubre 2025 | lanzamientos **del mes** |
+| **30,8%** | 2026 **hasta julio** | lanzamientos del año **a esa fecha** |
+| **~40,1%** | 2026 hasta la fecha | lanzamientos del año **acumulado** |
+| **49,9%** | **octubre 2026** | lanzamientos **del mes** |
+
+⇒ **No hay contradicción: hay una tasa mensual que sube dentro del año.** El
+acumulado anual (40,1%) es siempre menor que el mes más reciente (49,9%) **porque la
+serie es creciente**. La forma correcta de citarlo: *"casi la mitad de los
+lanzamientos de octubre de 2026 y ~40% del año acumulado"*. **Conflicto cerrado.**
+
+### 🔵 2. La geografía de la capa de fábrica, medida sobre 22 repos
+
+| Región de origen | Repos de esta capa | Licencia dominante |
+|---|---|---|
+| **EMEA** | AYON (Ynput, **Chequia**), Kitsu/Zou (CGWire, **Francia**), AltTester (Altom, **Rumanía**), plugin UE de TeamCity (JetBrains), aplib.net (**Países Bajos**) | 🔴 **FSL-1.1, AGPL-3.0, GPL-3.0** — la restrictiva |
+| **APAC** | Airtest + Poco (**NetEase, China**) | 🟢 **Apache-2.0** |
+| **North America** | git-lfs (GitHub), sccache (Mozilla), DVC/lakeFS (Treeverse), autopilot (Ramen), la arquitectura de referencia de AWS | 🟢 MIT/Apache **salvo** lakeFS (BSL) y la referencia de AWS (GPL + suscripción) |
+| **Global / comunidad** | game-ci | 🟢 MIT |
+| **LATAM** | **0 de 22** | — |
+
+🔴 **El dato que no estaba en ningún pass anterior: Europa produce la capa de
+pipeline de esta industria y la licencia a la defensiva.** Las dos plataformas de
+seguimiento de producción del mundo open source son europeas y **ninguna de las dos
+está en la ruta permisiva** (AYON parte el grant desde el 2025-01-27, Kitsu es AGPL
+desde 2017). No es casualidad de licencia: son empresas chicas que viven del
+producto, y la licencia es su modelo de negocio.
+
+🟢 **Y el espejo: la única automatización de QA de juego permisiva y a escala es
+china.** `AirtestProject/Airtest` (9.657★, Apache-2.0, NetEase) no tiene equivalente
+occidental permisivo: el occidental equivalente es AltTester y es GPL-3.0 con
+suscripción de pago para el modo batch.
+
+### Datos nuevos por región — este pass
+
+#### North America
+
+- 🔴 **La arquitectura de referencia de AWS para QA con agentes no es usable tal
+  como se publica**: embebe `AltTester-Unity-SDK` (**GPL-3.0**, 35.043 B medidos)
+  dentro del build del cliente, el server en *batchmode* sobre Fargate **requiere
+  suscripción Pro** (lo dice AWS), y **el repo prometido no está publicado**.
+  ⇒ En una conversación con un cliente que llega citando ese blog, el argumento
+  no es técnico: es que **la alternativa Apache-2.0 ya existe y cubre 4 engines**
+  (Receta 19). ⚠️ *Fuente secundaria: `aws.amazon.com` no resuelve desde esta sesión.*
+- 🔴 **Lock-in de pipeline en Unreal:** Horde, el sistema de build de Epic, publica
+  fuente **bajo la EULA de UE** y su CI **no soporta Git ni Subversion — sólo
+  Perforce, UE 5.4+**. Para un cliente AAA norteamericano esto es presupuesto, no
+  preferencia. ⚠️ *Fuente secundaria: `dev.epicgames.com` no resuelve desde esta sesión.*
+- 🟡 **Tercera reconfirmación de la frontera del cycle 8:** la consulta regional del
+  runbook (`AI gaming North America 2026 adoption regulation`) **vuelve a devolver el
+  informe UNLV/KPMG "State of AI in Gaming 2026" en primer lugar, y es de casino**
+  (índice de madurez 45/100, foco en protección del jugador). Sigue sin ser de
+  videojuegos. **La frontera no es una curiosidad: es el resultado nº1 de la consulta
+  obligatoria, tres passes seguidos.**
+
+#### EMEA
+
+- 🔴 **Las dos plataformas de producción de esta industria son europeas y las dos
+  salieron de la ruta permisiva** (ver el mapa de arriba). Consecuencia comercial
+  concreta: **en EMEA la conversación de pipeline empieza por licencia, no por
+  funcionalidad**, y el cliente europeo suele tener ya una de las dos instalada.
+- 🟢 **El argumento de soberanía se refuerza, no se debilita:** AYON y Kitsu se
+  despliegan on-prem por diseño; el competidor (ShotGrid/ftrack) es SaaS de un
+  proveedor norteamericano. Para un estudio europeo con datos de producción bajo
+  NDA, eso es el argumento, y es de ellos, no de Globant.
+
+#### APAC
+
+- 🟢 **La capa de QA de UI de juego es APAC-origen y permisiva**: Airtest (9.657★) +
+  Poco (1.964★), ambos Apache-2.0 desde el commit inicial (verificado por canal 5),
+  ambos de NetEase. ⚠️ **Poco lleva 34 meses sin commit y Airtest 8**: usar como
+  librería estable, no como dependencia con roadmap.
+- 🟡 **Corrobora el aflojamiento de aprobaciones que el cycle 13 registró en China:**
+  las aprobaciones de juegos acumulan **+19% interanual** (Niko Partners, fuente
+  secundaria). Es la tercera fuente independiente en la misma dirección.
+
+#### LATAM
+
+- 🆕 **Brasil tiene reglamento del Marco Legal, y esta KB no lo tenía:** el
+  **Decreto nº 13.138/2026, firmado el 14-oct-2026**, reglamenta la **Lei nº
+  14.852/2024** (Marco Legal da Indústria de Jogos Eletrônicos), con foco declarado
+  en desarrollo de la industria, innovación, formación profesional e
+  internacionalización, y con **desarrollo de juegos —co-desarrollo y QA— listado
+  entre las áreas abiertas a empresas extranjeras**. ⚠️ *Fuente secundaria:
+  `www.trade.gov` y `www.planalto.gov.br` no resuelven desde esta sesión; el número
+  de decreto y la fecha se publican como dato a confirmar contra el DOU en el
+  próximo pass.*
+  ⇒ **Por qué importa para Globant y no es trivia regulatoria:** es el primer
+  instrumento de la región que **nombra QA y co-desarrollo** como el carril de
+  entrada, que es exactamente la capa que este pass acaba de mapear (Recetas 19 y 43).
+- 🔴 **Cero medido, no silencio:** de los **22 repos** de la capa de fábrica
+  verificados este pass, **ninguno tiene dueño LATAM**. La capa que el decreto
+  brasileño incentiva **no se produce en la región**: se adopta. Para una propuesta
+  eso es favorable —no hay competidor local de producto— y para el discurso de
+  ecosistema es el gap que hay que nombrar.
+- 🟡 **Tamaño, de este pass:** Brasil sigue siendo el mercado mayor y más maduro de la
+  región, con penetración declarada **>70% de la población** y **más de 1.000
+  desarrolladores activos**; estudios de Argentina, Chile y Colombia aportan cada vez
+  más a lanzamientos internacionales (Xsolla/GamesBeat, fuente de industria).
+
+---
 
 ## 🔴 Lo que cambió — pass cycle 15 (2026-11-22): **la primera obligación de este mercado que YA se está litigando — y no es de IA**
 
@@ -1262,6 +1380,22 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 Oportunidad del pass cycle 17 (2026-11-22): **la fábrica, que es lo único que Steam exime y el backlash no toca**
+
+**El gancho, en una línea:** *"No les proponemos IA en el juego. Les proponemos que
+el build salga solo todas las noches, que un agente lo juegue antes que ustedes y que
+el crash llegue con el stack del cliente — y nada de eso dispara un disclosure en
+Steam ni una discusión con el equipo de arte."*
+
+- **Steam exime las herramientas de desarrollo.** La Receta 43 cae entera del lado
+  exento, igual que la 19 y la 10.
+- **El contra-argumento ya tiene nombre:** si el cliente llega con el blog de QA con
+  Bedrock de AWS, la respuesta es que esa referencia embebe **GPL-3.0 en su build** y
+  pide **suscripción Pro**, y que la alternativa Apache-2.0 cubre UE, Unity, Godot y
+  Roblox.
+- **Si el cliente es Unreal, hay una línea de presupuesto que nadie puso:** Perforce +
+  Horde bajo EULA, o TeamCity. Llevarlo a la estimación inicial.
+
 #### 🆕 Oportunidad del pass cycle 16 (2026-11-22): **la adopción sube y la aceptación baja, tercer año seguido** — y el plano de datos es lo único que se vende sin tocar esa herida
 
 **El gancho, en una línea:** *"El 36% de la industria ya usa IA generativa y el
@@ -1652,6 +1786,21 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 Oportunidad del pass cycle 17 (2026-11-22): **el pipeline europeo ya está instalado y su licencia es el problema** — entrar por ahí, no por el engine
+
+**El gancho, en una línea:** *"Su AYON es FSL desde enero de 2025 y su Kitsu es AGPL:
+nosotros construimos del lado Apache-2.0 del corte, y el entregable queda de ustedes,
+redistribuible, sin tocar el servidor."*
+
+- **Entrada técnica**: addons sobre `ayon-core` / `ayon-python-api` (Apache-2.0),
+  nunca parches al servidor (Receta 45).
+- **Entrada legal**: la cláusula de *professional services* de la FSL está escrita y
+  permite operar el servidor del cliente. Decirlo **antes** de que lo pregunten.
+- **Entrada de soberanía**: las dos plataformas se despliegan on-prem; el competidor
+  es SaaS norteamericano. El dato de producción no sale del estudio.
+- **Fecha para la propuesta**: si exigen grant permisivo sobre el servidor,
+  **2027-01-30** es el día en que AYON 1.7.0 convierte a Apache-2.0.
 
 #### 🆕 Oportunidad del pass cycle 16 (2026-11-22): **el marcado legible por máquina del Art. 50 vence el 2 de diciembre de 2026 — en diez días** — y hay un conflicto de fecha entre KBs que no se puede cerrar desde esta sesión
 
@@ -2139,6 +2288,19 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 Oportunidad del pass cycle 17 (2026-11-22): **la automatización de QA permisiva de esta industria es de la región** — se compone, no se importa
+
+**El gancho, en una línea:** *"La base de automatización que ya usan los estudios de
+la región es Apache-2.0 y es local; lo que falta no es la herramienta, es el agente
+que decide qué probar."*
+
+- **Airtest (9.657★, Apache-2.0, NetEase)** como capa de ejecución + `ramenvr/autopilot`
+  (Apache-2.0) como capa de decisión = Receta 19 + Receta 43 sin una sola licencia
+  restrictiva.
+- ⚠️ **Advertencia que hay que dar, no esconder**: Poco lleva **34 meses** sin commit
+  y Airtest **8**. Son bases estables, no dependencias con roadmap: presupuestar el
+  mantenimiento del *fork* propio.
+
 #### 🆕 Oportunidad del pass cycle 16 (2026-11-22): **China publicó la primera norma del mundo que apunta al MECANISMO de NPC-compañero, no al contenido generado** — y toca directamente lo que esta KB lleva 16 passes vendiendo
 
 **El gancho, en una línea:** *"Todas las normas de IA que mirabas regulan lo que el
@@ -2586,6 +2748,21 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 Oportunidad del pass cycle 17 (2026-11-22): **el decreto brasileño nombra QA y co-desarrollo, y la capa que nombra no se produce en la región**
+
+**El gancho, en una línea:** *"El reglamento del Marco Legal abre justamente
+co-desarrollo y QA, y en esa capa no hay proveedor local de producto: hay 22 repos
+medidos y ninguno es de la región. Lo que se arma acá es capacidad, no licencia."*
+
+- **Instrumento**: Decreto nº 13.138/2026 (14-oct-2026), que reglamenta la Lei nº
+  14.852/2024. ⚠️ *Dato de fuente secundaria — confirmar contra el DOU.*
+- **Oferta concreta y barata de arrancar**: Receta 43 variante A (100% MIT/Apache)
+  sobre un estudio de 10-30 personas; reemplaza una persona de release y deja
+  trazabilidad de build, que es lo que después pide cualquier certificación.
+- **Cero medido**: 0 de 22 repos de la capa con dueño LATAM. No es silencio, es
+  medición, y es el argumento de ecosistema para una conversación con Abragames o un
+  programa público.
 
 #### 🆕 Oportunidad del pass cycle 16 (2026-11-22): **la aceptación de IA convive con una objeción LABORAL explícita** — y el problema nº1 que declaran los estudios de la región es el que Globant vende
 

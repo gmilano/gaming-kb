@@ -8,13 +8,108 @@ updated: 2026-11-22
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22 cycles 15/14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 17)** (passes previos: 2026-11-22 cycles 16/15/14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
 > (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
 > de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
+
+## 🆕 Capa vertical nueva (2026-11-22, cycle 17): **la plataforma de producción del estudio** — y la corrección a un gap que esta página declaró **estructural** tres passes seguidos
+
+### 🔧 Primero la corrección, porque invalida una conclusión publicada
+
+El cycle 14 cerró así, y los cycles 15 y 16 lo dejaron en pie:
+
+> *"📉 Gap declarado: no existe un ERP/CRM vertical para estudios de juego. … el
+> equivalente de Odoo en gaming no existe, y el motivo es que el engine ya ocupa ese
+> lugar."*
+
+**La búsqueda que produjo ese gap era la del runbook —`open source platform gaming
+ERP CRM MIT Apache`— y devolvió Odoo, Dolibarr, EspoCRM y Operately.** Correcta como
+ejecución, **inválida como medición**: la categoría existe, no se llama ERP y por eso
+ninguna consulta con forma de ERP la podía encontrar. Se llama **production tracking
+/ pipeline** y tiene dos plataformas vivas con commits de esta semana:
+
+| Plataforma | Repos | ★ | Licencia **medida** | Último push |
+|---|---|---|---|---|
+| **AYON** (Ynput, Chequia) | `ayon-backend`, `ayon-frontend` | 40 + 31 | 🔴 **FSL-1.1-ALv2** (3.744 B) | 2026-11-20 / 21 |
+| | `ayon-core`, `ayon-launcher`, `ayon-docker`, `ayon-python-api` | 79/55/60/17 | 🟢 **Apache-2.0** (11.357 B) | 2026-11-07 → 21 |
+| **Kitsu** (CGWire, Francia) | `cgwire/kitsu` + `cgwire/zou` | 774 + 202 | ⛔ **AGPL-3.0** (34.520 B) | 2026-11-20 |
+| *(predecesor)* | `ynput/OpenPype` | 301 | MIT pero **ARCHIVADO** 2024-09-18 | — |
+
+> **Regla T67 — una consulta con forma de categoría no encuentra un objeto con
+> nombre de oficio.** Es la simétrica de la T64 de la familia (*"un instrumento con
+> forma de problema no encuentra un objeto con forma de categoría"*). El runbook pide
+> buscar "ERP/CRM"; una industria que llama a su ERP *"pipeline"* queda invisible a
+> esa consulta **para siempre, por más passes que se corran**. Antes de declarar un
+> gap estructural: **preguntar cómo lo llama la industria, no cómo lo llama el
+> runbook.**
+
+Lo que **sí sobrevive** de la conclusión vieja: no hay un Odoo de gaming —una
+plataforma única que abarque finanzas, RRHH y producción—. Lo que **cae**: que no
+hubiera nada vertical que adoptar.
+
+### El stack, con la licencia como criterio de selección
+
+```
+tracking de producción (tareas, versiones, estados, aprobaciones)
+   ├── Kitsu (AGPL-3.0)  → adoptable TAL CUAL, no derivable, no integrable en un producto cerrado
+   └── AYON  (grant PARTIDO)
+        ├── servidor  ayon-backend + ayon-frontend   → FSL-1.1-ALv2  (uso interno y servicios: SÍ; producto: NO)
+        └── cliente   ayon-core / launcher / python-api → Apache-2.0  (acá se escriben los addons)
+                ↓ addons propios
+        pipeline de assets del cycle 14 (Blender + generadores permisivos)
+                ↓ publish
+        versionado binario: git-lfs (MIT) o DVC (Apache-2.0)
+                ↓
+        CI: game-ci (MIT, Unity) · TeamCity+plugin Apache (Unreal) · sccache (Apache)
+                ↓
+        QA: ramenvr/autopilot (Apache-2.0, Receta 19) · Airtest (Apache-2.0, móvil)
+```
+
+### 🔴 La regla que esta vertical impone y las anteriores no: **el grant se parte entre lo que se despliega y lo que se escribe**
+
+En las verticales anteriores de esta página la pregunta era *"¿qué licencia tiene la
+plataforma?"*. Acá la plataforma **tiene dos**, y el corte cae exactamente donde
+importa:
+
+- **Lo que se despliega** (servidor AYON) es **FSL**: uso interno ✅, servicios
+  profesionales a un licenciatario ✅ *(está escrito en el Permitted Purpose nº4)*,
+  ofrecerlo como producto gestionado ⛔.
+- **Lo que Globant escribe** (addons sobre `ayon-core` / `ayon-python-api`) es
+  **Apache-2.0**: el entregable del proyecto queda limpio y es del cliente.
+
+⇒ **En una propuesta esto se dice en una línea:** *"el servidor se despliega bajo su
+licencia de origen en la infraestructura del cliente; todo lo que construimos vive
+en la capa Apache-2.0 y se entrega sin restricción."* Es defendible ante el área
+legal del cliente y es verdad.
+
+⚠️ **Y la fecha que hay que poner en la propuesta:** si el cliente exige grant
+permisivo también sobre el servidor, las únicas dos salidas medidas son **congelar
+en AYON 1.6.1 (2025-01-09, la última Apache-2.0)** o **esperar al 2027-01-30**, día
+en que la 1.7.0 convierte a Apache-2.0 por la cláusula de *Future License*. Ver el
+hallazgo nº1 del cycle 17 en `agents/top.md`.
+
+### 📉 Gap declarado (éste sí, medido en su propio vocabulario)
+
+Buscado en el vocabulario de la industria —*production tracking*, *pipeline*,
+*asset management*, *build automation*— y **no encontrado**:
+
+- **Ninguna plataforma de producción con grant permisivo completo**: AYON parte el
+  grant, Kitsu es AGPL, OpenPype está archivado. *La vertical existe; la vertical
+  100% permisiva no.*
+- **Ninguna plataforma de producción que entienda un engine**: AYON integra DCCs
+  (Blender, Maya, Houdini) y Unreal como DCC; **ninguna de las dos modela builds,
+  plataformas de destino, certificación de consola ni tiendas.** Ese pedazo del
+  estudio sigue siendo hoja de cálculo.
+- **Ninguna alternativa a Perforce** con tracción medible en estudios: `git-lfs`
+  (MIT) y `DVC` (Apache-2.0) resuelven el versionado de binarios, no el *file
+  locking* sobre assets no fusionables que es el motivo real por el que los estudios
+  usan Perforce.
+
+---
 
 ## 🆕 Capa vertical nueva (2026-11-22, cycle 16): **el plano de datos del jugador** — la primera vertical de esta página donde la plataforma líder **no se puede desplegar**, y la alternativa viable es un fork
 
@@ -153,7 +248,7 @@ mismo archivo.
 > Medición de este pass: **3 de 3** proyectos de audio con pesos licenciados
 > aparte los tienen en **modo no comercial**. Ninguno lo dice en el badge.
 
-### 📉 Gap declarado: **no existe un ERP/CRM vertical para estudios de juego**
+### 📉 Gap declarado: **no existe un ERP/CRM vertical para estudios de juego** — 🔧 **CORREGIDO EN EL CYCLE 17: la categoría existe y se llama *production tracking*; ver la sección del cycle 17 al principio de esta página**
 
 La búsqueda del runbook (`open source platform gaming ERP CRM MIT Apache`,
 corrida este pass) devuelve **sólo plataformas horizontales**: Odoo, Dolibarr,

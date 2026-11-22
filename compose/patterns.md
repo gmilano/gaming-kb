@@ -64,6 +64,150 @@ updated: 2026-11-22
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
 > benchmark publicado de agentes que juegan.
 
+## 🆕 Receta 43: **Fábrica de build 100% permisiva** — la capa que estaba entre la Receta 37 (assets) y la 19 (QA) y no estaba escrita
+
+**Caso de uso**: un estudio donde el arte ya se genera (R37), los NPC ya hablan
+(R35) y el agente ya juega (R19), pero **el build sale a mano**: alguien abre el
+engine, exporta, sube el zip. Es el punto donde los pilotos de IA mueren en el mes 3,
+porque nada de lo anterior entra en una cadencia.
+
+**Por qué ahora**: esta KB midió este pass que las seis categorías del carril —
+versionado binario, CI, caché, tracking, QA de UI, publicación— **tenían cero filas
+en 16 passes**, y que una de ellas (CI de Unreal) **no tiene opción permisiva**.
+
+### Variante A — cliente Unity (ruta 100% MIT/Apache)
+
+```
+repo del juego (Git)
+  ├── binarios      git-lfs/git-lfs            MIT (2.818 B)          ← assets no fusionables
+  ├── datasets      treeverse/dvc              Apache-2.0 (11.340 B)  ← sólo si hay ML propio
+  └── CI            GitHub Actions
+        ├── game-ci/docker            MIT (1.071 B)   imagen base del runner
+        ├── game-ci/unity-builder     MIT (1.097 B)   build por plataforma
+        ├── game-ci/unity-test-runner MIT (1.097 B)   Unity Test Framework
+        └── mozilla/sccache           Apache-2.0      caché de compilación (nativo/IL2CPP)
+              ↓ artefacto jugable
+        ramenvr/autopilot (Apache-2.0)   ← Receta 19, corrida nocturna sobre el build de la noche
+              ↓ crash + telemetría
+        GlitchTip (MIT)                  ← Receta 41, cycle 16
+```
+
+🔴 **Los dos pasos que no se pueden saltar:**
+
+1. **`game-ci` es MIT; Unity no.** Hay que inyectar la licencia de Unity como secreto
+   del runner. Decirlo en la estimación: no es un bloqueo, es una línea de costo y una
+   conversación con el cliente sobre su contrato de Unity.
+2. **Nunca empezar por `game-ci/unity-actions`** (1.097★, **último commit 2023-03-04**),
+   que es el que devuelve la mayoría de las guías. El vivo es `unity-builder`.
+
+### Variante B — cliente Unreal (y por qué cuesta más)
+
+```
+Perforce (propietario)  ──►  Horde (fuente bajo EULA de UE, CI sin soporte de Git/SVN, UE 5.4+)
+        ó
+Git + TeamCity (propietario, free tier) + JetBrains/teamcity-unreal-engine-plugin (Apache-2.0, 21★)
+        ó
+Git + Actions a mano con BuildGraph/UAT  ← sin plugin permisivo que lo envuelva
+```
+
+⇒ **El presupuesto de pipeline de un proyecto Unreal no es igual al de uno Unity, y
+la diferencia no es de horas: es de licencias de terceros.** Esta receta existe para
+que eso aparezca en la estimación y no en el mes 3.
+
+**Esfuerzo**: 1-2 semanas (Unity) · 3-5 semanas (Unreal, incluyendo el server de CI).
+**Entregable**: cadencia nocturna build → test → playtest con agente → reporte, con
+cada pieza del lado permisivo salvo las dos declaradas.
+
+**Por región**: en **EMEA** la variante A es además la que da trazabilidad para el
+inventario del Art. 50(2) (la R7 necesita saber qué build contiene qué asset generado).
+En **LATAM** y **APAC**, donde el cliente típico tiene equipo chico, la variante A
+reemplaza una persona de release. En **North America**, Steam exime las herramientas
+de desarrollo: **esta receta no dispara disclosure ni backlash**.
+
+---
+
+## 🆕 Receta 44: **Gate de canal 5** — verificar la HISTORIA de la licencia antes de adoptar, y recuperar la última versión permisiva
+
+**Caso de uso**: una dependencia pasa el gate de la Receta 10/20 (badge + archivo +
+checksum), entra al stack, y **seis meses después el área legal del cliente descubre
+que el proyecto se relicenció el año pasado** y que la versión que corre en producción
+ya no es la que se auditó.
+
+**Por qué ninguna receta anterior lo detecta**: las Recetas 10, 14, 17, 20 y 21 leen
+**el archivo de hoy**. Un relicenciamiento **no deja rastro en el archivo resultante**.
+
+**El gate, mecánico (2 minutos por repo, sin dependencias):**
+
+```bash
+slug=ynput/ayon-backend
+git clone -q --filter=blob:none --single-branch https://github.com/$slug /tmp/ch5
+cd /tmp/ch5
+
+# 1. ¿cambió la licencia alguna vez?
+git log --follow --date=short --pretty='%h %ad %s' -- LICENSE LICENSE.md LICENSE.txt COPYING
+
+# 2. si cambió: ¿cuál fue el último tag ANTES del cambio? (= última versión permisiva)
+for t in $(git tag --sort=creatordate); do echo "$(git log -1 --date=short --pretty=%ad $t) $t"; done
+
+# 3. ¿qué dice la cláusula de conversión? (FSL y BSL la tienen; MIT/Apache no)
+grep -iE "future license|change date|second anniversary" LICENSE
+```
+
+**Los cuatro resultados posibles y qué hacer con cada uno:**
+
+| Resultado | Lectura | Acción |
+|---|---|---|
+| Un solo commit, inicial | licencia estable desde el día 1 | ✅ adoptar; **y poder afirmarlo** en el entregable |
+| Cambios sólo de año/copyright | estable; **puede haber cambio de dueño** | 🟡 leer el diff: `Iterative, Inc.` → `Treeverse.` es un cambio de dueño sin cambio de grant |
+| Cambio de familia de licencia | relicenciamiento | 🔴 fechar el corte, identificar la última versión permisiva, decidir congelar o esperar |
+| Hay cláusula de conversión | FSL / BSL | 🔴 calcular la fecha de conversión **por versión**, no por proyecto |
+
+**Caso trabajado (medido este pass):** `ynput/ayon-backend` — Apache-2.0 desde
+2022-02-28, **FSL-1.1-ALv2 desde el commit `97627e27` del 2025-01-27**; última release
+Apache-2.0 **1.6.1 (2025-01-09)**; primera FSL **1.7.0 (2025-01-30)**, que **convierte
+a Apache-2.0 el 2027-01-30**. Las dos salidas son congelar en 1.6.1 o esperar; no hay
+una tercera, y las dos se dicen en una línea de propuesta.
+
+**Dónde conecta**: es el paso 0 de la Receta 23 (gate de BSL/Change Date) — la FSL es
+la misma estructura con conversión a Apache-2.0 a los 2 años — y el complemento de la
+Receta 40 (gate de sucesión): la 40 verifica al **reemplazo**, la 44 verifica al
+**pasado del titular**.
+
+**Copiar a toda la familia de KBs.** El costo es un clone sin blobs; el ahorro es una
+renegociación de contrato.
+
+---
+
+## 🆕 Receta 45: **Adoptar una plataforma con grant PARTIDO** — servidor restringido, cliente permisivo
+
+**Caso de uso**: la mejor plataforma de la categoría tiene el servidor bajo licencia
+source-available y los clientes bajo Apache-2.0 (AYON es el caso medido; el patrón se
+repitió este mismo año en el plano de datos con Snowplow, Receta 41).
+
+**El reparto que hay que escribir en la propuesta:**
+
+| Pieza | Licencia | Quién la toca | Qué se puede prometer |
+|---|---|---|---|
+| Servidor (`ayon-backend`, `ayon-frontend`) | **FSL-1.1-ALv2** | se **despliega** en la infra del cliente, sin modificar | uso interno ✅ · servicios profesionales a un licenciatario ✅ *(Permitted Purpose nº4, textual)* · ofrecerlo como producto gestionado ⛔ |
+| Clientes y SDK (`ayon-core`, `ayon-launcher`, `ayon-python-api`) | **Apache-2.0** | acá vive **todo** lo que escribe Globant | entregable limpio, del cliente, sin restricción |
+| Addons propios | **la que elija el cliente** | repo del cliente | — |
+
+**Regla de diseño:** *si una funcionalidad obliga a parchear el servidor, está del lado
+equivocado del corte.* Rediseñarla como addon sobre la API Apache-2.0 o no hacerla.
+
+**Pregunta para la reunión de arranque (una sola):** *"¿el entregable tiene que poder
+redistribuirse bajo licencia permisiva, o alcanza con que se pueda operar y extender?"*
+La primera respuesta obliga a congelar en la última versión permisiva (AYON 1.6.1) o a
+esperar la conversión (2027-01-30); la segunda no obliga a nada.
+
+**Por región**: en **EMEA** —donde nacieron las dos plataformas de esta capa, Ynput
+(Chequia) y CGWire (Francia)— es además la conversación de soberanía: las dos se
+despliegan on-prem. En **North America** el reflejo del cliente va a ser comprar
+ShotGrid/ftrack; el argumento no es precio, es **que el pipeline no se lleva el dato
+del estudio a un SaaS de un competidor**.
+
+---
+
 ## 🆕 Receta 41: **Plano de datos del jugador sin una sola licencia restringida** — y el motivo por el que se vende primero
 
 **Problema.** Todas las capas que esta KB fue añadiendo —NPC, assets, voz,
@@ -2786,6 +2930,9 @@ decirlo forma parte del entregable.**
 | 7 · **Marcado Art. 50(2) EU AI Act** | c2pa-python (**MIT *o* Apache-2.0** — elegir Apache-2.0 por la patente) + inventario de procedencia | 🔴 **reencuadrada: inventario en días, marcado parcial, plan fechado** | 🔴 **Deadline externo a 10 DÍAS: 2-dic-2026.** 🆕 **Y el inventario se recorta dos veces antes de empezar: la R27 saca el contenido efímero de runtime y las etapas intermedias de pipeline cerrado** |
 | 🆕 8 · World model sobre engine | Godot/Unity + Matrix-Game 4.0 (Apache-2.0 en v4) | 4-6 semanas | Prototipo visual sin pipeline de arte |
 | 9 · **QA con agentes, medido** | GamingAgent/LMGame Bench (MIT, ⚠️ congelado hace 1 año) + MCP | 1-4 semanas | QA con número defendible, no anécdota |
+| 🆕 43 · **Fábrica de build permisiva** | git-lfs (MIT) + game-ci (MIT) + sccache (Apache-2.0) + autopilot (Apache-2.0) | 1-2 sem (Unity) · 3-5 sem (Unreal) | Cadencia nocturna build→test→playtest; **y el costo de pipeline de Unreal en la estimación, no en el mes 3** |
+| 🆕 44 · **Gate de canal 5 (historia de la licencia)** | `git log --follow -- LICENSE` + tags por fecha | **2 min por repo** | Detecta relicenciamientos que las Recetas 10/14/17/20/21 **no pueden ver**. Copiar a toda la familia de KBs |
+| 🆕 45 · **Plataforma con grant partido** | AYON: servidor FSL-1.1 + clientes Apache-2.0 | 1 día de diseño | El entregable queda del lado permisivo y se puede prometer por escrito |
 | 🆕 10 · **Auditoría de licencias** | 2 canales + checksum de bytes (sin dependencias) | **2-4 días** | 🟢 **4/4 de acierto sobre las tablas de esta KB.** Entregable propio y auditable |
 | 🆕 11 · **Pipeline de estudio con agentes** | Claude-Code-Game-Studios (MIT, 40.377★) + MCP de engine + blender-skills | 1-2 días setup, **3-6 sem de calibración** | Cubrir roles, no acelerar tareas |
 | 🆕 12 · **Capacidad elástica de game servers** | Agones (Apache-2.0, 7.107★) + Nakama/Talo + Open Match | 2-3 semanas (K8s listo) | Escalar sin sobreaprovisionar |

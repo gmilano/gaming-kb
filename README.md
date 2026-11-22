@@ -9,10 +9,13 @@ updated: 2026-11-22
 > Knowledge base de la industria **Gaming** para Globant AI Studios.
 > NPC agents, procedural content, soporte in-game, anti-cheat, game analytics,
 > desde el cycle 13 la capa de **diálogo autorado, voz, moderación de chat y
-> localización**, y —desde el cycle 14— la de **producción de assets**: malla,
-> textura, rig, movimiento, música y SFX.
+> localización**, desde el cycle 14 la de **producción de assets** (malla, textura,
+> rig, movimiento, música y SFX), desde el cycle 15 la **operativa de cara al
+> jugador**, desde el cycle 16 el **plano de datos del jugador** y —desde el cycle
+> 17— la **fábrica**: versionado de binarios, CI de build, caché de compilación,
+> seguimiento de producción y automatización de QA.
 >
-> **Último pass: 2026-11-22 (cycle 14).**
+> **Último pass: 2026-11-22 (cycle 17).**
 
 ## Estructura
 

@@ -11,6 +11,28 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 17
+
+**Tema:** la fábrica. Igual que en el cycle 16, la búsqueda devolvió **más
+movimientos de licencia en repos viejos que repos nuevos** — y por segundo pass
+consecutivo ése es el dato. La novedad de método: los movimientos ya no se detectan
+leyendo el archivo, se detectan leyendo **su historia** (canal 5).
+
+| Repo | Licencia (bytes) | Qué cambió / por qué importa | ★ |
+|---|---|---|---|
+| [ynput/ayon-backend](https://github.com/ynput/ayon-backend) | 🔴 **FSL-1.1-ALv2** (3.744) | **El hallazgo del pass.** Relicenciado desde Apache-2.0 el **2025-01-27** (`97627e27`). Última release permisiva **1.6.1 (2025-01-09)**; la 1.7.0 vuelve a Apache-2.0 el **2027-01-30**. Toda la prensa sigue diciendo "Apache 2.0" — y era cierto cuando se escribió | 40 |
+| [treeverse/dvc](https://github.com/treeverse/dvc) | **Apache-2.0** (11.340) | Era `iterative/dvc`. `repo:iterative/dvc` devuelve **HTTP 422**, el mismo código que un repo inexistente, mientras `raw` sirve 200 ⇒ **regla T66**: ante un 422, buscar por nombre antes de escribir "ausente" | 15.993 |
+| [treeverse/lakeFS](https://github.com/treeverse/lakeFS) | ⛔ **BSL-1.1** (7.475) | Producto insignia del dueño nuevo de DVC. **Valor nuevo** para la tabla de checksum de bytes de esta KB | 5.590 |
+| [mozilla/sccache](https://github.com/mozilla/sccache) | **Apache-2.0** (11.358) | Caché de compilación distribuida; push **hoy**. La pieza que baja el costo del build de Unreal sin tocar la EULA | 7.968 |
+| [game-ci/docker](https://github.com/game-ci/docker) | **MIT** (1.071) | Push **hoy**. La imagen base del runner de Unity | 472 |
+| [game-ci/unity-actions](https://github.com/game-ci/unity-actions) | MIT (1.097) | 🔴 **1.097 ★ y 44 meses sin un commit**, con 16 ★ menos que el vivo (`unity-builder`): un ranking por estrellas los empata y el nombre genérico gana la intuición | 1.097 |
+| [AirtestProject/Airtest](https://github.com/AirtestProject/Airtest) | **Apache-2.0** (11.356) | La única automatización de QA de juego permisiva **a escala**, y es de NetEase. Apache desde el commit inicial de 2018 (canal 5) | 9.657 |
+| [git-lfs/git-lfs](https://github.com/git-lfs/git-lfs) | **MIT + BSD-3** (2.818) | El `NOASSERTION` del API es **composición**, no ausencia: MIT de GitHub + BSD-3 de Google embebida | 14.610 |
+| [JetBrains/teamcity-unreal-engine-plugin](https://github.com/JetBrains/teamcity-unreal-engine-plugin) | **Apache-2.0** (11.357) | 21 ★ y es **lo único permisivo que existe** para CI de Unreal. El tamaño de la estrella no mide la escasez | 21 |
+| [ynput/OpenPype](https://github.com/ynput/OpenPype) | MIT, **`archived=true`** | 7º caso de "archivado y aun así recomendado" de esta KB. Sucesor: AYON | 301 |
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 16
 
 **Tema:** plano de datos del jugador. La búsqueda de *trending* en esta capa

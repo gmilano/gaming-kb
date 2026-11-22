@@ -6,9 +6,87 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22 cycles 15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 17)** (passes previos: 2026-11-22 cycles 16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 17 (2026-11-22)
+
+**Tema:** la fábrica (versionado, CI, caché, tracking de producción). Cuatro
+tendencias, una corrección a un gap estructural que esta KB declaró tres passes
+seguidos, y un conflicto que se cierra.
+
+### 🆕 T-A · **La licencia de un repo es una función del tiempo, y el archivo de hoy no lo dice**
+
+El cycle 16 midió que una categoría entera salió del open source entre 2024 y 2026.
+Este pass mide **el mecanismo individual**, y es invisible a los cuatro canales de
+licencia de esta KB: `ynput/ayon-backend` pasó de Apache-2.0 a **FSL-1.1-ALv2** el
+**2025-01-27** (commit `97627e27`), y el `LICENSE` de hoy es un FSL impecable, **sin
+una sola línea que diga que ayer fue otra cosa**.
+
+> **Señal operativa (canal 5):** `git log --follow -- LICENSE` sobre un clone sin
+> blobs. Corrido sobre 4 repos de esta capa dio **1 relicenciamiento, 1 cambio de
+> dueño sin cambio de grant (`Iterative, Inc.` → `Treeverse.`, 2025-12-01) y 2
+> confirmaciones de estabilidad de 8 y 9 años**. Las confirmaciones valen tanto como
+> los hallazgos: *"Apache desde el commit inicial, nunca tocado"* es una afirmación
+> que esta KB no podía hacer hasta hoy. Receta 44.
+
+### 🆕 T-B · **El corte del grant se mudó del repo al componente: servidor restringido, cliente permisivo**
+
+Segundo caso medido en dos passes consecutivos. Cycle 16: Snowplow, badge Apache-2.0,
+componentes desplegables que prohíben producción. Cycle 17: AYON, cliente Apache-2.0,
+**servidor FSL**. En los dos la pieza restringida es **la que se despliega**, y en los
+dos el badge del repo más visible dice "permisivo".
+
+> **Señal operativa:** en una plataforma de varios repos, la pregunta no es *"¿qué
+> licencia tiene?"* sino **"¿qué licencia tiene lo que se despliega?"**. Y la buena
+> noticia para una consultora: tanto la FSL como la SSPL/SLULA permiten explícitamente
+> **servicios profesionales sobre la instalación del licenciatario**; lo que prohíben
+> es ofrecer el producto. Receta 45.
+
+### 🆕 T-C · **La fábrica es el carril exento: ni disclosure, ni backlash, ni consentimiento del equipo**
+
+Tres años de deterioro de sentimiento (18% → 30% → 52-55% de desarrolladores que ven
+daño) y ~85% de rechazo declarado del jugador conviven con **~90% de adopción en el
+pipeline**. La contradicción se explica sola cuando se separa **lo que el jugador ve**
+de **lo que la fábrica hace**: Steam exime las herramientas de desarrollo, y el Art. 50
+de la UE obliga sobre la salida, no sobre el build.
+
+> **Señal operativa:** toda receta de esta KB que viva **antes** del artefacto
+> jugable (10, 19, 36, 43, 44) se vende sin pelear la discusión cultural. Es, hoy, el
+> único carril de crecimiento que no depende de que el equipo del cliente *quiera* IA.
+
+### 🆕 T-D · **La capa de fábrica tiene geografía, y es inversa a la del resto de la KB**
+
+22 repos medidos: la **EMEA** produce las plataformas de producción y las licencia a
+la defensiva (FSL, AGPL, GPL); la **APAC** produce la única automatización de QA de
+juego permisiva y a escala (Airtest/Poco, Apache-2.0, NetEase); **North America**
+produce la infraestructura genérica permisiva (git-lfs, sccache, DVC) y la
+arquitectura de referencia **no usable** (GPL + suscripción); **LATAM: 0 de 22**.
+
+> **Señal operativa:** el argumento regional de esta capa no es de costo. En EMEA es
+> **licencia**, en APAC es **composición de lo local**, en NA es **presupuesto de
+> pipeline (Unreal/Perforce)** y en LATAM es **capacidad**, no producto.
+
+### 🔧 Corrección a esta KB · el gap *"no existe un ERP vertical de gaming"* era **un artefacto de la consulta**
+
+Declarado estructural en los cycles 14, 15 y 16. La consulta que lo produjo
+—`open source platform gaming ERP CRM MIT Apache`, la del runbook— **no podía
+encontrar la categoría porque la industria no la llama ERP, la llama pipeline /
+production tracking**. Existen, están vivas y tienen commits de esta semana: AYON
+(Ynput) y Kitsu (CGWire).
+
+> **Regla T67:** antes de declarar un gap estructural, **buscar en el vocabulario del
+> oficio, no en el del runbook**. Simétrica de la T64 de la familia.
+
+### 🟢 Conflicto cerrado · las cifras de divulgación de Steam no se contradicen
+
+49,9% (**mes** de octubre 2026) contra 40,1% (**año** acumulado) contra 30,8% (**año
+hasta julio**): es una serie mensual creciente medida en ventanas distintas. Citar
+como *"casi la mitad de los lanzamientos de octubre y ~40% del año"*. Ver
+`intel/market.md`.
+
+---
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 16 (2026-11-22)
 

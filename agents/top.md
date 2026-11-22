@@ -7,9 +7,17 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-22 (pass cycle 16)**. Passes previos: 2026-11-22
-> (cycles 15, 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
+> Última actualización: **2026-11-22 (pass cycle 17)**. Passes previos: 2026-11-22
+> (cycles 16, 15, 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
 > 2026-10-26, 2026-07-02.
+>
+> 🔴 **Lo que el pass cycle 17 agrega a los cuatro canales de licencia:** el
+> **canal 5 — `git log --follow -- LICENSE`**. Los canales 1-4 (badge, archivo,
+> enumeración, prosa del README) **sólo ven el presente**, y un relicenciamiento no
+> deja rastro en el archivo resultante: el `LICENSE` de `ynput/ayon-backend` leído
+> hoy es un FSL impecable y hasta el 2025-01-27 fue Apache-2.0. **La licencia de un
+> repo es una función del tiempo y del dueño.** Ver los hallazgos nº1 a nº3 del
+> cycle 17.
 >
 > 🔴 **Lo que el pass cycle 14 cambia de raíz:** los trece passes anteriores
 > asumieron que la licencia de un repo vive **dentro** del repo —badge, archivo,
@@ -71,6 +79,275 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 17): **la FÁBRICA — el carril por donde viaja el trabajo entre que el asset existe y el build sale — y el canal 5: la HISTORIA del archivo de licencia**
+
+El cycle 14 midió **qué se genera**, el 13 **quién habla**, el 11 y el 12 **qué
+corre en el servidor**, el 15 **qué toca el jugador**, el 16 **qué se mide**, y la
+Receta 19 ya tiene **quién lo juega** (`ramenvr/autopilot`, Apache-2.0). Falta el
+carril: **versionado de binarios, CI de build, caché de compilación y seguimiento
+de producción.** Inventario plano (regla T64) corrido sobre los 9 archivos de esta
+KB antes de buscar nada:
+
+| Término | Ocurrencias en la KB antes de este pass |
+|---|---|
+| `AYON` / `OpenPype` / `Kitsu` / `CGWire` | 0 |
+| `game-ci` / `GameCI` | 0 |
+| `AltTester` / `Airtest` | 0 |
+| `git-lfs` / `Perforce` / `version control` | 0 |
+| `sccache` / caché de compilación | 0 |
+| `treeverse` / `DVC` | 0 |
+
+**Seis categorías, cero filas en 16 passes.** No es una capa floja: es la capa que
+el cliente ya tiene montada y que decide si lo que esta KB propone se puede
+integrar o hay que reescribirlo.
+
+Y el resultado no es un catálogo: es que **en esta capa la licencia no es un
+atributo del repo, es una función del TIEMPO y del DUEÑO**, y los cuatro canales
+de licencia de esta KB —badge, archivo, enumeración, prosa del README— **sólo ven
+el presente**.
+
+---
+
+### 🔴 Hallazgo nº1: AYON es **Apache-2.0 en el cliente y FSL-1.1 en el servidor** — y el relicenciamiento tiene fecha, commit y una última versión permisiva recuperable
+
+AYON (Ynput s.r.o., Chequia) es el sucesor de OpenPype y la plataforma de pipeline
+de producción más usada fuera de ShotGrid/ftrack. Toda la prensa dice *"open
+source, Apache 2.0"*. La medición dice otra cosa:
+
+| Componente | ★ | SPDX del API | Archivo leído | Qué es |
+|---|---|---|---|---|
+| [`ynput/ayon-backend`](https://github.com/ynput/ayon-backend) | 40 | `NOASSERTION` | **FSL-1.1-ALv2, 3.744 B** | el servidor que se despliega |
+| [`ynput/ayon-frontend`](https://github.com/ynput/ayon-frontend) | 31 | `NOASSERTION` | **FSL-1.1-ALv2, 3.744 B** | la web del servidor |
+| [`ynput/ayon-core`](https://github.com/ynput/ayon-core) | 79 | `Apache-2.0` | 11.357 B ✅ | integración con DCCs |
+| [`ynput/ayon-launcher`](https://github.com/ynput/ayon-launcher) | 55 | `Apache-2.0` | 11.357 B ✅ | app de escritorio |
+| [`ynput/ayon-docker`](https://github.com/ynput/ayon-docker) | 60 | `Apache-2.0` | 11.357 B ✅ | el compose que **despliega la imagen FSL** |
+| [`ynput/ayon-python-api`](https://github.com/ynput/ayon-python-api) | 17 | `Apache-2.0` | 11.357 B ✅ | cliente REST |
+
+**El corte es exacto: el servidor es FSL, el cliente es Apache.** Y el `NOASSERTION`
+del API no es ruido — es el clasificador diciendo *"esto no es una licencia SPDX
+conocida"*, que es la señal T60 leída en la dirección restrictiva.
+
+**Qué prohíbe la FSL-1.1-ALv2, textual:** se puede usar, copiar, modificar y
+redistribuir para cualquier *Permitted Purpose*, que es cualquiera salvo un
+*Competing Use* — *"making the Software available to others in a commercial
+product or service that: 1. substitutes for the Software; 2. substitutes for any
+other product or service we offer using the Software…; or 3. offers the same or
+substantially similar functionality"*.
+
+🟢 **Y la cláusula que decide si Globant puede tocarlo** — está escrita y es
+favorable:
+
+> *"Permitted Purposes specifically include using the Software: 1. for your
+> internal use and access; … 4. **in connection with professional services that
+> you provide to a licensee using the Software in accordance with these Terms and
+> Conditions.**"*
+
+⇒ **Operar, configurar, extender y automatizar el AYON del cliente es un Permitted
+Purpose explícito.** Lo prohibido es lo que Globant no iba a hacer: ofrecer *"AYON
+gestionado por nosotros"* como producto. **La FSL no bloquea servicios; bloquea
+competencia de producto.** Esto hay que decirlo en la propuesta, porque el área
+legal del cliente va a ver "no es open source" y frenar.
+
+🔵 **El Change Date, medido** (la Receta 23 de esta KB ya tiene el gate de BSL;
+la FSL es su hermana y entra por el mismo gate):
+
+> *"We hereby irrevocably grant you an additional license to use the Software under
+> the Apache License, Version 2.0 that is effective on the **second anniversary of
+> the date we make the Software available**."*
+
+| Fecha | Evento | Consecuencia |
+|---|---|---|
+| 2022-02-28 | `chore: Added license file` (Apache-2.0) | el servidor nació permisivo |
+| **2025-01-09** | release **1.6.1** | **última versión Apache-2.0 para siempre** |
+| **2025-01-27** | commit **`97627e27` — *"License change from Apache 2.0 to FSL-1.1-ALv2"*** | el relicenciamiento, con fecha |
+| 2025-01-30 | release **1.7.0** | primera versión FSL · **se vuelve Apache-2.0 el 2027-01-30** |
+| 2026-11-19 | release 1.17.7 | FSL hasta 2028-11-19 |
+
+⇒ Un cliente que necesite grant permisivo **hoy** sobre el servidor tiene exactamente
+dos salidas medidas: **congelar en 1.6.1** (y perder 11 minors) o **esperar al
+2027-01-30** para que 1.7.0 convierta. No hay una tercera.
+
+⚠️ **Por qué ninguna búsqueda lo encuentra:** la prensa que define el consenso
+(cgchannel 2023 y 2024, animationmagazine 2023, 80.lv 2023) es **anterior al
+2025-01-27 y era correcta cuando se escribió**. Esta KB tenía la regla *"la
+documentación que viaja con el proyecto se escribe una vez y no se revisa"*; este
+caso es más incómodo: **la fuente no se equivocó, el objeto cambió debajo.**
+
+---
+
+### 🔵 Hallazgo nº2 (método, y el que hay que copiar a toda la familia de KBs): **canal 5 — `git log --follow -- LICENSE`**
+
+Los cuatro canales de esta KB leen el presente: el badge de hoy, el archivo de hoy,
+el árbol de hoy, el README de hoy. **Ninguno puede ver un relicenciamiento, y un
+relicenciamiento no deja rastro en el archivo resultante** — el `LICENSE` de
+`ayon-backend` leído hoy es un FSL impecable, sin una línea que diga que ayer fue
+Apache.
+
+El canal 5 cuesta un clone sin blobs y responde tres preguntas que ningún otro canal
+responde: **¿cambió?**, **¿cuándo?**, **¿qué versión publicada sigue siendo
+permisiva?**
+
+```bash
+git clone -q --filter=blob:none --single-branch https://github.com/<slug> /tmp/x
+cd /tmp/x && git log --follow --date=short --pretty='%h %ad %s' -- LICENSE
+# y si hay un cambio, la versión anterior se recupera por fecha de tag:
+for t in $(git tag --sort=creatordate); do echo "$(git log -1 --date=short --pretty=%ad $t) $t"; done
+```
+
+**Corrido sobre 4 repos de esta capa, resultado medido:**
+
+| Repo | Historia del `LICENSE` | Lectura |
+|---|---|---|
+| `ynput/ayon-backend` | Apache 2022-02-28 → **FSL 2025-01-27** | 🔴 relicenciamiento |
+| `treeverse/dvc` | `2025-12-01 update copyright`: *"Copyright 2017-2021 **Iterative, Inc.**"* → *"Copyright 2025 **Treeverse.**"* | 🟡 **cambio de dueño sin cambio de licencia** |
+| `cgwire/zou` | un solo commit, `2017-03-26 Initial commit` | 🟢 AGPL-3.0 estable 9 años |
+| `AirtestProject/Airtest` | un solo commit, `2018-01-24 opensource init version` | 🟢 Apache-2.0 estable 8 años |
+
+**1 relicenciamiento + 1 cambio de dueño + 2 confirmaciones de estabilidad.** Las
+dos confirmaciones valen tanto como los hallazgos: *"Apache desde el commit
+inicial, nunca tocado"* es una afirmación que esta KB **no podía hacer** hasta hoy.
+
+---
+
+### 🟡 Hallazgo nº3: DVC cambió de dueño, el buscador devuelve el mismo 422 que para un repo inexistente, y el dueño nuevo publica su propio producto bajo BSL
+
+`repo:iterative/dvc` → **HTTP 422** *"the listed users and repositories cannot be
+searched either because the resources do not exist or you do not have permission"*
+— **idéntico al control negativo** que esta página documenta para
+`repo:gmilano/control-does-not-exist-xyz-999`. Pero
+`raw.githubusercontent.com/iterative/dvc/HEAD/LICENSE` devuelve **200 y 11.340 B de
+Apache-2.0**, y el README resuelve.
+
+Resolución por búsqueda de nombre (no por sonda de slug):
+
+```bash
+gh api -X GET search/repositories -f q='dvc in:name stars:>3000'
+# → treeverse/dvc | ★15.993 | Apache-2.0 | pushed=2026-11-20
+```
+
+> **Regla T66 — el 422 del buscador no distingue "no existe" de "se mudó".** El
+> control negativo del cycle 16 sigue siendo válido, pero **no es suficiente**: ante
+> un 422 hay que correr una búsqueda **por nombre** antes de escribir "ausente". Un
+> repo de **15.993 ★** se estaba leyendo como inexistente.
+
+🟡 **Y el dato que sí importa para una propuesta:** el dueño nuevo, Treeverse,
+publica [`treeverse/lakeFS`](https://github.com/treeverse/lakeFS) (5.590★) bajo
+**Business Source License 1.1 — 7.475 B medidos**, valor nuevo para la tabla de
+checksum de esta KB. El grant Apache-2.0 de las versiones ya publicadas de DVC es
+irrevocable y no se toca; **lo que cambia es quién decide la licencia de la próxima
+versión, y ese dueño ya eligió BSL para su producto insignia.** Es exactamente el
+antecedente que la Receta 23 pide vigilar, y la misma forma del caso AYON: *una
+compañía con modelo source-available sosteniendo un repo permisivo.*
+
+---
+
+### 🔴 Hallazgo nº4: en `game-ci`, el repo que recomienda toda guía lleva **44 meses sin un commit**, y los vivos tienen menos estrellas
+
+| Repo | ★ | Licencia (bytes) | Último push | Estado |
+|---|---|---|---|---|
+| [`game-ci/unity-actions`](https://github.com/game-ci/unity-actions) | **1.097** | MIT, 1.097 B | **2023-03-04** | 🔴 **44 meses muerto** — el que nombran las guías |
+| [`game-ci/unity-builder`](https://github.com/game-ci/unity-builder) | 1.113 | MIT, 1.097 B | 2026-11-15 | 🟢 vivo, **el que hay que usar** |
+| [`game-ci/docker`](https://github.com/game-ci/docker) | 472 | MIT, 1.071 B | **2026-11-22 (hoy)** | 🟢 vivo |
+| [`game-ci/unity-test-runner`](https://github.com/game-ci/unity-test-runner) | 271 | MIT, 1.097 B | 2026-11-15 | 🟢 vivo |
+
+La diferencia de estrellas entre el muerto y el vivo es de **16 ★ sobre 1.100**:
+un ranking por estrellas los pone empatados y el nombre genérico (`unity-actions`)
+gana la intuición. **Es la "promoción del subcampeón" del cycle 4 en su forma más
+barata: no hace falta un rename para que la KB corone un cadáver, basta un nombre
+más obvio.**
+
+⚠️ **Y el límite de lo que `game-ci` resuelve:** el código es MIT, pero **Unity
+exige una licencia propia en el runner** (se inyecta como secreto). *El grant
+permisivo cubre el orquestador, no el motor que orquesta* — misma forma que el
+hallazgo de pesos del cycle 14, trasladada a CI.
+
+---
+
+### 🔴 Hallazgo nº5: **el carril de Unreal no tiene CI permisiva, y la de Epic exige Perforce**
+
+- **Horde** es el sistema de build de Epic (el que corre Fortnite). Epic publica la
+  fuente de cliente y servidor, pero **dentro del árbol de Unreal Engine y bajo la
+  EULA de UE, no bajo una licencia OSS**. Medición coherente: `repo:EpicGames/UnrealEngine`
+  → **422**, igual que cualquier repo al que esta sesión no tiene acceso.
+- Según la FAQ de Epic, **el CI de Horde no soporta Git ni Subversion: requiere un
+  stream de Perforce y UE 5.4+**. ⚠️ *Fuente secundaria: `dev.epicgames.com` no
+  resuelve desde esta sesión (ENOTFOUND) — ver la nota de instrumentos.*
+- Única integración **permisiva** medida para Unreal:
+  [`JetBrains/teamcity-unreal-engine-plugin`](https://github.com/JetBrains/teamcity-unreal-engine-plugin)
+  — **Apache-2.0 (11.357 B), 21 ★, push 2026-08-19 (3 meses)** — y requiere
+  **TeamCity, que es propietario**.
+
+⇒ **Asimetría con consecuencia económica directa:** un cliente Unity puede montar
+la fábrica entera con MIT (`game-ci`) sobre GitHub Actions; un cliente Unreal
+necesita **Perforce + Horde bajo EULA** o un CI genérico escrito a mano. *Es la
+primera vez que esta KB puede poner costo de pipeline en la conversación de
+elección de engine.*
+
+---
+
+### 🔴 Hallazgo nº6: la arquitectura de referencia de **AWS** para QA con agentes embebe un SDK **GPL-3.0** en el build del cliente — y encima pide suscripción de pago
+
+El blog de AWS for Games (*Building an AI game testing agent with Amazon Bedrock*)
+propone: AltTester Server + agente QA en contenedores sobre ECS/Fargate, estado de
+la escena de Unity expuesto por **AltTester SDK**, filtro que baja 1.400 objetos a
+~42, Nova resumiendo y Claude eligiendo la acción.
+
+| Pieza | Licencia medida | Consecuencia |
+|---|---|---|
+| [`alttester/AltTester-Unity-SDK`](https://github.com/alttester/AltTester-Unity-SDK) | **GPL-3.0 — 35.043 B**, `Copyright (C) 2025 Altom Consulting` | ⛔ **se instrumenta dentro del build**: si ese build se distribuye, el copyleft alcanza al juego |
+| AltTester Server en *batchmode* | **requiere suscripción Pro** (lo dice el propio AWS) | ⛔ no es gratis ni open |
+| El repo de referencia de AWS | **no publicado** (anunciado como "planean publicarlo") | ⛔ no hay artefacto que auditar |
+
+⇒ **La arquitectura del hiperescalador es, en las tres piezas que la definen, menos
+usable que la alternativa comunitaria que esta KB ya tiene**: la Receta 19 corre
+sobre `ramenvr/autopilot` (**Apache-2.0**, 881★, UE 5.4-5.8 / Unity 6 / Godot 4 /
+Roblox Studio). Dicho sin adorno: **un blog de AWS no es una auditoría de licencias,
+y acá la diferencia es GPL-3.0 dentro del build del cliente.**
+
+---
+
+### 🆕 Filas nuevas de este pass (cycle 17) — automatización de QA y fábrica, todas con licencia leída byte a byte
+
+| Agente / Herramienta | Repo | ★ | Licencia (verificada) | Último push | Para qué sirve acá |
+|---|---|---|---|---|---|
+| **Airtest** | [AirtestProject/Airtest](https://github.com/AirtestProject/Airtest) | 9.657 | **Apache-2.0** (11.356 B) | 2026-03-23 (8 meses) | automatización de UI de juegos por **reconocimiento de imagen**, Android/iOS/Windows; la única base permisiva a escala para QA de juego móvil. Origen **APAC (NetEase)** |
+| **Poco** | [AirtestProject/Poco](https://github.com/AirtestProject/Poco) | 1.964 | **Apache-2.0** (11.356 B) | 2024-01-08 (**34 meses**) | inspección de jerarquía de UI cross-engine (Unity/Cocos/UE). ⚠️ **dormido**: usable como librería, no como dependencia viva |
+| **sccache** | [mozilla/sccache](https://github.com/mozilla/sccache) | 7.968 | **Apache-2.0** (11.358 B) | **2026-11-22 (hoy)** | caché de compilación distribuida (C/C++/Rust) — la pieza que baja el costo del build de Unreal sin tocar la EULA |
+| **Git LFS** | [git-lfs/git-lfs](https://github.com/git-lfs/git-lfs) | 14.610 | **MIT + BSD-3 embebida** (2.818 B) — API dice `NOASSERTION` | 2026-11-06 | versionado de binarios sobre Git; explica el `NOASSERTION` por **composición**, no por ausencia |
+| **DVC** | [treeverse/dvc](https://github.com/treeverse/dvc) | 15.993 | **Apache-2.0** (11.340 B) | 2026-11-20 | versionado de assets grandes con remotos S3/GCS; **ojo al dueño nuevo** (hallazgo nº3) |
+| **GameCI (unity-builder)** | [game-ci/unity-builder](https://github.com/game-ci/unity-builder) | 1.113 | **MIT** (1.097 B) | 2026-11-15 | build de Unity en CI, multiplataforma |
+| **TeamCity UE plugin** | [JetBrains/teamcity-unreal-engine-plugin](https://github.com/JetBrains/teamcity-unreal-engine-plugin) | 21 | **Apache-2.0** (11.357 B) | 2026-08-19 | la única integración permisiva medida para CI de Unreal |
+
+### ⛔ Rechazos **medidos** de este pass — se publican porque el silencio se lee como cobertura
+
+| Candidato | ★ | Qué se midió | Por qué queda afuera |
+|---|---|---|---|
+| [`alttester/AltTester-Unity-SDK`](https://github.com/alttester/AltTester-Unity-SDK) | 128 | **GPL-3.0, 35.043 B** | copyleft **dentro del build** distribuible; el server en batch pide Pro |
+| [`cgwire/kitsu`](https://github.com/cgwire/kitsu) + [`cgwire/zou`](https://github.com/cgwire/zou) | 774 + 202 | **AGPL-3.0, 34.520 B** (ambos), vivos (push 2026-11-20) | AGPL sobre un servicio accesible por red: fuera de la ruta permisiva. **Adoptable tal cual, no derivable** |
+| [`treeverse/lakeFS`](https://github.com/treeverse/lakeFS) | 5.590 | **BSL-1.1, 7.475 B** | Change Date; entra por el gate de la Receta 23 |
+| [`ynput/OpenPype`](https://github.com/ynput/OpenPype) | 301 | MIT pero **`archived=true`, último push 2024-09-18 (26 meses)** | **archivado y aun así recomendado** por páginas de terceros como si fuera el camino vigente; el sucesor es AYON (hallazgo nº1) |
+| [`team-zomsa/aplib.net`](https://github.com/team-zomsa/aplib.net) | 9 | API: `NOASSERTION` · archivo: **AGPL-3.0 por referencia short-form, 709 B** (Utrecht University), push 2024-06-26 (**29 meses**) | AGPL + dormido. 🔎 **5ª instancia medida del falso negativo del short-form**: el `NOASSERTION` no era ausencia de licencia, era una licencia de 709 B que el clasificador no lee |
+| Repo de referencia de QA de AWS | — | no existe públicamente | anunciado, no publicado: **no hay artefacto que auditar** |
+
+### 📏 Lo que este pass NO puede medir, dicho explícitamente
+
+1. **Tres hosts primarios no resuelven desde esta sesión** (`ENOTFOUND`):
+   `dev.epicgames.com`, `aws.amazon.com`, `www.trade.gov` y `www.planalto.gov.br`.
+   Los hallazgos nº5 y nº6 y el dato de Brasil de `intel/market.md` quedan con
+   **fuente secundaria declarada**, no con lectura primaria. Agregar a la lista de
+   hosts muertos por política de la familia de KBs.
+2. **`README.md` no sirve como sonda de existencia:** de 23 slugs verificados,
+   **3 devolvieron 404** (`cgwire/zou`, `treeverse/dvc`, `AirtestProject/Poco`)
+   **y los tres existen** — tienen `README.rst` u otro nombre. La verificación de
+   URL de esta KB se hace contra `HEAD/LICENSE` + fila del buscador, **nunca contra
+   `README.md` y nunca contra `github.com` (403 del proxy para todo)**.
+3. **No se midió la cuota de mercado** de Perforce vs Git en estudios ni el costo
+   real de un runner de Unity con licencia: no hay fuente abierta verificable.
+4. **AYON y Kitsu no se probaron sobre un proyecto de juego real** — la afirmación
+   de que Kitsu sirve a estudios de videojuego es **del fabricante**, no medida.
+
+---
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 16): **el plano de datos del jugador — la primera capa de esta KB donde el proveedor líder prohíbe la producción con todas las letras, y la continuación permisiva es un fork, no un competidor**
 

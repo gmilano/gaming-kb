@@ -7,7 +7,13 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22 cycles 15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 17)** (passes previos: 2026-11-22 cycles 16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Canal 5, agregado el 2026-11-22 (cycle 17):** `git log --follow -- LICENSE`.
+> Los canales 1-4 leen el presente y **no pueden ver un relicenciamiento**: el
+> servidor de AYON es FSL-1.1 hoy y fue Apache-2.0 hasta el 2025-01-27. Para cada
+> fila nueva de esta página el canal 5 responde *¿cambió?*, *¿cuándo?* y *¿qué
+> versión publicada sigue siendo permisiva?*
 >
 > 🆕 **Canal 4, agregado el 2026-11-22 (cycle 14):** la sección `## License` del
 > `README.md`, con **cada dependencia que nombra resuelta como un repo más**.
@@ -38,6 +44,98 @@ updated: 2026-11-22
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El hallazgo del cycle 17 (2026-11-22): **faltaba la FÁBRICA entera** — versionado binario, CI, caché de compilación y seguimiento de producción, seis categorías con cero filas en 16 passes
+
+Esta página tenía engines, backends, servidores de juego, navmesh, world models,
+generadores de assets, voz, moderación, accesibilidad y plano de datos. **No tenía
+el carril por donde ese trabajo viaja hasta el build.** Lo que sigue son los
+fundacionales de ese carril, con la licencia leída byte a byte y el último push
+medido el día del pass.
+
+### 🆕 Versionado de binarios y assets grandes — el problema que todo estudio tiene antes del primer agente
+
+| Repo | ★ | Licencia (bytes leídos) | Último push | Nota |
+|---|---|---|---|---|
+| [git-lfs/git-lfs](https://github.com/git-lfs/git-lfs) | 14.610 | **MIT** + BSD-3 de Google embebida (`LICENSE.md`, 2.818 B) | 2026-11-06 | el API dice `NOASSERTION`: es **composición**, no ausencia. El estándar de facto sobre Git |
+| [treeverse/dvc](https://github.com/treeverse/dvc) | 15.993 | **Apache-2.0** (`LICENSE`, 11.340 B) | 2026-11-20 | antes `iterative/dvc`. Remotos S3/GCS/Azure; pipelines reproducibles sobre assets |
+| ⛔ [treeverse/lakeFS](https://github.com/treeverse/lakeFS) | 5.590 | **BSL-1.1** (7.475 B) | 2026-11-19 | del mismo dueño que DVC desde 2025. **Fuera de la ruta permisiva** (Receta 23) |
+
+> 🟡 **Dato de procedencia, no de licencia:** el `LICENSE` de DVC pasó de
+> *"Copyright 2017-2021 Iterative, Inc."* a *"Copyright 2025 Treeverse."* el
+> **2025-12-01** (commit `046d2fd7`), **sin cambiar el grant**. Apache-2.0 sobre lo
+> publicado es irrevocable; quien decide la licencia de la próxima versión es un
+> dueño cuyo producto insignia es BSL. Vigilar, no excluir.
+
+### 🆕 CI y build — y la asimetría Unity / Unreal que cambia el costo de un proyecto
+
+| Repo | ★ | Licencia (bytes) | Último push | Engine |
+|---|---|---|---|---|
+| [game-ci/unity-builder](https://github.com/game-ci/unity-builder) | 1.113 | **MIT** (1.097 B) | 2026-11-15 | Unity — build multiplataforma en GitHub Actions |
+| [game-ci/docker](https://github.com/game-ci/docker) | 472 | **MIT** (1.071 B) | **2026-11-22 (hoy)** | Unity — imágenes base del runner |
+| [game-ci/unity-test-runner](https://github.com/game-ci/unity-test-runner) | 271 | **MIT** (1.097 B) | 2026-11-15 | Unity — Test Framework en CI |
+| 🔴 [game-ci/unity-actions](https://github.com/game-ci/unity-actions) | 1.097 | MIT (1.097 B) | **2023-03-04 (44 meses)** | **muerto**, y es el que nombran las guías |
+| [JetBrains/teamcity-unreal-engine-plugin](https://github.com/JetBrains/teamcity-unreal-engine-plugin) | 21 | **Apache-2.0** (11.357 B) | 2026-08-19 | Unreal — **única integración permisiva medida**; requiere TeamCity (propietario) |
+| [mozilla/sccache](https://github.com/mozilla/sccache) | 7.968 | **Apache-2.0** (11.358 B) | **2026-11-22 (hoy)** | transversal — caché de compilación C/C++/Rust |
+
+⚠️ **Dos límites del grant que la tabla no muestra:**
+
+1. **`game-ci` es MIT, Unity no.** El runner necesita una licencia de Unity inyectada
+   como secreto. *El grant permisivo cubre el orquestador, no el motor.*
+2. **Unreal no tiene CI permisiva.** **Horde**, el sistema de build de Epic, publica
+   fuente **bajo la EULA de Unreal Engine** (no OSS) y, según la FAQ de Epic,
+   **su CI no soporta Git ni Subversion: requiere Perforce y UE 5.4+**.
+   `repo:EpicGames/UnrealEngine` → **422** desde esta sesión, consistente con un repo
+   con acceso restringido. ⚠️ *Fuente secundaria: `dev.epicgames.com` no resuelve
+   desde esta sesión.*
+
+### 🆕 Seguimiento de producción — y el fundacional cuyo **servidor** no es permisivo
+
+| Repo | ★ | Licencia (bytes) | Último push | Qué es |
+|---|---|---|---|---|
+| [ynput/ayon-core](https://github.com/ynput/ayon-core) | 79 | **Apache-2.0** (11.357 B) | 2026-11-21 | integración con DCCs (Blender, Maya, Houdini, Unreal) |
+| [ynput/ayon-launcher](https://github.com/ynput/ayon-launcher) | 55 | **Apache-2.0** (11.357 B) | 2026-11-19 | app de escritorio |
+| [ynput/ayon-docker](https://github.com/ynput/ayon-docker) | 60 | **Apache-2.0** (11.357 B) | 2026-11-07 | el compose; **despliega una imagen FSL** |
+| [ynput/ayon-python-api](https://github.com/ynput/ayon-python-api) | 17 | **Apache-2.0** (11.357 B) | 2026-11-18 | cliente REST |
+| 🔴 [ynput/ayon-backend](https://github.com/ynput/ayon-backend) | 40 | **FSL-1.1-ALv2** (3.744 B) | 2026-11-20 | **el servidor**: Apache hasta 1.6.1 (2025-01-09), FSL desde 1.7.0 (2025-01-30) |
+| 🔴 [ynput/ayon-frontend](https://github.com/ynput/ayon-frontend) | 31 | **FSL-1.1-ALv2** (3.744 B) | 2026-11-21 | la web del servidor |
+| ⛔ [cgwire/kitsu](https://github.com/cgwire/kitsu) | 774 | **AGPL-3.0** (34.520 B) | 2026-11-20 | tracker de producción; **adoptable, no derivable** |
+| ⛔ [cgwire/zou](https://github.com/cgwire/zou) | 202 | **AGPL-3.0** (34.520 B) | 2026-11-20 | la API de Kitsu |
+| ⛔ [ynput/OpenPype](https://github.com/ynput/OpenPype) | 301 | MIT | **2024-09-18 · `archived=true`** | predecesor de AYON; **archivado y todavía recomendado** por terceros |
+
+### 🆕 Automatización de QA — la base sobre la que corre la Receta 19
+
+| Repo | ★ | Licencia (bytes) | Último push | Nota |
+|---|---|---|---|---|
+| [AirtestProject/Airtest](https://github.com/AirtestProject/Airtest) | 9.657 | **Apache-2.0** (11.356 B) | 2026-03-23 | NetEase; automatización por reconocimiento de imagen, engine-agnóstica |
+| ⚠️ [AirtestProject/Poco](https://github.com/AirtestProject/Poco) | 1.964 | **Apache-2.0** (11.356 B) | **2024-01-08 (34 meses)** | inspección de jerarquía Unity/Cocos/UE; **dormido** |
+| ⛔ [alttester/AltTester-Unity-SDK](https://github.com/alttester/AltTester-Unity-SDK) | 128 | **GPL-3.0** (35.043 B) | 2026-11-19 | se instrumenta **dentro del build**: copyleft sobre el juego distribuido |
+
+### 📏 Tres valores nuevos para la tabla de checksum de bytes de esta KB
+
+| Licencia | Bytes medidos | Dónde |
+|---|---|---|
+| **FSL-1.1-ALv2** | **3.744 B** | `ynput/ayon-backend`, `ynput/ayon-frontend` (idénticos) |
+| **BSL-1.1** | **7.475 B** | `treeverse/lakeFS` |
+| **GPL-3.0** (variante con copyright de empresa) | **35.043 B** | `alttester/AltTester-Unity-SDK` |
+
+> Recordatorio del cycle 13 que este pass vuelve a confirmar **dos veces**: el
+> **short-form SPDX** da falso negativo en el checksum y en el badge del API —
+> `Unity-Technologies/ml-agents` tiene **572 B** y es Apache-2.0 por referencia, y
+> `team-zomsa/aplib.net` tiene **709 B** y es **AGPL-3.0** por referencia, con badge
+> `NOASSERTION`. El checksum **tría**; el íncipit dicta.
+
+### ⛔ Lo que se buscó en esta capa y **no existe** — se publica para que el silencio no se lea como cobertura
+
+- **No hay CI de Unreal open source y permisiva** equivalente a `game-ci`: lo medido
+  es Horde bajo EULA (Perforce only) o el plugin de TeamCity sobre un producto
+  propietario.
+- **No hay plataforma de seguimiento de producción específica de videojuegos con
+  grant permisivo completo**: AYON parte el grant en cliente/servidor y Kitsu es AGPL.
+- **No hay reemplazo vivo de Poco**: la inspección de jerarquía cross-engine
+  permisiva lleva 34 meses sin mantenimiento y el sustituto obvio (AltTester) es GPL-3.0.
+
+---
 
 ## 🔴 El hallazgo del cycle 16 (2026-11-22): **faltaba el PLANO DE DATOS DEL JUGADOR entero** — y el repo fundacional de la categoría prohíbe la producción en su propia licencia
 
