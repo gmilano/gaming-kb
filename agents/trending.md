@@ -12,6 +12,210 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 18
+
+**Tema del pass:** el **canal 6 — el árbol completo**. Los cycles 1-17 leyeron
+licencias cuya **ruta se podía adivinar**: la raíz, `LICENSE.md`, `licenses/`, lo
+que el README nombraba. Este pass agrega el canal que lee las que **no se pueden
+adivinar**, y el primer repo al que se le aplica resulta tener **28 archivos de
+licencia donde esta KB publicaba 7** — uno de ellos **no comercial**.
+
+### 🔧 El canal 6, y por qué cierra un gap declarado durante 5 passes
+
+`intel/trends.md` viene publicando, sin cambios, esto:
+
+> *"**Listado de directorios de un repo**: sigue sin canal. Por eso el grant
+> partido de Matrix-Game se verifica por sonda de rutas conocidas y no puede
+> afirmarse que `Matrix-Game-4/` sea el único subdirectorio con licencia propia."*
+
+**Sí hay canal.** No es la API de GitHub (`gh api repos/<slug>/contents` devuelve
+**403** fuera de los repos de la sesión); es **git**:
+
+```bash
+git clone --filter=blob:none --no-checkout --depth 1 https://github.com/<slug> <dir>
+cd <dir>
+git ls-tree -r --name-only HEAD                 # el árbol COMPLETO, sin bajar un byte de contenido
+git cat-file -p HEAD:<ruta>                     # el texto de CUALQUIER archivo, a demanda
+```
+
+El clon *blobless* baja el árbol y **ningún blob**: `SkyworkAI/Matrix-Game` son
+**2.765 archivos** listados sin descargar el repo. Medido este pass en **41 repos,
+0 fallos de clonado**.
+
+| Canal | Qué ve | Limitación que el canal 6 levanta |
+|---|---|---|
+| 1 · Badge (`search/repositories`) | 1 veredicto por repo | Elige **un** archivo, y puede elegir uno vendorizado (AccessKit, cycle 16) |
+| 2 · Archivo en una ruta conocida | el texto, en bytes | **Hay que saber la ruta** |
+| 3 · Enumeración por sonda | las rutas que se adivinan | No distingue *"no existe"* de *"no se me ocurrió"* |
+| 4 · Prosa del README | lo que el proyecto declara | Puede estar desactualizada |
+| 5 · `git log --follow -- LICENSE` | la **historia** del archivo | Sólo de los archivos que ya conocés |
+| 🆕 **6 · `git ls-tree -r HEAD`** | **todos los archivos que existen** | — |
+
+### 🔴 Hallazgo nº1: `SkyworkAI/Matrix-Game` tiene **28** archivos de licencia, no 7 — y uno es **CC BY-NC 4.0**
+
+`repos/foundations.md` publica desde el cycle 13: *"**7 archivos** (raíz MIT;
+`Matrix-Game-1/3/4` Apache-2.0; `licenses/MG4CF-LICENSE` Apache-2.0;
+`licenses/TAEHV-LICENSE` MIT; `web/mediamtx-reader.LICENSE` MIT). El pass anterior
+publicó 2 y declaró que no podía saber si había más. Hay 7."*
+
+**Hay 28.** Los 7 son correctos; los otros 21 viven bajo `third_party/` y **ninguna
+sonda los podía alcanzar**. El que decide una propuesta:
+
+| Ruta | Bytes | Grant | Consecuencia |
+|---|---|---|---|
+| 🔴 `Matrix-Game-1/GameWorldScore/GameWorld/third_party/amt/LICENSE` | **18.208** | ⛔ **CC BY-NC 4.0** (*Attribution-NonCommercial*) | **Exclusión dura.** `NonCommercial` dentro de un repo cuya raíz es MIT |
+| `.../third_party/DROID-SLAM/thirdparty/eigen/COPYING.GPL` | 35.147 | GPL-3.0 (texto de Eigen) | Eigen es MPL-2.0; arrastra los textos GPL/LGPL de sus módulos legacy |
+| `.../eigen/COPYING.LGPL` | 26.530 | LGPL-2.1 | idem |
+| `.../eigen/COPYING.MPL2` | 16.726 | MPL-2.0 (el grant real de Eigen) | copyleft **por archivo**, manejable |
+| `.../eigen/bench/btl/COPYING` | 18.109 | **GPL-2.0** | sólo el benchmark de Eigen |
+| `.../third_party/DROID-SLAM/LICENSE` · `RAFT/LICENSE` · `lietorch/LICENSE` | 1.539 / 1.512 / 1.512 | BSD-3-Clause | permisivos, atribución obligatoria |
+| `.../tartanair_tools/LICENSE` | 1.496 | Carnegie Mellon University | permisivo |
+| `Matrix-Game-4/game/third_party/{DirectXMath,JoltPhysics,recastnavigation,stb}` | 1.141 / 1.059 / 877 / 2.510 | MIT · MIT · **zlib** · dual PD-o-MIT | ⚠️ `recastnavigation` es **el mismo repo** que esta KB ya recomendaba suelto |
+
+**Dónde está exactamente el problema:** `amt` (*All-pairs Multi-field Transforms*,
+interpolación de frames) **no está en el modelo**. Está en **`GameWorldScore`**, que
+es el *benchmark* con el que Matrix-Game demuestra que el modelo funciona.
+
+⇒ **Se puede embarcar el modelo. No se puede correr su propio benchmark dentro de
+un entregable pago** sin extirpar `amt` o reimplementar la métrica. Ver Receta 47.
+
+**Y un dato que sólo el árbol da:** `Matrix-Game-2/` tiene **88 archivos y ninguna
+licencia propia** ⇒ cae bajo el MIT de la raíz. Eso no era afirmable antes.
+
+### 🔴 Hallazgo nº2: `4ian/GDevelop` (29.166 ★) **no es "MIT en todo el código"** — embarca un runtime con licencia **paga por usuario**
+
+El cycle 11 resolvió el badge `NOASSERTION` de GDevelop probando **4 carpetas** y
+publicó *"MIT en todo el código"*. El árbol tiene **11 archivos de licencia**. Las
+4 probadas son MIT y están bien; entre las 7 restantes hay una que no es open
+source:
+
+> `Extensions/Spine/spine-pixi-v7/Spine-Runtimes-License-Agreement.txt` (**1.472 B**,
+> Esoteric Software LLC, 2024-02-20): *"provided that **each user of the Products
+> must obtain their own Spine Editor license**"*.
+
+⇒ **No es copyleft ni es no comercial: traslada un costo por-usuario a un tercero.**
+Un juego vendido a jugadores finales que use la extensión Spine obligaría a **cada
+jugador** a comprar Spine Editor. En la práctica, inviable.
+
+Y el archivo de la raíz (`LICENSE.md`, **305 B**) **no es un grant**: es un puntero
+(*"See the license.md in each folders"*). Es el segundo archivo de este tipo medido
+este pass, junto al `LICENSE.txt` de o3de ⇒ **categoría nueva: el archivo de
+licencia que no licencia.**
+
+**GDevelop se mantiene como vertical recomendada**, con la condición explícita de
+excluir `Extensions/Spine/` del build. Detalle en `verticals/solutions.md`.
+
+### 🆕 El eje de licencia nº 9: **por *feature* activada**
+
+Las Recetas 14 y 20 enumeran 8 ejes de partición de un grant. GDevelop agrega el
+noveno y el peor de auditar: **la licencia efectiva de un engine *no-code* depende
+de qué extensiones activó el diseñador**, es decir, de un hecho que ocurre **en el
+proyecto del cliente y después** de que legales revisó el repo. ⇒ La auditoría se
+corre sobre el **manifiesto del proyecto**, no sobre el repo del engine.
+
+### 🆕 T68 · Un filtro anclado al principio del nombre **no ve** los grants con sufijo
+
+Sobre **el mismo árbol**, el mismo pass, dos filtros:
+
+| Filtro del nombre de archivo | Archivos encontrados |
+|---|---|
+| empieza con `licen[cs]e\|copying\|notice` | **23** |
+| **contiene** `licen[cs]e\|copying\|notice` | **28** |
+
+Los 5 invisibles son exactamente los que un proveedor usa para licenciar **un
+componente**: `MG4CF-LICENSE`, `TAEHV-LICENSE`, `SAL-LICENSE.txt`,
+`mediamtx-reader.LICENSE`, `THIRD_PARTY_NOTICES.md` — es decir, **los tres que esta
+KB ya había encontrado a mano** más dos nuevos. Un canal nuevo con un filtro malo
+habría *perdido* lo que la sonda ya tenía.
+
+⇒ **Regla:** el filtro se escribe sobre el **basename completo**, con `contains`,
+nunca con ancla inicial.
+
+### 🆕 T69 · Lo no-comercial no entra por el modelo, entra por el **banco de pruebas**
+
+De **41 repos y 329+ archivos de licencia** medidos este pass, hay **un solo grant
+no comercial**, y está a **seis niveles de profundidad dentro de un benchmark**. El
+componente contaminado nunca es el titular: el titular es el que el equipo legal
+mira.
+
+### 🆕 T70 · Apache-2.0 es íntegro en **cuatro** byte-counts distintos; el discriminador es la **línea**, no el byte
+
+El cycle 16 midió el Apache-2.0 sin apéndice (AccessKit, 9.723 B). Este pass agrega
+un segundo testigo y dos variantes más:
+
+| Repo | Archivo | Bytes | Líneas | `APPENDIX` | Veredicto |
+|---|---|---|---|---|---|
+| [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | `LICENSE-APACHE` | 9.723 | — | ❌ | Apache-2.0 íntegro |
+| 🆕 [IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP) | `LICENSE` | **10.197** | **176** | ❌ | Apache-2.0 íntegro |
+| 🆕 [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) | `LICENSE-APACHE` | **11.335** | **201** | ✅ | Apache-2.0 íntegro |
+| 🆕 [o3de/o3de](https://github.com/o3de/o3de) | `LICENSE_APACHE2.TXT` | **11.557** | **201** | ✅ | Apache-2.0 íntegro |
+
+Los cuatro se leyeron íntegros buscando cláusulas añadidas (`additional`,
+`notwithstanding`, `shall not be used`, `trademark of`): **ninguno está adulterado**.
+La diferencia entre 11.335 y 11.557 con **las mismas 201 líneas** es relleno del
+placeholder `[name of copyright owner]` y espacios finales.
+
+⇒ **Discriminador correcto:** `wc -l` (**201** con apéndice, **~176** sin) + la
+presencia del literal `END OF TERMS AND CONDITIONS`. El byte-count queda como
+**triage**, nunca como veredicto — que es lo que esta KB viene diciendo desde el
+cycle 13, ahora con el reemplazo concreto.
+
+### 🟢 Control negativo (lo que **no** apareció, que es la mitad del dato)
+
+| Medición | Resultado |
+|---|---|
+| Repos clonados por canal 6 | **41**, 0 fallos |
+| Archivos de licencia enumerados | **329+** |
+| Repos con grant **no comercial** en cualquier parte del árbol | **1** (Matrix-Game) |
+| Repos con copyleft fuerte **en la raíz** | **1** ([ALE](https://github.com/Farama-Foundation/Arcade-Learning-Environment), GPL-2.0 — ya publicado) |
+| Repos con copyleft **débil** vendorizado | **1** ([agones](https://github.com/agones-dev/agones): `vendor/hashicorp/golang-lru` 15.921 B + `hcl` 15.977 B, MPL-2.0 por archivo, dentro de `vendor/` ⇒ benigno) |
+| Repos con más grants vendorizados | agones **149**, [nakama](https://github.com/heroiclabs/nakama) **81**, Matrix-Game **28**, [pinus](https://github.com/node-pinus/pinus) **14** |
+
+⇒ **El stack permisivo que esta KB recomienda está limpio a nivel de árbol.** Eso
+ahora está **medido**, no supuesto.
+
+### 🔁 Reconfirmaciones por un canal independiente
+
+El canal 6 reprodujo, sin conocerlas de antemano, cinco conclusiones que esta KB
+había sacado por sonda o por badge:
+
+| Repo | Lo que la KB publicaba | Canal 6 |
+|---|---|---|
+| [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | badge `BSD-3-Clause` = grant **vendorizado**, real es MIT **o** Apache | ✅ `LICENSE-MIT` 1.023 + `LICENSE-APACHE` 9.723 + `LICENSE.chromium` 1.559 |
+| [o3de/o3de](https://github.com/o3de/o3de) | Apache-2.0 **o** MIT | ✅ + `LICENSE.txt` (1.475) es una **política**, no un grant: *"default license is Apache-2.0… you may elect at your option… MIT"* |
+| [luanti-org/luanti](https://github.com/luanti-org/luanti) | código LGPL-2.1+, medios aparte | ✅ `COPYING.LESSER` 26.415 + `LICENSE.txt` 8.793 = **sólo texturas y sonidos**. No hay otro grant en la raíz |
+| [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) | MIT **o** Apache (badge `NOASSERTION`) | ✅ dual confirmado |
+| [MineDojo/NitroGen](https://github.com/MineDojo/NitroGen) | `NVIDIA License`, **4.729 B**, no comercial | ✅ **4.729 B exactos**, y el árbol tiene **un solo** archivo de licencia |
+
+### ⛔ Canales re-testeados este pass (la regla de la rotación: un canal bloqueado se reintenta, no se hereda)
+
+| Canal | Resultado 2026-11-22 | Estado |
+|---|---|---|
+| `huggingface.co/api/*` | código **000** (sin conexión) | 🔴 sigue muerto ⇒ **licencia de los pesos sigue sin verificar** |
+| `eur-lex.europa.eu` | código **000** | 🔴 sigue muerto ⇒ fuente primaria del EU AI Act sin leer, **6º pass** |
+| `gh api repos/<slug>/contents` | **403** *"GitHub access to this repository is not enabled for this session"* | 🔴 bloqueado fuera de los repos de la sesión |
+| `gh api search/repositories` | 200, SPDX + ★ + `pushed_at` + `archived` | 🟢 vivo |
+| 🆕 `git clone --filter=blob:none --no-checkout` | 41/41 | 🟢 **canal 6, nuevo** |
+
+### 📊 Metadatos releídos este pass (canal 1)
+
+| Repo | ★ | Badge SPDX | Último push | Nota |
+|---|---|---|---|---|
+| [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) | **16.112** | MIT | 2026-11-17 | +25 desde el cycle 4 |
+| [luanti-org/luanti](https://github.com/luanti-org/luanti) | **13.886** | `NOASSERTION` | 2026-11-20 | LGPL-2.1+ por árbol |
+| [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | **13.763** | Apache-2.0 | 2026-11-18 | 81 grants vendorizados, todos permisivos |
+| [o3de/o3de](https://github.com/o3de/o3de) | **9.897** | `NOASSERTION` | **2026-11-22 (hoy)** | dual Apache/MIT |
+| [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | **8.205** | Zlib | ⚠️ 2026-02-27 (9 meses) | |
+| [agones-dev/agones](https://github.com/agones-dev/agones) | **7.107** | Apache-2.0 | 2026-11-20 | |
+| [IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP) | **4.681** | Apache-2.0 | **2026-11-22 (hoy)** | |
+| [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | **2.956** | MIT | ⚠️ 2026-10-29 | 🔴 **el badge MIT no ve el CC BY-NC del árbol** |
+| [Farama-Foundation/Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment) | 2.463 | GPL-2.0 | 2026-11-15 | |
+| [MineDojo/NitroGen](https://github.com/MineDojo/NitroGen) | **2.252** | `NOASSERTION` | ⚠️ 2026-01-25 | ⛔ no comercial |
+| [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | 1.567 | `BSD-3-Clause` ❌ | 2026-11-21 | badge = grant vendorizado |
+| [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) | 453 | `NOASSERTION` | 2026-11-21 | MIT **o** Apache |
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 17
 
 **Tema del pass:** la **fábrica** — versionado de binarios, CI de build, caché de

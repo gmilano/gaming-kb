@@ -7,12 +7,66 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-22 (cycle 17)** (passes previos: 2026-11-22 cycles 16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22 cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🆕 Lo que cambió — pass cycle 18 (2026-11-22): **la geografía del riesgo de licencia**, y qué devolvió cada región este pass
+
+El canal 6 (árbol completo del repositorio) permite por primera vez preguntar de
+**dónde viene** cada grant restringido que termina dentro de un entregable. La
+respuesta tiene geografía, y no es la de la regulación.
+
+### 🔴 El riesgo de licencia que importa **no viene del repo que se elige, viene del paper que ese repo cita**
+
+El único grant no comercial encontrado en **41 repos / 329+ archivos** es
+`CC BY-NC 4.0` dentro de `SkyworkAI/Matrix-Game` (🇨🇳 Skywork AI, China), y **no es
+de Skywork**: es de `amt`, un componente académico de interpolación de frames
+copiado dentro del benchmark `GameWorldScore`. Lo mismo vale para Eigen (🇫🇷/🇩🇪,
+MPL-2.0 con textos GPL/LGPL legacy) y DROID-SLAM / RAFT / lietorch (🇺🇸 Princeton,
+BSD-3) en el mismo árbol.
+
+⇒ **La cadena de contaminación es académica, no corporativa, y es transnacional.**
+Un world model chino embarca un componente de un paper estadounidense con licencia
+no comercial y una librería europea con copyleft débil. **Ninguna de las tres
+jurisdicciones explica el riesgo**: lo explica que un repo de research vendoriza
+`third_party/` a mano desde papers, y un paper rara vez elige una licencia pensando
+en producto.
+
+**Consecuencia para un engagement, en cualquier región:** la pregunta de *due
+diligence* no es *"¿de qué país es el repo?"* sino **"¿cómo trae sus
+dependencias?"**. `vendor/` de Go (agones: 149 grants, todos permisivos salvo 2
+MPL) es un régimen **auditable y aburrido**; `third_party/` copiado de papers
+(Matrix-Game: 28 grants, 1 no comercial) es el régimen donde aparece el problema.
+
+### 🆕 Lo que devolvió cada región este pass (y lo que NO)
+
+| Región | Qué se buscó | Qué devolvió |
+|---|---|---|
+| **North America** | `AI gaming North America 2026 adoption regulation players` | 🔁 **Nada nuevo, y la confirmación de un homónimo.** El informe-faro que devuelve el buscador sigue siendo **UNLV/KPMG *State of AI in Gaming 2026*** — que es **gambling**, no videojuegos (AI Maturity Index 45/100, abril 2026). Esta KB ya lo etiquetaba así desde el cycle 7: **tercera confirmación**. Lo único de videojuegos: Reed Smith citando la GDC 2026 (**52%** de devs ve daño) y la coalición de seguridad infantil de Roblox con la Attorney General Alliance |
+| **EMEA** | `AI gaming EMEA 2026 AI Act Article 50 deadline` | 🟡 **Un refinamiento operativo del Art. 50, no una novedad.** La excepción para videojuegos es **conjuntiva**: el contenido efímero en tiempo real queda exento *"donde el marcado sea técnicamente inviable **Y** se informe al usuario dentro de la experiencia"*. Esta KB publicaba la excepción (Receta 27) **sin el "Y"** ⇒ **cumplir una sola de las dos condiciones no exime**. El 2-dic-2026 está a **10 días** |
+| **APAC** | `AI gaming APAC 2026 China Japan Korea adoption regulation NPC` | 🟢 **Una cifra nueva y un conflicto de instrumento.** CADPA (vía cobertura de ChinaJoy 2026) mide **86,36%** de empresas chinas usando AI, contra el **~60%** de Niko Partners que esta KB publica. **No es un desacuerdo: son dos denominadores** (CADPA encuesta a sus asociadas, Niko estima el universo de estudios) ⇒ **llevar las dos o ninguna**, igual que con Steam. Y KOCCA aporta un tercer punto temporal: **41,7% en H1-2025** frente al **77,5% del Q2-2026** que esta KB ya tenía ⇒ **la serie coreana casi se duplicó en un año**, y es la única serie temporal de adopción por región que esta KB puede construir |
+| **LATAM** | `AI videojuegos LATAM Brasil Argentina México 2026 adopción regulación` | 🟡 **Confirmaciones, un dato de denominador y un gap que no se mueve.** México: **>76 M** jugadores (Endeavor) junto al 72,6 M de Xsolla ⇒ dos instrumentos, misma magnitud. **Regulación de IA en videojuegos en Brasil, Argentina y México: cero instrumentos encontrados**, cuarto pass consecutivo. ⚠️ **Y una advertencia de higiene que esta KB debe mantener:** la cifra de **97%** de devs LATAM usando IA sale del *Google Cloud Games Report* **vía Globant** — es nuestra propia casa citándose. Se publica **marcada como tal**, nunca como dato independiente |
+
+### ⛔ Gaps de este pass, declarados
+
+- **Japón: cero.** La consulta de APAC no devolvió ni una fuente sobre reglas
+  japonesas de IA en videojuegos. Esta KB tiene el *AI Basic Plan* del 14-jul-2026 y
+  el pronunciamiento de CESA sobre propiedad intelectual, y **nada más**. No es que
+  Japón no regule: es que **no se encontró con esta consulta**.
+- **Política de modelos open source en gaming, por región: cero.** Buscado
+  explícitamente en APAC. Ninguna jurisdicción aparece legislando sobre *qué modelos
+  puede usar un juego*, sólo sobre *qué hay que declarar*.
+- **Repos de gaming AI de origen LATAM: cero**, cuarto pass consecutivo, buscado en
+  español. El canal 6 no cambia esto — enumera árboles de repos que ya existen.
+- **Licencia de los pesos: sigue sin canal** (`huggingface.co` → 000). Dada la
+  tendencia 34 (*lo no comercial vive en la periferia: pesos, benchmark, dataset*),
+  **éste es ahora el gap de mayor riesgo comercial de esta KB**, en las cuatro
+  regiones por igual.
+
 
 ## 🔴 Lo que cambió — pass cycle 17 (2026-11-22): **la capa de fábrica tiene una geografía propia, y no es la del resto de esta KB** — más la resolución del conflicto de Steam que este archivo dejó abierto
 
@@ -1380,6 +1434,18 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+> 🆕 **cycle 18 (2026-11-22).** Nada nuevo de videojuegos, y **tercera confirmación
+> del homónimo**: el informe que el buscador devuelve como estado del arte
+> —UNLV/KPMG *State of AI in Gaming 2026*, AI Maturity Index **45/100**, abril
+> 2026— es de **gambling**, no de videojuegos. Citarlo en una propuesta de gaming
+> es un error de categoría, y es el error por defecto de cualquiera que busque este
+> tema sin saberlo. De videojuegos sólo apareció la GDC 2026 vía Reed Smith (**52%**
+> de devs ve daño) y la coalición de seguridad infantil de Roblox con la Attorney
+> General Alliance. 🔴 **Riesgo de licencia aplicable acá:** el stack de los papers
+> estadounidenses (DROID-SLAM, RAFT, lietorch — Princeton, BSD-3) es permisivo, pero
+> llega **vendorizado dentro de repos de terceros** ⇒ la obligación de atribución se
+> hereda sin elegirla. Ver Receta 46.
+
 #### 🆕 Oportunidad del pass cycle 17 (2026-11-22): **la fábrica, que es lo único que Steam exime y el backlash no toca**
 
 **El gancho, en una línea:** *"No les proponemos IA en el juego. Les proponemos que
@@ -1786,6 +1852,18 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+> 🆕 **cycle 18 (2026-11-22).** Refinamiento operativo del Art. 50, a **10 días** del
+> 2-dic-2026: la excepción de videojuegos es **conjuntiva**. El contenido efímero
+> generado en tiempo real queda exento del marcado *"donde el marcado sea
+> técnicamente inviable **Y** se informe al usuario dentro de la experiencia"*.
+> Esta KB publicaba la excepción (Receta 27) **sin el "Y"**. ⇒ **Cumplir una sola de
+> las dos condiciones no exime**, y la segunda —informar en la experiencia— es
+> trabajo de producto, no de legales: es la Receta 13 (disclosure por reloj de
+> sesión). Fuente: comentario legal concordante (Travers Smith, DLA Piper, William
+> Fry) sobre las guías de la Comisión del 20-jul-2026 + el escrito de Video Games
+> Europe del 3-jun-2026. ⚠️ `eur-lex.europa.eu` **sigue sin resolver** (código 000):
+> verificar contra el texto oficial antes de cualquier entregable firmado.
 
 #### 🆕 Oportunidad del pass cycle 17 (2026-11-22): **el pipeline europeo ya está instalado y su licencia es el problema** — entrar por ahí, no por el engine
 
@@ -2288,6 +2366,18 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+> 🆕 **cycle 18 (2026-11-22).** Dos cifras nuevas, y las dos son **de instrumento**,
+> no de tendencia. **China:** CADPA (vía cobertura de ChinaJoy 2026) mide **86,36%**
+> de empresas usando AI, contra el **~60%** de Niko Partners que esta KB publica. No
+> se contradicen: CADPA encuesta **a sus asociadas** y Niko estima **el universo de
+> estudios** ⇒ dos denominadores, **llevar las dos o ninguna** (misma regla que con
+> las tres cifras de Steam). **Corea:** KOCCA da **41,7% en H1-2025** frente al
+> **77,5% del Q2-2026** que esta KB ya tenía ⇒ **la adopción coreana casi se duplicó
+> en un año**, y es **la única serie temporal de adopción por región** que esta KB
+> puede construir con dos puntos del mismo instrumento. Ése es el argumento APAC más
+> fuerte disponible hoy: no el nivel, **la pendiente**. ⛔ **Japón: cero fuentes** en
+> esta consulta (ver gaps del cycle 18).
+
 #### 🆕 Oportunidad del pass cycle 17 (2026-11-22): **la automatización de QA permisiva de esta industria es de la región** — se compone, no se importa
 
 **El gancho, en una línea:** *"La base de automatización que ya usan los estudios de
@@ -2748,6 +2838,18 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+> 🆕 **cycle 18 (2026-11-22).** Confirmaciones y una advertencia de higiene.
+> **México:** **>76 M** jugadores (Endeavor) junto al 72,6 M de Xsolla ⇒ dos
+> instrumentos independientes, misma magnitud: la cifra es sólida. **Regulación de
+> IA en videojuegos en Brasil, Argentina y México: cero instrumentos encontrados**,
+> cuarto pass consecutivo — y eso es un dato vendible, no un vacío: **LATAM es hoy
+> la región donde una decisión de producto sobre AI no tiene un reloj regulatorio
+> encima**, al revés que EMEA (10 días) y NA (1-ene-2027). ⚠️ **Higiene de fuente:**
+> el **97%** de devs LATAM usando IA sale del *Google Cloud Games Report* **vía
+> Globant** — es nuestra propia casa citándose, y así debe publicarse. 🔴 **Repos de
+> gaming AI de origen LATAM: cero**, cuarto pass, buscado en español. El canal 6 no
+> mueve esta aguja: enumera árboles de repos que ya existen, no los crea.
 
 #### 🆕 Oportunidad del pass cycle 17 (2026-11-22): **el decreto brasileño nombra QA y co-desarrollo, y la capa que nombra no se produce en la región**
 

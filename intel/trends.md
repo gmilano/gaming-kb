@@ -6,9 +6,115 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-22 (cycle 17)** (passes previos: 2026-11-22 cycles 16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22 cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 18 (2026-11-22)
+
+**Tema:** el canal 6 (el árbol completo del repositorio). Dos tendencias nuevas, un
+gap estructural cerrado y dos gaps reconfirmados con el motivo medido.
+
+### 🟢 GAP CERRADO · **"Listado de directorios de un repo: sigue sin canal"** era falso
+
+Esta sección publicó durante **5 passes**, sin cambios:
+
+> *"**Listado de directorios de un repo**: sigue sin canal. Por eso el grant partido
+> de Matrix-Game se verifica por sonda de rutas conocidas y no puede afirmarse que
+> `Matrix-Game-4/` sea el único subdirectorio con licencia propia."*
+
+**Hay canal, y es git, no la API de GitHub:**
+
+```bash
+git clone --filter=blob:none --no-checkout --depth 1 https://github.com/<slug> <dir>
+git -C <dir> ls-tree -r --name-only HEAD      # árbol completo, cero blobs descargados
+git -C <dir> cat-file -p HEAD:<ruta>          # el texto, a demanda
+```
+
+Medido este pass: **41 repos, 0 fallos, 329+ archivos de licencia**. `gh api
+repos/<slug>/contents` sí está cerrado (**403** fuera de los repos de la sesión) —
+**la creencia correcta sobre el instrumento equivocado**. Es el **segundo** gap de
+canal de esta KB que resulta no existir, después del de octubre sobre
+`search/repositories`.
+
+🔴 **Y la lección se repite con una vuelta más:** en octubre, un canal declarado
+bloqueado congeló una columna entera durante un mes. Esta vez, un canal declarado
+**inexistente** hizo que esta KB publicara durante 5 passes que Matrix-Game tenía
+7 archivos de licencia cuando tiene **28**, uno de ellos **no comercial**. La regla
+de la rotación —*un canal declarado bloqueado se reintenta cada pass*— hay que
+extenderla: **también se reintenta un canal declarado inexistente, y se reintenta
+con una herramienta distinta, no con la misma**.
+
+### 🆕 Tendencia 33: **la superficie de licencia de un repo de gaming AI es ~4× más grande que cualquier sonda, y el multiplicador lo fija el gestor de dependencias**
+
+| Repo | Sonda | Árbol | Factor | Por qué |
+|---|---|---|---|---|
+| [agones-dev/agones](https://github.com/agones-dev/agones) | 3 | **149** | 50× | `vendor/` de Go, commiteado |
+| [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | 2 | **81** | 40× | idem |
+| [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | 7 | **28** | 4× | `third_party/` a mano, de papers |
+| [node-pinus/pinus](https://github.com/node-pinus/pinus) | — | **14** | — | |
+| [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | 4 | **4** | **1×** | repo chico y plano |
+
+**La señal:** el factor **no mide la calidad de la auditoría, mide cómo el proyecto
+trae sus dependencias.** Un repo Go con `vendor/` commiteado y un repo de research
+con `third_party/` copiado a mano son dos regímenes distintos de riesgo, y hoy esta
+KB los trataba igual. Operativamente: **preguntar por el gestor de dependencias
+antes de estimar el esfuerzo de una auditoría de licencias** — es la diferencia
+entre 4 archivos y 149.
+
+**Y el corolario que importa para vender:** los 146 archivos extra de agones son
+**ruido permisivo**. El valor de enumerar no es el volumen, es que **el único grant
+que cambia una decisión estaba entre ellos** en 1 de 41 repos. Una auditoría que no
+enumera acierta ~97% de las veces y falla exactamente donde duele.
+
+### 🆕 Tendencia 34: **el componente restringido nunca es el titular — y en gaming AI entra por el banco de pruebas**
+
+41 repos, 329+ grants, **un solo** `NonCommercial`: `CC BY-NC 4.0` (18.208 B) a seis
+niveles dentro de `GameWorldScore`, el **benchmark** de Matrix-Game. El modelo es
+MIT/Apache; lo restringido es **la prueba de que el modelo funciona**.
+
+No es un caso aislado: esta KB ya tenía el mismo patrón en otras dos formas —
+`audiocraft` (código MIT, **pesos** `CC BY-NC 4.0`), `YuE` (código Apache-2.0,
+**pesos** `CC BY-NC 4.0`), `minerl` (badge `NOASSERTION`, repo entero
+`CC-BY-NC-SA`). **La constante es que lo no comercial vive en la periferia del
+entregable:** los pesos, el benchmark, el dataset, el harness de evaluación. Nunca
+en el `LICENSE` de la raíz, que es el único que mira el equipo legal.
+
+⇒ **Inversión del orden de auditoría.** Primero `third_party/`, `vendor/`,
+`external/`, `eval/`, `benchmark/`, `assets/`, `weights/`; **el grant de la raíz al
+final**. Es exactamente al revés de como se audita hoy.
+
+⇒ **Y la consecuencia de producto:** en un PoC de world model, *entregar el modelo*
+y *reportar la métrica publicada del modelo* son **dos decisiones de licencia
+distintas**. Ver Receta 47.
+
+### 📏 7º y 8º defecto del *checksum de bytes* de esta KB
+
+**7º — el filtro de nombre, no el archivo.** Sobre el árbol de Matrix-Game, un
+filtro anclado al principio del basename (`^licen…`) encuentra **23** archivos; uno
+con `contains`, **28**. Los 5 perdidos (`MG4CF-LICENSE`, `TAEHV-LICENSE`,
+`SAL-LICENSE.txt`, `mediamtx-reader.LICENSE`, `THIRD_PARTY_NOTICES.md`) son
+**justamente la forma que usa un proveedor para licenciar un componente**. Un canal
+nuevo con un filtro malo pierde lo que el canal viejo ya tenía.
+
+**8º — Apache-2.0 es íntegro en cuatro byte-counts distintos.** Medidos este pass:
+**9.723** (AccessKit, cycle 16), **10.197 / 176 líneas / sin apéndice**
+(Unity-MCP 🆕), **11.335 / 201 líneas** (c2pa-rs 🆕), **11.557 / 201 líneas** (o3de 🆕),
+más el testigo histórico 11.357-11.362. Los cuatro leídos íntegros buscando
+cláusulas añadidas: **ninguno adulterado**. 11.335 vs 11.557 **con las mismas 201
+líneas** es relleno del placeholder `[name of copyright owner]`.
+
+⇒ **Reemplazo:** `wc -l` (**201** con apéndice, **~176** sin) + el literal
+`END OF TERMS AND CONDITIONS`. El byte-count es **triage**, no veredicto.
+
+### ⛔ Gaps de canal reconfirmados este pass, con el código medido
+
+| Canal | Test 2026-11-22 | Consecuencia |
+|---|---|---|
+| `huggingface.co/api/models/*` | **000** (sin conexión) | Licencia de los **pesos** de Matrix-Game, MineWorld y Audio2Face-3D **sin verificar**, 3er pass. En un world model los pesos son la mitad del entregable, y las tendencias 33-34 dicen que **es justamente donde vive lo no comercial** ⇒ este gap ahora es **el de mayor riesgo de la KB** |
+| `eur-lex.europa.eu` | **000** | Fuente primaria del EU AI Act **sin leer, 6º pass y 2 KBs**. El 2-dic-2026 (Art. 111(4)) sigue sostenido por 4+ secundarias concordantes |
+| `gh api repos/<slug>/contents` | **403** | Cerrado fuera de los repos de la sesión — **y ya no importa: el canal 6 lo reemplaza** |
+
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 17 (2026-11-22)
 
@@ -1684,9 +1790,16 @@ El primero contamina la inteligencia de mercado; el segundo, el catálogo de rep
   creencia errónea sobre el instrumento congeló una columna entera de la KB
   durante casi un mes. (El canal que sigue sin servir es `curl -sI` sobre
   github.com, que devuelve respuestas del proxy y no del repo.)
-- **Listado de directorios de un repo**: sigue sin canal. Por eso el grant partido
-  de Matrix-Game se verifica por sonda de rutas conocidas y no puede afirmarse que
-  `Matrix-Game-4/` sea el único subdirectorio con licencia propia.
+- 🟢 **GAP CERRADO (cycle 18) — "listado de directorios: sigue sin canal" era
+  falso.** El canal existe y es **git**, no la API de GitHub:
+  `git clone --filter=blob:none --no-checkout --depth 1` + `git ls-tree -r HEAD`.
+  41 repos, 0 fallos, 329+ archivos de licencia enumerados. **Matrix-Game tiene 28
+  archivos de licencia, no 7**, y el nº 28 es **CC BY-NC 4.0** dentro del benchmark
+  `GameWorldScore`. `Matrix-Game-2/` (88 archivos) no tiene licencia propia ⇒ cae
+  bajo el MIT de la raíz. Lo que sí está cerrado es `gh api repos/<slug>/contents`
+  (**403**): la creencia era correcta sobre el instrumento equivocado. **Regla
+  extendida para la rotación: un canal declarado INEXISTENTE se reintenta cada pass
+  igual que uno declarado bloqueado, y con una herramienta distinta.**
 - **`eur-lex.europa.eu` no es alcanzable** desde este entorno, así que el registro
   primario del EU AI Act **sigue sin leer tras 5 passes y 2 KBs**. Las fechas de
   este archivo provienen de comentario legal secundario, consistente entre sí pero

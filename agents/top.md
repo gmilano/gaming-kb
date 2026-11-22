@@ -7,9 +7,16 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-22 (pass cycle 17)**. Passes previos: 2026-11-22
-> (cycles 16, 15, 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
+> Última actualización: **2026-11-22 (pass cycle 18)**. Passes previos: 2026-11-22
+> (cycles 17, 16, 15, 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
 > 2026-10-26, 2026-07-02.
+>
+> 🔴 **Lo que el pass cycle 18 agrega a los cinco canales:** el **canal 6 —
+> `git ls-tree -r HEAD` sobre un clon `--filter=blob:none --no-checkout`**. Los
+> canales 1-5 necesitan **saber la ruta** del archivo de licencia; el canal 6
+> contesta *qué archivos existen*. Primer resultado: `SkyworkAI/Matrix-Game` tiene
+> **28** archivos de licencia donde esta KB publicaba 7, y el nº 28 es
+> **CC BY-NC 4.0** dentro del benchmark. Ver los hallazgos del cycle 18.
 >
 > 🔴 **Lo que el pass cycle 17 agrega a los cuatro canales de licencia:** el
 > **canal 5 — `git log --follow -- LICENSE`**. Los canales 1-4 (badge, archivo,
@@ -79,6 +86,135 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 18): **el canal 6 — el árbol completo**, y el grant no comercial que ningún canal anterior podía ver
+
+Los cycles 1-17 construyeron cinco canales de licencia. Los cinco comparten un
+supuesto que nunca se escribió: **que la ruta del archivo de licencia se conoce**.
+El badge devuelve un veredicto por repo; el byte-read necesita una ruta; la
+enumeración por sonda prueba las rutas que **se le ocurren** al que la escribe; el
+README nombra lo que el proyecto quiso nombrar; `git log --follow` sigue un archivo
+**que ya tenés**. Ninguno contesta *¿qué archivos de licencia existen?*
+
+### El canal 6
+
+```bash
+git clone --filter=blob:none --no-checkout --depth 1 https://github.com/<slug> <dir>
+git -C <dir> ls-tree -r --name-only HEAD
+git -C <dir> cat-file -p HEAD:<ruta>
+```
+
+El clon *blobless* trae el árbol y **cero blobs**; los textos se piden de a uno. En
+este pass: **41 repos, 0 fallos**, **329+** archivos de licencia enumerados.
+
+🟢 **Cierra un gap que `intel/trends.md` declaró durante 5 passes** (*"listado de
+directorios de un repo: sigue sin canal"*). No era cierto que no hubiera canal: la
+API de GitHub está cerrada (`gh api repos/<slug>/contents` → **403** fuera de los
+repos de la sesión), pero **git no**.
+
+### 🔴 Hallazgo nº1: `SkyworkAI/Matrix-Game` publica **28** archivos de licencia, esta KB tenía **7**, y el nº 28 es **CC BY-NC 4.0**
+
+| | Archivos de licencia | Cómo se encontraron |
+|---|---|---|
+| cycle 12 | 2 | ruta adivinada |
+| cycle 13 | 7 | sonda sistemática — y se declaró *"no puedo saber si hay más"* |
+| 🆕 **cycle 18** | **28** | **enumeración del árbol** |
+
+Los 7 publicados son **correctos**. Los 21 restantes viven bajo `third_party/`, a
+hasta **seis niveles** de profundidad, y **ninguna sonda los podía alcanzar**.
+
+**El que decide una propuesta:**
+
+> `Matrix-Game-1/GameWorldScore/GameWorld/third_party/amt/LICENSE` — **18.208 B** —
+> **Creative Commons Attribution-NonCommercial 4.0 International**
+> (8 ocurrencias del literal `NonCommercial`).
+
+`amt` es *All-pairs Multi-field Transforms*, interpolación de frames. **No está en
+el modelo.** Está en **`GameWorldScore`**, el banco de pruebas con el que
+Matrix-Game demuestra que el modelo funciona.
+
+⇒ **Consecuencia comercial, que es nueva y es precisa:** el **modelo** de
+Matrix-Game sigue siendo embarcarle (raíz MIT 1.118 B; `Matrix-Game-1/3/4`
+Apache-2.0). Lo que **no** se puede hacer dentro de un entregable pago es **correr
+su propio benchmark**. Un PoC que reporte GameWorldScore al cliente está usando un
+componente `NonCommercial`. Ver **Receta 47**.
+
+**Y lo que sólo el árbol permite afirmar:** `Matrix-Game-2/` tiene **88 archivos y
+ninguna licencia propia** ⇒ cae bajo el MIT de la raíz. Antes era indecidible.
+
+#### El resto del árbol de Matrix-Game, por capa
+
+| Capa | Rutas | Grants |
+|---|---|---|
+| Producto | `LICENSE` (1.118 MIT) · `Matrix-Game-1/GameWorldScore/LICENSE` (11.356) · `Matrix-Game-3/LICENSE.txt` (11.358) · `Matrix-Game-4/LICENSE` (11.357) + `NOTICE` | MIT + Apache-2.0 ×3 |
+| Componentes propios | `Matrix-Game-4/licenses/MG4CF-LICENSE` (11.357) · `TAEHV-LICENSE` (1.073) · `matrix_game/web/mediamtx-reader.LICENSE` (1.062) | Apache-2.0 + MIT ×2 |
+| ⛔ **Benchmark** | `.../third_party/amt/LICENSE` (**18.208**) | ⛔ **CC BY-NC 4.0** |
+| Benchmark (resto) | `DROID-SLAM` (1.539) · `RAFT` (1.512) · `lietorch` (1.512) · `tartanair_tools` (1.496, CMU) | BSD-3-Clause ×3 + CMU |
+| Benchmark → Eigen | `COPYING.MPL2` (16.726, **el grant real**) · `COPYING.GPL` (35.147, **GPL-3.0**) · `COPYING.LGPL` (26.530, **LGPL-2.1**) · `bench/btl/COPYING` (18.109, **GPL-2.0**) · `COPYING.BSD` · `COPYING.APACHE` · `COPYING.MINPACK` | MPL-2.0 + textos legacy |
+| Runtime del juego | `DirectXMath/LICENSE` (1.141) + `SAL-LICENSE.txt` (1.116) · `JoltPhysics` (1.059) · `recastnavigation/License.txt` (877) · `stb` (2.510) | MIT ×3 + **zlib** + dual PD/MIT |
+
+⚠️ **`recastnavigation` aparece dos veces en esta KB**: como fila propia (8.205 ★,
+zlib) y **vendorizado dentro de Matrix-Game-4**. Es el mismo código con el mismo
+grant, pero el aviso de atribución hay que ponerlo **una vez por copia embarcada**.
+
+### 🆕 T68 · Un filtro anclado al **principio** del nombre no ve los grants con sufijo
+
+Mismo árbol, mismo pass, dos filtros de `git ls-tree`:
+
+| Filtro sobre el basename | Encontrados |
+|---|---|
+| **empieza con** `licen[cs]e\|copying\|notice` | 23 |
+| **contiene** `licen[cs]e\|copying\|notice` | **28** |
+
+Los 5 que se pierden son `MG4CF-LICENSE`, `TAEHV-LICENSE`, `SAL-LICENSE.txt`,
+`mediamtx-reader.LICENSE` y `THIRD_PARTY_NOTICES.md` — es decir, **exactamente la
+forma que usa un proveedor para licenciar un componente suelto**, y tres de ellos
+son los que esta KB ya había encontrado a mano. **Un canal nuevo con un filtro malo
+pierde lo que el canal viejo ya tenía.** Se escribe con `contains`, siempre.
+
+### 🆕 T69 · Lo no comercial no entra por el modelo: entra por el **banco de pruebas**
+
+41 repos, 329+ grants, **un solo** `NonCommercial` — y está seis niveles adentro de
+un benchmark. Generaliza un patrón que esta KB ya tenía en dos formas (pesos
+`CC BY-NC` en `audiocraft` y `YuE`; `minerl` entero `CC-BY-NC-SA`): **el componente
+restringido nunca es el titular**, porque el titular es el que mira el equipo legal.
+El orden de auditoría correcto es **al revés**: primero `third_party/`, `vendor/`,
+`external/`, `benchmark/`, `eval/`; el grant de la raíz al final.
+
+### 🆕 T70 · Apache-2.0 es íntegro en **cuatro** byte-counts; el discriminador es la línea, no el byte
+
+| Repo | Archivo | Bytes | Líneas | `APPENDIX` | Veredicto |
+|---|---|---|---|---|---|
+| [AccessKit/accesskit](https://github.com/AccessKit/accesskit) | `LICENSE-APACHE` | 9.723 | — | ❌ | íntegro (cycle 16) |
+| 🆕 [IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP) | `LICENSE` | **10.197** | **176** | ❌ | **íntegro** |
+| 🆕 [contentauth/c2pa-rs](https://github.com/contentauth/c2pa-rs) | `LICENSE-APACHE` | **11.335** | **201** | ✅ | **íntegro** |
+| 🆕 [o3de/o3de](https://github.com/o3de/o3de) | `LICENSE_APACHE2.TXT` | **11.557** | **201** | ✅ | **íntegro** |
+| (testigo histórico de esta KB) | — | 11.357-11.362 | 201 | ✅ | íntegro |
+
+Los cuatro se leyeron buscando cláusulas añadidas (`additional`, `notwithstanding`,
+`shall not be used`, `trademark of`, `amend`): **ninguno adulterado**. 11.335 vs
+11.557 con **las mismas 201 líneas** es relleno del placeholder
+`[name of copyright owner]` y espacios finales.
+
+⇒ **Reemplazo operativo del checksum para Apache-2.0:** `wc -l` (**201** con
+apéndice, **~176** sin) **+** presencia del literal `END OF TERMS AND CONDITIONS`.
+El byte-count queda como **triage**, nunca como veredicto.
+
+### 🟢 Control negativo medido (la mitad del dato)
+
+| Medición | Resultado |
+|---|---|
+| Repos enumerados por canal 6 | **41** · 0 fallos de clonado |
+| Archivos de licencia leídos en bytes | **329+** |
+| Con grant **no comercial** en cualquier punto del árbol | **1** · Matrix-Game |
+| Con copyleft **fuerte en la raíz** | **1** · ALE (GPL-2.0, ya publicado) |
+| Con copyleft **débil vendorizado** | **1** · agones (`vendor/hashicorp/*`, MPL-2.0 por archivo ⇒ benigno) |
+| Grants vendorizados, top | agones **149** · nakama **81** · Matrix-Game **28** · pinus **14** |
+
+⇒ **El stack permisivo de las recetas de esta KB está limpio a nivel de árbol**, y
+eso pasó de supuesto a **medido**.
+
+---
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 17): **la FÁBRICA — el carril por donde viaja el trabajo entre que el asset existe y el build sale — y el canal 5: la HISTORIA del archivo de licencia**
 

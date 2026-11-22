@@ -7,7 +7,12 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-22 (cycle 17)** (passes previos: 2026-11-22 cycles 16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22 cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Canal 6, agregado el 2026-11-22 (cycle 18):** `git ls-tree -r HEAD` sobre un
+> clon `--filter=blob:none --no-checkout`. Los canales 1-5 necesitan **saber la ruta**
+> del archivo; el canal 6 contesta **qué archivos existen**. Aplicado a esta página,
+> la enumeración por sonda del cycle 6 resultó subestimar entre **4× y 50×**.
 >
 > 🆕 **Canal 5, agregado el 2026-11-22 (cycle 17):** `git log --follow -- LICENSE`.
 > Los canales 1-4 leen el presente y **no pueden ver un relicenciamiento**: el
@@ -852,12 +857,43 @@ O3DE si el cliente exige MIT y no acepta el Qt/LGPL del editor?"* **ahora tiene
 respuesta** (`bevy`, MIT *o* Apache a elección, 49.914 ★) y hasta hoy esta KB no
 la tenía.
 
+## 🆕 Canal 6 aplicado a esta página (2026-11-22, cycle 18): **la enumeración por sonda subestimaba por 4×**
+
+La tabla de arriba (cycle 6) es la mejor enumeración que esta KB podía hacer **sin
+listar directorios**. Este pass lista directorios de verdad
+(`git ls-tree -r HEAD` sobre un clon `--filter=blob:none --no-checkout`) y el
+resultado corrige la propia tabla:
+
+| Repo | Sonda (cycles 6-13) | 🆕 Árbol completo (cycle 18) | Veredicto |
+|---|---|---|---|
+| 🔴 [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | **7** | **28** | 🔴 **Cambia la fila.** Entre los 21 nuevos hay un **CC BY-NC 4.0** (18.208 B) en `Matrix-Game-1/GameWorldScore/GameWorld/third_party/amt/` |
+| 🟡 [agones-dev/agones](https://github.com/agones-dev/agones) | 3 | **149** | Los 146 nuevos están en `vendor/` (Go). **2 son MPL-2.0** (hashicorp `golang-lru`, `hcl`): copyleft por archivo, benigno, pero hay que nombrarlo |
+| 🟢 [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | 2 | **81** | **Todos permisivos** (Go/BSD/MIT). La fila se confirma, ahora con denominador |
+| 🟢 [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | 4 | **4** | ✅ **La sonda acertó.** Único caso en que coinciden |
+| 🟢 [node-pinus/pinus](https://github.com/node-pinus/pinus) | — | **14** | Todos permisivos |
+
+⇒ **La sonda no fue imprudente: fue ciega por construcción.** Acertó donde el repo
+es chico y plano (`recastnavigation`), y subestimó 4× a 50× donde hay `vendor/` o
+`third_party/`. **La proporción del error es función de cómo el proyecto trae sus
+dependencias, no de cuánto esfuerzo se puso en la sonda.**
+
+### 🔴 La fila corregida
+
+| Repo | ★ | Grant **del producto** | Grant **del benchmark** | Veredicto |
+|---|---|---|---|---|
+| [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | **2.956** | 🟢 **MIT** (raíz, 1.118 B) + **Apache-2.0** en `Matrix-Game-1/3/4` + `MG4CF-LICENSE` (11.357) + `TAEHV-LICENSE` (1.073) + `mediamtx-reader.LICENSE` (1.062). `Matrix-Game-2/` (88 archivos) **sin licencia propia** ⇒ MIT de la raíz | ⛔ **CC BY-NC 4.0** en `GameWorldScore/.../third_party/amt/` (18.208 B, 8× el literal `NonCommercial`) + Eigen vía DROID-SLAM (MPL-2.0 real; textos **GPL-3.0** 35.147, **LGPL-2.1** 26.530, **GPL-2.0** 18.109) + BSD-3 ×3 | 🟡 **Embarcar el modelo: sí. Correr su benchmark en un entregable pago: no.** Ver Receta 47. ⚠️ Pesos **sin verificar** (`huggingface.co` no resuelve) |
+
+**Nota de procedencia:** `pushed_at` 2026-10-29 (24 días), badge SPDX `MIT`. **El
+badge no ve nada de la columna del medio** — es el modo de falla del canal 1
+llevado a su conclusión: un badge correcto sobre el archivo equivocado.
+
+
 ## 🆕 Enumeración aplicada a esta página (2026-11-21 cycle 6): **lo que una sonda no podía ver**
 
 | Repo de esta página | Archivos de licencia **enumerados** | Qué cambia |
 |---------------------|-------------------------------------|-----------|
 | 🔴 [limbonaut/limboai](https://github.com/limbonaut/limboai) | `LICENSE.md` (1103, **MIT**) · `LOGO_LICENSE.md` (212, **CC BY 4.0**) · `demo/LICENSE_ASSETS.md` (280, **CC BY 4.0**) | **Esta KB lo publicaba como "MIT" plano.** Es **MIT el código y CC BY 4.0 el logo y los PNG/SVG del proyecto demo**. Forkear el demo como base de proyecto **hereda atribución**. Corregido en `agents/top.md`. |
-| 🔴 [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | **7 archivos** (raíz MIT; `Matrix-Game-1/3/4` Apache-2.0; `licenses/MG4CF-LICENSE` Apache-2.0; `licenses/TAEHV-LICENSE` MIT; `web/mediamtx-reader.LICENSE` MIT) | El pass anterior publicó **2** y declaró que no podía saber si había más. Hay 7, y 3 de las rutas **no eran adivinables**. |
+| 🔴 [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | ⚠️ **SUPERADO POR EL CYCLE 18 — son 28, ver arriba.** Lo que la sonda vio: **7 archivos** (raíz MIT; `Matrix-Game-1/3/4` Apache-2.0; `licenses/MG4CF-LICENSE` Apache-2.0; `licenses/TAEHV-LICENSE` MIT; `web/mediamtx-reader.LICENSE` MIT) | El pass anterior publicó **2** y declaró que no podía saber si había más. Hay 7, y 3 de las rutas **no eran adivinables**. |
 | 🟡 [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | `License.txt` (**zlib**) · `Docs/doxygen-awesome-css/LICENSE` · `RecastDemo/Contrib/implot/LICENSE` · `RecastDemo/Contrib/imgui/LICENSE.txt` | La librería sigue siendo **zlib puro**; el `RecastDemo` **no**: vendoriza imgui/implot (MIT). Embeberlo requiere propagar esos avisos. |
 | 🟡 [agones-dev/agones](https://github.com/agones-dev/agones) | `LICENSE` (Apache-2.0) · `proto/grpc-gateway/LICENSE.txt` · `sdks/rust/proto/grpc-gateway/LICENSE.txt` | grpc-gateway vendorizado por duplicado. Benigno; hay que propagar el aviso. |
 | 🟢 [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | `LICENSE` (Apache-2.0) · `internal/gopher-lua/LICENSE` | gopher-lua vendorizado. Benigno. **Confirma** la fila. |

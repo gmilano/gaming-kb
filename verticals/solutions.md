@@ -8,13 +8,105 @@ updated: 2026-11-22
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-11-22 (cycle 17)** (passes previos: 2026-11-22 cycles 16/15/14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22 cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
 > (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
 > de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
+
+## 🔴 Corrección del cycle 18 (2026-11-22): **"GDevelop es MIT en todo el código" es falso** — embarca un runtime que exige una licencia **paga por usuario**
+
+El cycle 11 agregó GDevelop a esta página (29.166 ★) y publicó, tras resolver el
+badge `NOASSERTION` por sonda de cuatro carpetas:
+
+> *"🟢 **MIT en todo el código** — `Core`, `GDJS`, `Extensions`, `newIDE`."*
+
+El **canal 6** (árbol completo, `git ls-tree -r HEAD`) enumera **11 archivos de
+licencia**, no 4. La sonda acertó en las cuatro que probó. El problema son las otras
+siete.
+
+### Lo que la sonda no podía ver
+
+| Ruta | Bytes | Grant | Consecuencia |
+|---|---|---|---|
+| `LICENSE.md` (raíz) | **305** | ⚠️ **No es un grant: es un puntero.** *"See the license.md in each folders for the full licenses"* | El archivo que todo el mundo abre primero **no licencia nada** |
+| `Core/LICENSE.md` | 1.274 | 🟢 MIT | ✅ |
+| `GDJS/LICENSE.md` | 1.296 | 🟢 MIT | ✅ |
+| `Extensions/LICENSE.md` | 1.295 | 🟢 MIT | ✅ |
+| `newIDE/LICENSE.md` | 1.107 | 🟢 MIT | ✅ |
+| 🆕 `GDevelop.js/LICENSE.md` | 1.088 | 🟢 MIT | **5ª carpeta**, no 4 |
+| 🆕 `Extensions/DialogueTree/bondage.js/LICENSE.md` | 1.075 | 🟢 MIT | vendorizado, benigno |
+| 🆕 `Extensions/Firebase/A_firebasejs/LICENSE.md` | 11.358 | 🟢 Apache-2.0 | vendorizado, benigno |
+| 🔴 🆕 `Extensions/Spine/spine-pixi-v7/Spine-Runtimes-License-Agreement.txt` | **1.472** | ⛔ **Spine Runtimes License Agreement** (Esoteric Software LLC, 2024-02-20) | **No es open source** |
+| 🆕 `GDJS/Runtime/{Cordova,Electron}/LICENSE.GDevelop.txt` | 139 ×2 | aviso de atribución | hay que embarcarlo |
+
+### La cláusula que cambia el presupuesto, literal
+
+> *"it is permitted to integrate the Spine Runtimes into software or otherwise
+> create derivative works of the Spine Runtimes (collectively, "Products"),
+> **provided that each user of the Products must obtain their own Spine Editor
+> license** and redistribution of the Products in any form must include this license
+> and copyright notice."*
+
+⇒ **No es copyleft ni es no comercial: es una licencia que traslada un costo
+por-usuario a un tercero.** Un juego hecho con GDevelop que use la extensión Spine
+obliga a **cada usuario del producto** a tener su propia licencia de **Spine Editor**
+(producto pago de Esoteric Software). Para un juego vendido a jugadores finales eso
+es, en la práctica, **inviable**.
+
+### Lo que esto **no** significa
+
+**GDevelop sigue siendo recomendable y sigue siendo MIT.** El riesgo está
+**confinado a una extensión** y sólo se materializa si el proyecto **usa animación
+Spine**. La fila se mantiene, con la condición explícita.
+
+| Plataforma | ★ | Grant | Condición nueva |
+|---|---|---|---|
+| [4ian/GDevelop](https://github.com/4ian/GDevelop) | **29.166** | 🟢 **MIT** en `Core`, `GDJS`, `Extensions`, `newIDE`, `GDevelop.js` (**5** carpetas) + Apache-2.0 y MIT vendorizados | 🔴 **Excluir `Extensions/Spine/` del build.** Si el cliente pide animación esqueletal, la alternativa permisiva es [DragonBones](https://github.com/DragonBones/DragonBonesJS) (MIT) o animación por sprite |
+
+### 🆕 El eje de licencia nº 9 de esta KB: **por *feature* activada, no por carpeta ni por rama**
+
+Las Recetas 14 y 20 enumeran **ocho** ejes de partición de un grant (por carpeta,
+por rama, por tipo de medio, por versión, por entregable…). GDevelop agrega el
+noveno, y es el más difícil de auditar porque **no se ve en el repo, se ve en el
+proyecto del cliente**: la licencia efectiva de un engine *no-code* depende de **qué
+extensiones activó el diseñador**, y eso ocurre después de que el equipo legal
+revisó el repo.
+
+**Gate operativo:** en cualquier engine con sistema de extensiones (GDevelop, Godot
+con addons, Unity con packages), la auditoría de licencias se corre **sobre el
+manifiesto del proyecto**, no sobre el repo del engine. Es un paso nuevo para las
+Recetas 15 y 46.
+
+### 🟢 Reconfirmado por canal 6: `TaloDev/hosting` sigue **sin grant**, ahora con denominador
+
+Esta página y `agents/top.md` publican desde el cycle 8 que
+[TaloDev/hosting](https://github.com/TaloDev/hosting) (36 ★) **no tiene licencia**.
+El canal 6 lo confirma de la forma más fuerte posible: **el árbol completo son 11
+archivos y ninguno es un grant**. Antes era *"la sonda no encontró"*; ahora es
+**"no existe"**. El resto del stack de Talo (`backend`, `frontend`, `unity`,
+`godot`) es **MIT** verificado en bytes (1.074 B cada uno) ⇒ la Receta 31 se
+mantiene **sin** `hosting`, que son ejemplos de despliegue y se reescriben.
+
+### 🟢 Control negativo de esta página
+
+Canal 6 sobre 8 plataformas de esta página: **cero** grants no comerciales, **cero**
+copyleft fuerte. [MonoGame](https://github.com/MonoGame/MonoGame) confirma
+**Ms-PL** (3.882 B, el valor del checksum del cycle 4);
+[ynput/ayon-core](https://github.com/ynput/ayon-core) confirma **Apache-2.0**
+(11.357) y el corte cliente/servidor del cycle 17;
+[GameTuner/collector](https://github.com/GameTuner/collector) **Apache-2.0**
+(⚠️ 0 ★, último push 2024-02-06 — referencia de esquema, no dependencia viva);
+[NetEase/pomelo](https://github.com/NetEase/pomelo) **MIT** (1.111) — ⚠️
+**archivado** (push 2023-08-10), la cadena viva es *pomelo → nano → pitaya*.
+
+⇒ **Y eso es el límite del canal 6, dicho explícitamente:** el árbol dice qué
+licencia tiene un repo, **no si el repo está vivo**. `pomelo` tiene un MIT
+impecable y lleva 3 años archivado. La licencia y la vigencia son dos canales
+distintos y hay que correr los dos (canal 1 da `archived` y `pushed_at`).
+
 
 ## 🆕 Capa vertical nueva (2026-11-22, cycle 17): **la plataforma de producción del estudio** — y la corrección a un gap que esta página declaró **estructural** tres passes seguidos
 
@@ -423,7 +515,7 @@ la plataforma donde el cliente ya tiene contenido hecho por gente que no program
 
 | Plataforma | Licencia **verificada** | ★ | Push | Por qué entra |
 |---|---|---|---|---|
-| 🆕 [4ian/GDevelop](https://github.com/4ian/GDevelop) | 🟢 **MIT en todo el código** — ver desglose abajo | **29.166** | 2026-11-21 | Engine open source **2D / 3D / multijugador**, *no-code*, multiplataforma. Es la plataforma de esta página con la base de usuarios **menos técnica**, y por eso la de mayor apalancamiento para una capa de agentes: el usuario ya describe lógica en lenguaje casi natural (eventos), que es exactamente la superficie donde un agente aporta |
+| 🆕 [4ian/GDevelop](https://github.com/4ian/GDevelop) | ⚠️ **CORREGIDO EN EL CYCLE 18 — ver arriba: MIT en 5 carpetas, pero `Extensions/Spine/` NO es open source.** Lo que el cycle 11 publicó: 🟢 *MIT en todo el código* — ver desglose abajo | **29.166** | 2026-11-21 | Engine open source **2D / 3D / multijugador**, *no-code*, multiplataforma. Es la plataforma de esta página con la base de usuarios **menos técnica**, y por eso la de mayor apalancamiento para una capa de agentes: el usuario ya describe lógica en lenguaje casi natural (eventos), que es exactamente la superficie donde un agente aporta |
 
 ### 🔴 El badge decía `NOASSERTION`. La lectura byte a byte dice MIT cuatro veces.
 

@@ -7,8 +7,14 @@ updated: 2026-11-22
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-11-22 (cycle 16)** (passes previos: 2026-11-22
-> cycles 15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22
+> cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Las del cycle 18 son la 46** (auditoría de licencias **por árbol completo** —
+> el canal 6 reemplaza el paso de enumeración de las Recetas 10/14/17/20, que probaba
+> rutas y por construcción no podía saber si faltaban) **y la 47** (contratar un world
+> model separando **el modelo** del **banco de pruebas**: en Matrix-Game el modelo es
+> MIT/Apache y su benchmark contiene un componente **CC BY-NC 4.0**).
 >
 > 🆕 **Las del cycle 16 son la 41** (plano de datos del jugador sin una sola
 > licencia restringida — y el motivo por el que se vende antes que las demás capas)
@@ -501,6 +507,155 @@ curl -s -o /tmp/l -w '%{size_download}\n' \
 > permisivo y está archivado pero **funciona**, un fork mantenido puede costar
 > menos que la obligación que impone el sucesor. **Archivado no es lo mismo que
 > inservible** — esta KB ya lo midió con ViZDoom en el cycle 11.
+
+## 🆕 Receta 46: **Auditoría de licencias por árbol completo (canal 6)** — la que reemplaza a las Recetas 10, 14, 17 y 20 en el paso de enumeración
+
+**Qué resuelve.** Las Recetas 10/14/17/20 enumeran grants **probando rutas**. Una
+sonda no distingue *"no existe"* de *"no se me ocurrió"*: aplicada a
+`SkyworkAI/Matrix-Game` encontró **7** archivos de licencia y declaró que no podía
+saber si había más. **Hay 28**, y el nº 28 es `CC BY-NC 4.0`. Esta receta hace el
+paso de enumeración **completo y mecánico**.
+
+**Cuándo se corre.** Antes de poner cualquier repo en una propuesta, y **de nuevo**
+antes del primer entregable (un `third_party/` nuevo entra con un `git pull`).
+
+### Implementación
+
+```bash
+#!/bin/bash
+# canal 6 — enumeración completa de grants. Uso: ./c6.sh owner/repo
+slug="$1"; d="/tmp/c6/$(echo "$slug" | tr '/' '_')"
+rm -rf "$d"
+
+# 1. clon BLOBLESS: baja el árbol, cero contenido de archivos.
+#    Matrix-Game = 2.765 archivos listados sin descargar el repo.
+git clone --filter=blob:none --no-checkout --depth 1 \
+    "https://github.com/$slug" "$d" || { echo "NO CLONE: $slug"; exit 1; }
+cd "$d" || exit 1
+
+# 2. enumerar. El filtro va sobre el BASENAME COMPLETO con `contains`:
+#    un ancla inicial (^licen...) pierde MG4CF-LICENSE, TAEHV-LICENSE,
+#    SAL-LICENSE.txt, mediamtx-reader.LICENSE -> 23 en vez de 28. (T68)
+git ls-tree -r --name-only HEAD \
+  | grep -iE '[^/]*(licen[cs]e|copying|notice|legal)[^/]*$' \
+  | grep -viE '\.(py|js|ts|go|cs|h|cpp|rs|java|meta|png|jpg)$' \
+  | while read -r p; do
+      bytes=$(git cat-file -p "HEAD:$p" | wc -c)
+      lines=$(git cat-file -p "HEAD:$p" | wc -l)
+      inc=$(git cat-file -p "HEAD:$p" | grep -m1 -vE '^\s*$' | cut -c1-70)
+      printf '%-8s %-6s %-70s %s\n' "$bytes" "$lines" "$p" "$inc"
+    done
+```
+
+### Triage del resultado — **en este orden**, que es el inverso del habitual (T69)
+
+| # | Dónde mirar | Por qué primero |
+|---|---|---|
+| 1 | `third_party/` · `external/` · `vendor/` | Es donde está el 95% del volumen **y el 100% de las sorpresas** |
+| 2 | `eval/` · `benchmark/` · `test*/` · `*Score/` | 🔴 **Donde vivía el único `NonCommercial` de 41 repos.** El benchmark no es el producto, pero se entrega igual |
+| 3 | `assets/` · `weights/` · `models/` · `demo/` | Grants por **tipo de medio** (`limboai`: código MIT, logo CC BY 4.0) |
+| 4 | Subdirectorios de producto (`Matrix-Game-4/`, `com.unity.*/`) | Grant partido por versión o por paquete |
+| 5 | La raíz | **Último.** Es el único que el equipo legal ya miró |
+
+### Clasificar cada archivo encontrado
+
+```bash
+# ¿NO COMERCIAL? -> exclusión dura, no hay mitigación
+grep -ci 'noncommercial\|non-commercial' "$f"
+
+# ¿copyleft fuerte? -> GPL/AGPL. Mirar si está en el build o sólo en bench/
+grep -m1 -i 'GNU GENERAL PUBLIC\|AFFERO' "$f"
+
+# ¿Apache-2.0 íntegro? NO por bytes (son >=4 válidos: 9723/10197/11335/11557).
+# Por LÍNEAS + el literal de cierre: (T70)
+wc -l < "$f"                                   # 201 con apéndice, ~176 sin
+grep -c 'END OF TERMS AND CONDITIONS' "$f"     # debe ser 1
+
+# ¿adulterado? -> cláusula añadida sobre un texto estándar
+grep -inE 'shall not be used|trademark of|notwithstanding the foregoing|amend' "$f"
+```
+
+### Salida para el cliente
+
+Una tabla de 3 columnas que **separa el producto del andamio**, porque esa
+separación es la que cambia el precio:
+
+| Componente | Ruta | Grant | ¿Se embarca? | ¿Bloquea? |
+|---|---|---|---|---|
+
+**Ejemplo real, Matrix-Game (medido 2026-11-22):** 28 archivos → 24 permisivos
+embarcables, 3 textos legacy de Eigen que no aplican al uso, **1 `CC BY-NC 4.0`
+que no se embarca pero sí se ejecuta** ⇒ la propuesta sale, con una línea de
+alcance explícita. Ver Receta 47.
+
+### Lo que esta receta **no** hace
+
+- **No ve la licencia de los pesos.** `huggingface.co` no resuelve en este entorno
+  (código 000) y los pesos no están en el árbol de git. En un world model eso es
+  **la mitad del entregable sin verificar** — declararlo en la propuesta.
+- **No ve el futuro ni el pasado del archivo**: eso es el canal 5
+  (`git log --follow -- LICENSE`, Receta 44).
+- **No ve dependencias no vendorizadas** (`requirements.txt`, `package.json`,
+  `go.mod`): ésas son las Recetas 14 y 17.
+
+---
+
+## 🆕 Receta 47: **Contratar un world model separando el modelo del banco de pruebas**
+
+**Qué resuelve.** El hallazgo del cycle 18: en `SkyworkAI/Matrix-Game` el **modelo**
+es MIT/Apache-2.0 y el **benchmark con el que el modelo se valida**
+(`GameWorldScore`) contiene un componente `CC BY-NC 4.0`. *Entregar el modelo* y
+*reportar la métrica publicada del modelo* son **dos decisiones de licencia
+distintas**, y hasta este pass esta KB las trataba como una sola.
+
+**El error que evita:** un PoC pago que entrega un prototipo de world model **y en
+el informe final reporta GameWorldScore** ha ejecutado un componente no comercial
+para producir un entregable comercial. Es barato de evitar antes y caro de
+descubrir en la revisión legal del cliente.
+
+### El mapa, medido
+
+| Capa | Rutas | Grant | ¿Comercial? |
+|---|---|---|---|
+| 🟢 **Modelo** | `LICENSE` (MIT, 1.118) · `Matrix-Game-1/3/4/LICENSE` (Apache-2.0) · `licenses/MG4CF-LICENSE` · `licenses/TAEHV-LICENSE` · `mediamtx-reader.LICENSE` | MIT + Apache-2.0 | ✅ **sí** |
+| 🟢 **Runtime del juego** | `Matrix-Game-4/game/third_party/{JoltPhysics,DirectXMath,stb,recastnavigation}` | MIT ×3 · zlib · dual PD/MIT | ✅ **sí**, con avisos de atribución |
+| ⛔ **Benchmark** | `Matrix-Game-1/GameWorldScore/GameWorld/third_party/amt/` | **CC BY-NC 4.0** (18.208 B) | ❌ **no** |
+| 🟡 Benchmark (resto) | `DROID-SLAM` · `RAFT` · `lietorch` (BSD-3) · `tartanair_tools` (CMU) · Eigen (MPL-2.0; textos GPL-3.0/LGPL-2.1/GPL-2.0 legacy) | permisivo + copyleft débil por archivo | 🟡 sí, con cuidado |
+| ❓ **Pesos** | Hugging Face | **sin verificar** (host no resuelve) | ❓ **declarar como riesgo abierto** |
+
+### Las tres salidas, por orden de costo
+
+1. **Extirpar `amt` y no reportar la métrica.** Se entrega el modelo; la validación
+   se hace con métricas propias (FVD/PSNR/LPIPS sobre un set del cliente). **Costo:
+   días.** Es la opción por defecto.
+2. **Reimplementar la métrica** sin el componente NC, si el cliente exige
+   comparabilidad con el paper. **Costo: semanas**, y el número **no** es citable
+   como "GameWorldScore".
+3. **Correr GameWorldScore tal cual**, sólo en investigación interna no facturada y
+   sin que el resultado entre en ningún entregable. **Frágil**: depende de una
+   frontera que nadie audita en el momento. No recomendada en engagement pago.
+
+### Cláusula de alcance para la propuesta
+
+> *El modelo base se entrega bajo MIT/Apache-2.0. La validación se realiza con
+> métricas propias acordadas con el Cliente; **no** se ejecuta ni se reporta el
+> benchmark publicado por el proveedor del modelo, que incorpora componentes de
+> terceros con licencia no comercial. **La licencia de los pesos preentrenados no
+> ha podido verificarse y se trata como riesgo abierto**: si el Cliente requiere
+> certeza, se sustituyen por pesos entrenados sobre datos del Cliente.*
+
+### Generalización — **aplicar a todo world model, no sólo a éste**
+
+La tendencia 34 dice que lo no comercial vive en la periferia del entregable. Antes
+de proponer cualquier modelo, correr la **Receta 46** sobre su repo y responder
+tres preguntas, **separadas**:
+
+1. ¿Puedo **embarcar** el modelo? → grant de las rutas de producto.
+2. ¿Puedo **ejecutar** su evaluación? → grant de `eval/`, `benchmark/`, `*Score/`.
+3. ¿Puedo **usar los pesos**? → grant del host de pesos. **Hoy esta KB no puede
+   contestar la nº 3 para ningún modelo**, y es la más cara de las tres.
+
+---
 
 ## 🆕 Receta 36: **Auditoría de CLAUSURA de licencias** — el gate que ningún gate anterior de esta KB detecta
 

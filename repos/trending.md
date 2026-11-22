@@ -11,6 +11,57 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 18
+
+**Tema:** el **canal 6** (`git ls-tree -r HEAD` sobre un clon *blobless*). Por
+tercer pass consecutivo la búsqueda devuelve **más información sobre repos que esta
+KB ya tenía** que repos nuevos — y por tercera vez ése es el dato. La diferencia:
+los cycles 16 y 17 miraron la licencia en el **tiempo**; éste la mira en el
+**espacio del repositorio**.
+
+### Lo que el canal 6 cambia de las filas ya publicadas
+
+| Repo | ★ | Lo que esta KB publicaba | Lo que mide el árbol completo |
+|---|---|---|---|
+| [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | **2.956** | **7** archivos de licencia (raíz MIT + Apache por versión) | 🔴 **28 archivos.** Entre los 21 nuevos, **CC BY-NC 4.0** (18.208 B) en `Matrix-Game-1/GameWorldScore/GameWorld/third_party/amt/` ⇒ **el benchmark no es comercializable**; el modelo sí |
+| [agones-dev/agones](https://github.com/agones-dev/agones) | 7.107 | Apache-2.0 | ✅ Apache-2.0 (11.359) + **149** grants vendorizados en `vendor/`. 2 son MPL-2.0 (hashicorp `golang-lru` 15.921, `hcl` 15.977): copyleft **por archivo**, dentro de `vendor/` ⇒ benigno, pero hay que nombrarlo en el aviso |
+| [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | 13.763 | Apache-2.0 | ✅ Apache-2.0 (11.358) + **81** grants vendorizados, **todos permisivos** (Go/BSD/MIT). Control negativo limpio |
+| [IvanMurzak/Unity-MCP](https://github.com/IvanMurzak/Unity-MCP) | 4.681 | Apache-2.0 | ✅ pero el archivo mide **10.197 B / 176 líneas, sin apéndice** ⇒ 2º testigo del Apache-2.0 podado (ver T70) |
+| [o3de/o3de](https://github.com/o3de/o3de) | 9.897 | Apache-2.0 **o** MIT | ✅ `LICENSE_APACHE2.TXT` 11.557 + `LICENSE_MIT.TXT` 1.074 + `LICENSE.txt` 1.475, que **no es un grant sino una política**: *"Contributions must be made under both licenses"* |
+| [luanti-org/luanti](https://github.com/luanti-org/luanti) | 13.886 | código LGPL-2.1+, medios aparte | ✅ `COPYING.LESSER` 26.415 + `LICENSE.txt` 8.793 (**sólo texturas y sonidos**). **No existe otro grant en la raíz** — afirmable por primera vez |
+| [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | 8.205 | zlib + 3 grants vendorizados | ✅ zlib (877 B) + 3 MIT en docs/demo. ⚠️ **9 meses sin push** (2026-02-27) |
+| 🔴 [4ian/GDevelop](https://github.com/4ian/GDevelop) | **29.166** | *"MIT en todo el código"* (4 carpetas probadas, cycle 11) | 🔴 **11 archivos de licencia.** Las 4 probadas son MIT ✅, pero `Extensions/Spine/spine-pixi-v7/` lleva el **Spine Runtimes License Agreement** (1.472 B): *"each user of the Products must obtain their own Spine Editor license"* ⇒ **no es open source**. Y `LICENSE.md` de la raíz (305 B) **no es un grant, es un puntero** |
+| 🟢 [TaloDev/hosting](https://github.com/TaloDev/hosting) | 36 | **sin grant** (sonda) | ✅ **Confirmado del modo más fuerte:** el árbol completo son **11 archivos y ninguno es una licencia**. Pasa de *"no se encontró"* a **"no existe"** |
+
+### Repos nuevos entrados por el canal 6 **como componente vendorizado**, no como fila propia
+
+Esto es una categoría que esta KB no tenía: software que **ya estás embarcando** sin
+haberlo elegido. Dentro de `Matrix-Game-4/game/third_party/`:
+
+| Componente | Bytes | Grant | Nota |
+|---|---|---|---|
+| [JoltPhysics](https://github.com/jrouwe/JoltPhysics) | 1.059 | **MIT** | motor de física; el de *Horizon Forbidden West* |
+| [recastnavigation](https://github.com/recastnavigation/recastnavigation) | 877 | **zlib** | ⚠️ **el mismo repo** que esta KB ya recomienda suelto |
+| [DirectXMath](https://github.com/microsoft/DirectXMath) | 1.141 + 1.116 | **MIT** ×2 (`LICENSE` + `SAL-LICENSE.txt`) | el 2º archivo es un grant **con sufijo**: invisible a un filtro anclado (T68) |
+| [stb](https://github.com/nothings/stb) | 2.510 | **MIT o dominio público** (dual, elegís) | |
+
+### Lo que se buscó este pass y **no** apareció (para que el silencio no se lea como cobertura)
+
+- **Grants no comerciales en el stack recomendado:** se enumeraron **41 repos** y
+  **329+ archivos de licencia**. Apareció **uno solo** (Matrix-Game/`amt`). No es
+  una muestra de que no haya más en la KB entera —son 339 slugs publicados— pero sí
+  de que los 41 más usados en las recetas están limpios.
+- **Repos de gaming AI con origen LATAM:** re-buscado en español este pass. **Cero**,
+  por cuarto pass consecutivo. Detalle y denominador en `intel/market.md` → LATAM.
+- **Un ERP/CRM vertical de gaming:** el cycle 17 cerró este gap con la capa de
+  *pipeline de producción* (AYON/Kitsu). Nada nuevo este pass.
+- **`huggingface.co` y `eur-lex.europa.eu`:** re-testeados, **siguen sin resolver**
+  (código 000). La licencia de los **pesos** de Matrix-Game, MineWorld y
+  Audio2Face-3D **sigue sin verificar** — y en un world model los pesos son la mitad
+  del entregable.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 17
 
 **Tema:** la fábrica. Igual que en el cycle 16, la búsqueda devolvió **más
@@ -277,7 +328,7 @@ listado. No era un repo faltante: era una capa.
 | [zfoo-project/zfoo](https://github.com/zfoo-project/zfoo) | **Apache-2.0** (11.357 ✅) | **Java/JVM**, RPC + game server. Única opción JVM de la categoría | 2.005 | 2026-11-19 |
 | [node-pinus/pinus](https://github.com/node-pinus/pinus) | **MIT** (1.067) | **Node.js / TypeScript** distribuido | 1.933 | 2026-09-29 |
 | [BabylonJS/Babylon.js](https://github.com/BabylonJS/Babylon.js) | **Apache-2.0** (`license.md`, 9.226 — **minúscula**) | Motor 3D **web** completo. La tabla de engines no tenía ninguno de navegador de primera línea, y `godogen` ya generaba para él | **26.419** | 2026-11-21 |
-| [4ian/GDevelop](https://github.com/4ian/GDevelop) | **NOASSERTION → MIT × 4** (ver `verticals/solutions.md`) | Engine **no-code** 2D/3D/multijugador. Badge opaco, grant permisivo | **29.166** | 2026-11-21 |
+| [4ian/GDevelop](https://github.com/4ian/GDevelop) | **NOASSERTION → MIT × 4** ⚠️ **corregido en el cycle 18: 5 carpetas MIT + `Extensions/Spine/` que NO es open source** (ver `verticals/solutions.md`) | Engine **no-code** 2D/3D/multijugador. Badge opaco, grant permisivo | **29.166** | 2026-11-21 |
 
 ⛔ **El cadáver más estrellado de la categoría:**
 [NetEase/pomelo](https://github.com/NetEase/pomelo) — **11.855 ★, MIT,
