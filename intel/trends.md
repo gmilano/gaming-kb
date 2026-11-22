@@ -6,9 +6,97 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-21 (cycle 6)** (passes previos: 2026-11-21 cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22 cycle 10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 11 (2026-11-22)
+
+### 🆕 Tendencia 25: **el regulador europeo empezó a escribir excepciones técnicas, no sólo obligaciones**
+
+🔵 Las guías finales del Art. 50 (adoptadas **5-nov-2026**, `C(2026) 7702 final`)
+**amplían** las excepciones al marcado del Art. 50(2), y dos de las ampliaciones
+están redactadas en términos de esta industria: **contenido efímero generado en
+tiempo real en videojuegos y VR**, y **pipelines de producción en circuito
+cerrado** donde sólo la salida final se marca.
+
+**Por qué es una tendencia y no un detalle:** durante dos años el movimiento
+regulatorio europeo fue de **ampliación de deberes**. Este es el primer
+instrumento del período que **devuelve alcance** reconociendo un límite técnico
+—y lo condiciona a demostrarlo—. ⇒ cambia la forma del entregable de
+cumplimiento: de *"marcar todo"* a **"clasificar, demostrar infactibilidad donde
+la haya, y dar disclosure de sesión"**. El trabajo no desaparece: **se vuelve
+argumentativo y documental**, que es trabajo de consultoría, no de pipeline.
+
+⚠️ **Riesgo simétrico:** una excepción condicionada es una excepción que alguien
+tiene que **sostener por escrito**. Un cliente que la invoque sin memo es un
+cliente peor parado que uno que marcó de más.
+
+### 🆕 Tendencia 26: **Europa integra más profundo que Norteamérica, con el régimen regulatorio más duro encima**
+
+Vivrato VAIA (20-oct-2026, n=101 líderes): **Europa 4,2/10** vs **Norteamérica
+3,5/10** de profundidad de integración en pipeline; **52%** del total ≤ 3/10.
+
+Esto **refuta el supuesto por defecto** de que la regulación europea frena la
+adopción. Los dos hechos conviven: EMEA tiene el calendario legal más exigente
+**y** la integración más profunda. La lectura más económica es que **la presión de
+cumplimiento obligó a formalizar pipelines**, y un pipeline formalizado es un
+pipeline donde la AI se puede embeber. ⚠️ Es una **inferencia**, no un hallazgo
+medido: el informe da los dos números, no la causa.
+
+**Consecuencia de pitch:** en EMEA no se vende adopción, se vende profundidad.
+En NA no se vende adopción tampoco —ya ocurrió, y es ancha y fina— se vende
+**integración**. En las dos regiones el discurso de *"empiecen con AI"* llega
+tarde.
+
+### 🆕 Tendencia 27: **la capa de infraestructura de servidor de juego está casi íntegramente en APAC y es permisiva**
+
+De los cinco frameworks de game server incorporados este pass
+([skynet](https://github.com/cloudwu/skynet) 14.199 ★ MIT,
+[nano](https://github.com/lonng/nano) 3.228 ★ MIT,
+[pitaya](https://github.com/topfreegames/pitaya) 2.847 ★ MIT,
+[zfoo](https://github.com/zfoo-project/zfoo) 2.005 ★ Apache-2.0,
+[pinus](https://github.com/node-pinus/pinus) 1.933 ★ MIT), **el centro de
+gravedad de la categoría —incluido el cadáver más estrellado,
+[pomelo](https://github.com/NetEase/pomelo) de NetEase— está en APAC**, y la
+categoría entera es permisiva.
+
+Contrasta con la capa de **world models**, donde el liderazgo de APAC (Tencent)
+vino con **exclusión territorial de EU/UK/Corea** (cycle 10). ⇒ **la
+infraestructura de APAC es abierta; los modelos de APAC no necesariamente.**
+Distinguir las dos capas evita tanto el rechazo en bloque como la confianza en
+bloque.
+
+### 🔴 Corrección a la propia KB: **"Farama = permisivo" era una inferencia, y es falsa**
+
+Esta KB lista cuatro repos de la Farama Foundation y los dos que tienen badge
+limpio son MIT (Gymnasium, PettingZoo; Minigrid devuelve `NOASSERTION`). De ahí
+se seguía —sin estar escrito— que la fundación es permisiva.
+[Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment)
+es **GPL-2.0** y [ViZDoom](https://github.com/Farama-Foundation/ViZDoom) **no
+expone grant legible** (27 sondas en 404, API `null`), los dos vivos. ⇒
+**regla nº18: la licencia es propiedad del repo, nunca de la cuenta.**
+
+Es la misma clase de error que la KB ya cometió con **la popularidad** (0ad,
+pomelo, SerpentAI: muchas estrellas, proyecto muerto) y con **el badge**
+(NOASSERTION leído como negativo). Tres veces el mismo patrón: **una señal barata
+usada como sustituto de una medición.**
+
+### 🆕 Tendencia 28: **el juego como interfaz de los agentes, no el agente dentro del juego**
+
+[Agentshire](https://github.com/Agentshire/Agentshire) (MIT, 1.317 ★) visualiza
+**agentes AI como NPCs 3D en un pueblo**: el juego no es el producto, es la
+**consola de observabilidad** de una flota de agentes. Es la inversión de la
+dirección que toda esta KB venía registrando.
+
+**Por qué mirarlo aunque no sea gaming:** para un cliente **no gaming**, la
+objeción recurrente ante un sistema multi-agente es *"no veo qué está pasando"*.
+Esta categoría convierte competencia de game dev —que es lo que Globant tiene en
+esta KB— en **una capacidad vendible fuera de la industria**. Señal temprana:
+un repo, 7 meses sin push. Se registra como emergente, no como tendencia
+confirmada.
+
+---
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 10 (2026-11-22)
 

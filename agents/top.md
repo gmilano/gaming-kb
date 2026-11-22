@@ -7,8 +7,8 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-21 (pass cycle 7)**. Passes previos: 2026-11-21
-> (cycle 6), 2026-11-21 (cycle 5), 2026-11-20, 2026-10-26, 2026-07-02.
+> Última actualización: **2026-11-22 (pass cycle 11)**. Passes previos: 2026-11-22
+> (cycle 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20, 2026-10-26, 2026-07-02.
 >
 > 🔴 **Lo que este pass cambia de raíz:** los seis passes anteriores afinaron
 > *cómo leer una licencia*. Este pass descubre que **la lista de repos sobre la
@@ -53,6 +53,80 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 11): **la licencia NO se hereda de la organización** — la Farama Foundation publica MIT, GPL-2.0 y *nada* a la vez
+
+Esta KB lista **cuatro** repos de la Farama Foundation
+([Gymnasium](https://github.com/Farama-Foundation/Gymnasium) MIT,
+[PettingZoo](https://github.com/Farama-Foundation/PettingZoo) MIT,
+[MicroRTS-Py](https://github.com/Farama-Foundation/MicroRTS-Py) MIT y
+[Minigrid](https://github.com/Farama-Foundation/Minigrid), cuyo badge es
+`NOASSERTION` y **queda sin resolver en este pass**) y de ahí se
+desprende, sin que nadie lo haya escrito nunca, una inferencia cómoda:
+*"Farama = permisivo"*. Este pass midió los dos repos de esa fundación que la KB
+**no** tenía, y la inferencia se cae:
+
+| Repo de Farama | Canal API (SPDX) | Canal raw (lectura byte a byte) | Veredicto |
+|---|---|---|---|
+| [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) | `MIT` | `LICENSE` 1.104 B | 🟢 **MIT** — usable |
+| [PettingZoo](https://github.com/Farama-Foundation/PettingZoo) | `MIT` | `LICENSE` 1.073 B | 🟢 **MIT** — usable |
+| 🆕 [Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment) | **`GPL-2.0`** | — | 🔴 **COPYLEFT FUERTE.** 2.463 ★, vivo (push 2026-11-15) |
+| 🆕 [ViZDoom](https://github.com/Farama-Foundation/ViZDoom) | **`null`** | **9 nombres × 3 refs (`HEAD`, `master`, `main`) = 27 sondas, las 27 en 404** | 🔴 **SIN GRANT RESOLUBLE.** 2.110 ★, push **hoy** |
+
+🔴 **Por qué esto importa más que dos filas nuevas.** ALE es *el* banco de pruebas
+canónico de RL sobre juegos — el de los papers de Atari — y ViZDoom es el de
+shooters en primera persona. Un equipo que arma un pipeline de QA con agentes
+llega a los dos por el camino natural (vienen recomendados en la documentación de
+Gymnasium, que es MIT), y **los dos fallan la barra permisiva de Globant por
+motivos distintos**: uno por GPL-2.0 declarado, el otro porque *no hay nada que
+leer*. Ninguno de los dos se detecta mirando la organización.
+
+> 🆕 **Regla de método nº18 — la licencia es una propiedad del repositorio, nunca
+> de la cuenta que lo aloja.** Vale para fundaciones (Farama), para empresas
+> (Tencent-Hunyuan, medido en el cycle 10) y para los monorepos partidos por
+> carpeta (GDevelop, medido abajo). **Una fila heredada de una organización es una
+> fila sin medir.**
+
+### 🔴 El caso ViZDoom: **vivo y sin licencia no es lo mismo que muerto**
+
+ViZDoom tiene commit **del día de hoy** y 2.110 ★. No es un proyecto abandonado:
+es un proyecto activo cuyo grant **no se puede resolver por ninguno de los dos
+canales que esta KB usa**. El badge del API dice `null` y el archivo no existe
+bajo ningún nombre habitual, en ninguna de las tres referencias probadas.
+
+| Sonda | Resultado |
+|---|---|
+| `gh api search/repositories -f q='repo:Farama-Foundation/ViZDoom'` | `license: null` |
+| `raw.../HEAD/{LICENSE, LICENSE.md, license.md, LICENSE.txt, license.txt, COPYING, COPYING.txt, LICENCE, LICENSE-APACHE}` | 404 × 9 |
+| idem sobre `master` y sobre `main` | 404 × 18 |
+
+⚠️ **Lo que NO se puede concluir:** que ViZDoom sea propietario. El proyecto
+envuelve el motor de *Doom* (1993), cuya cadena de licencias es conocida por ser
+compleja. **Lo que sí se concluye, y es lo que va al entregable:** *no existe un
+grant verificable mecánicamente*, así que **no se compone** hasta que alguien lea
+la cadena completa a mano. Es el mismo veredicto operativo que un rechazo, con
+una causa distinta — y la causa importa, porque es reversible.
+
+### 🆕 Agentes nuevos incorporados este pass — 6 filas, las 6 con licencia leída byte a byte
+
+| Agente / pack | Repo | Licencia (verificada) | Qué hace | ★ | Último push |
+|---|---|---|---|---|---|
+| 🆕 **Microverse** | [KsanaDock/Microverse](https://github.com/KsanaDock/Microverse) | **MIT** (`LICENSE`, 1.065 B) | Sandbox de simulación divina sobre **Godot 4** como **sistema de simulación social multi-agente**. Es el eslabón que faltaba entre `concordia` (poblaciones de NPC, pero sin engine) y los plugins de Godot (engine, pero un NPC por vez): acá la población **corre dentro del engine**. ⚠️ 7 meses sin push | **2.515** | 2026-04-10 |
+| 🆕 **threejs-game-skills** | [majidmanzarpour/threejs-game-skills](https://github.com/majidmanzarpour/threejs-game-skills) | **MIT** (`LICENSE`, 1.073 B, © 2026) | Pack de **agent skills** para construir juegos de navegador en **three.js** jugables y terminados (game feel incluido). Es el par web de `godogen`: la capa de skills de esta KB estaba cubierta para Godot/Bevy/Unreal y **vacía para el navegador puro** | **2.873** | 2026-09-28 |
+| 🆕 **Agentshire** | [Agentshire/Agentshire](https://github.com/Agentshire/Agentshire) | **MIT** (`LICENSE`, 1.085 B, © 2025-2026) | Plugin que **visualiza agentes AI como NPCs 3D en un pueblo**. Invierte la dirección habitual de esta KB: no es AI *dentro* de un juego, es un juego usado como **interfaz de observabilidad de una flota de agentes**. Para una demo de cliente, es la pieza que hace visible un sistema multi-agente | 1.317 | 2026-04-15 |
+| 🆕 **GameDesignOS** | [DY-2026/GameDesignOS](https://github.com/DY-2026/GameDesignOS) | **MIT** (`LICENSE`, 1.065 B, © 2026) | *Local-first game design OS* para agentes: convierte sesiones de diseño en **evidencia y experimentos**. Cubre la etapa **preproducción**, que en esta KB estaba representada sólo por generadores de assets | 459 | 2026-08-17 |
+| 🆕 **GameBlocks** | [xt4d/GameBlocks](https://github.com/xt4d/GameBlocks) | **MIT** (`LICENSE`, 1.069 B, © 2026) | Bloques de construcción concisos y autoexplicativos para que **un agente de código** prototipe juegos. El contrapunto minimalista de los packs de 49 agentes: cabe en una ventana de contexto | 434 | 2026-07-10 |
+| 🆕 **Legends-Of-Heroes** | [FlameskyDexive/Legends-Of-Heroes](https://github.com/FlameskyDexive/Legends-Of-Heroes) | **MIT** (`LICENSE`, 1.076 B) | Juego de bolas estilo LoL **construido sobre agentes AI**, con soporte de agent skills. Valor como **referencia end-to-end**: un título jugable y completo cuya arquitectura es agéntica, no un demo de una sola mecánica | 939 | 2026-09-22 |
+
+### ⛔ Rechazos **medidos** de este pass — se publican porque el silencio se lee como cobertura
+
+| Repo | ★ | Causa medida | Por qué estaba en el camino |
+|---|---|---|---|
+| [art-from-the-machine/Mantella](https://github.com/art-from-the-machine/Mantella) | 427 | **AGPL-3.0** (`LICENSE`, **34.523 B** — el checksum AGPL~34.500 del cycle 4 vuelve a acertar) | Mod de **Skyrim y Fallout 4** con NPC conversacionales por voz. Esta KB ya lista `SkyrimNet-GamePlugin`; Mantella es el otro grande del nicho y **es el que no se puede tocar** |
+| [GigaxGames/gigax](https://github.com/GigaxGames/gigax) | 346 | **Sin licencia de ningún tipo** (API `null` + sin archivo) **y 28 meses sin push** (2024-07-26) | *"LLM-powered NPCs running on your hardware"* — el título describe exactamente lo que un cliente pide. Doble descarte: sin grant y muerto |
+| [SerpentAI/SerpentAI](https://github.com/SerpentAI/SerpentAI) | **6.987** | **MIT, pero ARCHIVADO** desde 2022-11-07 | *Game Agent Framework*. 🔴 **La trampa de estrellas altas del pass:** casi 7.000 ★ y licencia impecable sobre un repo que GitHub marca archivado hace 4 años. **El badge de licencia no dice nada sobre si el proyecto existe** |
+
+---
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 10): **la línea de world models de Tencent no tiene licencia en EMEA — las tres, no una — y dentro de una de ellas hay una isla Apache-2.0**
 

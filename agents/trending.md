@@ -12,6 +12,41 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 11
+
+**Tema del pass: la licencia no se hereda de la organización.** De los repos de
+la Farama Foundation que esta KB listaba, los de badge limpio son **MIT**
+(Gymnasium, PettingZoo). Los dos que **no** listaba son **GPL-2.0** (ALE) y
+**sin grant legible** (ViZDoom). Misma fundación, tres resultados distintos.
+
+| Agente / pack | Repo | Licencia (byte a byte) | Qué es | ★ |
+|---|---|---|---|---|
+| **Microverse** | [KsanaDock/Microverse](https://github.com/KsanaDock/Microverse) | **MIT** (1.065) | Simulación social **multi-agente dentro de Godot 4**. El eslabón entre `concordia` (población sin engine) y los plugins de Godot (engine, un NPC por vez). ⚠️ 7 meses sin push | **2.515** |
+| **threejs-game-skills** | [majidmanzarpour/threejs-game-skills](https://github.com/majidmanzarpour/threejs-game-skills) | **MIT** (1.073) | Skills de agente para juegos **three.js** de navegador. El par web de `godogen`: la capa de skills estaba vacía para navegador puro | **2.873** |
+| **Agentshire** | [Agentshire/Agentshire](https://github.com/Agentshire/Agentshire) | **MIT** (1.085) | Visualiza **agentes como NPCs 3D en un pueblo**: el juego como interfaz de observabilidad de una flota de agentes, no AI dentro del juego | 1.317 |
+| **Legends-Of-Heroes** | [FlameskyDexive/Legends-Of-Heroes](https://github.com/FlameskyDexive/Legends-Of-Heroes) | **MIT** (1.076) | Título jugable estilo LoL con **arquitectura agéntica end-to-end** + agent skills | 939 |
+| **GameDesignOS** | [DY-2026/GameDesignOS](https://github.com/DY-2026/GameDesignOS) | **MIT** (1.065) | *Game design OS* local-first: convierte sesiones de diseño en evidencia. Cubre **preproducción**, etapa que la KB no tenía | 459 |
+| **GameBlocks** | [xt4d/GameBlocks](https://github.com/xt4d/GameBlocks) | **MIT** (1.069) | Bloques mínimos para que un agente de código prototipe juegos. Contrapunto de los packs de 49 agentes | 434 |
+
+### ⛔ Rechazos medidos este pass (se publican: el silencio se lee como cobertura)
+
+| Repo | ★ | Causa |
+|---|---|---|
+| [Farama-Foundation/Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment) | 2.463 | **GPL-2.0.** El benchmark canónico de Atari, vivo (2026-11-15), copyleft fuerte |
+| [Farama-Foundation/ViZDoom](https://github.com/Farama-Foundation/ViZDoom) | 2.110 | **Sin grant resoluble**: API `null` + **27 sondas en 404** (9 nombres × `HEAD`/`master`/`main`). Push **de hoy**: vivo ≠ usable |
+| [art-from-the-machine/Mantella](https://github.com/art-from-the-machine/Mantella) | 427 | **AGPL-3.0** (34.523 B — checksum acierta otra vez). NPC por voz en Skyrim/Fallout 4 |
+| [SerpentAI/SerpentAI](https://github.com/SerpentAI/SerpentAI) | **6.987** | **MIT pero ARCHIVADO** desde 2022-11-07. La trampa de estrellas altas del pass |
+| [GigaxGames/gigax](https://github.com/GigaxGames/gigax) | 346 | **Sin licencia** + 28 meses sin push |
+
+> **Sondas de este pass.** `gh api search/repositories` ✅ · `raw.githubusercontent.com` ✅
+> (**distingue mayúsculas** — ver regla nº19) · `gh api repos/<o>/<r>/contents/` ❌
+> *"Request path could not be canonicalized"* · `gh api users/<org>` ❌ *"sessions are
+> bound to their configured repositories"* · `curl -sI github.com` ❌ 403 sobre repos
+> reales · **WebFetch ❌ `ENOTFOUND` en todos los hosts externos** ⇒ todo lo
+> regulatorio de este pass es **secundario**, marcado 🔵.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 10
 
 > **Primer pass de un día nuevo** (el último fue el cycle 9, 2026-11-21).

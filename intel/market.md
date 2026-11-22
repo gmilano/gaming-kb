@@ -7,12 +7,127 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-21 (cycle 6)** (passes previos: 2026-11-21 cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22 cycle 10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🔴 Lo que cambió — pass cycle 11 (2026-11-22): **las Guías del Art. 50 se adoptaron formalmente el 5-nov-2026, y traen una excepción escrita para el contenido generado EN TIEMPO REAL dentro de un juego**
+
+Esta KB citaba las guías del Art. 50 como *"20-jul-2026, **no vinculantes**"* y
+dejó registrado en dos archivos que **la fuente primaria no se pudo leer**
+(`ENOTFOUND`). Esa limitación sigue vigente en esta sesión — WebFetch no resuelve
+ningún host externo —, así que **todo lo de abajo es 🔵 secundario y hay que
+contrastarlo contra el texto oficial antes de firmar**. Dicho eso, lo que las
+fuentes secundarias coinciden en decir **cambia la Receta 7**, que es la receta
+con reloj.
+
+### 🔵 1. El instrumento tiene número y fecha de adopción formal
+
+| Hito | Fecha | Documento |
+|---|---|---|
+| La Comisión **aprueba el contenido** de las guías del Art. 50 | **20-jul-2026** | `C(2026) 5054 final` |
+| 🆕 La Comisión las **adopta formalmente**, *sin cambios de fondo* | **5-nov-2026** | 🆕 `C(2026) 7702 final` |
+| 🆕 **Code of Practice on Transparency of AI-generated Content**, versión final | **10-jun-2026** | Voluntario; exige **≥ 2 técnicas legibles por máquina** |
+
+⇒ La KB tenía la fecha del **borrador aprobado**, no la del **instrumento
+adoptado**. Hay 17 días de diferencia y un número de documento que citar.
+🔵 Una fuente fecha la publicación de las guías finales el 20-jul y no menciona
+la adopción de noviembre: **las fuentes no coinciden**, y hasta leer el original
+se citan **las dos fechas**, no una.
+
+### 🟢 2. La excepción que cambia el alcance: **contenido efímero en tiempo real**
+
+Las guías finales **amplían las excepciones** al deber de marcado del Art. 50(2).
+La que importa en esta industria está escrita en términos de videojuegos:
+
+> 🔵 El contenido **efímero generado en tiempo real** — *se citan explícitamente
+> videojuegos y realidad virtual* — queda **exento del marcado** **sólo si** se
+> cumplen **las dos** condiciones: (a) el marcado **no es técnicamente factible**
+> y (b) se informa al usuario del origen AI **a nivel de experiencia o de sesión**.
+
+Y la definición de *"técnicamente factible"* que traen las guías:
+
+> 🔵 *Soluciones implementables con la tecnología y los métodos **actualmente
+> disponibles**, dentro de **la arquitectura técnica y el entorno operativo
+> específicos**.*
+
+🔴 **Por qué esto es el hallazgo del pass y no una nota al pie.** Esta KB ya
+había medido que **sólo el 3% de las declaraciones de AI en Steam corresponde a
+generación durante el gameplay**. Ese 3% es exactamente el contenido efímero en
+tiempo real. ⇒ **el caso más caro de resolver técnicamente — marcar cada línea de
+diálogo que un LLM emite en runtime — es justo el que tiene una vía de excepción
+escrita.** La conversación con el cliente deja de ser *"hay que marcar todo en 10
+días"* y pasa a ser **dos entregables distintos**:
+
+| Contenido | Obligación | Trabajo real |
+|---|---|---|
+| Assets generados **en pipeline** y embarcados en el build | **Marcado Art. 50(2)** (si es provider y el título es pre-2-ago-2026) | Receta 7: inventario + marcado |
+| Contenido generado **en runtime, efímero, no grabado** | 🆕 Posible **excepción**, si se sostiene la infactibilidad **y** se da disclosure de sesión | 🆕 **Memo de factibilidad + disclosure de sesión** — ver Receta 23 |
+
+### 🟢 3. Dos excepciones más, y la que sirve para pipelines de producción
+
+| Excepción 🔵 | Qué dice | Lectura para gaming |
+|---|---|---|
+| **Pipelines cerrados de producción** | Las salidas usadas en **flujos de producción en circuito cerrado** para cine, animación, **juegos** y publicidad **no se marcan en etapas intermedias**: sólo **la salida final** debe ir marcada y ser detectable | 🟢 **Descarga de trabajo grande.** El arte intermedio, los *concepts*, las variantes descartadas y los pasos de un pipeline de assets **no son puntos de marcado**. La KB vendía inventario sobre todo el pipeline |
+| **Productos cerrados / B2B técnico** | Sistemas embebidos en **productos físicos cerrados** cuyas salidas no se pueden exportar quedan fuera; y hay una excepción **B2B** acotada para salidas estrictamente técnicas dirigidas a un conjunto limitado y predefinido de profesionales | ⚠️ **No se aplica sola a un pipeline de estudio.** Ninguna fuente la extiende a assets de videojuego. Se menciona para que nadie la invoque de memoria |
+| ⚠️ **El límite técnico declarado** | 🔵 Las guías **no resuelven** que las soluciones robustas de marcado, **en particular para TEXTO**, siguen siendo limitadas | 🟢 **Es el fundamento técnico del memo de infactibilidad** para diálogo de NPC generado por LLM. No es una opinión del proveedor: es una limitación que el propio comentario legal sobre las guías reconoce |
+
+🔴 **Lo que NO cambia, y hay que decirlo en la misma frase:** la excepción es
+**del marcado del Art. 50(2)**. El **Art. 50(1)** —avisar al jugador de que
+interactúa con un sistema de AI— **no tiene excepción por eficiencia técnica** y
+rige **para todos desde el 2-ago-2026**. De hecho la excepción de arriba
+**exige** disclosure de sesión como condición: *el aviso no es lo que se ahorra,
+es lo que se paga a cambio*.
+
+### 🔴 4. El 94% de Vivrato ahora tiene desglose regional — y Europa está más adelante que Norteamérica
+
+Esta KB ya publicaba *"Europa reporta adopción más profunda que Norteamérica"*
+**sin la cifra**. El informe (**VAIA, publicado el 20-oct-2026**) la trae:
+
+| Métrica | Valor | Nota |
+|---|---|---|
+| Líderes que usaron AI **en desarrollo, de alguna forma** | **97 %** | Es el titular que circula |
+| Líderes que la usaron en **≥ 1 de 9 etapas de producción** | **94 %** | Es el dato que esta KB ya tenía |
+| Profundidad de integración **≤ 3/10** | **52 %** | La adopción es ancha y fina |
+| 🆕 Profundidad media — **Europa** | **4,2 / 10** | |
+| 🆕 Profundidad media — **Norteamérica** | **3,5 / 10** | |
+| Muestra | **101 líderes senior**, entrevistas estructuradas, **abr–sep 2026**, estudios de EU y NA | No es encuesta online |
+
+🟢 **97% y 94% no son dos versiones del mismo número**: el 97% es *"usó AI en
+desarrollo"* y el 94% es *"en al menos una de nueve etapas"*. Citar el 97% como
+"94%" o viceversa es citar mal — y la prensa los mezcla.
+
+🔴 **La inversión EU > NA es vendible y contraintuitiva.** El supuesto de sala es
+que Norteamérica va delante. **Europa mide 0,7 puntos más de profundidad de
+integración** — con el calendario regulatorio más duro del mundo encima. ⇒ en
+EMEA **no se vende "empezar con AI"**: se vende *profundizar lo que ya corre*, y
+**el argumento de cumplimiento es un acelerador, no un freno**.
+
+### 🔵 5. Ubisoft Motherbrain: el mandato incluye explícitamente **clientes de afuera**
+
+La KB registró Motherbrain (19-nov-2026) como señal de riesgo de marca junto a
+los despidos. Las fuentes de este pass agregan **el dato comercial**:
+
+- Alcance declarado: *"servir a creadores **globalmente, dentro del ecosistema de
+  Ubisoft y fuera de él**"*, y **formar alianzas con empresas de tecnología
+  seleccionadas**.
+- Foco técnico: **NPCs inteligentes con memoria** y **AI game masters** que
+  gestionan mundos sistémicos a gran escala. Formaliza el equipo del prototipo
+  **Teammates** (compañeros de escuadra por voz).
+- **Sin producto, sin fecha, sin detalle técnico anunciado.**
+- ⚠️ **Conflicto de cifra en los despidos: 116 vs 166.** Esta KB publica **166**.
+  Hay fuentes de la misma semana que dicen **116 en dos estudios**. ⇒ **llevar las
+  dos** o no llevar ninguna; no hay forma de dirimirlo desde esta sesión.
+
+🟢 **Lectura comercial:** un publisher AAA acaba de declarar que **va a vender
+tecnología de NPC a terceros**. Eso lo convierte, a la vez, en **competidor** de
+una propuesta de AI Studios y en **socio tecnológico posible**. Es la primera vez
+que esta KB puede nombrar a un actor de la industria en las dos casillas.
+
+---
 
 ## 🔴 Lo que cambió — pass cycle 10 (2026-11-22): **el Digital Fairness Act dejó de ser un borrador esperado: se publicó el 11-nov-2026, y esta KB lo seguía anunciando a futuro en 5 lugares**
 
@@ -545,6 +660,14 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 Cycle 11 (2026-11-22) — Norteamérica mide **menos profundidad de integración que Europa**, y Ubisoft abre su tecnología de NPC a terceros
+
+| Hallazgo | Dato | Qué hacer con él |
+|---|---|---|
+| 🔴 **NA está por DEBAJO de Europa en profundidad** | Vivrato VAIA (20-oct-2026, n=101 líderes, abr–sep 2026): **Norteamérica 3,5/10** vs **Europa 4,2/10** de profundidad de integración en pipeline. **52%** de la muestra total puntúa ≤ 3/10 | Contradice el supuesto de sala. En NA el pitch correcto es **"la adopción ya ocurrió, la integración no"**: hay herramientas en todas partes y **casi ningún pipeline** que las tenga embebidas. Eso es trabajo de integración — exactamente lo que AI Studios vende — y **no** requiere convencer a nadie de adoptar AI |
+| 🟢 **Ubisoft Motherbrain va a vender a terceros** | Mandato declarado: servir a creadores *"dentro del ecosistema de Ubisoft **y fuera de él**"* + alianzas con empresas de tecnología seleccionadas. Foco: **NPC con memoria** y **AI game masters** de mundos sistémicos. Formaliza el prototipo **Teammates**. Sin producto ni fecha | **Competidor y socio posible a la vez.** Es el primer actor de esta KB que ocupa las dos casillas. Para una cuenta AAA norteamericana, la pregunta *"¿y si Ubisoft les vende esto?"* **va a aparecer**: la respuesta es que Motherbrain no tiene producto anunciado y que la integración con el pipeline del cliente no es lo que un publisher rival va a hacer por él |
+| ⚠️ **Cifra de despidos en conflicto** | Esta KB publica **166**. Fuentes de la misma semana dicen **116 en dos estudios** | **Llevar las dos o ninguna.** No se puede dirimir desde esta sesión |
+
 
 #### 🆕 cycle 9 (2026-11-21) — el informe que todos citan es de casino, y la brecha líder/trabajador es de 54 puntos
 
@@ -823,6 +946,22 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 Cycle 11 (2026-11-22) — las Guías del Art. 50 **se adoptaron formalmente** y abren una excepción para el contenido en tiempo real; Malta propone una Carta de AI (carril casino)
+
+🔵 **Todo lo regulatorio de esta subsección es secundario**: WebFetch da
+`ENOTFOUND` en todos los hosts externos de esta sesión. Contrastar contra el
+texto oficial antes de firmar. Desarrollo completo arriba, en *"Lo que cambió —
+pass cycle 11"*.
+
+| Hallazgo | Dato | Qué cambia |
+|---|---|---|
+| 🔵 **Las guías tienen adopción formal y número** | Contenido aprobado **20-jul-2026** (`C(2026) 5054 final`); **adoptadas formalmente el 5-nov-2026** como **`C(2026) 7702 final`**, sin cambios de fondo. **Code of Practice on Transparency of AI-generated Content**, final el **10-jun-2026**, voluntario, **≥ 2 técnicas legibles por máquina**. ⚠️ Una fuente sólo reconoce el 20-jul ⇒ **citar las dos fechas** | La KB citaba el borrador. Ahora hay un instrumento adoptado que nombrar |
+| 🟢 **Excepción escrita para contenido EFÍMERO EN TIEMPO REAL** | Las guías finales **amplían** las excepciones al marcado del Art. 50(2). El contenido efímero generado en tiempo real —**se citan videojuegos y VR explícitamente**— queda exento **sólo si** (a) el marcado **no es técnicamente factible** **y** (b) hay disclosure **de experiencia o de sesión** | 🔴 **El cambio de alcance más grande del pass.** El 3% de declaraciones de Steam que es generación en gameplay — el caso técnicamente más caro — **tiene vía de excepción**. Se convierte en **memo de factibilidad + disclosure de sesión** (Receta 23), no en sprint de marcado |
+| 🟢 **Pipelines cerrados: sólo se marca la salida final** | Salidas en flujos de producción **en circuito cerrado** para cine, animación, **juegos** y publicidad **no se marcan en etapas intermedias** | Reduce el inventario de la Receta 7: *concepts*, variantes y pasos intermedios **no son puntos de marcado** |
+| 🟢 **El marcado de TEXTO sigue siendo limitado, y las guías lo admiten** | 🔵 El comentario legal sobre las guías señala que **no resuelven** la limitación de las soluciones robustas de marcado, **en particular para texto** | Es el **fundamento técnico** del memo de infactibilidad para diálogo de NPC por LLM. No es alegato de parte |
+| 🔴 **Lo que NO tiene excepción** | El **Art. 50(1)** (avisar que se interactúa con AI) **rige para todos desde el 2-ago-2026** y no admite excepción por infactibilidad técnica — **al contrario: la excepción de marcado lo EXIGE** como condición | El aviso **no es lo que se ahorra: es lo que se paga a cambio** |
+| 🎰 **Carril casino (≠ videojuego)** | **Malta (MGA)** abrió consulta en **sept-2026** sobre una **AI Gaming Charter voluntaria**: disclosure de uso de AI, chequeos de equidad y **supervisión humana** de decisiones automatizadas que afecten acceso o gasto. Documento público: `mga.org.mt/app/uploads/AI-Gaming-Charter-2026.pdf` | **No aplica a videojuegos.** Se registra porque es el primer regulador de EMEA con un instrumento de AI específico del sector, y porque un cliente de iGaming **sí** lo va a preguntar |
 
 
 #### 🆕 cycle 9 (2026-11-21) — **el sprint del Art. 50(2) es MÁS ANGOSTO de lo que esta KB venía diciendo**
@@ -1175,6 +1314,15 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 Cycle 11 (2026-11-22) — China acelera aprobaciones y NetEase embarca narrativa generativa; **cero actividad regulatoria de AI en el carril casino de APAC**
+
+| Hallazgo | Dato | Qué hacer con él |
+|---|---|---|
+| 🟢 **El embudo de aprobación chino se está abriendo, no cerrando** | 🔵 NPPA: **+19% interanual** a mayo-2026 y **~1.571 títulos aprobados hasta septiembre, +23%** sobre 2025 (Niko Partners / prensa sectorial; **sin tabla primaria de NPPA verificable desde esta sesión**, y las fuentes **no coinciden** en el agregado — otra da ~1.766 hasta octubre) | Esta KB registraba la aprobación como **freno**. El dato de 2026 dice que el freno **se está soltando**. Para una cuenta con ambición en China, el cuello de botella ya no es la licencia: es el contenido |
+| 🟢 **Narrativa generativa EMBARCADA, no en demo** | 🔵 **NetEase** anunció para *Justice Online Mobile* un **"sistema de narrativa infinita dirigido por AI"**: el jugador crea y juega historias generadas dinámicamente | Se suma a Tencent (Game for Peace, 110 M de usuarios acumulados de NPC-AI) como **segunda prueba de que APAC pone generación de cara al jugador en producción**, no en beta. Es el contraargumento a *"esto no escala"* y a *"los jugadores lo rechazan"* |
+| 🔵 **Corea: la referencia de producto tiene fechas** | **Krafton**, personaje **Ella** en *PUBG: Battlegrounds*, **beta limitada del 17-jun al 1-jul-2026**, restringida a jugadores con hardware **NVIDIA RTX** compatible | Caso con ventana cerrada y **gate de hardware**: sirve para dimensionar expectativas de cobertura de jugadores, no sólo de capacidad técnica |
+| 🎰 **Carril casino: hueco declarado** | 🔵 El benchmark de *gambling* (n=**83 empresas** y **113 reguladores**) registra actividad regulatoria sobre AI **concentrada en Norteamérica y Europa Occidental**, y **ninguna registrada en Asia-Pacífico** (ni en Medio Oriente/África). En APAC, mesas de juego inteligentes desplegándose en Macao, Manila, Singapur, Auckland y Australia; **Macao más conservador** por incertidumbre sobre privacidad en reconocimiento facial | **Un cero medido, no un silencio.** Para iGaming en APAC **no hay regulador de AI que invocar**, lo que invierte el pitch: no se vende cumplimiento, se vende **gobernanza anticipada** |
+
 
 #### 🆕 cycle 9 (2026-11-21) — dos cifras chinas que no se pueden conciliar, y un regulador que acelera
 
@@ -1500,6 +1648,35 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 Cycle 11 (2026-11-22) — LATAM: **no existe una cifra de adopción de AI en videojuegos** para la región en las fuentes de 2026. Es un hueco medido, no una omisión
+
+Este pass buscó específicamente una medición de adopción de AI entre estudios de
+videojuegos latinoamericanos —en inglés y acotando a Brasil y México— y **no la
+encontró**. Es la **tercera confirmación** del mismo cero, con un instrumento
+distinto de los dos anteriores. Lo que hay es cualitativo. Se escribe porque un vacío no declarado se
+lee como cobertura:
+
+| Lo que SÍ hay | Dato | Calidad |
+|---|---|---|
+| **Brasil, volumen de industria** | 🔵 **más de 1.000 estudios** operando en el país; los estudios *"ya exploran AI para acelerar prototipado y experimentar con flujos de localización"* (pieza ligada a **ABRAGAMES**, may-2026) | Cualitativo. **Sin porcentaje** |
+| **LATAM, informe regional** | 🔵 *State of the LATAM Games Industry 2026* (GamesBeat): el talento de ingeniería regional *"utiliza cada vez más AI para mejorar la eficiencia de producción"* | Cualitativo. **Sin porcentaje** |
+| **México** | 🔵 La única cifra localizable es de **2023** (crecimiento del desarrollo indie), y **no habla de AI** | No utilizable para 2026 |
+| **Señal de ecosistema** | 🔵 **Xbox LATAM Game Camp / ID@Xbox**, oct-2026: programa activo de desarrollo de creadores latinoamericanos | Contexto, no medición |
+
+🔴 **Lo que esto significa para una propuesta.** La KB tiene para LATAM una cifra
+**de jugadores** (48,8% de aceptación en AR/CL/CO/MX/PE, n=7.202; Brasil aparte
+con 39,3%) y **ninguna de estudios**. ⇒ **el argumento LATAM de esta KB sigue
+siendo de demanda, no de oferta**, y hay que decirlo así: *"el mercado acepta AI
+de cara al jugador mucho más que el promedio global; cuánto la usan los estudios
+locales no está medido públicamente"*. Inventar un número ahí es el error que
+esta KB pasó dos ciclos corrigiendo.
+
+| Otro hallazgo | Dato | Lectura |
+|---|---|---|
+| ⚠️ **Un repo permisivo de la categoría backend, con origen SIN confirmar** | [topfreegames/pitaya](https://github.com/topfreegames/pitaya) (MIT, 2.847 ★, push 2026-11-17, SDKs Unity/iOS/Android) suele asociarse a un estudio brasileño. **Esta sesión no pudo confirmarlo**: `gh api users/<org>` está bloqueado y la búsqueda web no lo corrobora (una fuente advierte que las dos empresas que se asocian son distintas) | 🔴 **No se publica como "repo de origen LATAM".** Queda como **candidato a verificar** en el próximo pass con un canal que lea la ficha de la organización. La casilla *repos de agentes/infra de origen LATAM* sigue **en cero medido** |
+| 🎰 **Carril casino: Brasil enfría la inversión regional** | 🔵 **Nov-2026**: la prohibición brasileña del iGaming regulado empuja jugadores a operadores sin licencia y lleva a los proveedores a compromisos **más chicos y más cortos en toda LATAM**; México, Perú y Argentina siguen en foco pero con cautela. Colombia ya aplica reglas actualizadas de juego responsable | **No aplica a videojuegos.** Importa porque un cliente de iGaming en LATAM va a estar recortando presupuesto justo ahora |
+| 🎰 **Y el contrapunto** | 🔵 Un análisis sectorial posiciona a LATAM como **líder global en adopción de AI para seguridad del jugador**, con el argumento de que los mercados abrieron hace poco y la supervisión por AI quedó **en el reglamento inicial** en vez de ser un retrofit | Mismo carril casino. Es el único eje donde LATAM aparece **estructuralmente adelante**, no más barato |
 
 
 #### 🔴 cycle 9 (2026-11-21) — **CORRECCIÓN: el 48,8% que esta KB usa para vender LATAM no incluye a Brasil**

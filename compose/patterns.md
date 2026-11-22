@@ -7,8 +7,8 @@ updated: 2026-11-22
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-11-21 (cycle 6)** (passes previos: 2026-11-21
-> cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22
+> cycle 10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Dieciocho recetas.** Las del cycle 6 son la **16** (gate de licencia para
 > packs de skills y prompts — la ruta de contaminación por `cp -r` que el gate
@@ -23,6 +23,156 @@ updated: 2026-11-22
 > concretos de este ciclo: una fecha límite regulatoria en la UE, world models
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
 > benchmark publicado de agentes que juegan.
+
+## 🆕 Receta 27: **Memo de factibilidad del Art. 50(2) para contenido generado en runtime** — la salida que la Receta 7 no tenía
+
+**Problema que resuelve:** la Receta 7 manda a marcar. La Receta 22 tria provider
+vs deployer. Ninguna de las dos resuelve el caso **más caro y más común en un
+juego con LLM**: ¿cómo se marca de forma legible por máquina **cada línea de
+diálogo que un NPC genera en tiempo real y que nadie graba**?
+
+🔵 **La base (secundaria — ver `intel/market.md` cycle 11):** las guías finales
+del Art. 50 (adoptadas **5-nov-2026**, `C(2026) 7702 final`) **amplían las
+excepciones** al marcado del 50(2). El contenido **efímero generado en tiempo
+real** —**videojuegos y VR citados explícitamente**— queda exento **sólo si se
+cumplen las dos condiciones**:
+
+| Condición | Quién la demuestra | Forma del entregable |
+|---|---|---|
+| (a) El marcado **no es técnicamente factible** | **El cliente**, por escrito | **Este memo** |
+| (b) El usuario es informado del origen AI **a nivel de experiencia o de sesión** | El cliente, en producto | **Cambio de UI/UX**, no de pipeline |
+
+⚠️ **Es una excepción condicionada: si falla (a) o falla (b), no hay excepción.**
+Y (b) **no es gratis** — el aviso al jugador no es lo que se ahorra, es lo que se
+paga a cambio del marcado.
+
+### Implementación
+
+**Paso 1 — Separar el catálogo en dos pilas** (una consulta al equipo técnico):
+
+| Pila | Definición operativa | Ruta |
+|---|---|---|
+| **Pipeline** | El contenido AI **se genera antes del build y se embarca** (arte, voces, textos, variantes) | **Receta 7** (marcado), con el recorte del paso 2 |
+| **Runtime efímero** | Se genera **durante la sesión**, **no se persiste** y no se redistribuye | **Esta receta** |
+
+🔴 **El caso borde que decide el proyecto:** si el juego **guarda** lo generado
+(log de chat, screenshot compartible, clip, UGC exportable), **deja de ser
+efímero** y vuelve a la pila de pipeline. **La pregunta es "¿sale del proceso?",
+no "¿se generó en vivo?".**
+
+**Paso 2 — Recortar la pila de pipeline con la excepción de circuito cerrado.**
+🔵 Las salidas de **flujos de producción en circuito cerrado** (cine, animación,
+**juegos**, publicidad) **no se marcan en etapas intermedias**: sólo **la salida
+final** debe ir marcada y ser detectable. ⇒ los *concepts*, las variantes
+descartadas y los pasos intermedios **salen del inventario**. En un pipeline de
+assets real eso es la mayor parte de los artefactos.
+
+**Paso 3 — Redactar el memo de infactibilidad.** Estructura mínima, una página
+por sistema:
+
+```
+1. Sistema y salida      NPC conversacional X; texto generado por LLM, por turno
+2. Volumen y vida útil   ~N turnos/sesión; no persistido; no exportable
+3. Técnicas evaluadas    watermark de texto | metadata C2PA | marca en render
+4. Por qué no son factibles
+   "dentro de la arquitectura técnica y el entorno operativo específicos"
+   (definición de las guías)
+5. Evidencia externa     las guías NO resuelven la limitación de las
+                         soluciones robustas de marcado, EN PARTICULAR DE TEXTO
+6. Medida compensatoria  disclosure de sesión: dónde, con qué texto, desde
+                         qué build
+7. Fecha, responsable, y revisión al cambiar el motor de generación
+```
+
+🟢 **El punto 5 es el que hace que el memo no sea alegato de parte:** la
+limitación del marcado de texto está reconocida en el comentario legal sobre las
+propias guías, no la alega el proveedor.
+
+⚠️ **Lo que NO puede decir el memo:** *"es caro"*, *"no hay tiempo"* o *"nadie lo
+hace"*. La prueba es de **factibilidad técnica dentro de la arquitectura
+específica**, no de conveniencia. Un memo con argumentos de costo **debilita** el
+caso en vez de sostenerlo.
+
+**Paso 4 — Implementar el disclosure de sesión (condición (b)).** Es trabajo de
+producto, no de pipeline, y **es la parte que no se puede saltear**:
+
+| Dónde | Qué |
+|---|---|
+| Primera sesión / pantalla de inicio | Aviso de que el título usa AI generativa en contenido en vivo |
+| Entrada al modo/zona con generación | Aviso de experiencia, persistente y no modal |
+| Ajustes | Dónde se explica qué sistema genera qué |
+
+🔗 **Encaja con lo que la KB ya tiene:** la clasificación por edad de la
+**Receta 18** decide si además hay deberes reforzados; la **Receta 22** decide si
+el cliente es provider (único que mira el reloj del 2-dic) o deployer; la
+**Receta 13** cubre la obligación de runtime del Art. 50(1), que **esta receta no
+reemplaza**.
+
+**Tiempo estimado:** **2–3 días** por título ya inventariado (1 día de
+clasificación de pilas, 1–2 de memo y texto de disclosure). Comparado con las
+**3–5 semanas** de un sprint de marcado completo, **y con la ventaja de que
+termina en una decisión defendible en vez de en un marcado parcial**.
+
+🔵 **Advertencia que va en el entregable, no en la nota al pie:** toda la base
+legal de esta receta es **secundaria**. WebFetch no resuelve
+`digital-strategy.ec.europa.eu` desde esta sesión. **Antes de firmar, leer
+`C(2026) 7702 final` y el Code of Practice (final 10-jun-2026) directamente.**
+
+---
+
+## 🆕 Receta 28: **Elegir servidor de juego sin heredar un cadáver** — framework vs backend terminado
+
+**Problema que resuelve:** el cliente pide *"backend multijugador con AI"*, el
+equipo busca por estrellas, y los dos primeros resultados de la categoría
+(`NetEase/pomelo`, 11.855 ★ y `SerpentAI`, 6.987 ★) **están archivados**.
+La KB tenía la capa de *backends terminados* y **no** la de *frameworks*.
+
+**Paso 1 — Decidir la clase antes del repo** (es la pregunta que ordena todo):
+
+| Si el cliente... | Clase | Opción | Licencia verificada |
+|---|---|---|---|
+| Quiere features ya hechas (auth, leaderboards, chat, storage) + capa AI encima | **Backend terminado** | [heroiclabs/nakama](https://github.com/heroiclabs/nakama) · [TaloDev/backend](https://github.com/TaloDev/backend) | Apache-2.0 (11.358) · MIT (1.074) |
+| Tiene protocolo propio y necesita control de sharding | **Framework** | [cloudwu/skynet](https://github.com/cloudwu/skynet) (C+Lua) · [topfreegames/pitaya](https://github.com/topfreegames/pitaya) (Go, SDKs Unity/iOS/Android) | MIT (1.085) · MIT (1.067) |
+| Es una casa **JVM** | **Framework** | [zfoo-project/zfoo](https://github.com/zfoo-project/zfoo) | Apache-2.0 (11.357) |
+| Es web / Node / TypeScript | **Framework o backend** | [colyseus/colyseus](https://github.com/colyseus/colyseus) · [node-pinus/pinus](https://github.com/node-pinus/pinus) | MIT (1.075) · MIT (1.067) |
+| Necesita escalar **instancias de partida** en Kubernetes | **Ortogonal — se suma** | [agones-dev/agones](https://github.com/agones-dev/agones) | Apache-2.0 |
+
+**Paso 2 — Filtro de vigencia, antes que el de licencia.** Para cada candidato,
+`gh api search/repositories -f q='repo:<slug>'` y mirar **`archived` y
+`pushed_at`**, en ese orden. Un MIT impecable sobre un repo archivado es
+**peor** que un Apache-2.0 vivo, porque el badge invita a confiar.
+
+```bash
+for s in cloudwu/skynet topfreegames/pitaya NetEase/pomelo; do
+  gh api -X GET search/repositories -f q="repo:$s" \
+    --jq '.items[]|"\(.full_name) arch=\(.archived) push=\(.pushed_at[0:10]) \(.license.spdx_id)"'
+done
+```
+
+⛔ **Descartes que esta receta hace explícitos:**
+[NetEase/pomelo](https://github.com/NetEase/pomelo) (**archivado 2023-08-10** —
+su continuación viva es `pinus`) y
+[clockworklabs/SpacetimeDB](https://github.com/clockworklabs/SpacetimeDB)
+(**BSL 1.1**, tope de una instancia en producción — cycle 9).
+
+**Paso 3 — Declarar el linaje antes de comparar.** 🔴
+**pomelo (archivado) → nano → pitaya.** El `LICENSE` de pitaya dice
+*"© 2018 TFG Co **and nano Authors**"*. **Poner nano y pitaya como dos
+alternativas independientes en un cuadro comparativo es un error técnico**: son
+tronco y rama. Y nano lleva **9 meses sin push** mientras pitaya commiteó hace
+días.
+
+**Paso 4 — Dónde entra la AI.** En las dos clases, la capa de agentes va en el
+**borde de lógica de servidor**, no dentro del transporte: handlers/remotes en
+pitaya o nano, servicios Lua en skynet, módulos Go/Lua/TS en Nakama. Ahí se
+enchufan matchmaking con modelo propio ([open-match](https://github.com/googleforgames/open-match),
+Apache-2.0), telemetría de comportamiento ([PostHog](https://github.com/PostHog/posthog)
+— ⚠️ MIT Expat **con carve-out `ee/`**) y el NPC server-side de la **Receta 1**.
+
+**Tiempo estimado:** **medio día** la selección documentada; el filtro de vigencia
+del paso 2 son **minutos** y es el que evita el error caro.
+
+---
 
 ## Patrón base
 
@@ -1611,7 +1761,7 @@ decirlo forma parte del entregable.**
 | 4 · Mundo procedural | Godot + WFC + LLM + Concordia | 4-8 semanas | Contenido infinito, replayability |
 | 5 · Game Support Agent | LlamaIndex (MIT) + FastAPI + Godot UI | 1-2 semanas | -70% tickets de soporte |
 | 6 · AI dev tooling | 🔴 **corregido:** godot-ai (3.627★) / **CoplayDev/unity-mcp (MIT, 16.087★)** + Claude Code | 1 día de setup | 2-3x velocidad de desarrollo |
-| 7 · **Marcado Art. 50(2) EU AI Act** | c2pa-python (**MIT *o* Apache-2.0** — elegir Apache-2.0 por la patente) + inventario de procedencia | 🔴 **reencuadrada: inventario en días, marcado parcial, plan fechado** | 🔴 **Deadline externo a 12 DÍAS: 2-dic-2026** |
+| 7 · **Marcado Art. 50(2) EU AI Act** | c2pa-python (**MIT *o* Apache-2.0** — elegir Apache-2.0 por la patente) + inventario de procedencia | 🔴 **reencuadrada: inventario en días, marcado parcial, plan fechado** | 🔴 **Deadline externo a 10 DÍAS: 2-dic-2026.** 🆕 **Y el inventario se recorta dos veces antes de empezar: la R27 saca el contenido efímero de runtime y las etapas intermedias de pipeline cerrado** |
 | 🆕 8 · World model sobre engine | Godot/Unity + Matrix-Game 4.0 (Apache-2.0 en v4) | 4-6 semanas | Prototipo visual sin pipeline de arte |
 | 9 · **QA con agentes, medido** | GamingAgent/LMGame Bench (MIT, ⚠️ congelado hace 1 año) + MCP | 1-4 semanas | QA con número defendible, no anécdota |
 | 🆕 10 · **Auditoría de licencias** | 2 canales + checksum de bytes (sin dependencias) | **2-4 días** | 🟢 **4/4 de acierto sobre las tablas de esta KB.** Entregable propio y auditable |
@@ -1627,15 +1777,17 @@ decirlo forma parte del entregable.**
 | 🆕 20 · **Auditoría de licencias CORREGIDA** | Canal 3 → canal 2 **por rama** + dedupe por `sha256` + 3 discriminadores (íncipit / apéndice / texto post-`END OF TERMS`) | **medio día** por stack | 🔴 **Corrige 3 defectos medidos del checksum**: Apache tiene **dos** valores válidos (falso negativo en `bevy` y `libgdx`), un conteo **por encima** del canónico son cláusulas añadidas (NVIDIA 15057 B), y **9977 B ≠ Apache** (`Defold License`, field-of-use). 8º eje: **partición por rama** (`ml-agents` 572 B vs 11.324 B) |
 | 🆕 25 · **Sustitución de world models bloqueados por TERRITORIO** | Matriz de 5 grants medidos + manifiesto YAML con rutas y `longest-prefix-wins` + sustitutos Apache/MIT + [stable-worldmodel](https://github.com/galilai-group/stable-worldmodel) (MIT) para decidir con medición | **1-2 días** por stack | 🔴 **Las TRES releases abiertas de world models de Tencent (≈5.300★) no otorgan licencia en EU, UK ni Corea.** Extiende la R15 con el caso que ésta no cubría: dentro de `HY-WorldPlay` hay un subárbol **Apache-2.0** (`worldcompass/`) y, un nivel más abajo, **reaparece** la licencia Tencent |
 | 🆕 26 · **Auditoría de ruta de datos COPPA (NPC infantil)** | Clasificación de audiencia (reusa la R18) + inventario de rutas de salida + 1 de 3 salidas: on-device ([LLMUnity](https://github.com/undreamai/LLMUnity)) / opt-out contractual / intents cerrados + verificación en Play Mode con [unity-cli-loop](https://github.com/hatayama/unity-cli-loop) (MIT) | **1-2 semanas** | 🔴 **Obligación con fecha YA VENCIDA: 22-abr-2026** (COPPA enmendada, 90 FR 16970). Exige **VPC separado y desagrupado** antes de divulgar datos de un menor a terceros **para entrenar IA** ⇒ el patrón "NPC contra LLM hosteado" **no es implementable tal cual** en un juego infantil de EE.UU. Comprador: legal+privacy, con presupuesto propio |
+| 🆕 27 · **Memo de factibilidad Art. 50(2) para runtime** | Partición pipeline/runtime-efímero + memo de infactibilidad (6 puntos) + disclosure de sesión en producto | **2-3 días** por título ya inventariado | 🟢 **El recorte de alcance más grande del pass.** 🔵 Las guías adoptadas el **5-nov-2026** (`C(2026) 7702 final`) eximen del marcado al contenido **efímero generado en tiempo real** (videojuegos y VR citados) **si** se demuestra infactibilidad técnica **y** se da disclosure de sesión. Convierte un sprint de 3-5 semanas en una **decisión documentada**. ⚠️ Base **secundaria**: leer el original antes de firmar |
+| 🆕 28 · **Elegir servidor de juego sin heredar un cadáver** | Decisión framework vs backend terminado + filtro `archived`/`pushed_at` **antes** que el de licencia: [skynet](https://github.com/cloudwu/skynet) · [pitaya](https://github.com/topfreegames/pitaya) · [zfoo](https://github.com/zfoo-project/zfoo) · [pinus](https://github.com/node-pinus/pinus) vs [nakama](https://github.com/heroiclabs/nakama) · [Talo](https://github.com/TaloDev/backend) | **medio día** la selección documentada | 🟢 Capa nueva en la KB (5 frameworks, 24.000 ★, todos permisivos). ⛔ Evita el error caro: los dos primeros resultados por estrellas de la categoría (`NetEase/pomelo` 11.855 ★, `SerpentAI` 6.987 ★) **están archivados**. 🔴 Declarar el linaje **pomelo→nano→pitaya** antes de comparar |
 
 ### Cuál proponer según la región del engagement
 
 | Región | Receta de entrada | Por qué |
 |--------|-------------------|---------|
-| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 🆕 FASE 0 de la R7 (partir el catálogo por fecha de puesta en el mercado), luego 18 (clasificar audiencia), luego 7 reencuadrada, luego 20, 17 y 15** · 🆕 **quedan 10 días** | Fecha legal dura **a 10 días** (2-dic-2026) y un segundo reloj en 2-dic-2027. 🆕 **Y el alcance es más chico de lo que vendíamos: el 2-dic cubre SÓLO el Art. 50(2) y SÓLO el catálogo puesto en el mercado antes del 2-ago-2026** (base legal citada: **Art. 111(4)**). Un título lanzado después **nunca tuvo gracia** y el Art. 50(1) **vence para todos desde agosto** ⇒ la Fase 0 decide si es un sprint o una remediación. 🆕 **C2PA no es obligatorio: el Acta no nombra tecnología de marcado.** 🆕 Sanción **15 M€ / 3%**. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
-| **North America** | 🆕 **13** primero si hay NPC conversacional, luego **6** y **9**, luego 2, **17** y **10** · 🆕 **16 obligatoria** si el entregable incluye packs de skills | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 🆕 **55%** de los devs ve la gen AI como daño (GDC nov-2026; era 52%) y ~85% de los jugadores la rechaza. 🆕 **Adopción estadounidense estancada: 36%→38%, dentro del margen de error** ⇒ acá se vende *primer paso*, no escala. 🆕 **Y ya hay obligación de runtime: Receta 13.** **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". 🆕 **Añadir 19** (QA con agente OSS): cae del lado **exento** de Steam. 🆕 **Y el dato de rechazo del jugador está en conflicto y hay que llevar las dos cifras:** ~85% de rechazo en abstracto (Quantic Foundry) **pero 43% de ~3.800 usuarios de Steam no tiene problema en comprar un juego con disclosure** (GameDiscoverCo) ⇒ **la fricción de compra medida es mucho menor que el rechazo declarado**, y ésa es la objeción nº1 que frena la R7. 🆕 Censo de **53.597 releases**: 10,9% (2024) → 19,9% (2025) → 30,8% (2026 a julio); **47% de los títulos con <10 reviews declaran AI vs 14% de los de ≥1.000** ⇒ para un AAA, declarar lo pone en el 14%: conversación de **riesgo de marca**. |
-| **APAC** | **8** y **11**, luego 7 adaptada, **17**, **10** y 🆕 **15** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; 🔴 **HY-World 2.0 sí publica licencia — `License.txt` — y excluye EU, UK y Corea**). 🆕 **Adopción japonesa 85,8% con 63% de uso diario (CESA 2026, 1.349 respuestas)** ⇒ acá no se vende adopción: se vende **gobernanza, escala y evaluación de calidad de salidas** (la preocupación nº1 declarada es precisión/calidad, 51,9%). 🆕 **Corea entra con cifra propia: 77,5% de 120 empresas** (KOCCA Q2-2026) y *"AI skills"* como **prioridad nº1 de contratación**; **JOGA: 100%** de las empresas japonesas de juego online. 🆕 **Y la práctica declarada del cliente YA coincide con nuestro entregable:** los estudios japoneses **restringen qué herramientas usa el personal** y **prohíben que salidas crudas lleguen al producto** ⇒ **15 y 16 no hay que justificarlas, hay que implementarlas**, y **19** es AI que no toca contenido de jugador. |
-| **LATAM** | **1**, **3**, **5** y **12** (y **13** sólo si se publica en EE.UU.; **16** si el entregable lleva packs de skills) | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad (PGB Latam 2026), y Ubisoft acaba de ponerle titular. 🆕 **El único compliance con fecha en LATAM es publicitario, no de producto: guía CONAR de Brasil en vigor desde el 1-jun-2026** (el PL 2338/2023 sigue trabado en la Cámara ⇒ **no hay ley general de AI en vigor**). 🆕 **El constraint está nombrado por la industria y no es tecnológico: es FINANCIAMIENTO** ⇒ **el entregable tiene que pagarse solo dentro del trimestre**; un programa a 12 meses no tiene de dónde financiarse, una R1/R3 acotada sí. 🆕 **Estructura: Brasil ~13.225 devs / ~1.042 estudios activos** (el talento), **México 72,6 M de jugadores = 61% de la población 6+** (el jugador) — **son dos conversaciones distintas**. ⚫ **Cero medido con dos instrumentos: no existe encuesta de adopción de gen AI por estudios LATAM** ⇒ la cifra vendible de la región sigue siendo de **jugadores**, no de estudios. |
+| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 🆕 FASE 0 de la R7 (partir el catálogo por fecha de puesta en el mercado), luego 18 (clasificar audiencia), luego 7 reencuadrada, luego 20, 17 y 15** · 🆕 **quedan 10 días** | Fecha legal dura **a 10 días** (2-dic-2026) y un segundo reloj en 2-dic-2027. 🆕 **Y el alcance es más chico de lo que vendíamos: el 2-dic cubre SÓLO el Art. 50(2) y SÓLO el catálogo puesto en el mercado antes del 2-ago-2026** (base legal citada: **Art. 111(4)**). Un título lanzado después **nunca tuvo gracia** y el Art. 50(1) **vence para todos desde agosto** ⇒ la Fase 0 decide si es un sprint o una remediación. 🆕 **C2PA no es obligatorio: el Acta no nombra tecnología de marcado.** 🆕 Sanción **15 M€ / 3%**. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** 🆕 **Y el sprint se recorta ANTES de empezar, con la R27: las guías adoptadas el 5-nov-2026 (`C(2026) 7702 final`) eximen del marcado al contenido efímero de runtime —videojuegos citados explícitamente— y sacan las etapas intermedias de un pipeline cerrado. El trabajo pasa de marcar a DEMOSTRAR, y la condición es disclosure de sesión.** 🆕 **Dato de venta: Europa integra MÁS PROFUNDO que Norteamérica (4,2 vs 3,5 /10, Vivrato VAIA 20-oct-2026) ⇒ en EMEA no se vende adoptar, se vende profundizar.** |
+| **North America** | 🆕 **13** primero si hay NPC conversacional, luego **6** y **9**, luego 2, **17** y **10** · 🆕 **16 obligatoria** si el entregable incluye packs de skills | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 🆕 **55%** de los devs ve la gen AI como daño (GDC nov-2026; era 52%) y ~85% de los jugadores la rechaza. 🆕 **Adopción estadounidense estancada: 36%→38%, dentro del margen de error** ⇒ acá se vende *primer paso*, no escala. 🆕 **Y ya hay obligación de runtime: Receta 13.** **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". 🆕 **Añadir 19** (QA con agente OSS): cae del lado **exento** de Steam. 🆕 **Y el dato de rechazo del jugador está en conflicto y hay que llevar las dos cifras:** ~85% de rechazo en abstracto (Quantic Foundry) **pero 43% de ~3.800 usuarios de Steam no tiene problema en comprar un juego con disclosure** (GameDiscoverCo) ⇒ **la fricción de compra medida es mucho menor que el rechazo declarado**, y ésa es la objeción nº1 que frena la R7. 🆕 Censo de **53.597 releases**: 10,9% (2024) → 19,9% (2025) → 30,8% (2026 a julio); **47% de los títulos con <10 reviews declaran AI vs 14% de los de ≥1.000** ⇒ para un AAA, declarar lo pone en el 14%: conversación de **riesgo de marca**. 🆕 **NA mide MENOS profundidad de integración que Europa: 3,5 vs 4,2 /10** (Vivrato VAIA, 20-oct-2026, n=101 líderes) ⇒ el pitch no es adopción —ya ocurrió, ancha y fina— es **integración de pipeline**. 🆕 **Y hay un competidor-socio nuevo con nombre: Ubisoft Motherbrain declara que va a servir a creadores *fuera* de su ecosistema** (NPC con memoria, AI game masters). Sin producto ni fecha anunciados. ⚠️ Despidos: esta KB publica 166, otras fuentes de la misma semana dicen 116 ⇒ **llevar las dos o ninguna**. |
+| **APAC** | **8** y **11**, luego 7 adaptada, **17**, **10** y 🆕 **15** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; 🔴 **HY-World 2.0 sí publica licencia — `License.txt` — y excluye EU, UK y Corea**). 🆕 **Adopción japonesa 85,8% con 63% de uso diario (CESA 2026, 1.349 respuestas)** ⇒ acá no se vende adopción: se vende **gobernanza, escala y evaluación de calidad de salidas** (la preocupación nº1 declarada es precisión/calidad, 51,9%). 🆕 **Corea entra con cifra propia: 77,5% de 120 empresas** (KOCCA Q2-2026) y *"AI skills"* como **prioridad nº1 de contratación**; **JOGA: 100%** de las empresas japonesas de juego online. 🆕 **Y la práctica declarada del cliente YA coincide con nuestro entregable:** los estudios japoneses **restringen qué herramientas usa el personal** y **prohíben que salidas crudas lleguen al producto** ⇒ **15 y 16 no hay que justificarlas, hay que implementarlas**, y **19** es AI que no toca contenido de jugador. 🆕 **El embudo chino se está ABRIENDO, no cerrando: ~1.571 aprobaciones NPPA hasta sept-2026, +23% interanual** (🔵 fuentes secundarias que **no coinciden** en el agregado) ⇒ el cuello de botella dejó de ser la licencia. 🆕 **Segunda prueba de generación embarcada de cara al jugador: NetEase anuncia un "sistema de narrativa infinita" en *Justice Online Mobile*** (se suma a Tencent). 🆕 **Y la infraestructura de servidor de la R28 es mayormente de APAC y ENTERAMENTE permisiva** (skynet, zfoo, pinus) — a diferencia de los world models de la región, que traen exclusión territorial: **son dos capas distintas, no se juzgan juntas**. |
+| **LATAM** | **1**, **3**, **5** y **12** (y **13** sólo si se publica en EE.UU.; **16** si el entregable lleva packs de skills) | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad (PGB Latam 2026), y Ubisoft acaba de ponerle titular. 🆕 **El único compliance con fecha en LATAM es publicitario, no de producto: guía CONAR de Brasil en vigor desde el 1-jun-2026** (el PL 2338/2023 sigue trabado en la Cámara ⇒ **no hay ley general de AI en vigor**). 🆕 **El constraint está nombrado por la industria y no es tecnológico: es FINANCIAMIENTO** ⇒ **el entregable tiene que pagarse solo dentro del trimestre**; un programa a 12 meses no tiene de dónde financiarse, una R1/R3 acotada sí. 🆕 **Estructura: Brasil ~13.225 devs / ~1.042 estudios activos** (el talento), **México 72,6 M de jugadores = 61% de la población 6+** (el jugador) — **son dos conversaciones distintas**. ⚫ **Cero medido con TRES instrumentos: no existe encuesta de adopción de gen AI por estudios LATAM** (🆕 tercera confirmación en el cycle 11, buscando en inglés y acotando a Brasil y México) ⇒ la cifra vendible de la región sigue siendo de **jugadores**, no de estudios. 🆕 **Lo cualitativo que sí hay, y sirve de contexto: >1.000 estudios en Brasil explorando AI para prototipado y localización (ABRAGAMES), y el informe GamesBeat LATAM 2026 — ninguno con porcentaje.** ⚠️ **Y un candidato a verificar, no a publicar: [pitaya](https://github.com/topfreegames/pitaya) (MIT, 2.847 ★) suele asociarse a un estudio brasileño y esta sesión NO pudo confirmarlo** (`gh api users/<org>` bloqueado) ⇒ la casilla *repos de infra de origen LATAM* sigue en **cero medido**. |
 
 ---
 *Pass **2026-11-21 (cycle 6)**: recetas nuevas **16** (gate de licencia para

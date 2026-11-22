@@ -7,7 +7,7 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-21 (cycle 7)** (passes previos: 2026-11-21 cycle 6, 2026-11-21 cycle 5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22 cycle 10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Doble canal obligatorio en esta página.** El SPDX del API
 > (`gh api search/repositories -f q='repo:<slug>'`) y la lectura del archivo en
@@ -32,6 +32,89 @@ updated: 2026-11-22
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El hallazgo del cycle 11 (2026-11-22): **faltaba una CAPA entera, no un repo** — cinco frameworks de game server, 24.000 ★ sumadas, ninguno listado en 11 passes
+
+El cycle 9 encontró un backend de 25.570 ★ que esta página nunca había mirado
+(SpacetimeDB) y lo descartó por licencia. Este pass repitió el barrido **por
+categoría en vez de por nombre** (`game server framework stars:>1500`) y el
+resultado no fue un repo suelto: fue **una familia de cinco**, todos permisivos,
+cuatro de ellos vivos, **ninguno** en esta KB.
+
+La sección de backend de esta página listaba Nakama, Open-Match, Colyseus, Talo,
+Agones y Supabase — es decir, **el stack que se googlea en inglés**. La familia
+que faltaba es la de los *frameworks de servidor de juego* propiamente dichos,
+y su centro de gravedad está en **APAC**.
+
+| Repo | Licencia (dos canales) | Lenguaje / forma | ★ | Último push |
+|---|---|---|---|---|
+| 🆕 [cloudwu/skynet](https://github.com/cloudwu/skynet) | **MIT** (`LICENSE`, 1.085 B) · API `MIT` | Framework de actores en **C + Lua**. El más estrellado de la categoría por un margen grande | **14.199** | 2026-11-15 |
+| 🆕 [lonng/nano](https://github.com/lonng/nano) | **MIT** (`LICENSE`, 1.073 B) · API `MIT` | **Go**, ligero, un solo binario. ⚠️ 9 meses sin push | 3.228 | 2026-02-26 |
+| 🆕 [topfreegames/pitaya](https://github.com/topfreegames/pitaya) | **MIT** (`LICENSE`, 1.067 B) · API `MIT` | **Go** con *clustering*, y SDKs de cliente para **Unity, iOS y Android** vía el C SDK (`libpitaya`). 547 forks | 2.847 | 2026-11-17 |
+| 🆕 [zfoo-project/zfoo](https://github.com/zfoo-project/zfoo) | **Apache-2.0** (`LICENSE`, **11.357 B** — checksum Apache~11.350 ✅) · API `Apache-2.0` | **Java**, RPC + servidor de juego. Única opción JVM de la categoría | 2.005 | 2026-11-19 |
+| 🆕 [node-pinus/pinus](https://github.com/node-pinus/pinus) | **MIT** (`LICENSE`, 1.067 B) · API `MIT` | **Node.js / TypeScript**, distribuido | 1.933 | 2026-09-29 |
+
+⛔ **Y el que NO se usa, que es la mitad del hallazgo:**
+[NetEase/pomelo](https://github.com/NetEase/pomelo) — **11.855 ★, MIT,
+y ARCHIVADO** desde 2023-08-10. Es el framework original de Node.js para juegos
+de NetEase, sigue siendo el primer resultado por estrellas, y está muerto desde
+hace más de tres años. **`node-pinus/pinus` es su continuación viva**, con una
+sexta parte de las estrellas. Quien ordene por popularidad elige el cadáver.
+
+🔵 **Un linaje que conviene saber antes de proponer dos de ellos como alternativas
+independientes:** el `LICENSE` de **pitaya** dice literalmente
+*"Copyright (c) 2018 TFG Co **and nano Authors**"*, y su README se declara
+*"inspired by starx and pomelo and built on top of **nano's networking library**"*.
+⇒ **pitaya y nano no son dos opciones separadas: son una rama y su tronco.**
+Ponerlos en la misma tabla comparativa de un entregable sin decirlo es un error
+de criterio técnico, no de licencia. (Nota: *pomelo → nano → pitaya* es la cadena,
+y pomelo está archivado.)
+
+⚠️ **Origen geográfico NO confirmado en este pass.** `topfreegames` es una
+organización de GitHub cuya ficha **no se puede leer desde esta sesión**
+(`gh api users/<org>` responde *"sessions are bound to their configured
+repositories"*). Una búsqueda web no pudo confirmar la atribución a un estudio
+brasileño —una fuente incluso advierte que las dos empresas que suelen asociarse
+son distintas—. ⇒ **pitaya se lista por su licencia y su actividad, no como
+"repo de origen LATAM"**, y esa casilla queda explícitamente vacía hasta que haya
+evidencia. Ver `intel/market.md` → LATAM.
+
+### 🆕 El motor web que faltaba en la tabla de engines — y la lección de la minúscula, por segunda vez
+
+| Repo | Licencia (verificada) | Qué aporta | ★ | Último push |
+|---|---|---|---|---|
+| 🆕 [BabylonJS/Babylon.js](https://github.com/BabylonJS/Babylon.js) | **Apache-2.0** — `license.md` (**9.226 B**), **en minúscula** · API `Apache-2.0` | Motor de render y juego **web** completo, mantenido por Microsoft. La tabla de engines de esta página tenía Godot, o3de, MonoGame, Stride, LÖVE, Defold, Cocos, Panda3D, libGDX, Phaser, Flame, raylib y Bevy — y **ningún engine 3D de navegador de primera línea**. `godogen`, el pack de skills mejor puntuado de esta KB, **ya genera para Babylon.js**: la skill apuntaba a un engine que la KB no tenía | **26.419** | 2026-11-21 |
+
+🔴 **Segunda instancia medida de la misma trampa.** El cycle 7 descubrió que
+LÖVE guarda su grant en `license.txt` **en minúscula** y que sondear sólo
+`LICENSE.txt` devuelve 404 sobre un repo que sí tiene licencia. Babylon.js repite
+el patrón con `license.md`. Dos casos ya no son una anécdota:
+
+> 🆕 **Regla de método nº19 — `raw.githubusercontent.com` distingue mayúsculas.**
+> Una sonda que pruebe sólo nombres en mayúscula **fabrica falsos "sin licencia"**.
+> La lista mínima de nombres es `{LICENSE, LICENSE.md, LICENSE.txt, license,
+> license.md, license.txt, LICENCE, COPYING}` × `{HEAD, rama default}`. Y cuando
+> el API dice `Apache-2.0` pero las sondas dan 404, **el que está mal es el juego
+> de sondas, no el repo** — exactamente al revés del caso ViZDoom, donde fallan
+> los dos canales. Ver `agents/top.md` → cycle 11.
+
+### ⛔ El benchmark canónico de RL sobre juegos es **GPL-2.0** — medido, no supuesto
+
+[Farama-Foundation/Arcade-Learning-Environment](https://github.com/Farama-Foundation/Arcade-Learning-Environment)
+(2.463 ★, push 2026-11-15) es **GPL-2.0**, y
+[Farama-Foundation/ViZDoom](https://github.com/Farama-Foundation/ViZDoom)
+(2.110 ★, push 2026-11-22) **no expone ningún grant legible** (27 sondas en 404).
+Los dos son vecinos de Gymnasium y PettingZoo —que esta página lista como MIT— en
+la misma fundación. El desarrollo completo está en `agents/top.md` → cycle 11,
+con la **regla nº18: la licencia no se hereda de la organización**.
+
+**Consecuencia concreta para la Receta 2 (QA con agentes RL):** el stack
+recomendado de esta KB (Gymnasium + stable-baselines3 + ml-agents + godot_rl_agents)
+**se sostiene entero en MIT/Apache** y no necesita ni ALE ni ViZDoom. Decirlo por
+escrito evita que alguien "complete" el stack con el benchmark de Atari y le
+meta GPL-2.0 al entregable.
+
+---
 
 ## 🆕 El hallazgo del cycle 10 (2026-11-22): **esta página tenía el navmesh en C++ y el world model con exclusión territorial** — las dos puertas de entrada que faltaban
 

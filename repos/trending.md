@@ -11,6 +11,36 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 11
+
+**El barrido de este pass cambió de eje: por CATEGORÍA, no por nombre.** Buscar
+`game server framework stars:>1500` devolvió una familia de cinco frameworks
+permisivos, con **24.000 ★ sumadas**, que once passes de esta KB no habían
+listado. No era un repo faltante: era una capa.
+
+| Repo | Licencia (dos canales) | Qué es | ★ | Push |
+|---|---|---|---|---|
+| [cloudwu/skynet](https://github.com/cloudwu/skynet) | **MIT** (1.085) | Framework de actores **C + Lua**. El más estrellado de la categoría | **14.199** | 2026-11-15 |
+| [topfreegames/pitaya](https://github.com/topfreegames/pitaya) | **MIT** (1.067) | **Go** con clustering + SDKs **Unity / iOS / Android** (`libpitaya`). 547 forks | 2.847 | 2026-11-17 |
+| [lonng/nano](https://github.com/lonng/nano) | **MIT** (1.073) | **Go** ligero. ⚠️ 9 meses sin push. **Es el tronco del que sale pitaya** | 3.228 | 2026-02-26 |
+| [zfoo-project/zfoo](https://github.com/zfoo-project/zfoo) | **Apache-2.0** (11.357 ✅) | **Java/JVM**, RPC + game server. Única opción JVM de la categoría | 2.005 | 2026-11-19 |
+| [node-pinus/pinus](https://github.com/node-pinus/pinus) | **MIT** (1.067) | **Node.js / TypeScript** distribuido | 1.933 | 2026-09-29 |
+| [BabylonJS/Babylon.js](https://github.com/BabylonJS/Babylon.js) | **Apache-2.0** (`license.md`, 9.226 — **minúscula**) | Motor 3D **web** completo. La tabla de engines no tenía ninguno de navegador de primera línea, y `godogen` ya generaba para él | **26.419** | 2026-11-21 |
+| [4ian/GDevelop](https://github.com/4ian/GDevelop) | **NOASSERTION → MIT × 4** (ver `verticals/solutions.md`) | Engine **no-code** 2D/3D/multijugador. Badge opaco, grant permisivo | **29.166** | 2026-11-21 |
+
+⛔ **El cadáver más estrellado de la categoría:**
+[NetEase/pomelo](https://github.com/NetEase/pomelo) — **11.855 ★, MIT,
+ARCHIVADO** desde 2023-08-10. Ordenar por popularidad lo pone primero;
+[node-pinus/pinus](https://github.com/node-pinus/pinus) es su continuación viva
+con **1/6 de las estrellas**. La relación popularidad↔vigencia vuelve a salir
+invertida, como con `0ad/0ad` (cycle 4) y `SerpentAI` (este pass).
+
+🔴 **Cadena de linaje que hay que declarar antes de comparar:**
+**pomelo (archivado) → nano → pitaya**. El `LICENSE` de pitaya dice
+*"© 2018 TFG Co **and nano Authors**"*. No son tres alternativas independientes.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 10
 
 > Sin deltas de ★ (primer pass de un día nuevo). Lo que cambia este pass es

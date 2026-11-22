@@ -8,13 +8,80 @@ updated: 2026-11-22
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-11-20** (passes previos: 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 11)** (passes previos: 2026-11-22 cycle 10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
 > (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
 > de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
+
+## 🆕 Plataforma vertical nueva (2026-11-22, cycle 11): **GDevelop** — 29.166 ★, badge opaco, grant MIT en las cuatro carpetas
+
+Esta página existe para listar *sistemas reales y funcionales sobre los que se
+pone una capa AI encima* — el papel que Odoo juega en ERP o Moodle en educación.
+En gaming, el equivalente más cercano que faltaba es el **engine no-code**:
+la plataforma donde el cliente ya tiene contenido hecho por gente que no programa.
+
+| Plataforma | Licencia **verificada** | ★ | Push | Por qué entra |
+|---|---|---|---|---|
+| 🆕 [4ian/GDevelop](https://github.com/4ian/GDevelop) | 🟢 **MIT en todo el código** — ver desglose abajo | **29.166** | 2026-11-21 | Engine open source **2D / 3D / multijugador**, *no-code*, multiplataforma. Es la plataforma de esta página con la base de usuarios **menos técnica**, y por eso la de mayor apalancamiento para una capa de agentes: el usuario ya describe lógica en lenguaje casi natural (eventos), que es exactamente la superficie donde un agente aporta |
+
+### 🔴 El badge decía `NOASSERTION`. La lectura byte a byte dice MIT cuatro veces.
+
+El API de GitHub devuelve `license.spdx_id = NOASSERTION` para GDevelop, que en
+la regla del cycle 7 es **la ausencia de un veredicto, no un veredicto negativo**,
+y obliga a resolver por lectura directa. La resolución:
+
+| Archivo leído | Bytes | Contenido |
+|---|---|---|
+| `LICENSE.md` (raíz) | **305** | 🔵 **Es un PUNTERO, no un grant.** Dice: *"The Core library, the game engine, the new IDE, and all extensions (respectively Core, GDJS, new IDE and Extensions folders) are under the **MIT license**"* + *"The name, GDevelop, and its logo are the exclusive property of Florian Rival"* |
+| `Core/LICENSE.md` | 1.274 | **The MIT License (MIT)** — GDevelop Core (GDCore) |
+| `GDJS/LICENSE.md` | 1.296 | **The MIT License (MIT)** — GDevelop JS Platform |
+| `newIDE/LICENSE.md` | 1.107 | **The MIT License (MIT)** — GDevelop IDE |
+| `Extensions/LICENSE.md` | 1.295 | **The MIT License (MIT)** — GDevelop extensions |
+
+⇒ **Tercer caso medido de `NOASSERTION` que resuelve a PERMISIVO** (tras los 4 del
+cycle 7 y los de o3de/love). La causa no es ambigüedad legal: es que el detector
+automático de GitHub **no sabe leer un archivo raíz de 305 bytes que delega en
+cuatro subcarpetas**.
+
+⚠️ **El límite real, y no es la licencia del código:** *"The name, GDevelop, and
+its logo are the exclusive property of Florian Rival"*. El MIT cubre **el código**;
+**la marca no**. Un entregable que forkee GDevelop para un cliente **puede
+redistribuir el software y no puede llamarlo GDevelop** ni usar su logo. Es el
+mismo patrón de reserva de marca que la mayoría de los proyectos grandes, y es la
+única cláusula de esta ficha que hay que poner por escrito en una propuesta.
+
+### 🆕 La capa de servidor de juego que esta página tampoco tenía
+
+`repos/foundations.md` (cycle 11) incorpora **cinco frameworks de game server**
+permisivos que la KB no listaba —
+[skynet](https://github.com/cloudwu/skynet) (MIT, 14.199 ★),
+[pitaya](https://github.com/topfreegames/pitaya) (MIT, 2.847 ★, SDKs Unity/iOS/Android),
+[nano](https://github.com/lonng/nano) (MIT, 3.228 ★),
+[zfoo](https://github.com/zfoo-project/zfoo) (Apache-2.0, 2.005 ★, JVM) y
+[pinus](https://github.com/node-pinus/pinus) (MIT, 1.933 ★, Node/TS).
+
+**Dónde encajan en esta página, que es lo que decide si sirven:** no compiten con
+Nakama ni con Talo. Nakama es un **backend terminado** (auth, leaderboards, chat,
+storage) que se extiende; estos cinco son **frameworks**, es decir, el cliente
+**escribe la lógica** y gana control del protocolo y del sharding a cambio de
+trabajo. Regla práctica para elegir en una propuesta:
+
+| Si el cliente... | Va a | Por qué |
+|---|---|---|
+| Quiere features de backend ya hechas y una capa AI encima | **Nakama** / **Talo** | Lo que se customiza es la extensión (Lua/TS/Go), no el servidor |
+| Ya tiene un protocolo propio y un servidor que no escala | **skynet** / **pitaya** / **zfoo** | Framework, no producto: se adapta al protocolo existente |
+| Necesita escalar *instancias de partida* en Kubernetes | **Agones** | Es ortogonal a los cinco: orquesta procesos, no define lógica |
+| Es un juego web / asíncrono | **Colyseus** / **pinus** / **Supabase** | Node/TS de punta a punta |
+
+⛔ **Y el descarte explícito:** [NetEase/pomelo](https://github.com/NetEase/pomelo),
+**11.855 ★, MIT, ARCHIVADO desde 2023-08-10**. Es el primer resultado por
+estrellas de toda la categoría. **No se propone.** Su continuación viva es
+`node-pinus/pinus`.
+
+---
 
 ## 🆕 Movimientos de plataforma (2026-11-22, cycle 10): **Agones pasó a gobernanza CNCF, y el clúster de herramientas de Godot se fragmentó en siete**
 
