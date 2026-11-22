@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # Patrones de composición — Gaming AI
@@ -309,7 +309,7 @@ la facturación mundial anual**, el mayor de los dos.
 ### 🔴 REENCUADRE OBLIGATORIO — actualizado **2026-11-21: quedan 11 DÍAS**
 
 Esta receta se escribió el 2026-10-26 como un **sprint de 3-5 semanas** contra el
-2-dic-2026. **Hoy es 2026-11-21, quedan 11 días, y ese entregable ya no cabe.** Proponerlo tal cual
+2-dic-2026. **Hoy es 2026-11-22, quedan 10 días, y ese entregable ya no cabe.** Proponerlo tal cual
 es vender un incumplimiento con fecha de entrega posterior a la obligación. La
 receta técnica de abajo **sigue siendo correcta y se conserva íntegra** — es lo que
 hay que construir —, pero **el encuadre comercial cambia**:
@@ -1459,6 +1459,148 @@ es "cualquier fallo que el agente encuentre se reproduce en un comando".**
 
 ---
 
+## 🆕 Receta 25: **Sustitución de la línea completa de world models de Tencent** — extiende la Receta 15 con el dato que faltaba
+
+**Qué cambió respecto de la Receta 15.** Aquella receta nació con **un** repo
+confirmado con exclusión territorial (`HY-World-2.0`) y construyó el gate de CI
+alrededor. Este pass verificó byte a byte los **tres** repos de la línea y
+encontró, además, que **la exclusión no llega hasta el fondo del árbol**: hay un
+subdirectorio Apache-2.0 dentro de uno de ellos. El gate de la Receta 15 falla
+el build correctamente, pero **falla de más**: bloquea un subárbol que sí se
+puede usar.
+
+**Paso 1 — la matriz, ya medida (no hay que re-verificarla):**
+
+| Componente | Licencia leída | Bytes | ¿EU / UK / KR? | ¿NA / LATAM / APAC-ex-KR? |
+|---|---|---|---|---|
+| `Tencent-Hunyuan/HY-World-2.0` → `License.txt` | Tencent HY-World 2.0 Community | 16.858 | ⛔ sin grant | ✅ con condiciones |
+| `Tencent-Hunyuan/Hunyuan-GameCraft-1.0` → `LICENSE` | Tencent Hunyuan Community | 16.386 | ⛔ sin grant | ✅ con condiciones |
+| `Tencent-Hunyuan/HY-WorldPlay` → `License.txt` | Tencent HY-WorldPlay Community | 16.045 | ⛔ sin grant | ✅ con condiciones |
+| 🟢 `HY-WorldPlay` → **`worldcompass/LICENSE`** | **Apache-2.0** | 10.757 | ✅ **sin restricción** | ✅ |
+| ⛔ `HY-WorldPlay` → `worldcompass/reward_function/HunyuanWorldMirror/License.txt` | Tencent HunyuanWorld-Mirror Community | 17.267 | ⛔ sin grant | ✅ con condiciones |
+
+⚠️ **Leer la tabla de abajo hacia arriba:** dentro del subárbol Apache-2.0
+reaparece una licencia Tencent un nivel más abajo. **Un gate que marque
+`worldcompass/` como "permisivo" y pare ahí deja entrar la reward function.**
+
+**Paso 2 — el manifiesto de la Receta 15, corregido para admitir rutas:**
+
+```yaml
+- slug: Tencent-Hunyuan/HY-WorldPlay
+  paths:
+    - path: "/"
+      license: LicenseRef-Tencent-HY-WorldPlay-Community
+      territory_excluded: [EU, UK, KR]
+    - path: "worldcompass/"
+      license: Apache-2.0
+      territory_excluded: []
+    - path: "worldcompass/reward_function/HunyuanWorldMirror/"   # re-entra la exclusión
+      license: LicenseRef-Tencent-HunyuanWorld-Mirror-Community
+      territory_excluded: [EU, UK, KR]
+  resolution: longest-prefix-wins
+```
+
+`longest-prefix-wins` es la regla que hace falta y la que nadie escribe: **el
+grant aplicable a un archivo es el del prefijo más largo que lo cubra**, no el
+de la raíz.
+
+**Paso 3 — el sustituto, con grant verificado este pass:**
+
+| Sustituto | Licencia (byte-read) | ★ | Territorio | Nota |
+|---|---|---|---|---|
+| [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | **MIT** (raíz, 1.118 B) + **Apache-2.0** (`Matrix-Game-4/`, 11.357 B) | 2.951 | ✅ sin cláusula | Mismo caso de uso: mundo jugable generado. **7 archivos de licencia** — aplicar `longest-prefix-wins` |
+| [deeplethe/utopia](https://github.com/deeplethe/utopia) | **Apache-2.0** (11.353 B) | 8.745 | ✅ sin cláusula | El más grande; push 2026-11-22 |
+| [nv-tlabs/lyra](https://github.com/nv-tlabs/lyra) | **Apache-2.0** (11.356 B) | 2.888 | ✅ sin cláusula | Salida **3D**, no video — equivalente funcional de HY-World 2.0 |
+| [microsoft/mineworld](https://github.com/microsoft/mineworld) | MIT | 497 | ✅ sin cláusula | ⚠️ sin push desde 2026-05-08 |
+
+**Paso 4 — decidir con una medición, no con un README.** Antes de comprometer
+un sustituto, correr los tres candidatos contra
+[galilai-group/stable-worldmodel](https://github.com/galilai-group/stable-worldmodel)
+(**MIT**, 2.315 ★), que existe exactamente para eso: evaluación reproducible de
+world models. Es la pieza que convierte "elegimos Matrix-Game" en "elegimos
+Matrix-Game **porque midió así**".
+
+⚠️ **El límite de esta receta, igual que en la Receta 15: cubre el código, no
+los pesos.** `huggingface.co` no resuelve en este entorno (5º pass consecutivo
+que se declara). **La licencia de los pesos de los cuatro sustitutos sigue sin
+verificar** y va al manifiesto como riesgo abierto, no como casilla tildada.
+
+---
+
+## 🆕 Receta 26: **Auditoría de ruta de datos COPPA** — la receta que decide la topología del NPC antes de que alguien escriba un prompt
+
+**Para qué.** Desde el **22-abr-2026** (COPPA enmendada, 90 FR 16970), un juego
+estadounidense dirigido a menores necesita **consentimiento parental verificable
+separado y desagrupado** antes de divulgar datos personales de un menor a un
+tercero **para entrenar o desarrollar IA**. La FTC fundamenta que esa divulgación
+**"no se considera, en general, integral al servicio"** — por eso no puede ir
+empaquetada con el consentimiento del juego.
+
+**Por qué rompe el patrón por defecto.** El NPC conversacional estándar manda la
+frase del jugador a una API de LLM de un tercero. Si el jugador es un menor y el
+tercero puede entrenar con eso, **el patrón entero queda del lado equivocado de
+una regla que ya está en vigor.** No es una mejora pendiente: es una exposición
+con fecha pasada.
+
+**Paso 1 — clasificar el título, antes que nada.** ¿Es *child-directed*? Si la
+respuesta es "no, pero tenemos jugadores menores", esta receta aplica igual a la
+porción de la base de usuarios con edad conocida. Encadena con la **Receta 18**
+(clasificación de audiencia por edad), que ya existe en este archivo para el
+Art. 50 europeo: **la misma clasificación sirve para las dos jurisdicciones y se
+hace una sola vez.**
+
+**Paso 2 — inventario de rutas de datos.** Una fila por salida del dispositivo:
+
+| Ruta | Qué sale | Destino | ¿Entrena con ello? | Veredicto |
+|---|---|---|---|---|
+| NPC conversacional | **texto libre del jugador** | API de LLM de terceros | según contrato | 🔴 **VPC separado** o rediseño |
+| Voz → texto | audio del jugador | STT de terceros | según contrato | 🔴 idem |
+| Telemetría de gameplay | eventos, sin texto libre | propio | no | 🟢 fuera de alcance |
+| Moderación | texto del jugador | clasificador de terceros | según contrato | 🟡 revisar contrato |
+
+**Paso 3 — elegir una de las tres salidas técnicas. Presentarlas juntas, porque
+el cliente elige por coste y las tres cuestan distinto:**
+
+1. **Inferencia on-device.** No hay divulgación a terceros ⇒ el requisito de VPC
+   por entrenamiento **desaparece** (no se "cumple": deja de aplicar). Es la
+   única salida que elimina el problema en vez de gestionarlo. Coste: modelo
+   chico, calidad menor, presupuesto de memoria en consola/móvil.
+2. **Contrato con opt-out de entrenamiento verificable.** Sigue habiendo
+   divulgación, así que sigue habiendo obligaciones COPPA — pero **la rama
+   específica de entrenamiento de IA se cierra por contrato**. Coste: negociación
+   y una cláusula que alguien tiene que auditar cada renovación.
+3. **Rediseño a intents cerrados.** El NPC nunca transmite entrada libre: el
+   jugador elige entre opciones y lo que viaja es un identificador, no texto.
+   Coste: se pierde la conversación abierta, que suele ser la razón por la que
+   el cliente quería el NPC.
+
+**Paso 4 — si queda alguna ruta 🔴, construir el segundo flujo de consentimiento.**
+Es trabajo de producto, no de legal: una pantalla **separada**, con la opción de
+**aceptar el juego y rechazar el entrenamiento**, telemetría que registre cuál
+eligió cada padre, y un *kill switch* que apague la ruta para los que
+rechazaron. **Si el juego deja de funcionar cuando el padre dice que no, el
+consentimiento estaba empaquetado** — y ése es exactamente el supuesto que la
+regla prohíbe.
+
+**Composición concreta con lo que ya lista esta KB.** Para la salida nº1
+(on-device), el camino más corto es
+[undreamai/LLMUnity](https://github.com/undreamai/LLMUnity) (inferencia local
+dentro de Unity, ya en `agents/top.md`) para el modelo, más
+[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) (**MIT**, 16.104 ★)
+o [hatayama/unity-cli-loop](https://github.com/hatayama/unity-cli-loop)
+(**MIT**, 602 ★) para que el agente de desarrollo pueda **correr el juego y
+verificar en Play Mode que ninguna ruta roja quedó viva** — que es la parte que
+normalmente se verifica leyendo código y por eso se escapa.
+
+⚠️ **Procedencia y límite.** Toda la base normativa de esta receta viene de
+**fuentes secundarias** (blogs legales y de compliance): `WebFetch` no resuelve
+hosts generales en esta sesión y **90 FR 16970 no pudo leerse**. Las fuentes
+además discrepan sobre si el 22-abr-2026 es fecha de cumplimiento de una regla
+efectiva desde jun-2025 o fecha de entrada en vigor. **En sustancia no cambia
+nada —hoy aplica— pero esta receta no sustituye a un abogado estadounidense, y
+decirlo forma parte del entregable.**
+
+---
 ## Tabla resumen
 
 | Patrón | Stack principal | Esfuerzo | ROI esperado |
@@ -1483,12 +1625,14 @@ es "cualquier fallo que el agente encuentre se reproduce en un comando".**
 | 🆕 18 · **Clasificación de audiencia por edad antes del Art. 50** | Columna PEGI/ESRB en el inventario de la R7 + edad como parámetro de runtime (no constante de build) | **2-3 días** | 🟢 Libera semanas de ingeniería: la obligación europea **depende de la audiencia**, no de tener un NPC |
 | 🆕 19 · **QA autónomo con agente de playtesting OSS** | [ramenvr/autopilot](https://github.com/ramenvr/autopilot) (Apache-2.0, 881★, UE 5.4–5.8 / Unity 6 / Godot 4 / Roblox) + MCP + LMGame Bench | **3-5 días** (loop MCP) · 2-3 semanas (gate CI) | 🟢 Reemplaza la dependencia de `GamingAgent`, **congelado desde 2025-11-16**. Cierra el loop de las R6/R11: el agente que escribe el código **prueba su propio cambio**. ⚠️ Compilar de fuente si hay revisión de seguridad; las cifras del vendor no están verificadas |
 | 🆕 20 · **Auditoría de licencias CORREGIDA** | Canal 3 → canal 2 **por rama** + dedupe por `sha256` + 3 discriminadores (íncipit / apéndice / texto post-`END OF TERMS`) | **medio día** por stack | 🔴 **Corrige 3 defectos medidos del checksum**: Apache tiene **dos** valores válidos (falso negativo en `bevy` y `libgdx`), un conteo **por encima** del canónico son cláusulas añadidas (NVIDIA 15057 B), y **9977 B ≠ Apache** (`Defold License`, field-of-use). 8º eje: **partición por rama** (`ml-agents` 572 B vs 11.324 B) |
+| 🆕 25 · **Sustitución de world models bloqueados por TERRITORIO** | Matriz de 5 grants medidos + manifiesto YAML con rutas y `longest-prefix-wins` + sustitutos Apache/MIT + [stable-worldmodel](https://github.com/galilai-group/stable-worldmodel) (MIT) para decidir con medición | **1-2 días** por stack | 🔴 **Las TRES releases abiertas de world models de Tencent (≈5.300★) no otorgan licencia en EU, UK ni Corea.** Extiende la R15 con el caso que ésta no cubría: dentro de `HY-WorldPlay` hay un subárbol **Apache-2.0** (`worldcompass/`) y, un nivel más abajo, **reaparece** la licencia Tencent |
+| 🆕 26 · **Auditoría de ruta de datos COPPA (NPC infantil)** | Clasificación de audiencia (reusa la R18) + inventario de rutas de salida + 1 de 3 salidas: on-device ([LLMUnity](https://github.com/undreamai/LLMUnity)) / opt-out contractual / intents cerrados + verificación en Play Mode con [unity-cli-loop](https://github.com/hatayama/unity-cli-loop) (MIT) | **1-2 semanas** | 🔴 **Obligación con fecha YA VENCIDA: 22-abr-2026** (COPPA enmendada, 90 FR 16970). Exige **VPC separado y desagrupado** antes de divulgar datos de un menor a terceros **para entrenar IA** ⇒ el patrón "NPC contra LLM hosteado" **no es implementable tal cual** en un juego infantil de EE.UU. Comprador: legal+privacy, con presupuesto propio |
 
 ### Cuál proponer según la región del engagement
 
 | Región | Receta de entrada | Por qué |
 |--------|-------------------|---------|
-| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 🆕 FASE 0 de la R7 (partir el catálogo por fecha de puesta en el mercado), luego 18 (clasificar audiencia), luego 7 reencuadrada, luego 20, 17 y 15** · 🆕 **quedan 11 días** | Fecha legal dura **a 11 días** (2-dic-2026) y un segundo reloj en 2-dic-2027. 🆕 **Y el alcance es más chico de lo que vendíamos: el 2-dic cubre SÓLO el Art. 50(2) y SÓLO el catálogo puesto en el mercado antes del 2-ago-2026** (base legal citada: **Art. 111(4)**). Un título lanzado después **nunca tuvo gracia** y el Art. 50(1) **vence para todos desde agosto** ⇒ la Fase 0 decide si es un sprint o una remediación. 🆕 **C2PA no es obligatorio: el Acta no nombra tecnología de marcado.** 🆕 Sanción **15 M€ / 3%**. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
+| **EMEA** | 🔴 **primero el chequeo Art. 5, luego 🆕 FASE 0 de la R7 (partir el catálogo por fecha de puesta en el mercado), luego 18 (clasificar audiencia), luego 7 reencuadrada, luego 20, 17 y 15** · 🆕 **quedan 10 días** | Fecha legal dura **a 10 días** (2-dic-2026) y un segundo reloj en 2-dic-2027. 🆕 **Y el alcance es más chico de lo que vendíamos: el 2-dic cubre SÓLO el Art. 50(2) y SÓLO el catálogo puesto en el mercado antes del 2-ago-2026** (base legal citada: **Art. 111(4)**). Un título lanzado después **nunca tuvo gracia** y el Art. 50(1) **vence para todos desde agosto** ⇒ la Fase 0 decide si es un sprint o una remediación. 🆕 **C2PA no es obligatorio: el Acta no nombra tecnología de marcado.** 🆕 Sanción **15 M€ / 3%**. **Y antes del marcado: si hay NPC conversacional conectado a la tienda, puede ser práctica PROHIBIDA (Art. 5) — eso no se marca, se rediseña.** |
 | **North America** | 🆕 **13** primero si hay NPC conversacional, luego **6** y **9**, luego 2, **17** y **10** · 🆕 **16 obligatoria** si el entregable incluye packs de skills | Steam exime las herramientas de desarrollo: la AI interna no dispara disclosure ni backlash, y 🆕 **55%** de los devs ve la gen AI como daño (GDC nov-2026; era 52%) y ~85% de los jugadores la rechaza. 🆕 **Adopción estadounidense estancada: 36%→38%, dentro del margen de error** ⇒ acá se vende *primer paso*, no escala. 🆕 **Y ya hay obligación de runtime: Receta 13.** **Dato nuevo: sólo 3% de las declaraciones de AI en Steam son generación en gameplay** — el pipeline interno es el 97% del mercado real. La Receta 10 vende bien donde los reguladores declaran "visibilidad limitada". 🆕 **Añadir 19** (QA con agente OSS): cae del lado **exento** de Steam. 🆕 **Y el dato de rechazo del jugador está en conflicto y hay que llevar las dos cifras:** ~85% de rechazo en abstracto (Quantic Foundry) **pero 43% de ~3.800 usuarios de Steam no tiene problema en comprar un juego con disclosure** (GameDiscoverCo) ⇒ **la fricción de compra medida es mucho menor que el rechazo declarado**, y ésa es la objeción nº1 que frena la R7. 🆕 Censo de **53.597 releases**: 10,9% (2024) → 19,9% (2025) → 30,8% (2026 a julio); **47% de los títulos con <10 reviews declaran AI vs 14% de los de ≥1.000** ⇒ para un AAA, declarar lo pone en el 14%: conversación de **riesgo de marca**. |
 | **APAC** | **8** y **11**, luego 7 adaptada, **17**, **10** y 🆕 **15** | Los world models abiertos punteros son de APAC (Skywork, Tencent) y Corea/China ya obligan etiquetado (Corea **extraterritorial** desde 22-ene-2026). **Y es la única región con NPCs con AI a escala de producción probada: Tencent reporta 110M de usuarios acumulados y 17,7M de DAU pico en *Game for Peace*** — acá la conversación no es "si funciona", es integración. La Receta 10 es obligatoria si se construye sobre I+D china (Hunyuan no es OSI; 🔴 **HY-World 2.0 sí publica licencia — `License.txt` — y excluye EU, UK y Corea**). 🆕 **Adopción japonesa 85,8% con 63% de uso diario (CESA 2026, 1.349 respuestas)** ⇒ acá no se vende adopción: se vende **gobernanza, escala y evaluación de calidad de salidas** (la preocupación nº1 declarada es precisión/calidad, 51,9%). 🆕 **Corea entra con cifra propia: 77,5% de 120 empresas** (KOCCA Q2-2026) y *"AI skills"* como **prioridad nº1 de contratación**; **JOGA: 100%** de las empresas japonesas de juego online. 🆕 **Y la práctica declarada del cliente YA coincide con nuestro entregable:** los estudios japoneses **restringen qué herramientas usa el personal** y **prohíben que salidas crudas lleguen al producto** ⇒ **15 y 16 no hay que justificarlas, hay que implementarlas**, y **19** es AI que no toca contenido de jugador. |
 | **LATAM** | **1**, **3**, **5** y **12** (y **13** sólo si se publica en EE.UU.; **16** si el entregable lleva packs de skills) | No hay AI Act que vender; sí hay **48,8% de jugadores que compraría juegos hechos con AI** —contra ~85% de rechazo global— lo que hace de LATAM **el mercado de primer lanzamiento racional para AI de cara al jugador**, no el último. Más 86,9% de mobile en México y operadores iGaming con supervisión creciente. ⚠️ Cuidar la narrativa laboral: 40,6% de preocupación por precariedad (PGB Latam 2026), y Ubisoft acaba de ponerle titular. 🆕 **El único compliance con fecha en LATAM es publicitario, no de producto: guía CONAR de Brasil en vigor desde el 1-jun-2026** (el PL 2338/2023 sigue trabado en la Cámara ⇒ **no hay ley general de AI en vigor**). 🆕 **El constraint está nombrado por la industria y no es tecnológico: es FINANCIAMIENTO** ⇒ **el entregable tiene que pagarse solo dentro del trimestre**; un programa a 12 meses no tiene de dónde financiarse, una R1/R3 acotada sí. 🆕 **Estructura: Brasil ~13.225 devs / ~1.042 estudios activos** (el talento), **México 72,6 M de jugadores = 61% de la población 6+** (el jugador) — **son dos conversaciones distintas**. ⚫ **Cero medido con dos instrumentos: no existe encuesta de adopción de gen AI por estudios LATAM** ⇒ la cifra vendible de la región sigue siendo de **jugadores**, no de estudios. |

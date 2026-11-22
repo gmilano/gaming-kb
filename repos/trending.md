@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # Repos trending — Gaming AI
@@ -11,6 +11,65 @@ updated: 2026-11-21
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 10
+
+> Sin deltas de ★ (primer pass de un día nuevo). Lo que cambia este pass es
+> **cobertura del lado de los world models**, que era el hueco más caro del
+> inventario: la KB listaba la línea de Tencent —que **no tiene licencia en
+> EMEA**— y casi nada permisivo al lado.
+
+### 🆕 World models permisivos — el bloque que faltaba
+
+| Repo | ★ | Licencia (byte-read) | Último push | Qué aporta |
+|---|---|---|---|---|
+| [deeplethe/utopia](https://github.com/deeplethe/utopia) | **8.745** | **Apache-2.0** (11.353 B) | 2026-11-22 | El world model abierto más grande del inventario. Creado 2026-08-07: **8.745 ★ en 3,5 meses** |
+| [nv-tlabs/lyra](https://github.com/nv-tlabs/lyra) | **2.888** | **Apache-2.0** (11.356 B) | ⚠️ 2026-07-20 | NVIDIA Toronto AI Lab. **Salida 3D**, no video — el equivalente funcional directo de HY-World 2.0, con grant limpio |
+| [SkyworkAI/Matrix-Game](https://github.com/SkyworkAI/Matrix-Game) | 2.951 | **MIT** raíz + **Apache-2.0** en `Matrix-Game-4/` | 2026-10-29 | Ya en la KB; se re-verifica porque es **el sustituto recomendado** de la línea Tencent |
+| [galilai-group/stable-worldmodel](https://github.com/galilai-group/stable-worldmodel) | **2.315** | **MIT** (1.070 B) | 2026-10-02 | **Evaluación reproducible.** La pieza que convierte la elección entre los otros tres en una medición |
+
+🔴 **El contraste que justifica el bloque entero:** las **tres** releases
+abiertas de world models de Tencent (`HY-World-2.0` 2.901 ★,
+`HY-WorldPlay` 1.630 ★, `Hunyuan-GameCraft-1.0` 765 ★) llevan, en la **primera
+línea** de su archivo de licencia, *"THIS LICENSE AGREEMENT DOES NOT APPLY IN
+THE EUROPEAN UNION, UNITED KINGDOM AND SOUTH KOREA"*. **≈5.300 ★ de world
+models que un estudio europeo no puede usar**, contra ≈14.000 ★ permisivos que
+ahora sí están listados.
+
+### 🆕 Navegación y entornos RL — dos clásicos que faltaban
+
+| Repo | ★ | Licencia | Último push | Qué aporta |
+|---|---|---|---|---|
+| [ikpil/DotRecast](https://github.com/ikpil/DotRecast) | 968 | **Zlib** (904 B) | 2026-10-03 | Port a **C#** de Recast & Detour. La KB tenía sólo el original C++ ⇒ **no tenía vía de entrada a Unity/.NET** para navmesh |
+| [Kautenja/gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) | 910 | **MIT** (1.073 B) | 2026-09-30 | Entornos Gymnasium NES/Mario, **vivos**, compatibles con `Farama-Foundation/Gymnasium` |
+
+### 🆕 Herramientas de engine — 5 filas, todas permisivas
+
+| Repo | ★ | Licencia | Último push | Engine |
+|---|---|---|---|---|
+| [kevinpbuckley/VibeUE](https://github.com/kevinpbuckley/VibeUE) | 845 | **MIT** (1.091 B) | 2026-11-20 | **Unreal** |
+| [hatayama/unity-cli-loop](https://github.com/hatayama/unity-cli-loop) | 602 | **MIT** (`LICENSE.md`) | 2026-11-21 | Unity (**hasta Play Mode**) |
+| [tugcantopaloglu/godot-mcp](https://github.com/tugcantopaloglu/godot-mcp) | 521 | **MIT** (1.169 B) | 2026-10-09 | Godot (157 tools) |
+| [IvanMurzak/Godot-MCP](https://github.com/IvanMurzak/Godot-MCP) | 376 | **Apache-2.0** | 2026-11-21 | Godot |
+| [FunplayAI/funplay-unity-mcp](https://github.com/FunplayAI/funplay-unity-mcp) | 330 | **MIT** (1.064 B) | 2026-11-19 | Unity (`execute_code`) |
+
+🟡 **El lado Unreal estaba peor que el de Godot y nadie lo había dicho:** el repo
+Unreal más estrellado del inventario,
+[chongdashu/unreal-mcp](https://github.com/chongdashu/unreal-mcp), tiene
+**2.119 ★, licencia `null` y 19 meses sin push**. `VibeUE` (MIT, 845 ★, push
+hace 2 días) es la primera alternativa Unreal viva **y con grant** que entra a
+esta KB.
+
+### 📉 Estado de salud del inventario (159 repos, medido este pass)
+
+| Señal | Nº | Comentario |
+|---|---|---|
+| Archivados | 2 | `0ad/0ad`, `openai/gym` — ya anotados |
+| Renombrados (422 + `raw` 200) | 3 | `minetest/minetest`, `rivet-gg/toolchain`, 🆕 `kolbytn/mindcraft` |
+| Borrados (422 + `raw` 404) | 1 | `pelican-dev/panel` |
+| Dormidos > 6 meses | **26** | El más estrellado vivo-pero-dormido: `joonspk-research/generative_agents` (22.399 ★, **sin push desde 2024-08-05**) |
+| `NOASSERTION` o `null` | 31 | Cada uno necesita byte-read; **el badge no es un veredicto en ninguna dirección** |
+
+---
 ## 🆕 2026-11-21 — pass cycle 9
 
 > Sin deltas de ★ (quinto pass del día). Lo que cambia este pass **es el tamaño del

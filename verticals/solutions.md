@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # Verticales de partida — Gaming AI
@@ -16,6 +16,76 @@ updated: 2026-11-21
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
 
+## 🆕 Movimientos de plataforma (2026-11-22, cycle 10): **Agones pasó a gobernanza CNCF, y el clúster de herramientas de Godot se fragmentó en siete**
+
+### 🟢 `agones-dev/agones` → **gobernanza CNCF desde marzo de 2026**
+
+| Campo | Valor (medido este pass) |
+|---|---|
+| Repo | [agones-dev/agones](https://github.com/agones-dev/agones) |
+| Licencia | **Apache-2.0** |
+| ★ / último push | **7.107** / 2026-11-20 |
+| Gobernanza | 🆕 **CNCF, desde marzo de 2026** (creado por Google y Ubisoft) |
+| Qué es | Orquestación de **servidores de juego dedicados sobre Kubernetes**. Infraestructura, **no** un backend: matchmaking, identidad, economía y datos van por fuera |
+
+**Por qué el cambio de gobernanza importa comercialmente y no es trivia.** En
+una conversación de arquitectura con un cliente grande, *"proyecto de una
+empresa"* y *"proyecto de la CNCF"* se evalúan con criterios distintos: el
+segundo trae un modelo de gobernanza público, política de releases y una
+expectativa de continuidad que no depende de la hoja de ruta de un proveedor.
+**Es el mismo argumento que sostiene a Kubernetes en esa sala**, y ahora aplica
+a la capa de servidores de juego.
+
+### 🟢 Backends open source — estado re-verificado este pass
+
+| Plataforma | Repo | Licencia | ★ | Último push | Capa |
+|---|---|---|---|---|---|
+| **Nakama** | [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | **Apache-2.0** | **13.763** | 2026-11-18 | Backend completo: multiplayer, matchmaking, leaderboards, chat, social |
+| **Agones** | [agones-dev/agones](https://github.com/agones-dev/agones) | **Apache-2.0** | 7.107 | 2026-11-20 | Orquestación de servidores sobre K8s |
+| **Open Match** | [googleforgames/open-match](https://github.com/googleforgames/open-match) | **Apache-2.0** | 3.427 | ⚠️ 2026-07-12 | Matchmaking; se usa **junto con** Agones. **4 meses sin push** — el único de los cuatro que no está activo |
+| **Talo** | [TaloDev/backend](https://github.com/TaloDev/backend) | **MIT** | 105 | 2026-11-21 | Backend indie: players, cloud saves, analytics, leaderboards |
+
+⚠️ **Dato con fuentes en conflicto, se declara sin resolver:** las releases de
+Nakama. Una comparativa fecha **v3.41.0 el 18-sep-2026**; la página de
+desarrollador de Nakama lista **v3.41.0 el 5-oct-2026** y **v3.42.0 el
+3-nov-2026**. **Ninguna pudo verificarse contra el repo en esta sesión** (el
+canal `releases` de la API de GitHub no está habilitado acá). Si la versión
+importa para un diseño, hay que mirarla en el repo, no en esta tabla.
+
+⚠️ **Y lo que las páginas de vendor no dicen:** Heroic Labs posiciona **Hiro**
+(metagame) y **Satori** (LiveOps: eventos, audiencias, feature flags,
+experimentos) encima de Nakama. **Ninguna de las fuentes consultadas afirma que
+Hiro o Satori sean open source.** El Apache-2.0 verificado cubre el **servidor
+Nakama y sus librerías cliente**. Para un cliente que compra "LiveOps open
+source", la frontera cae exactamente ahí, y conviene decirlo antes de la firma.
+
+### 🟡 Herramientas de engine como vertical: **el clúster de Godot se fragmentó en siete, y el líder lleva 7 meses sin un commit**
+
+Para una práctica que elige stack, esto es una decisión de plataforma, no de
+librería:
+
+| Repo | ★ | Licencia (byte-read) | Último push | Veredicto |
+|---|---|---|---|---|
+| [Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp) | **6.732** | MIT | 2026-04-16 | ⛔ **muerto** (7 meses) |
+| [youichi-uda/godot-mcp-pro](https://github.com/youichi-uda/godot-mcp-pro) | 649 | ⛔ MIT **sólo del plugin**; servidor **de pago** | 2026-09-24 | ⛔ open-core |
+| [tugcantopaloglu/godot-mcp](https://github.com/tugcantopaloglu/godot-mcp) | 521 | ✅ MIT | 2026-10-09 | 🟢 viable (157 tools) |
+| [tomyud1/godot-mcp](https://github.com/tomyud1/godot-mcp) | 454 | ✅ MIT | 2026-10-17 | 🟢 viable |
+| [IvanMurzak/Godot-MCP](https://github.com/IvanMurzak/Godot-MCP) | 376 | ✅ **Apache-2.0** | **2026-11-21** | 🟢 **el más activo** + grant de patentes |
+| [HaD0Yun/Doyunha-Gopeak](https://github.com/HaD0Yun/Doyunha-Gopeak) | 274 | ✅ MIT | 2026-11-13 | 🟢 viable (95+ tools) |
+| [satelliteoflove/godot-mcp](https://github.com/satelliteoflove/godot-mcp) | 188 | ✅ MIT | 2026-11-16 | 🟢 **playtesting determinista** (Receta 24) |
+
+**Seis de los siete nacieron entre dic-2025 y jun-2026.** Es un mercado abierto
+hace once meses, sin consolidar, donde **el único que superó las 700 ★ es el que
+dejó de publicar**. Para una práctica eso significa: **no casarse todavía**, y
+elegir por `pushed_at` + licencia, no por estrellas.
+
+> Contraste útil: en **Unity** el clúster sí consolidó —
+> [CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp) (**MIT, 16.104 ★,
+> push 2026-11-17**) está un orden de magnitud por encima del segundo. **Mismo
+> problema, dos engines, dos estructuras de mercado opuestas**, y eso cambia qué
+> se le recomienda a un cliente según con qué engine llegue.
+
+---
 ## 🆕 Plataforma vertical nueva (2026-11-21, cycle 9): **Roblox** — la plataforma de desarrollo que esta página no tenía
 
 Esta KB mencionaba Roblox de pasada (seguridad infantil, coalición con la Attorney

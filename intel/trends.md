@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # Tendencias — Gaming AI
@@ -10,6 +10,129 @@ updated: 2026-11-21
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
 
+## 🆕 Tendencias nuevas y correcciones — pass cycle 10 (2026-11-22)
+
+### 🔴 Corrección obligatoria: el **Digital Fairness Act ya no es un borrador esperado**
+
+Esta página lo listaba como *"Borrador previsto para Q4-2026"*. **Se publicó el
+11-nov-2026 como COM(2026) 1100.** La fila corregida:
+
+| Tendencia | Qué dice | Estado |
+|---|---|---|
+| 🔴 **Digital Fairness Act** | **Publicado 11-nov-2026, COM(2026) 1100.** Art. 15: recompensa variable de pago (loot boxes, ruletas, sobres) debe **publicar ítems y probabilidades**, ofrecer **desactivación accesible** y queda **prohibida para menores**. Arts. 14–17: el diseño adictivo (push no disparados por el usuario, rachas) debe poder **apagarse**. Multa hasta **6% de facturación global**. Los juegos online quedan exentos de las reglas de diseño adictivo *para menores*, que pasan al **EU KIDS Act** | 🔴 **Propuesta publicada.** Pendiente de Parlamento y Consejo; aplicaría **12 meses después de entrar en vigor** |
+
+⚠️ **El matiz que la prensa está perdiendo:** la prohibición de loot boxes de
+pago **es para menores**. No hay prohibición general para adultos.
+
+### 🆕 Tendencia 21: **la obligación regulatoria dejó de ser sólo de transparencia y pasó a ser de topología de datos**
+
+Hasta este pass, todo lo regulatorio que medía esta KB pedía **declarar** algo
+(Art. 50 del AI Act, disclosure de Steam, ratings). La **COPPA enmendada**
+(90 FR 16970, cumplimiento obligatorio desde el **22-abr-2026**) pide otra cosa:
+**consentimiento parental verificable separado y desagrupado** antes de divulgar
+datos de un menor a un tercero **para entrenar IA**.
+
+**Por qué es un cambio de categoría.** Una obligación de transparencia se cumple
+escribiendo. Ésta se cumple **cambiando por dónde viajan los bytes**: inferencia
+on-device, opt-out contractual de entrenamiento, o un NPC que nunca transmita
+texto libre. ⇒ **El patrón por defecto de la industria —NPC conversacional
+contra un LLM hosteado— no es implementable tal cual en un juego infantil
+estadounidense.** Ver Receta 26.
+
+**Predicción falsable, para que el próximo pass la mida:** si esta tendencia es
+real, en los próximos 2–3 passes deberían aparecer repos de NPC con **inferencia
+local como opción de primera clase**, no como fallback. `undreamai/LLMUnity`, ya
+en esta KB, es el candidato a observar.
+
+### 🆕 Tendencia 22: **la licencia se volvió un eje geográfico, y no viene de ningún regulador**
+
+Las **tres** releases abiertas de world models de Tencent
+(`HY-World-2.0` 2.901 ★, `HY-WorldPlay` 1.630 ★, `Hunyuan-GameCraft-1.0` 765 ★)
+declaran, en la primera línea de su archivo de licencia, que **no se aplican en
+la Unión Europea, el Reino Unido ni Corea del Sur**. Verificado byte a byte en
+este pass, los tres.
+
+**≈5.300 ★ de world models abiertos que un estudio europeo no puede usar** — y
+el badge de GitHub para los tres dice `NOASSERTION`, que no se parece en nada a
+*"prohibido en tu jurisdicción"*.
+
+> **Lo que esto anuncia, y es más grande que estos tres repos: el *open weights*
+> chino está adoptando la licencia comunitaria con exclusión territorial como
+> estándar de facto, y el territorio excluido es exactamente el bloque
+> regulatorio más exigente.** No es casualidad: una licencia que excluye la UE
+> es una forma de no entrar al perímetro del AI Act. ⇒ **Para esta KB, la
+> pregunta "¿es permisiva?" dejó de ser suficiente. La pregunta completa es
+> "¿es permisiva, y dónde?"**
+
+**Predicción falsable:** si el patrón es estructural y no de un proveedor, los
+próximos releases abiertos de world models de origen chino —de cualquier casa—
+deberían traer la misma cláusula territorial. El próximo pass puede medirlo con
+`search/code` + byte-read, que es barato.
+
+### 🆕 Tendencia 23: **el "mercado" de herramientas de agente por engine consolida en Unity y se fragmenta en Godot**
+
+Mismo problema técnico, dos estructuras de mercado opuestas, medidas el mismo día:
+
+| Engine | Nº de repos MCP relevantes | Líder | ¿Consolidado? |
+|---|---|---|---|
+| **Unity** | 6+ | `CoplayDev/unity-mcp` — **16.104 ★**, MIT, push 2026-11-17 | ✅ **sí**: un orden de magnitud sobre el 2.º |
+| **Godot** | **7** | `Coding-Solo/godot-mcp` — 6.732 ★ pero **7 meses sin commit** | ⛔ **no**: ninguno de los vivos pasó de 700 ★ |
+
+**Seis de los siete repos de Godot nacieron entre dic-2025 y jun-2026.** La
+lectura: Unity ya tiene ganador y conviene construir encima; Godot está en
+disputa y conviene **no casarse** — y elegir por `pushed_at` + licencia, nunca
+por estrellas, porque ahí la estrella apunta a un repo muerto.
+
+### 🆕 Tendencia 24: **APAC es la única región donde la IA en gaming tiene argumento de ingresos**
+
+En **H1-2026**, los títulos con IA fueron **~15% del top-100 móvil de China** y
+se llevaron **42,6% de los ingresos** de ese top-100: **≈2,8× de
+sobre-representación**.
+
+| Región | Con qué se vende hoy la IA en gaming |
+|---|---|
+| **NA** | Riesgo (COPPA, FTC §5) y eficiencia interna. Sentimiento del jugador hostil |
+| **EMEA** | Cumplimiento (AI Act Art. 50, DFA) |
+| **APAC** | 🟢 **Ingresos** |
+| **LATAM** | Aceptación del jugador y ventana regulatoria abierta |
+
+⚠️ **Correlación, no causalidad:** los títulos con IA del top-100 chino son
+desproporcionadamente los de los estudios grandes, que ya facturaban más. **Lo
+que el dato prueba es que la IA no es un lastre comercial en ese mercado**, que
+sigue siendo más de lo que puede probarse en cualquier otra región.
+
+### 🟡 Corrección nº3: las tres cifras de Steam de esta KB son **tres denominadores**, no un desacuerdo
+
+| Cifra | Ventana | Denominador |
+|---|---|---|
+| **49,9%** (cross-check SteamDB **49,7%** = 1.821/3.661) | **octubre 2026** | releases del mes |
+| **40,1%** | ene–oct 2026 | releases del año |
+| **~30%** | ene-2025 → oct-2026 | **9.251 juegos de pago** (excluye F2P) |
+| 61,1% / 43% | 1–3 nov / 1–2 nov | **275 juegos: ruido, no usar** |
+
+**Y dos matices que bajan el número real:** Valve **quitó en enero de 2026** la
+obligación de declarar herramientas de desarrollo (agentes de código incluidos),
+así que el 49,9% mide **assets que ve el jugador**, no uso interno; y el 49,9%
+**incluye juegos cuyo único uso de IA fue traducir una cadena de texto**.
+
+**Desglose de usos entre los que declaran:** imagen **63%**, testing/traducción
+30%, store page 26%, música 21%, programación 16%, **voice acting 7%**.
+
+> **El 7% de voice acting ordena toda la conversación de riesgo reputacional: es
+> el uso que más indigna y el menos frecuente.** Un cliente que teme el backlash
+> está temiendo una práctica que hace uno de cada catorce juegos que declaran.
+
+### ⛔ Gap de canal declarado, re-verificado este pass
+
+`WebFetch` **no resuelve ningún host general en esta sesión**
+(`getaddrinfo ENOTFOUND`). ⇒ **Ninguna afirmación regulatoria de esta página
+está verificada contra fuente primaria**: ni COM(2026) 1100, ni 90 FR 16970, ni
+el informe de GDC. Todo lo regulatorio viene de **resúmenes de búsqueda web
+sobre fuentes secundarias** y se marca como tal. Los canales que sí funcionan
+—`gh api search/repositories`, `gh api search/code`, `raw.githubusercontent.com`—
+**sólo verifican repos**, y es ahí donde esta KB puede afirmar sin asteriscos.
+
+---
 ## Tendencias confirmadas (alta confianza)
 
 ### 1. 🔴 El sentimiento del desarrollador se dio vuelta, y eso cambia cómo se vende
@@ -775,7 +898,7 @@ El primero contamina la inteligencia de mercado; el segundo, el catálogo de rep
 | **Un solo estudio asistido por agentes** | [WhiteTowerAI/ohmygame](https://github.com/WhiteTowerAI/ohmygame), Apache-2.0, **2.486★ (+107% en 25 días)** | 🟢 **Promovido a tendencia confirmada** → ver tendencia 10 |
 | **Modding asistido por AI** | [rehan-remade/universal-modder](https://github.com/rehan-remade/universal-modder), MIT, **9.809★ (★ ahora verificada)** | Categoría con volumen propio |
 | 🆕 **Práctica PROHIBIDA, no alto riesgo, en la UE** | La Comisión Europea citó como ejemplo de práctica prohibida (Art. 5) los **NPCs generados por AI diseñados a empujar al jugador a gastar más**; comentario legal extiende a optimización de engagement sobre menores | 🔴 **Régimen distinto: lo prohibido no se gestiona, se cancela.** Primera conversación si el cliente tiene NPC conversacional conectado a la tienda |
-| 🆕 **Digital Fairness Act** | Borrador previsto para **Q4-2026**: diseño adictivo y mecánicas aleatorizadas (loot boxes) | Anunciado; convierte el monetization design en materia regulada |
+| 🆕 **Digital Fairness Act** | Borrador previsto para **Q4-2026**: diseño adictivo y mecánicas aleatorizadas (loot boxes) | ⛔ **SUPERADO 2026-11-22 — publicado 11-nov-2026, COM(2026) 1100; ver cycle 10 arriba.** Convierte el monetization design en materia regulada |
 | 🔴 **World model 3D con licencia *territorial*** — **corregido 2026-11-21** | [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0), 2.900★. **Sí publica grant**: `License.txt` (⚠️ mayúscula L, minúscula t), 16.858 B, *Tencent HY-WORLD 2.0 Community License*, release 15-abr-2026 | 🔴 **No es "sin licencia" — es una licencia no-OSI que se cae por región:** *"THIS LICENSE AGREEMENT DOES NOT APPLY IN THE EUROPEAN UNION, UNITED KINGDOM AND SOUTH KOREA"*. Usable en NA/LATAM/APAC-ex-Corea, **inusable en EMEA y Corea**. **No** es el patrón de `unreal-mcp`: ahí no hay archivo. |
 | 🆕 **Reescritura de engines en Rust** | [horizon-rust/horizon](https://github.com/horizon-rust/horizon), **11.515★**, Minecraft Java en Rust | 🔴 **LGPL-3.0**: aparecerá en listas de trending de gaming y **no es permisivo** |
 | **Pesos con licencia distinta al código** | Matrix-Game y MineWorld publican pesos en HF | 🔴 **No verificable desde aquí** (ver gaps) |

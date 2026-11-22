@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # 🎮 Agentes AI — Gaming
@@ -53,6 +53,204 @@ updated: 2026-11-21
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 10): **la línea de world models de Tencent no tiene licencia en EMEA — las tres, no una — y dentro de una de ellas hay una isla Apache-2.0**
+
+> **Primer pass de un día nuevo** (el anterior fue el cycle 9, 2026-11-21). Como
+> en los passes del 21, **no se reportan deltas de ★**: 24 h no mueven una
+> estrella de forma interpretable. Lo que sí cambió en el intervalo son **hechos
+> con fecha** (la Comisión Europea publicó un texto el 11-nov; el canal de
+> licencias destapó una partición territorial sistemática) y eso es lo que trae
+> este pass.
+>
+> **Auditoría mecánica de este pass: 159/159 slugs del inventario re-leídos** con
+> `gh api search/repositories -f q='repo:<slug>'` (★ + SPDX + `archived` +
+> `pushed_at` + `fork`). Resultado: **0 forks disfrazados de upstream**, 2
+> archivados (ambos ya anotados: `0ad/0ad`, `openai/gym`), **4 slugs con 422** y
+> **1 rename nuevo**. Ver el hallazgo nº3.
+
+### 🔴 Hallazgo nº1: las **tres** releases abiertas de world models de Tencent excluyen EU, UK y Corea del Sur — y `HY-WorldPlay` enseña cómo salir
+
+Esta KB ya tenía anotada la exclusión territorial de `HY-World-2.0` y de
+`Hunyuan-GameCraft-1.0`. Este pass agrega el tercer repo de la línea y, al
+enumerar sus archivos de licencia, encuentra que **la exclusión no es una
+peculiaridad de un release: es la plantilla de la casa** — y que dentro del
+mismo repo convive un subdirectorio genuinamente permisivo.
+
+| Repo | ★ | SPDX de GitHub | Licencia **leída byte a byte** | Territorio |
+|---|---|---|---|---|
+| [Tencent-Hunyuan/HY-World-2.0](https://github.com/Tencent-Hunyuan/HY-World-2.0) | 2.901 | `NOASSERTION` | **Tencent HY-World 2.0 Community License** (`License.txt`, 16.858 B, release **15-abr-2026**) | ⛔ **no aplica en EU / UK / Corea del Sur** |
+| [Tencent-Hunyuan/Hunyuan-GameCraft-1.0](https://github.com/Tencent-Hunyuan/Hunyuan-GameCraft-1.0) | 765 | `NOASSERTION` | **Tencent Hunyuan Community License** (`LICENSE`, 16.386 B, release **14-ago-2025**) | ⛔ idem |
+| 🆕 [Tencent-Hunyuan/HY-WorldPlay](https://github.com/Tencent-Hunyuan/HY-WorldPlay) | 1.630 | `NOASSERTION` | **Tencent HY-WorldPlay Community License** (`License.txt`, 16.045 B, release **17-dic-2025**) | ⛔ idem |
+
+La cláusula es literal y es la **primera línea** de los tres archivos:
+
+```
+THIS LICENSE AGREEMENT DOES NOT APPLY IN THE EUROPEAN UNION, UNITED KINGDOM
+AND SOUTH KOREA AND IS EXPRESSLY LIMITED TO THE TERRITORY, AS DEFINED BELOW.
+```
+
+Y la definición que la hace operativa:
+
+> *"**Territory** shall mean the worldwide territory, **excluding** the territory
+> of the European Union, United Kingdom and South Korea."*
+
+**Qué significa, sin eufemismos.** No es una licencia restrictiva en EMEA: es
+**la ausencia de licencia** en EMEA. Fuera del Territory no hay grant — el
+default legal es *todos los derechos reservados*. Un engagement europeo o
+coreano que integre cualquiera de los tres **no tiene permiso de uso**, ni
+siquiera para evaluar, y el badge `NOASSERTION` de GitHub no lo dice.
+
+#### 🟢 La parte nueva y accionable: `HY-WorldPlay` tiene **tres** archivos de licencia, y uno es Apache-2.0
+
+El canal de enumeración (`gh api search/code -f q='repo:<slug> filename:LICENSE'`)
+devuelve `total_count: 3` para `HY-WorldPlay` — contra `1` para `HY-World-2.0`:
+
+| Ruta dentro del repo | Bytes | Licencia | ¿Usable en EMEA? |
+|---|---|---|---|
+| `License.txt` (raíz) | 16.045 | Tencent HY-WorldPlay Community License | ⛔ **no** |
+| 🟢 **`worldcompass/LICENSE`** | 10.757 | **Apache-2.0** (texto estándar) | ✅ **sí, sin restricción territorial** |
+| `worldcompass/reward_function/HunyuanWorldMirror/License.txt` | 17.267 | Tencent HunyuanWorld-Mirror Community License (release 22-oct-2025) | ⛔ **no** |
+
+Es decir: **el subárbol `worldcompass/` es Apache-2.0 de verdad, pero la función
+de reward que vive dentro de él vuelve a caer bajo licencia Tencent con
+exclusión territorial.** Tres niveles, tres grants, y el anidamiento va
+permisivo → restrictivo → permisivo → restrictivo según la profundidad. Un
+`grep` de "Apache" en la raíz del checkout no lo distingue.
+
+> **Regla de método nº14 (nueva, para copiar a toda la familia de KBs): el
+> territorio es un eje de partición del grant tan real como el directorio, y es
+> el único que convierte una decisión técnica en una decisión de *dónde se
+> vende*.** Esta KB ya tenía 7 ejes de partición (por directorio, por archivo,
+> por rama, por componente, por dependencia vendorizada, por pesos-vs-código,
+> por carve-out `ee/`). El territorio es el octavo, y es el primero que un
+> arquitecto **no puede resolver leyendo el repo**: hay que saber en qué
+> jurisdicción publica el cliente.
+
+**El sustituto medido para EMEA.** `SkyworkAI/Matrix-Game` (2.951 ★) cubre el
+mismo caso de uso — mundo interactivo jugable generado — y su grant **no tiene
+cláusula territorial**: raíz `LICENSE` = **MIT** (1.118 B), `Matrix-Game-4/LICENSE`
+= **Apache-2.0** (11.357 B). Ver la Receta 25 en `compose/patterns.md`.
+
+### 🔴 Hallazgo nº2: `youichi-uda/godot-mcp-pro` — 649 ★, cabecera **MIT**, y el producto real es **de pago y propietario**
+
+`gh api search/repositories` lo devuelve como `NOASSERTION`. El byte-read del
+`LICENSE` (1.282 B) abre con `MIT License` — exactamente el patrón que el cycle 4
+de esta KB bautizó *"licence rule inverted"*: un `NOASSERTION` que esconde un
+grant permisivo. **Acá la inversión no se sostiene, y la prueba está en los
+últimos 200 bytes del mismo archivo:**
+
+```
+NOTE: This license applies to the Godot editor plugin (addons/godot_mcp/).
+The MCP server (TypeScript) is distributed separately under a proprietary
+license as part of the paid Godot MCP Pro package.
+```
+
+El repo se anuncia como *"162 MCP tools for AI-powered Godot 4 development"*.
+**Las 162 herramientas viven en el servidor MCP, y el servidor MCP no está
+cubierto.** Lo que es MIT es el plugin del editor: el extremo tonto del cable.
+
+> **Corrección a la regla del cycle 4.** Aquella decía: *"NOASSERTION es la
+> ausencia de un veredicto, resolver por byte-read en ambos sentidos"*. Sigue
+> siendo cierta, pero estaba incompleta: **el byte-read hay que hacerlo del
+> archivo ENTERO, no de la cabecera.** Los 1.070 B del MIT canónico son un
+> checksum útil; **1.282 B no es "MIT con un copyright largo", es MIT más algo**,
+> y ese algo fue, en este caso, el modelo de negocio. Regla nº15: **si el conteo
+> de bytes supera al canónico, leer la cola antes que la cabeza.**
+
+Es el 2.º caso de *open-core en la capa de agentes* que encuentra esta KB (el
+1.º fue el carve-out `ee/` de PostHog) y el 1.º donde **el núcleo cerrado es
+justamente la funcionalidad que da fama al repo**.
+
+### 🔴 Hallazgo nº3: `422` no distingue *borrado* de *renombrado* — pero combinado con `raw`, sí
+
+La auditoría de los 159 slugs devolvió **4 con HTTP 422** (*"resources do not
+exist or you do not have permission"*). Esta KB venía usando ese 422 como
+control negativo de inexistencia. **Es insuficiente:** un repo renombrado
+devuelve exactamente el mismo 422 que uno que nunca existió.
+
+El discriminador es cruzar con el canal `raw`, que **sí sigue el redirect del
+rename**:
+
+| Slug del inventario | `search/repositories` | `raw.../HEAD/README.md` | Veredicto |
+|---|---|---|---|
+| 🆕 `kolbytn/mindcraft` | **422** | **200** | 🔄 **RENOMBRADO** (nuevo este pass) |
+| `minetest/minetest` | **422** | **200** | 🔄 renombrado → `luanti-org/luanti` (ya anotado) |
+| `rivet-gg/toolchain` | **422** | **200** | 🔄 renombrado (cadena de 3 saltos, ya anotada) |
+| `pelican-dev/panel` | **422** | **404** (cuerpo de 14 B) | ⛔ **BORRADO** (ya anotado) |
+
+> **Regla de método nº16: `422` + `raw 200` = se mudó, tu URL redirige y va a
+> seguir redirigiendo hasta que alguien registre el slug viejo. `422` + `raw 404`
+> = no está. Un 422 solo no autoriza a escribir "no existe".**
+
+**El rename nuevo, resuelto:**
+
+| Slug viejo (el que tenía esta KB) | Slug real | ★ | Licencia | Último push |
+|---|---|---|---|---|
+| `kolbytn/mindcraft` | 🆕 **[mindcraft-bots/mindcraft](https://github.com/mindcraft-bots/mindcraft)** | **6.039** | **MIT** | 2026-10-27 |
+
+Mindcraft pasó de cuenta personal a **organización** — la misma transición que
+`justinpbarnett → CoplayDev`, `googleforgames → agones-dev` y
+`minetest → luanti-org`. **Cuarto caso del mismo patrón en esta KB: el proyecto
+que funciona se institucionaliza, y el slug personal queda como redirect.** Es
+un indicador de madurez, no un problema — pero una tabla que cita el slug viejo
+envejece sin avisar, porque el redirect nunca falla.
+
+### 🆕 Filas nuevas de este pass — 11 repos, **las 11 con licencia leída byte a byte**
+
+| Agente / herramienta | Repo | Licencia (byte-read) | ★ | Último push | Para qué sirve |
+|---|---|---|---|---|---|
+| **utopia** | [deeplethe/utopia](https://github.com/deeplethe/utopia) | **Apache-2.0** (`LICENSE`, 11.353 B) | **8.745** | 2026-11-22 | World model abierto de escala "enterprise". **El repo de world models más grande que entra a esta KB** y, a diferencia de toda la línea Tencent, **sin cláusula territorial**: utilizable en EMEA. Creado 2026-08-07. |
+| **Project Lyra** | [nv-tlabs/lyra](https://github.com/nv-tlabs/lyra) | **Apache-2.0** (`LICENSE`, 11.356 B) | **2.888** | 2026-07-20 | World models 3D generativos del **NVIDIA Toronto AI Lab**. Genera escena 3D, no video: es el lado "asset utilizable" del problema, igual que HY-World 2.0 pero **con Apache-2.0 limpia y sin restricción de territorio**. ⚠️ 4 meses sin push. |
+| **stable-worldmodel** | [galilai-group/stable-worldmodel](https://github.com/galilai-group/stable-worldmodel) | **MIT** (`LICENSE`, 1.070 B) | **2.315** | 2026-10-02 | Plataforma de **evaluación reproducible** de world models. La pieza que falta para decidir entre Matrix-Game, Lyra y utopia con una medición en vez de un README. |
+| **DotRecast** | [ikpil/DotRecast](https://github.com/ikpil/DotRecast) | **Zlib** (`LICENSE.txt`, 904 B) | **968** | 2026-10-03 | Port a **C#** de Recast & Detour (navmesh estándar de la industria). Esta KB ya listaba el original en C++; **DotRecast es la vía de entrada a Unity/stacks .NET**, y Zlib es la licencia más permisiva del inventario. |
+| **VibeUE** | [kevinpbuckley/VibeUE](https://github.com/kevinpbuckley/VibeUE) | **MIT** (`LICENSE`, 1.091 B) | **845** | 2026-11-20 | *Vibe coding* para **Unreal Engine**. Tapa el hueco más viejo de esta tabla: el lado Unreal estaba cubierto sólo por `chongdashu/unreal-mcp` (**2.119 ★ pero `null` de licencia y 19 meses dormido**). |
+| **gym-super-mario-bros** | [Kautenja/gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) | **MIT** (`LICENSE`, 1.073 B) | **910** | 2026-09-30 | Entornos Gymnasium para NES/Mario con metadata de tarea y recompensa instrumentada. Benchmark clásico, **vivo** (push hace 2 meses) y compatible con `Farama-Foundation/Gymnasium` que esta KB ya lista. |
+| **unity-cli-loop** | [hatayama/unity-cli-loop](https://github.com/hatayama/unity-cli-loop) | **MIT** (`LICENSE.md`, 1.075 B) | **602** | 2026-11-21 | Maneja Unity desde el Editor **hasta Play Mode** por CLI. Es la mitad que le falta a los MCP de Unity: casi todos editan la escena pero no saben *correr* el juego. ⚠️ Archivo `LICENSE.md`, no `LICENSE` — la sonda estándar le erraba. |
+| **godot-mcp (tugcantopaloglu)** | [tugcantopaloglu/godot-mcp](https://github.com/tugcantopaloglu/godot-mcp) | **MIT** (`LICENSE`, 1.169 B) | **521** | 2026-10-09 | 157 herramientas MCP para control completo de Godot 4.x. **MIT íntegro — contrastar con `godot-mcp-pro`, mismo pitch y núcleo cerrado** (hallazgo nº2). |
+| **Godot-MCP (IvanMurzak)** | [IvanMurzak/Godot-MCP](https://github.com/IvanMurzak/Godot-MCP) | **Apache-2.0** (`LICENSE`, 11.357 B) | **376** | **2026-11-21** | Del autor de `IvanMurzak/Unity-MCP`, que esta KB ya lista. **El Godot-MCP con el push más reciente de todo el clúster** (ver abajo). Apache-2.0 ⇒ trae grant de patentes, que MIT no da. |
+| **funplay-unity-mcp** | [FunplayAI/funplay-unity-mcp](https://github.com/FunplayAI/funplay-unity-mcp) | **MIT** (`LICENSE`, 1.064 B) | **330** | 2026-11-19 | MCP de Unity con `execute_code` + *prompts/resources*. El `execute_code` es lo que lo separa: permite al agente correr C# arbitrario en el Editor en vez de pedir una herramienta por operación. |
+| **Doyunha-Gopeak** | [HaD0Yun/Doyunha-Gopeak](https://github.com/HaD0Yun/Doyunha-Gopeak) | **MIT** (`LICENSE`, 1.070 B) | **274** | 2026-11-13 | 95+ herramientas MCP para Godot: escena, animación, física. Tercera opción MIT del clúster Godot. |
+
+### 🟡 El clúster `godot-mcp`: **el líder por estrellas lleva 7 meses sin un commit**, y hay 6 alternativas vivas
+
+Esta KB ya había detectado en el cycle 4 que `Coding-Solo/godot-mcp` estaba
+muerto. Este pass **mide el clúster entero** y el resultado cambia la
+recomendación:
+
+| Repo | ★ | Licencia (byte-read) | Último push | Edad del push |
+|---|---|---|---|---|
+| [Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp) | **6.732** | MIT | 2026-04-16 | ⛔ **7 meses** |
+| [youichi-uda/godot-mcp-pro](https://github.com/youichi-uda/godot-mcp-pro) | 649 | ⛔ MIT **sólo del plugin** (núcleo de pago) | 2026-09-24 | 2 meses |
+| [tugcantopaloglu/godot-mcp](https://github.com/tugcantopaloglu/godot-mcp) | 521 | ✅ MIT | 2026-10-09 | 1,5 meses |
+| [tomyud1/godot-mcp](https://github.com/tomyud1/godot-mcp) | 454 | ✅ MIT | 2026-10-17 | 1 mes |
+| [IvanMurzak/Godot-MCP](https://github.com/IvanMurzak/Godot-MCP) | 376 | ✅ Apache-2.0 | **2026-11-21** | 🟢 **1 día** |
+| [HaD0Yun/Doyunha-Gopeak](https://github.com/HaD0Yun/Doyunha-Gopeak) | 274 | ✅ MIT | 2026-11-13 | 9 días |
+| [satelliteoflove/godot-mcp](https://github.com/satelliteoflove/godot-mcp) | 188 | ✅ MIT | 2026-11-16 | 6 días |
+
+**El líder tiene 10× las estrellas del repo más activo.** Es la *runner-up
+promotion* que el cycle 4 documentó en Unity, repetida en Godot con una
+diferencia: acá **no hubo rename**. Nadie escondió al líder; simplemente las
+estrellas no caducan y los commits sí. Una búsqueda ordenada por ★ —la que hace
+cualquiera, incluida esta KB en sus primeros passes— devuelve siempre primero el
+repo muerto.
+
+> **Regla nº17: ordenar por ★ responde "qué fue importante"; ordenar por
+> `pushed_at` responde "qué está vivo". Para elegir una base sobre la que
+> construir, la segunda pregunta es la única que importa.**
+
+### ⛔ Candidatos nuevos **rechazados** este pass, con motivo medido
+
+| Candidato | Repo | Qué es | Motivo del rechazo |
+|---|---|---|---|
+| **godot-mcp-pro** | [youichi-uda/godot-mcp-pro](https://github.com/youichi-uda/godot-mcp-pro) | 649 ★, 162 herramientas MCP para Godot 4 | 🔴 **Open-core.** El MIT (1.282 B) cubre **sólo** `addons/godot_mcp/`; el servidor MCP —donde viven las 162 herramientas— es **propietario y de pago**. Ver hallazgo nº2. |
+| **STS2-Agent** | [CharTyr/STS2-Agent](https://github.com/CharTyr/STS2-Agent) | 366 ★, expone *Slay the Spire 2* como MCP server para que un agente lo juegue | 🔴 **AGPL-3.0** (`LICENSE`, **33.985 B** — el checksum de AGPL de esta KB es ~34.500 B ✅). GitHub decía `NOASSERTION`. Copyleft de red: inaceptable para un entregable de cliente. Técnicamente es el mejor ejemplo nuevo de *game-as-MCP-server*, y por eso se anota en vez de omitirse. |
+| **Locus** | [r1n7aro/Locus](https://github.com/r1n7aro/Locus) | 762 ★, *"the open source Unity Dev Agent"* | 🔴 **GPL-3.0** (`LICENSE`, 35.149 B; checksum GPL-3 ≈ 35.200 B ✅). Hay 6 alternativas MIT/Apache en la misma categoría. |
+| **corosolto/client** | [corosolto/client](https://github.com/corosolto/client) | 263 ★, FPS de navegador con 5 facciones brasileñas, 44 personajes | 🔴 **Doble rechazo:** AGPL-3.0 (`LICENSE`, 34.523 B) **y no es un agente ni una herramienta** — es un juego. Se anota porque es **el repo de gaming de origen LATAM con más estrellas que encontró el canal de enumeración en 10 passes**, y ese dato vale para `intel/market.md` aunque la fila no entre acá. |
+| **HY-WorldPlay** (raíz) | [Tencent-Hunyuan/HY-WorldPlay](https://github.com/Tencent-Hunyuan/HY-WorldPlay) | 1.630 ★, world model interactivo en tiempo real | 🟡 **Rechazo parcial, el más útil del pass.** La raíz está bajo licencia Tencent con exclusión EU/UK/Corea ⇒ **inusable en EMEA**. Pero `worldcompass/` es **Apache-2.0** y sí se puede usar. Entra a la KB como *entrada condicionada por región*, no como fila de tabla. Ver hallazgo nº1. |
+
+---
+
 
 ## 🔴 Lo más importante del pass 2026-11-21 (cycle 9): **el backend de 25.570 ★ que esta KB nunca miró, y las dos sondas que esta sesión NO tiene**
 
@@ -548,7 +746,7 @@ bytes con status HTTP; multiplicidad de archivos de licencia enumerada con canal
 | 🆕 ⚫ **godogen_assets** | [htdt/godogen_assets](https://github.com/htdt/godogen_assets) | 🔴 **SIN LICENCIA — ningún grant** (69 archivos versionados, **0** archivos de licencia) | El motor de generación local de assets de Godogen (Blender, imagen, mesh, rig, motion, lipsync, sfx, voz vía `bin/*`). **Dos canales independientes concuerdan**: `find` sobre el clon → 0 resultados; `search/code repo:htdt/godogen_assets filename:LICENSE` → `total_count: 0`. ⛔ **Sin licencia no hay permiso**: no se puede copiar, modificar ni redistribuir en un entregable de cliente. Además exige un token de Hugging Face cuya cuenta haya **aceptado la licencia de `stabilityai/stable-audio-3-small-sfx`** (único modelo *gated*). | 2 |
 | 🆕 **OpenGameAgent** | [EricSun0218/OpenGameAgent](https://github.com/EricSun0218/OpenGameAgent) | **MIT** (`LICENSE`, 1096) | Runtime TypeScript para **personajes y mundos AI-native**. Muy nuevo (push 2026-11-17) y muy chico: **se anota como señal temprana, no como base recomendada**. | 61 |
 | 🆕 ⚠️ **Voyager** | [MineDojo/Voyager](https://github.com/MineDojo/Voyager) | **MIT** (`LICENSE`, 1070) | El agente LLM *open-ended* de Minecraft (currículo automático + skill library + prompting iterativo): **la implementación de referencia más citada de "LLM que juega"**, y un hueco histórico de esta KB. 🔴 **`pushed_at` = 2024-04-03: 2 años y 8 meses sin un commit.** Todo roundup de 2026 lo sigue recomendando. ⇒ **9º caso en esta KB+energy+enterprise de "archivado/congelado pero recomendado"**, y otra vez el patrón: lo recomienda la documentación adyacente al proyecto, nunca una fuente independiente. **Leer el paper y la skill library; no forkear como base viva.** | 7.339 |
-| 🆕 **Mindcraft** | [kolbytn/mindcraft](https://github.com/kolbytn/mindcraft) | **MIT** (`LICENSE`, 1073) | Framework de agentes LLM en Minecraft (multi-agente, colaboración, construcción). 🔵 **No se cita ★**: el repo **no está en el índice de `search/repositories`** (igual que `ossf/gemara` en la KB de enterprise), aunque `ls-remote` lo da vivo y la licencia se leyó en bytes. **Un repo ausente del índice no es un repo inexistente — pero inventarle una cifra sería peor que no darla.** 🔴 Figuraba en el cycle 3 (ago-2026) y **se perdió**: ese pass quedó en commit local sin push. | n/d |
+| 🆕 **Mindcraft** | [mindcraft-bots/mindcraft](https://github.com/mindcraft-bots/mindcraft) | **MIT** (`LICENSE`, 1073) | Framework de agentes LLM en Minecraft (multi-agente, colaboración, construcción). 🟢 **RESUELTO el 2026-11-22: no estaba fuera del índice — estaba RENOMBRADO.** `kolbytn/mindcraft` → **`mindcraft-bots/mindcraft`**, **6.039 ★**, MIT, push 2026-10-27. El 422 de `search/repositories` era el rename, no una ausencia del índice. **Un repo ausente del índice no es un repo inexistente — pero inventarle una cifra sería peor que no darla.** 🔴 Figuraba en el cycle 3 (ago-2026) y **se perdió**: ese pass quedó en commit local sin push. | n/d |
 
 ### 🟢 NVIDIA ACE / Audio2Face-3D: la KB lo citaba en 8 archivos sin un solo grant leído
 

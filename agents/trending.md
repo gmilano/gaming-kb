@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # Agentes trending — Gaming AI
@@ -12,6 +12,79 @@ updated: 2026-11-21
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 10
+
+> **Primer pass de un día nuevo** (el último fue el cycle 9, 2026-11-21).
+> **Sigue sin reportarse delta de ★**: 24 h no mueven una estrella de forma
+> interpretable y ninguna cifra heredada se reescribe. Lo que aporta este pass
+> es **una auditoría mecánica completa del inventario (159/159 slugs)** y
+> **11 filas nuevas**, todas con licencia leída byte a byte.
+
+### Lo que la auditoría de 159 slugs encontró
+
+| Señal | Resultado |
+|---|---|
+| Slugs re-leídos con `gh api search/repositories` | **159 / 159** |
+| Forks disfrazados de upstream | **0** |
+| Archivados | **2** — `0ad/0ad`, `openai/gym` (ambos ya anotados) |
+| HTTP 422 | **4** — 3 renames + 1 borrado (ver abajo) |
+| **Renames nuevos** | **1** 🆕 |
+| Repos dormidos >6 meses | **26** |
+
+### 🔄 Rename nuevo de este pass
+
+| Slug que tenía esta KB | Slug real | ★ | Licencia | Último push |
+|---|---|---|---|---|
+| `kolbytn/mindcraft` | **[mindcraft-bots/mindcraft](https://github.com/mindcraft-bots/mindcraft)** | **6.039** | **MIT** | 2026-10-27 |
+
+Cuarto caso del mismo patrón en esta KB (**cuenta personal → organización**),
+después de `justinpbarnett → CoplayDev`, `googleforgames → agones-dev` y
+`minetest → luanti-org`. **El redirect nunca falla, así que una tabla con el
+slug viejo envejece en silencio.**
+
+### 🆕 Agentes y herramientas nuevos — 11 filas
+
+| Agente / herramienta | Repo | Licencia (byte-read) | ★ | Último push |
+|---|---|---|---|---|
+| **utopia** | [deeplethe/utopia](https://github.com/deeplethe/utopia) | **Apache-2.0** (11.353 B) | 8.745 | 2026-11-22 |
+| **Project Lyra** | [nv-tlabs/lyra](https://github.com/nv-tlabs/lyra) | **Apache-2.0** (11.356 B) | 2.888 | 2026-07-20 |
+| **stable-worldmodel** | [galilai-group/stable-worldmodel](https://github.com/galilai-group/stable-worldmodel) | **MIT** (1.070 B) | 2.315 | 2026-10-02 |
+| **DotRecast** | [ikpil/DotRecast](https://github.com/ikpil/DotRecast) | **Zlib** (904 B) | 968 | 2026-10-03 |
+| **gym-super-mario-bros** | [Kautenja/gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) | **MIT** (1.073 B) | 910 | 2026-09-30 |
+| **VibeUE** | [kevinpbuckley/VibeUE](https://github.com/kevinpbuckley/VibeUE) | **MIT** (1.091 B) | 845 | 2026-11-20 |
+| **unity-cli-loop** | [hatayama/unity-cli-loop](https://github.com/hatayama/unity-cli-loop) | **MIT** (`LICENSE.md`, 1.075 B) | 602 | 2026-11-21 |
+| **godot-mcp (tugcantopaloglu)** | [tugcantopaloglu/godot-mcp](https://github.com/tugcantopaloglu/godot-mcp) | **MIT** (1.169 B) | 521 | 2026-10-09 |
+| **Godot-MCP (IvanMurzak)** | [IvanMurzak/Godot-MCP](https://github.com/IvanMurzak/Godot-MCP) | **Apache-2.0** (11.357 B) | 376 | 2026-11-21 |
+| **funplay-unity-mcp** | [FunplayAI/funplay-unity-mcp](https://github.com/FunplayAI/funplay-unity-mcp) | **MIT** (1.064 B) | 330 | 2026-11-19 |
+| **Doyunha-Gopeak** | [HaD0Yun/Doyunha-Gopeak](https://github.com/HaD0Yun/Doyunha-Gopeak) | **MIT** (1.070 B) | 274 | 2026-11-13 |
+
+### ⛔ Rechazados este pass, con motivo medido
+
+| Candidato | Repo | ★ | Motivo |
+|---|---|---|---|
+| **godot-mcp-pro** | [youichi-uda/godot-mcp-pro](https://github.com/youichi-uda/godot-mcp-pro) | 649 | 🔴 **Open-core**: el MIT cubre sólo `addons/godot_mcp/`; el servidor MCP con las 162 herramientas es **propietario y de pago** |
+| **STS2-Agent** | [CharTyr/STS2-Agent](https://github.com/CharTyr/STS2-Agent) | 366 | 🔴 **AGPL-3.0** (33.985 B) tras badge `NOASSERTION` |
+| **Locus** | [r1n7aro/Locus](https://github.com/r1n7aro/Locus) | 762 | 🔴 **GPL-3.0** (35.149 B); hay 6 alternativas MIT/Apache iguales |
+| **corosolto/client** | [corosolto/client](https://github.com/corosolto/client) | 263 | 🔴 AGPL-3.0 **y no es un agente** (es un juego). Se anota por ser el repo de gaming **de origen LATAM** con más tracción que vio el canal en 10 passes |
+| **HY-WorldPlay** (raíz) | [Tencent-Hunyuan/HY-WorldPlay](https://github.com/Tencent-Hunyuan/HY-WorldPlay) | 1.630 | 🟡 **Rechazo parcial**: raíz con exclusión EU/UK/Corea; **`worldcompass/` es Apache-2.0 y sí se usa** |
+
+### 🟡 La tendencia que este pass puede medir y los anteriores no: **el clúster `godot-mcp` se fragmentó en 7, y el líder está muerto**
+
+| Repo | ★ | Licencia | Último push |
+|---|---|---|---|
+| [Coding-Solo/godot-mcp](https://github.com/Coding-Solo/godot-mcp) | **6.732** | MIT | ⛔ 2026-04-16 (**7 meses**) |
+| [youichi-uda/godot-mcp-pro](https://github.com/youichi-uda/godot-mcp-pro) | 649 | ⛔ open-core | 2026-09-24 |
+| [tugcantopaloglu/godot-mcp](https://github.com/tugcantopaloglu/godot-mcp) | 521 | ✅ MIT | 2026-10-09 |
+| [tomyud1/godot-mcp](https://github.com/tomyud1/godot-mcp) | 454 | ✅ MIT | 2026-10-17 |
+| [IvanMurzak/Godot-MCP](https://github.com/IvanMurzak/Godot-MCP) | 376 | ✅ Apache-2.0 | 🟢 **2026-11-21** |
+| [HaD0Yun/Doyunha-Gopeak](https://github.com/HaD0Yun/Doyunha-Gopeak) | 274 | ✅ MIT | 2026-11-13 |
+| [satelliteoflove/godot-mcp](https://github.com/satelliteoflove/godot-mcp) | 188 | ✅ MIT | 2026-11-16 |
+
+**6 de los 7 nacieron entre dic-2025 y jun-2026.** Es un mercado que se abrió
+hace once meses y todavía no consolidó: nadie pasó de 700 ★ salvo el que dejó de
+publicar. Si hay que apostar a uno, el criterio no es la estrella — es el push.
+
+---
 ## 🆕 2026-11-21 — pass cycle 9
 
 > **Quinto pass del día.** Igual que en los cycles 5-8, **no se reportan deltas de

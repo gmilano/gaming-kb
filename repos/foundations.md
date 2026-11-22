@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # 🏗️ Repos fundacionales — Gaming
@@ -33,6 +33,62 @@ updated: 2026-11-21
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
 
+## 🆕 El hallazgo del cycle 10 (2026-11-22): **esta página tenía el navmesh en C++ y el world model con exclusión territorial** — las dos puertas de entrada que faltaban
+
+Dos huecos de **tipo**, no de precisión: no era que una fila estuviera mal, era
+que faltaba la variante que un cliente real usa.
+
+### 🆕 Repos fundacionales nuevos — 6 filas, todas verificadas byte a byte
+
+| Repo | Licencia (bytes) | Para qué sirve | ★ | Último push |
+|---|---|---|---|---|
+| [ikpil/DotRecast](https://github.com/ikpil/DotRecast) | **Zlib** (`LICENSE.txt`, 904) | Port a **C#** de Recast & Detour, el navmesh estándar de la industria. Esta página listaba sólo [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) (C++, 8.205 ★, **sin push desde 2026-02-27**) ⇒ **no había camino a Unity ni a ningún stack .NET.** Zlib es la licencia más permisiva del inventario entero | 968 | 2026-10-03 |
+| [deeplethe/utopia](https://github.com/deeplethe/utopia) | **Apache-2.0** (`LICENSE`, 11.353) | World model abierto de escala grande, **sin cláusula territorial**. Creado 2026-08-07 | **8.745** | 2026-11-22 |
+| [nv-tlabs/lyra](https://github.com/nv-tlabs/lyra) | **Apache-2.0** (`LICENSE`, 11.356) | World models 3D generativos (NVIDIA Toronto AI Lab). **Genera escena 3D, no video** ⇒ la salida entra a un engine. ⚠️ 4 meses sin push | 2.888 | 2026-07-20 |
+| [galilai-group/stable-worldmodel](https://github.com/galilai-group/stable-worldmodel) | **MIT** (`LICENSE`, 1.070) | Plataforma de **evaluación reproducible** de world models. Convierte la elección entre utopia / Lyra / Matrix-Game en una medición | 2.315 | 2026-10-02 |
+| [Kautenja/gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) | **MIT** (`LICENSE`, 1.073) | Entornos Gymnasium para NES/Mario con metadata de tarea y recompensa instrumentada. Benchmark clásico **y vivo** | 910 | 2026-09-30 |
+| [mindcraft-bots/mindcraft](https://github.com/mindcraft-bots/mindcraft) | **MIT** | Agentes LLM en Minecraft; benchmark MARL. **Slug corregido este pass** — esta KB citaba `kolbytn/mindcraft`, que ya es sólo un redirect | **6.039** | 2026-10-27 |
+
+### 🔴 Por qué `DotRecast` no es "otro navmesh más"
+
+`recastnavigation/recastnavigation` tiene 8.205 ★ y es la referencia — pero es
+una librería **C++**, y el 100% de las herramientas de agentes que lista esta KB
+para Unity trabajan en **C#**. El puente que cualquiera construye a mano
+(P/Invoke sobre la librería nativa, un binario por plataforma de destino) es
+precisamente el trabajo que DotRecast ya hizo, bajo **Zlib**, que no pide ni
+atribución en binario. **Es el repo con el grant menos restrictivo de todo el
+inventario**, y llevaba 10 passes sin aparecer.
+
+### 🔴 La advertencia que acompaña al bloque de world models
+
+Las tres releases abiertas de world models de **Tencent** que esta KB lista
+(`HY-World-2.0`, `HY-WorldPlay`, `Hunyuan-GameCraft-1.0`) **no otorgan licencia
+en la Unión Europea, el Reino Unido ni Corea del Sur** — verificado byte a byte
+en el cycle 10, los tres archivos, misma cláusula en la primera línea. **Las
+cuatro filas permisivas de arriba existen para que haya a dónde ir.** Ver
+`agents/top.md` (hallazgo nº1) y la **Receta 25**.
+
+### ⚠️ Fundacionales ya listados que están **dormidos** — re-medido este pass
+
+No se quitan (son referencia), pero no se recomiendan como base viva:
+
+| Repo | ★ | Último push | Antigüedad |
+|---|---|---|---|
+| [joonspk-research/generative_agents](https://github.com/joonspk-research/generative_agents) | 22.399 | 2024-08-05 | **28 meses** |
+| [MineDojo/Voyager](https://github.com/MineDojo/Voyager) | 7.339 | 2024-04-03 | **32 meses** |
+| [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | 8.205 | 2026-02-27 | 9 meses |
+| [MineDojo/MineDojo](https://github.com/MineDojo/MineDojo) | 2.285 | 2024-03-18 | **32 meses** |
+| [opendilab/DI-engine](https://github.com/opendilab/DI-engine) | 3.645 | 2025-12-07 | 12 meses |
+| [chongdashu/unreal-mcp](https://github.com/chongdashu/unreal-mcp) | 2.119 | 2025-04-22 | **19 meses** + licencia `null` |
+
+> **El patrón, y vale para toda la familia de KBs: los repos fundacionales de
+> esta página promedian más estrellas y más meses sin commit que los repos de
+> agentes. Es esperable —una librería de navmesh terminada no necesita commits—
+> pero significa que `pushed_at` NO se lee igual en las dos tablas.** En
+> `agents/top.md`, 7 meses de silencio es un repo muerto. Acá puede ser uno
+> terminado. **Lo que no cambia es que haya que medirlo y escribirlo.**
+
+---
 ## 🔴 El hallazgo del cycle 9 (2026-11-21): **el agujero no era de precisión, era de COBERTURA** — un backend de 25.570 ★ que esta página nunca listó
 
 Ocho passes de forensia de licencias sobre el catálogo existente, cada uno más fino

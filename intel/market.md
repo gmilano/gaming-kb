@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-21
+updated: 2026-11-22
 ---
 
 # Mapa de mercado — Gaming AI
@@ -13,6 +13,261 @@ updated: 2026-11-21
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🔴 Lo que cambió — pass cycle 10 (2026-11-22): **el Digital Fairness Act dejó de ser un borrador esperado: se publicó el 11-nov-2026, y esta KB lo seguía anunciando a futuro en 5 lugares**
+
+> **Primer pass de un día nuevo.** El cycle 9 corrió el 2026-11-21. En 24 h no se
+> mueve una cifra de encuesta; sí se mueven **hechos con fecha**, y este pass trae
+> tres que el inventario anterior no tenía: la publicación del DFA, una
+> obligación federal estadounidense que ya está en vigor y toca directamente a
+> los NPCs con LLM, y la reconciliación de las tres cifras de Steam que esta KB
+> venía citando como si fueran la misma.
+
+#### 🔴 Corrección nº1 — regulación europea: el **Digital Fairness Act ya es una propuesta publicada** — COM(2026) 1100, del 11-nov-2026
+
+Esta KB escribía *"propuesta esperada en Q4-2026"*, *"borrador Q4-2026"* y
+*"propuesta formal prevista para Q4-2026"* en `intel/market.md` (×4) y
+`intel/trends.md` (×2). **El Q4 llegó y el texto salió.** La diferencia no es
+cosmética: *esperado* es una conversación de radar, *publicado* es una
+conversación de roadmap con articulado citable.
+
+| Campo | Valor medido |
+|---|---|
+| Fecha de publicación | **11-nov-2026** (una fuente secundaria dice 12-nov; la discrepancia se declara, no se resuelve) |
+| Designación | **COM(2026) 1100** |
+| Estado | Propuesta de la Comisión. **Todavía tiene que pasar por Parlamento y Consejo** — no es derecho aplicable |
+| Entrada en aplicación prevista | **12 meses después de la entrada en vigor**, una vez acordado |
+| Sanción máxima | **6% de la facturación anual global** |
+
+**Qué dice el articulado que importa a un estudio:**
+
+| Artículo(s) | Qué regula | Obligación concreta |
+|---|---|---|
+| **Art. 15** | **Sistemas de recompensa variable de pago**: loot boxes, ruletas, sobres de cartas coleccionables | Publicar **qué ítems hay y con qué probabilidad**; dar al jugador **una herramienta accesible para desactivarlos**; **prohibidos para menores** |
+| **Arts. 14–17** | **Diseño adictivo** | El consumidor tiene que poder **apagar** notificaciones push no disparadas por su propia actividad, rachas de engagement y mecánicas equivalentes |
+| Interacción con **EU KIDS Act** | Menores | Los juegos online quedarían **exentos de las reglas de diseño adictivo del DFA *para menores***, porque esa materia pasa al KIDS Act. **No es una exención general** |
+
+> ⚠️ **Matiz que hay que llevar a la sala, porque la prensa lo está perdiendo:**
+> la prohibición de loot boxes de pago **es para menores**. *No* hay prohibición
+> general para jugadores adultos. Varios titulares de nov-2026 dicen lo
+> contrario. Un cliente que llegue alarmado por "la UE prohibió las loot boxes"
+> está citando un titular, no el texto.
+
+⚠️ **Procedencia:** parte de la cobertura disponible (PocketGamer, Shattered,
+Inven Global) se escribió sobre un **borrador filtrado antes de la publicación**
+y puede no coincidir con el texto final. El análisis de Pinsent Masons es el
+único de la muestra escrito sobre el texto publicado. **Ninguna fuente primaria
+pudo leerse en esta sesión** (ver el gap de canal declarado abajo), así que
+COM(2026) 1100 queda como referencia a verificar, no como cita verificada.
+
+**Por qué esto cambia la conversación comercial en EMEA.** La KB venía vendiendo
+Art. 50(2) del AI Act (transparencia de contenido generado) como el gancho
+regulatorio europeo. El DFA agrega un gancho **de monetización**, que es donde
+está el P&L del cliente, no su pipeline de arte. Y con **12 meses desde la
+entrada en vigor**, el calendario de implementación cae justo en el horizonte de
+un engagement que arranque en 2027.
+
+#### 🔴 Corrección nº2 — regulación estadounidense: **ya hay una obligación federal en vigor que rompe el patrón "el NPC llama a un LLM hosteado"** — y esta KB no la tenía
+
+Esta KB declaraba, correctamente, que **no existe** ley federal ni estatal
+estadounidense específica de IA en videojuegos. Sigue siendo cierto. Pero existe
+una regla federal **general** cuyo efecto sobre juegos infantiles es directo,
+está **en vigor desde el 22-abr-2026**, y no aparecía en ninguno de los 8
+archivos:
+
+| Campo | Valor |
+|---|---|
+| Norma | **COPPA Rule enmendada** (FTC) — Federal Register **90 FR 16970** |
+| Fecha de cumplimiento obligatorio | **22-abr-2026** (ya pasada) |
+| Qué exige | **Consentimiento parental verificable (VPC) SEPARADO** antes de divulgar datos personales de un menor a **terceros** para publicidad dirigida **o para entrenar/desarrollar IA** |
+| Prohibición de empaquetado | El padre tiene que poder **aceptar el servicio sin aceptar el entrenamiento de IA**. No vale enterrarlo en los ToS ni agruparlo con el consentimiento del juego |
+| Fundamento de la FTC | Divulgar datos de un menor para entrenar IA **"no se considera, en general, integral al servicio"** |
+
+**Traducción a arquitectura, que es lo que hace esta KB.** En un título dirigido
+a menores en EE.UU.:
+
+1. Mandar la frase que escribió un chico a una API de LLM de un tercero **es una
+   divulgación a un tercero**.
+2. Si ese tercero puede usarla para entrenar, hace falta **VPC separado y
+   desagrupado** — un segundo flujo de consentimiento, no una casilla más.
+3. ⇒ **El patrón "NPC conversacional contra un modelo hosteado" no es
+   implementable tal cual en un juego infantil estadounidense.** Las salidas
+   viables son: inferencia **local/on-device**, un contrato con **opt-out
+   contractual de entrenamiento** verificable, o diseñar el NPC para que **nunca
+   transmita entrada libre del jugador**.
+
+Esto es más accionable que cualquier porcentaje de adopción: es un **requisito
+de diseño**, con fecha, que decide la topología del sistema. Ver la **Receta 26**
+en `compose/patterns.md`.
+
+⚠️ **Procedencia:** todas las fuentes de la muestra son blogs legales y de
+compliance, no el texto de la FTC. Discrepan además sobre si el 22-abr-2026 es
+la fecha de *cumplimiento* de una regla efectiva desde el 23-jun-2025, o la
+fecha de *entrada en vigor*. En sustancia da igual —hoy aplica— pero la cita
+exacta debe sacarse de 90 FR 16970.
+
+#### 🟡 Corrección nº3 — Steam: las **tres** cifras de Steam que esta KB cita son tres denominadores distintos, y mezclarlas produce contradicciones falsas
+
+Esta KB publica *"10,9% (2024) → 19,9% (2025) → 30,8% (2026 a julio)"* sobre un
+censo de 53.597 releases, y en otro lugar *"49,9% oct-2026"*. Las dos son
+correctas y **no se contradicen**: miden cosas distintas. La tabla que faltaba:
+
+| Cifra | Qué mide exactamente | Ventana | Denominador |
+|---|---|---|---|
+| **49,9%** | Share de releases **del mes** con disclosure | **octubre 2026** | Todos los releases de ese mes (cross-check SteamDB: **1.821 / 3.661 = 49,7%**) |
+| **40,1%** | Share acumulado **del año en curso** | ene–oct 2026 | Todos los releases de 2026 |
+| **~30%** | Share del **catálogo de juegos de pago** | ene-2025 → oct-2026 | **9.251** juegos de pago (excluye free-to-play) |
+| 61,1% / 43% | Lecturas de **primeros días de noviembre** | 1–3 nov / 1–2 nov | **275 juegos. Ruido, no señal** — no usar |
+
+> **Regla de método nº18 (hermana de la nº "un número sin su muestra no es un
+> número" del cycle 5): dos cifras de disclosure de Steam sólo son comparables
+> si comparten ventana Y denominador. La diferencia entre 49,9% y 30% no es
+> desacuerdo entre fuentes: es free-to-play dentro o fuera.**
+
+**Y dos matices que bajan el número real de "AI en gameplay":**
+- Valve **cambió las reglas en enero de 2026**: ya **no** hay que declarar
+  herramientas de desarrollo, agentes de código incluidos. El 49,9% mide
+  **assets que ve el jugador**, no uso interno — y el uso interno, que es el 97%
+  del mercado según el dato que esta KB ya tenía, **salió del numerador**.
+- El 49,9% **incluye juegos cuyo único uso de IA fue traducir una cadena de
+  texto**.
+
+**Desglose de usos entre los juegos que sí declaran** (nuevo en esta KB):
+
+| Uso declarado | Share |
+|---|---|
+| Generación de imagen | **63%** |
+| Testing y traducción | 30% |
+| Store page / marketing | 26% |
+| Música | 21% |
+| Programación | 16% |
+| Voice acting | **7%** |
+
+El *voice acting* en 7% es el dato que ordena la conversación de riesgo
+reputacional: **es el uso que más indigna y el menos frecuente.**
+
+### Datos nuevos por región — este pass
+
+#### North America
+- **COPPA enmendada**, en vigor desde el 22-abr-2026 (arriba). Es, hasta donde
+  mide esta KB, **la primera obligación estadounidense con fecha que condiciona
+  la arquitectura de un NPC con LLM**.
+- **Sigue sin haber** ley federal ni estatal específica de IA en videojuegos.
+  El gancho federal general es la **Sección 5 de la FTC Act**: presentar
+  contenido generado por IA como hecho por humanos en material de marketing
+  puede ser práctica desleal o engañosa. ⛔ **Gap declarado:** la afirmación de
+  que *"la ESRB adoptó en 2024 una política de clasificación de contenido IA"*
+  aparece en una sola fuente de baja calidad y **no pudo corroborarse**. No se
+  incorpora como dato.
+- **Regulación de *gambling* (el otro "gaming"):** KPMG mide que **58% de los
+  reguladores duda de que la industria pueda autorregular su uso de IA** y que
+  **sólo 13% conoce operadores licenciados con marcos internos de IA
+  responsable**. ⚠️ Es del sector casino, no videojuegos — esta KB ya documentó
+  ese homónimo en el cycle 8 y lo mantiene separado a propósito.
+
+#### EMEA
+- **Digital Fairness Act publicado el 11-nov-2026, COM(2026) 1100** (arriba).
+  Es el cambio de estado más importante del pass para la región.
+- **La línea de world models de Tencent no tiene licencia en EU ni UK** — las
+  tres releases, verificado byte a byte este pass (ver `agents/top.md`,
+  hallazgo nº1). **Es una restricción de EMEA que nace en un repo, no en un
+  regulador**, y por eso es fácil de pasar por alto en un due diligence que sólo
+  mira normativa.
+- El AI Act sigue con **cronogramas en conflicto entre fuentes** (Art. 50 desde
+  el 2-ago-2026 según varias; obligaciones de alto riesgo desplazadas a
+  2027/2028 por el Digital Omnibus según otras). **Esta KB sigue llevando las
+  dos y no elige** — el conflicto es el dato.
+
+#### APAC
+- **China, adopción a nivel estudio — dos cifras que no coinciden y hay que
+  llevar las dos:**
+
+  | Fuente | Fecha | Cifra | Matiz |
+  |---|---|---|---|
+  | Niko Partners | 2025 | **~60%** de los estudios chinos usan IA | — |
+  | Game Publishing Committee (citada en **ChinaJoy 2026**) | 2026 | **86,4%** con IA en producción | **La mayoría en etapa temprana de "exploración asistida por IA"** |
+
+  El salto de 60%→86,4% es casi con certeza **definición, no crecimiento**: la
+  segunda cuenta "exploración" como producción.
+- 🔴 **El dato que convierte la adopción en dinero (nuevo, el mejor del pass para
+  APAC):** en **H1-2026**, los títulos con IA fueron **~15% del top-100 móvil de
+  China** pero generaron **42,6% de los ingresos** de ese top-100. **≈2,8× de
+  sobre-representación en revenue.** Es el primer dato de esta KB que liga IA en
+  gaming a facturación y no a eficiencia de producción.
+- **NetEase:** un ejecutivo reporta **+30% de eficiencia de I+D** con
+  herramientas tipo DeepSeek, concentrado en **diseño de diálogo de NPC y
+  testing**. Sin cifras de usuarios para la franquicia *Justice*.
+- **Tencent** confirma lo que esta KB ya tenía (*Game for Peace*: **110 M**
+  usuarios acumulados de gameplay con NPC IA, **17,7 M** de pico DAU) y agrega
+  **Roco Kingdom: World**, donde los combates de NPC son mayoritariamente
+  dirigidos por IA. Nuevo también: Tencent lanzó un **compañero de IA que mira
+  la pantalla del jugador y aconseja** — categoría distinta al NPC, y sin
+  números públicos.
+- **Japón:** foco declarado en **protección de IP** y modelos *backend-specialized*,
+  no en features visibles al jugador. Encaja con el 85,8% de adopción entre
+  desarrolladores japoneses (CESA) que esta KB ya tenía: **adoptan mucho y
+  muestran poco.**
+- **Corea:** la **AI Basic Act** rige desde el 22-ene-2026 con **al menos un año
+  de gracia antes de multas**, y Corea **rechazó** introducir excepción de TDM
+  en su ley de copyright (feb-2026). 🔴 **Y Corea es, junto a EU y UK, uno de los
+  tres territorios excluidos de la licencia Tencent** — para un engagement
+  coreano, esa línea de modelos está doblemente cerrada.
+
+#### LATAM
+- 🔴 **El 48,8% insignia de esta KB ahora tiene su ficha técnica completa, y
+  confirma la corrección del cycle 9:** el estudio es **PGB Latam 2026**
+  (Pesquisa Game Brasil, presentado en **gamescom latam**), **más de 7.200
+  encuestados**, y el panel es de **cinco países hispanoamericanos: Argentina,
+  Chile, Colombia, México y Perú**. **Brasil no está en la muestra.**
+- 🆕 Del mismo estudio: **40,6% de los encuestados está preocupado por los
+  despidos y la precarización del trabajo creativo**. Es el contrapeso del
+  48,8%, y faltaba: **aceptación de compra y preocupación laboral conviven en la
+  misma población.** Vender el 48,8% sin el 40,6% es vender medio dato.
+- 🆕 **Gen Z = 47,5% del total de jugadores** de la región.
+- 🆕 **Trampa de denominador detectada este pass:** varios medios regionales
+  presentan el **Gaming Report 2026 de Bain** (*42% de los gamers se siente más
+  cómodo con IA que hace un año; 59% entre adolescentes*) **como si fuera un
+  estudio de LATAM. No lo es: es una encuesta global de 5.300+ jugadores.** Es
+  la misma clase de error que el de los denominadores de Steam, y acá produce un
+  número **inflado a favor** del pitch regional — el tipo de error que no se
+  corrige solo porque nadie se queja de una cifra que le conviene.
+- **Regulación, Brasil:** el **PL 2338/2023** (Marco Legal da IA) **sigue sin ser
+  ley**. Aprobado por el Senado en dic-2024, está en la Cámara; el relator
+  anunció el **24-ago-2026** que la votación quedaba **para después de las
+  elecciones de octubre de 2026**. A nov-2026 no hay fecha de votación.
+  ⇒ **Para un engagement brasileño que arranque hoy, el riesgo regulatorio de IA
+  es bajo y conocido. Esa es una ventaja estructural real de la región frente a
+  EMEA**, y es honesta: no se sostiene en que LATAM sea más barata.
+- ⛔ **Gap medido, no silenciado — tercera vez consecutiva que se mide y tercera
+  vez que da el mismo resultado:** **no existe dato publicado de adopción de IA
+  por estudios de desarrollo latinoamericanos.** Se buscó en español y en
+  portugués (`industria videojuegos América Latina 2026 inteligencia artificial
+  estudios adopción`, `Brasil PL 2338 inteligência artificial jogos
+  desenvolvedores 2026`). Lo más cercano que existe es **IBGE 2026: 41,9% de las
+  empresas brasileñas de 100+ empleados usan IA** — de toda la economía, **no del
+  sector juegos**. Se registra como proxy explícitamente etiquetado, no como
+  dato sectorial.
+- 🆕 **Medición de origen LATAM en el canal de repos (instrumento nuevo este
+  pass):** la enumeración por estrellas devolvió **un** repo de gaming de origen
+  latinoamericano con tracción — `corosolto/client` (263 ★, FPS de navegador con
+  facciones brasileñas, **AGPL-3.0**, push 2026-11-22). **No es un agente ni usa
+  IA**, así que no entra en `agents/top.md`. Pero el cero de passes anteriores
+  deja de ser cero: **hay producción de juegos open source en la región, no hay
+  producción de *agentes* de gaming.** Es un gap de categoría, no de volumen.
+
+#### ⛔ Gap de canal declarado (no silenciado) — se re-verificó este pass
+
+`WebFetch` **no resuelve ningún host general en esta sesión** (`getaddrinfo
+ENOTFOUND` contra `www.pinsentmasons.com`). ⇒ **Ninguna afirmación regulatoria de
+este pass está verificada contra fuente primaria**: ni COM(2026) 1100, ni
+90 FR 16970, ni el informe de GDC. Todo lo regulatorio de esta sección viene de
+**resúmenes de búsqueda web de fuentes secundarias**, y se marca como tal. Los
+canales que **sí** funcionan y sí verificaron datos este pass son
+`gh api search/repositories`, `gh api search/code` y `raw.githubusercontent.com`
+— los tres sobre repos, ninguno sobre normativa.
+
+---
+
 
 ## 🔴 Lo que cambió — pass cycle 9 (2026-11-21): **la cifra insignia de LATAM de esta KB se midió sobre un panel que excluye a Brasil**
 
@@ -546,6 +801,27 @@ declarado; usar con la regla de la muestra de arriba.
 | **AI responsable para operadores iGaming** | Los reguladores dudan de la autorregulación y pocos operadores tienen política interna. | Marco de AI responsable + monitoreo de daño al jugador, auditable. |
 | **Anti-fraude conductual** | Carril iGaming NA con supervisión activa. | GNNs sobre red de jugadores + detección server-side. |
 
+
+#### 🆕 Oportunidad del pass 2026-11-22: **auditoría COPPA de rutas de datos de menores** (la única del pass con obligación ya vencida)
+
+Desde el **22-abr-2026** un juego estadounidense dirigido a menores necesita
+**consentimiento parental verificable separado y no empaquetado** antes de
+mandar datos de un chico a un tercero **para entrenar IA** (COPPA enmendada,
+90 FR 16970). Casi ningún NPC conversacional en producción fue diseñado contra
+ese requisito, porque el requisito es posterior al patrón.
+
+- **Entregable:** inventario de rutas de datos del título (qué sale del
+  dispositivo, hacia qué proveedor, bajo qué términos de entrenamiento) +
+  veredicto por ruta + plan de remediación.
+- **Las tres salidas técnicas, y hay que presentarlas juntas:** (1) inferencia
+  **on-device** — elimina la divulgación, no el consentimiento; (2) contrato con
+  **opt-out de entrenamiento verificable**; (3) rediseño para que el NPC **nunca
+  transmita entrada libre** del jugador (intents cerrados en vez de texto).
+- **Por qué vende:** no es una mejora, es una exposición legal con fecha pasada.
+  Y el comprador no es el director creativo: es **legal + privacy**, que tiene
+  presupuesto propio.
+- **Composición:** Receta 26 (`compose/patterns.md`).
+
 ### EMEA
 
 
@@ -584,7 +860,7 @@ vender once días de pánico por un deber que puede no aplicar al cliente.
   de NPC) es **riesgo mínimo**.
 - Lo que **sí** está prohibido (Art. 5, no "alto riesgo"): **NPCs diseñados para empujar
   gasto in-game**. Multas hasta **35 M€ o 7% de la facturación global**.
-- Pendiente: **Digital Fairness Act**, propuesta esperada en **Q4-2026**, apuntando a
+- Pendiente: **Digital Fairness Act**, propuesta esperada en **Q4-2026**, apuntando a ⛔ **SUPERADO el 2026-11-22: el DFA se publicó el 11-nov-2026 como COM(2026) 1100. Ver la sección del cycle 10 al inicio de este archivo.**
   diseño adictivo y mecánicas aleatorias, con protecciones específicas para menores.
 - Lado casino (frontera del homónimo): la **UKGC subió el rating de riesgo de los
   proveedores de software de juego de bajo a medio el 30-jul-2026**, citando documentos
@@ -618,7 +894,7 @@ reproducen, de forma independiente de los tres passes anteriores:
 - **Guidelines del Art. 50 de la Comisión aprobadas el 20-jul-2026**, y la
   lectura de que **para un single-player de audiencia adulta el diálogo con NPCs
   puede quedar sin etiquetado adicional**.
-- **Digital Fairness Act**: propuesta formal prevista para **Q4-2026**.
+- **Digital Fairness Act**: propuesta formal prevista para **Q4-2026**. ⛔ **SUPERADO el 2026-11-22: el DFA se publicó el 11-nov-2026 como COM(2026) 1100. Ver la sección del cycle 10 al inicio de este archivo.**
 
 ⇒ **Cuenta como la 4ª confirmación independiente del 2-dic-2026** (cycles 5, 6, 7
 y éste, con fuentes distintas cada vez). **No cuenta como verificación
@@ -784,7 +1060,7 @@ con OSCAL y el Anexo IV.
   enteramente por AI** puede tener **protección de copyright limitada o nula**.
   Para un estudio, el riesgo no es sólo la multa: es **no poder defender su
   propio asset**. Y en el radar: **Digital Fairness Act** (borrador Q4-2026),
-  DSA sobre UGC y protección de menores, y reglas de loot boxes.
+  DSA sobre UGC y protección de menores, y reglas de loot boxes. ⛔ **SUPERADO el 2026-11-22: el DFA se publicó el 11-nov-2026 como COM(2026) 1100. Ver la sección del cycle 10 al inicio de este archivo.**
 
 ---
 
@@ -833,7 +1109,7 @@ con OSCAL y el Anexo IV.
 - 🆕 **Y viene una segunda norma, específica de diseño de juego:** la Comisión
   planea un borrador de **Digital Fairness Act para el Q4 de 2026**, apuntando a
   **diseño adictivo y mecánicas aleatorizadas** (loot boxes) en productos
-  digitales, juegos incluidos. Para un publisher europeo, el monetization design
+  digitales, juegos incluidos. ⛔ **SUPERADO el 2026-11-22: el DFA se publicó el 11-nov-2026 como COM(2026) 1100. Ver la sección del cycle 10 al inicio de este archivo.** Para un publisher europeo, el monetization design
   pasa a ser materia regulada, no sólo materia de ética.
 - 🆕 **iGaming EMEA:** la **Malta Gaming Authority** abrió consulta sobre una
   **AI Gaming Charter voluntaria**; a septiembre de 2026 no había publicado guía
@@ -855,6 +1131,47 @@ con OSCAL y el Anexo IV.
 | 🔴 **Sprint de marcado Art. 50(2)** | Deadline 2-dic-2026, catálogo ya publicado, requiere marcado machine-readable. Ventana de 5 semanas. | Entregable acotado y fechado. Ver `compose/patterns.md` → **Receta 7**. |
 | **Separación de relojes 50 / Anexo III** | Dos fechas (2-dic-2026 y 2-dic-2027) y fuentes que las confunden. | Assessment de alcance: qué sistema cae en transparencia y qué en alto riesgo, con la ambigüedad declarada. |
 | **Arquitectura "sin perfilado" por diseño** | Si los sistemas adaptativos caen en Anexo III, el dynamic difficulty basado en perfil del jugador se vuelve caro. | Sacar la decisión de dificultad del LLM y llevarla a un modelo auditable y determinista. |
+
+
+#### 🆕 Oportunidad del pass 2026-11-22 (a): **readiness de monetización frente al Digital Fairness Act** — ya hay texto publicado que citar
+
+COM(2026) 1100 se publicó el **11-nov-2026**. Todavía tiene que pasar Parlamento
+y Consejo, y aplicaría **12 meses después de entrar en vigor** — es decir, cae de
+lleno en el horizonte de un proyecto que arranque en 2027.
+
+- **Entregable:** auditoría del diseño de monetización contra **Art. 15**
+  (recompensa variable de pago: inventario de ítems + **probabilidades
+  publicadas** + **switch de desactivación accesible** + **bloqueo para
+  menores**) y contra **Arts. 14–17** (diseño adictivo: push no disparados por
+  el usuario y rachas, **apagables**).
+- **El ángulo que lo diferencia de un trabajo legal:** las probabilidades y el
+  switch son **features de producto**, no cláusulas. Alguien tiene que construir
+  el panel de odds, el toggle, el gate por edad y la telemetría que prueba que
+  funcionan. Eso es ingeniería, y es lo que vende AI Studios.
+- ⚠️ **Honestidad obligatoria en la sala:** la prohibición de loot boxes de pago
+  **es para menores**; no hay prohibición general para adultos. Si el cliente
+  llega con el titular equivocado, corregirlo **es** el primer entregable.
+- **Riesgo máximo citable:** **6% de facturación global anual**.
+
+#### 🆕 Oportunidad del pass 2026-11-22 (b): **sustitución de world models bloqueados por territorio**
+
+Verificado byte a byte este pass: **las tres releases abiertas de world models
+de Tencent** (`HY-World-2.0`, `Hunyuan-GameCraft-1.0`, `HY-WorldPlay`) llevan la
+misma cláusula — *"THIS LICENSE AGREEMENT DOES NOT APPLY IN THE EUROPEAN UNION,
+UNITED KINGDOM AND SOUTH KOREA"*. En EMEA **no hay grant**: no es una licencia
+incómoda, es ninguna licencia.
+
+- **Entregable:** barrido del stack del cliente buscando pesos y código con
+  exclusión territorial, y **plan de sustitución medido** —
+  `SkyworkAI/Matrix-Game` (MIT en raíz + Apache-2.0 en `Matrix-Game-4/`),
+  `nv-tlabs/lyra` (Apache-2.0), `deeplethe/utopia` (Apache-2.0), ninguno con
+  cláusula de territorio.
+- **Por qué nadie lo detecta solo:** el badge de GitHub dice `NOASSERTION`, no
+  "prohibido en tu país". La cláusula está en la **primera línea de un
+  `License.txt` con L mayúscula y t minúscula**, que la sonda habitual
+  (`LICENSE`, `LICENSE.txt`) **no pide**. Esta KB le erró con la sonda estándar
+  en este mismo pass antes de enumerar.
+- **Composición:** Receta 25 (`compose/patterns.md`).
 
 ### APAC
 
@@ -1156,6 +1473,31 @@ open source más fuerte del ciclo.**
 | **Integración de world models abiertos** | Matrix-Game 4.0 es MIT/Apache-2.0 y corre en una RTX 5080. La barrera ya no es el modelo: es integrarlo a un pipeline de producción. | Ver `compose/patterns.md` → **Receta 8**. |
 | **Due diligence de procedencia de pesos** | Construir sobre I+D china implica revisar licencia de pesos y de assets de entrenamiento, y Hunyuan ya es no-OSI. | Screening de grants (el método está en `agents/top.md`). |
 | **Analítica de esports** | Juegos Asiáticos 2026. | Anti-cheat conductual + analítica de broadcast. |
+
+
+#### 🆕 Oportunidad del pass 2026-11-22: **el argumento de ingresos, que en APAC ya existe y en ninguna otra región**
+
+Dato nuevo de este pass: en **H1-2026** los títulos con IA fueron **~15% del
+top-100 móvil chino** y se llevaron **42,6% de los ingresos** de ese top-100
+(≈**2,8×** de sobre-representación). Es el primer dato del inventario que liga
+IA en gaming a **facturación**, no a eficiencia de producción.
+
+- **Cómo se usa:** en NA y EMEA la conversación es *coste* y *riesgo*; en APAC
+  se puede abrir por **ingreso**. Es la misma tecnología con un caso de negocio
+  distinto, y el caso de ingreso es el único que financia un proyecto grande.
+- ⚠️ **Decir el sesgo antes de que lo digan:** correlación, no causalidad. Los
+  títulos con IA del top-100 chino son desproporcionadamente los de los grandes
+  estudios, que ya facturaban más. **Lo que el dato prueba es que la IA no es un
+  lastre comercial en ese mercado** — que ya es más de lo que puede probarse en
+  cualquier otra región.
+- **Adopción a nivel estudio, con las dos cifras:** ~60% (Niko, 2025) vs **86,4%**
+  (Game Publishing Committee, ChinaJoy 2026, *mayoría en etapa temprana*). La
+  diferencia es de definición. ⇒ **Vender integración y puesta en producción, no
+  evangelización**: el mercado ya probó, le falta operar.
+- 🔴 **Corea, advertencia doble:** AI Basic Act desde el **22-ene-2026** (≥1 año
+  de gracia antes de multas) **y** territorio excluido de la licencia Tencent.
+  La línea de world models de Tencent **no se puede usar en un engagement
+  coreano**, igual que en EMEA.
 
 ### LATAM
 
@@ -1485,6 +1827,35 @@ corrió y no encontró nada.
 | **Exportación con diferencial AI** | Estudios LATAM compitiendo globalmente sin oferta OSS local. | Globant como acelerador de integración AI. |
 
 ---
+
+
+#### 🆕 Oportunidad del pass 2026-11-22: **la ventana regulatoria brasileña**, y el 48,8% dicho entero
+
+El **PL 2338/2023** sigue sin ser ley: aprobado por el Senado en dic-2024, está
+en la Cámara, y el relator anunció el **24-ago-2026** que la votación quedaba
+**para después de las elecciones de octubre de 2026**. A nov-2026 no hay fecha.
+
+- **El argumento, y es estructural, no de precio:** un piloto de IA en juego
+  lanzado hoy en Brasil corre bajo un régimen **conocido y estable**, mientras
+  que el equivalente europeo tiene que presupuestar DFA + AI Act con cronogramas
+  en conflicto. **LATAM como mercado de primer lanzamiento para features de IA
+  visibles al jugador** es la única tesis de esta KB que no se apoya en que la
+  región sea más barata.
+- **Reforzado por aceptación medida:** **48,8%** compraría títulos hechos con IA
+  (PGB Latam 2026, >7.200 encuestados, **Argentina/Chile/Colombia/México/Perú —
+  Brasil NO está en el panel**), contra ~85% de rechazo declarado a nivel global.
+- 🔴 **Y hay que decir la otra mitad del mismo estudio: 40,6% está preocupado por
+  los despidos y la precarización del trabajo creativo.** Aceptación de compra y
+  ansiedad laboral conviven en la misma población encuestada. Un pitch que cite
+  48,8% y omita 40,6% se cae cuando el cliente lee el estudio.
+- ⚠️ **No confundir con Bain:** el *Gaming Report 2026* (42% más cómodo con IA
+  que hace un año; 59% entre adolescentes) es **global, 5.300+ jugadores**,
+  aunque varios medios regionales lo presenten como latinoamericano.
+- ⛔ **Lo que sigue sin existir, medido tres passes seguidos:** cifras de adopción
+  de IA por **estudios** de desarrollo latinoamericanos. El mejor proxy
+  disponible es **IBGE 2026: 41,9% de las empresas brasileñas de 100+ empleados**
+  — de toda la economía, no del sector. **Si un pitch necesita ese número, hay
+  que generarlo, no citarlo**: ahí hay un entregable de investigación vendible.
 
 ## Posicionamiento Globant AI Studios
 
