@@ -6,9 +6,107 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22 cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 19)** (passes previos: 2026-11-22 cycles 18/17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 19 (2026-11-22)
+
+**Tema:** el **plano de decisión** (flags, *remote config*, experimentos,
+recomendación, LTV) y el **canal 7** (censo del carve-out y su deriva). Cuatro
+tendencias nuevas, una corrección a una tendencia de esta misma KB publicada hace
+una hora, y dos gaps medidos.
+
+### 🆕 Tendencia 35: **la licencia ya no se mueve de un valor a otro; se mueve de PROPORCIÓN**
+
+Las tendencias 33 y 34 de esta página dicen que la superficie de licencia de un repo
+es más grande que cualquier sonda y que el componente restringido nunca es el
+titular. Este pass agrega el eje que faltaba: **el tamaño del pedazo restringido es
+una variable de tiempo, y se mide sin leer una línea de licencia**.
+
+| Repo | Carve-out 2023 | Carve-out 2026 | Dirección |
+|---|---|---|---|
+| `growthbook/growthbook` | 12 archivos (**0,73 %** del árbol) | **317** archivos (**4,55 %**) | ⬆️ ×26 en archivos, **×6,2 en proporción** |
+| `PostHog/posthog` | 247 archivos (2023) | **836** archivos (**1,12 %**, desde 7,35 % en 2022) | ⬆️ en archivos, **⬇️ en proporción** |
+
+**Señal:** dos productos de la misma capa, la misma técnica de licencia (núcleo
+permisivo + directorio propietario), **tendencias opuestas** — y ninguno cambió
+nunca de licencia, así que ningún canal de los 1-6 lo habría visto. El titular
+*"el carve-out de PostHog casi se cuadruplicó"* es cierto y engañoso; el de
+GrowthBook es cierto en los dos sentidos. **La proporción es el indicador; su
+derivada es el riesgo.**
+
+### 🆕 Tendencia 36: **la capa que decide qué ve el jugador tiene plataformas permisivas; lo que no tiene es SDK de engine**
+
+Medido en este pass: **ocho** plataformas permisivas, auto-hospedables y vivas
+(Flagsmith BSD-3, GrowthBook MIT-core, flagd/OpenFeature Apache-2.0,
+go-feature-flag MIT, Featurevisor MIT, gorse Apache-2.0, y Flipt/Unleash con
+reservas). **Cero** paquetes Unity. **Cero** Unreal. Las tres opciones con SDK de
+engine (Unity Remote Config/Game Overrides, GameAnalytics, Joystick) son
+propietarias.
+
+**Por qué importa como tendencia y no como dato:** reproduce en una cuarta capa el
+patrón que esta KB ya midió en engines, backends y assets — **el open source
+permisivo llega hasta el borde del engine y se detiene ahí**, porque quien escribe
+infraestructura de decisión trabaja en web/SaaS y quien trabaja en engines no
+escribe infraestructura de decisión. Es el hueco donde una práctica de servicios
+tiene ventaja estructural: no hay que construir la plataforma, hay que **tender el
+último metro**.
+
+### 🆕 Tendencia 37: **la regulación de 2026 pasó del CONTENIDO generado a la DECISIÓN tomada**
+
+Los cycles 10-18 siguieron etiquetas, marcado y categorías de edad: regulación del
+**output**. Este pass encuentra una familia distinta, en vigor en tres regiones,
+que regula **la decisión**: *surveillance pricing* en EE.UU. (Maryland en vigor
+desde 1-oct-2026), precios algorítmicos de plataforma en China (en vigor
+10-abr-2026, con **registro de algoritmo** y divulgación de reglas de ranking),
+loot boxes y oferta a menores en Brasil (Decreto 12.880/2026), y el Art. 5 del AI
+Act en la lectura sectorial de *gambling* (apuntar ofertas de mayor riesgo a
+jugadores financieramente vulnerables como práctica potencialmente **prohibida**,
+no de alto riesgo).
+
+**Lo que las cuatro piden en términos de ingeniería es lo mismo:** poder **apagar**
+la personalización de oferta y precio por jugador y por jurisdicción, y poder
+**probar** cuándo se apagó. Detalle por región en `intel/market.md`.
+
+### 🆕 Tendencia 38: **el repo archivado se queda con las estrellas, y eso rompe cualquier ranking por tracción**
+
+`hyochan/react-native-iap`: **3.219 ★**, `archived=true`, y en su propia descripción
+declara el sucesor. `hyodotdev/openiap`: **171 ★**, MIT, push del 2026-11-21. **19×
+de diferencia a favor del muerto.** Es el *runner-up promotion* del cycle 4, pero la
+señal es distinta: en un rename el slug viejo devuelve `NOT_FOUND` por API y 200 en
+raw; en un archivo **todo responde 200** y la única pista está en la prosa de la
+descripción y en el campo `archived`. ⇒ **`archived` deja de ser un campo
+informativo y pasa a ser un filtro obligatorio** en cualquier consulta de esta
+familia de KBs.
+
+### 📏 🔴 CORRECCIÓN a la T70 del cycle 18 (publicada hace ~1 hora): **Apache-2.0 no tiene cuatro byte-counts, tiene al menos SEIS**
+
+Medidos hoy, los seis Apache-2.0 legítimos: **10.760** (`prebid/prebid-server`) ·
+**11.316** (`Unleash/unleash` pre-v8) · **11.344**
+(`OpenAttribution/open-attribution`) · **11.352** (`open-feature/spec`) ·
+**11.356** (`gorse-io/gorse`) · **11.357** (`pymc-labs/pymc-marketing`). **600 B de
+dispersión.** La mayor parte de la diferencia es el apéndice *"How to apply the
+Apache License to your work"*, que algunos repos recortan.
+
+⇒ **Para Apache-2.0 el checksum de bytes puede levantar la mano, nunca
+dictaminar.** Confirmar con la primera línea no vacía y con la presencia del
+apéndice. Para MIT (1.066-1.102 B observados en 5 repos) y GPL-3.0 (35.149 B en dos
+repos independientes) el checksum sigue siendo fiable. **Esta es la tercera
+corrección al checksum en tres passes: la técnica estrella de esta KB es un
+detector, no un juez, y conviene dejar de tratarla como un juez.**
+
+### ⛔ Gaps medidos este pass, con lo que se buscó
+
+| Gap | Qué se buscó | Resultado medido |
+|---|---|---|
+| SDK de engine para flags/experimentos | paquetes Unity y Unreal de las 8 plataformas permisivas | **cero y cero** |
+| MMP / atribución móvil open source | `open source MMP mobile attribution` | **uno** (`OpenAttribution/open-attribution`, Apache-2.0, 86 ★) y **sin push desde 2025-09-28** ⇒ existe y está parado |
+| Mediación de publicidad open source | mediación entre redes | **cero**; la subasta sí (`prebid/prebid-server`, Apache-2.0) |
+| Modelo de churn/LTV de juego | reconfirmación del gap del cycle 16 | **sigue en cero**, pero la base permisiva para construirlo es `pymc-labs/pymc-marketing` (Apache-2.0, CLV bayesiano) |
+| Regla de juegos sobre oferta personalizada en China/Corea | búsqueda regional dirigida | **cero**: la exposición entra por reglas de **plataforma y precio**, no de juegos |
+| Enmienda COPPA 2026 / acción FTC 2026 sobre ofertas personalizadas | búsqueda regional dirigida | **cero verificable**; sólo los casos de 2022-2023 (Epic, USD 520 M) |
+| Fuente primaria de Unleash y de Bain | `getunleash.io`, `docs.getunleash.io`, `bain.com` | **ENOTFOUND** en esta sesión. Unleash **sustituido por completo** en el repo (historia + `package.json` + tags); Bain **sin sustituto** ⇒ cifras marcadas como secundarias |
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 18 (2026-11-22)
 

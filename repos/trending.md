@@ -11,6 +11,53 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 19
+
+**Tema:** el **plano de decisión**. Por primera vez en cuatro passes la búsqueda
+devuelve **más repos nuevos que información nueva sobre repos viejos** — 28 slugs
+que esta KB no tenía, ninguno heredado — y el motivo es el vocabulario: los cycles
+10-18 preguntaron por *engine, NPC, world model, assets, voz, datos, fábrica*;
+este pass preguntó por *feature flag, remote config, experiment assignment,
+recommender, uplift, LTV*. **El inventario no estaba incompleto por falta de
+passes: estaba incompleto por falta de palabras.**
+
+### Trending de esta capa, por tracción y con la licencia leída en bytes
+
+| Repo | ★ | Licencia (byte-read) | Último push | Señal |
+|---|---|---|---|---|
+| [recommenders-team/recommenders](https://github.com/recommenders-team/recommenders) | 22.009 | MIT (1.212 B) | 2026-11-05 | Linux Foundation; el estándar de facto para arrancar un recomendador |
+| [Unleash/unleash](https://github.com/Unleash/unleash) | 14.337 | **AGPL-3.0** (34.523 B) | 2026-11-20 | 🔴 Relicenciado el 2026-05-26; la web sigue diciendo Apache-2.0 |
+| [gorse-io/gorse](https://github.com/gorse-io/gorse) | 9.927 | Apache-2.0 (11.356 B) | 2026-11-20 | Recomendador **desplegable**; rankers LLM en la descripción |
+| [VowpalWabbit/vowpal_wabbit](https://github.com/VowpalWabbit/vowpal_wabbit) | 8.742 | BSD-3-Clause (1.584 B) | 2026-10-15 | Badge `NOASSERTION` por formato; permisivo de verdad |
+| [growthbook/growthbook](https://github.com/growthbook/growthbook) | 8.645 | MIT Expat + carve-out | 2026-11-21 | Carve-out **×6,2 en proporción** en 20 meses (canal 7) |
+| [Flagsmith/flagsmith](https://github.com/Flagsmith/flagsmith) | 8.533 | BSD-3-Clause (1.556 B) | 2026-11-21 | La más limpia de la capa: cero archivos de licencia fuera de la raíz |
+| [flipt-io/flipt](https://github.com/flipt-io/flipt) | 4.953 | FCL-1.0-MIT / GPL-3.0 / MIT | 2026-11-21 | **Tres grants en un repo**, según rama y subdirectorio |
+| [meta-pytorch/torchrec](https://github.com/meta-pytorch/torchrec) | 2.629 | BSD-3-Clause (1.530 B) | 2026-11-22 | ⚠️ Rename: `pytorch/torchrec` → 422 |
+| [thomaspoignant/go-feature-flag](https://github.com/thomaspoignant/go-feature-flag) | 2.145 | MIT (1.072 B) | 2026-11-22 | Push el día del pass; flags sin base de datos |
+| [open-feature/spec](https://github.com/open-feature/spec) + [flagd](https://github.com/open-feature/flagd) | 1.299 + 1.029 | Apache-2.0 | 2026-11-21 / 19 | El estándar CNCF y su evaluador: la salida del *lock-in* |
+| [pymc-labs/pymc-marketing](https://github.com/pymc-labs/pymc-marketing) | 1.314 | Apache-2.0 (11.357 B) | 2026-11-21 | CLV bayesiano: cierra parcialmente el *"churn/LTV = cero"* del cycle 16 |
+| [hyodotdev/openiap](https://github.com/hyodotdev/openiap) | 171 | MIT (1.066 B) | 2026-11-21 | Sucesor **vivo** de un repo archivado con 19× sus ★ |
+
+### 🆕 Señal de método, para el historial: **el checksum de bytes de Apache-2.0 tiene ≥6 valores**
+
+Medidos este pass, todos Apache-2.0 legítimos: **10.760** · **11.316** · **11.344** ·
+**11.352** · **11.356** · **11.357**. 600 B de dispersión ⇒ para Apache el checksum
+**flagea, no dictamina** (corrige la T70 del cycle 18, publicada ~1 h antes). Para
+MIT (1.066-1.102 B en 5 repos) y GPL-3.0 (35.149 B en 2 repos) sigue firme.
+
+### Repos en observación para el próximo pass de gaming
+
+- **`OpenAttribution/open-attribution`** (Apache-2.0, 86 ★): si vuelve a tener push,
+  es el único MMP open source y cambia el mapa de monetización. Sin push desde
+  2025-09-28.
+- **`open-feature/dotnet-sdk`** (Apache-2.0, 143 ★): si aparece un *wrapper* Unity
+  sobre él —de la comunidad o de un estudio— cierra el gap de SDK de engine de toda
+  esta capa.
+- **`flipt-io/flipt`**: la rama `main` (GPL-3.0, v1) sigue recibiendo commits
+  (2026-11-17). Si v1 se archiva, el repo pasa de tres grants a dos.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 18
 
 **Tema:** el **canal 6** (`git ls-tree -r HEAD` sobre un clon *blobless*). Por

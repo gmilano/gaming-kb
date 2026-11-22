@@ -8,13 +8,93 @@ updated: 2026-11-22
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22 cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 19)** (passes previos: 2026-11-22 cycles 18/17/16/15/14/13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
 > (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
 > de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
+
+## 🆕 Capa vertical nueva (2026-11-22, cycle 19): **la consola de live-ops** — y el gap que el cycle 16 declaró queda *reencuadrado*, no cerrado
+
+El cycle 16 escribió en esta página: *"no existe una plataforma de live-ops open
+source y permisiva para juegos"*, y dejó anotado que Heroic Labs posiciona
+**Satori** (eventos, audiencias, feature flags, experimentos) encima de Nakama sin
+que ninguna fuente afirme que sea open source. Ese gap se midió otra vez hoy, con
+el vocabulario correcto —*feature flags*, *remote config*, *experiment assignment*,
+*recommender*— y el resultado es más útil que un cero:
+
+> **Hay ocho plataformas permisivas, auto-hospedables y vivas para esta capa. Lo
+> que no existe es el SDK de engine.** El gap no era la plataforma: era el último
+> metro entre el servidor de decisión y el cliente de juego. Eso cambia la
+> conversación con el cliente de *"hay que construir la plataforma"* a *"hay que
+> escribir dos SDKs delgados sobre un protocolo abierto (OpenFeature)"*.
+
+### La tabla de plataformas de esta vertical
+
+| Plataforma | Licencia (verificada 2026-11-22) | Se despliega | Qué cubre | Veredicto para un estudio |
+|---|---|---|---|---|
+| [Flagsmith](https://github.com/Flagsmith/flagsmith) (8.533 ★) | **BSD-3-Clause** (1.556 B, sin carve-out) | self-host (Docker/K8s) | flags, *remote config*, segmentos, multi-entorno | ✅ **La recomendación por defecto si lo que se necesita es la consola.** La licencia más limpia de la capa. |
+| [GrowthBook](https://github.com/growthbook/growthbook) (8.645 ★) | 🟡 **MIT Expat** + 3 directorios `enterprise/` (317 archivos, **4,55 %** del árbol) | self-host | flags **+ motor de estadística** de experimentos | ✅ Si hace falta decidir con estadística y no sólo encender features. **Excluir los 3 directorios del entregable** y fijarlo por escrito. |
+| [flagd](https://github.com/open-feature/flagd) + [OpenFeature](https://github.com/open-feature/spec) (1.029 + 1.299 ★) | **Apache-2.0** | un demonio + un archivo | evaluación de flags, estándar CNCF | ✅ **La opción sin consola y sin vendor.** Lo que se le entrega al cliente es un contrato de API, no un producto. |
+| [go-feature-flag](https://github.com/thomaspoignant/go-feature-flag) (2.145 ★) | **MIT** (1.072 B) | binario; estado en S3/Git/HTTP | flags, reglas, *rollout* progresivo | ✅ Para estudios sin equipo de plataforma: no hay base de datos que operar. |
+| [Featurevisor](https://github.com/featurevisor/featurevisor) (816 ★) | **MIT** (1.102 B) | artefactos de build (CDN) | flags, experimentos, *remote config* en Git | ✅ Cuando el flag tiene que entrar por PR y quedar en el historial del repo. |
+| [Flipt](https://github.com/flipt-io/flipt) (4.953 ★) | ⚠️ **FCL-1.0-MIT** (v2) · **GPL-3.0** (v1) · **MIT** (`sdk/go`) | self-host | flags declarativos, *GitOps* | 🟡 **Usable en servicios profesionales por cláusula expresa**; no empaquetable como producto de Globant. Ver Receta 45. |
+| [Unleash](https://github.com/Unleash/unleash) (14.337 ★) | ⛔ **AGPL-3.0** desde v8 (2026-05-26) | self-host | flags, estrategias, *edge* | ⛔ **No recomendable como base de entregable** desde v8. Si ya está instalado en el cliente: v7.6.4 es el último Apache-2.0 y los SDKs siguen permisivos. |
+| [gorse](https://github.com/gorse-io/gorse) (9.927 ★) | **Apache-2.0** (11.356 B) | servicio al lado del backend | recomendación (clásica + rankers LLM) | ✅ La pieza de personalización desplegable de la vertical. |
+
+### ⛔ Lo propietario, nombrado a propósito
+
+Para que la comparación sea honesta en una propuesta: **las tres plataformas que
+sí traen SDK de engine no son open source.** *Unity Remote Config* con *Game
+Overrides* (experimentos por segmento de jugador, con API de runtime para otros
+engines), *GameAnalytics* (SDK C++ abierto, plataforma de live-ops cerrada) y
+*Joystick* (SDKs Unity y Unreal, licencia no verificada en esta sesión). El
+argumento de venta del camino permisivo **no** es que sea más barato: es que el
+*dato de decisión* —qué oferta vio cada jugador y a qué precio— se queda en la
+infraestructura del cliente, que es exactamente lo que la regulación de 2026 le va
+a pedir auditar (ver `intel/market.md`, las cuatro regiones).
+
+### 🟢 Lo que esto le agrega al stack recomendado de esta página
+
+El stack de esta KB era **Godot + Nakama + MCP**. La capa de decisión se enchufa
+sin tocar ninguna de las tres:
+
+```
+Godot/Unity (cliente)
+   │  flag/config por jugador  ← SDK OpenFeature (hay que escribirlo: ver gap)
+   ▼
+flagd (Apache-2.0)  ──lee──>  archivo de flags en Git  (revisión por PR)
+   │
+   ├── GrowthBook (MIT core) ─ asignación + estadística del experimento
+   └── gorse (Apache-2.0)  ─ recomendación, alimentado por los eventos de Nakama
+                                │
+Nakama (Apache-2.0) ───────────┘   (el plano de datos del cycle 16 sigue siendo el que vende primero)
+```
+
+🔴 **El interruptor que esta vertical hace posible y que ninguna otra capa de esta
+KB podía ofrecer:** un flag `offer_personalization_enabled`, derivado de banda
+etaria y jurisdicción, que **apaga por defecto** la personalización de ofertas y
+precios. Sin esta capa, cumplir el Decreto 12.880/2026 brasileño o las reglas
+chinas de precios requiere un parche de cliente y una release; con esta capa es un
+cambio de configuración con registro de quién lo cambió y cuándo. Ver **Receta 50**.
+
+### 📉 Gaps de esta vertical, medidos y declarados
+
+- **SDK Unity/Unreal en plataforma permisiva: cero.** (Detallado en
+  `repos/foundations.md`.)
+- **Mediación de publicidad open source: cero.** La subasta sí
+  ([prebid-server](https://github.com/prebid/prebid-server), Apache-2.0); la
+  mediación entre redes, no.
+- **MMP/atribución open source: uno y dormido** —
+  [OpenAttribution](https://github.com/OpenAttribution/open-attribution)
+  (Apache-2.0, 86 ★, sin push desde 2025-09-28).
+- **Modelo de churn/LTV de juego listo para producción: sigue en cero**, pero la
+  base permisiva para construirlo ya está identificada
+  ([pymc-marketing](https://github.com/pymc-labs/pymc-marketing), Apache-2.0,
+  CLV bayesiano). El cycle 16 decía *"hay que entrenarlo sobre el plano de datos
+  del cliente"*; hoy se puede decir **con qué**.
 
 ## 🔴 Corrección del cycle 18 (2026-11-22): **"GDevelop es MIT en todo el código" es falso** — embarca un runtime que exige una licencia **paga por usuario**
 

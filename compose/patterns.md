@@ -7,8 +7,15 @@ updated: 2026-11-22
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22
-> cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 19)** (passes previos: 2026-11-22
+> cycles 18/17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Las del cycle 19 son la 48** (plano de decisión 100 % permisivo: flags,
+> experimentos, recomendación y LTV sin un componente restringido), **la 49**
+> (*gate de carve-out* — canal 7: medir qué **proporción** del repo no es libre y
+> si crece), **la 50** (el **interruptor de oferta**: un flag, cuatro jurisdicciones
+> que piden cosas incompatibles, apagado por defecto) y **la 51** (salir de Unleash
+> sin heredar la AGPL).
 >
 > 🆕 **Las del cycle 18 son la 46** (auditoría de licencias **por árbol completo** —
 > el canal 6 reemplaza el paso de enumeración de las Recetas 10/14/17/20, que probaba
@@ -69,6 +76,209 @@ updated: 2026-11-22
 > concretos de este ciclo: una fecha límite regulatoria en la UE, world models
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
 > benchmark publicado de agentes que juegan.
+
+## 🆕 Receta 48: **Plano de decisión 100 % permisivo** — el *flag* como punto de control auditable, sin un solo componente restringido
+
+**Para qué:** un juego live necesita cambiar configuración, contenido y ofertas sin
+sacar un build, y necesita **poder probar** qué vio cada jugador. Esta receta arma
+esa capa sin ningún grant con reservas y sin SaaS.
+
+**Piezas, todas verificadas el 2026-11-22:**
+
+| Rol | Repo | ★ | Licencia (byte-read) | Dónde corre |
+|---|---|---|---|---|
+| Contrato de API (el que te des-casa del vendor) | [open-feature/spec](https://github.com/open-feature/spec) | 1.299 | **Apache-2.0** (11.352 B) | especificación |
+| Evaluador de flags | [open-feature/flagd](https://github.com/open-feature/flagd) | 1.029 | **Apache-2.0** | *sidecar* junto al backend |
+| SDK servidor (Go: el lenguaje de Nakama) | [open-feature/go-sdk](https://github.com/open-feature/go-sdk) | 257 | **Apache-2.0** | backend de juego |
+| SDK .NET (vía más corta a Unity) | [open-feature/dotnet-sdk](https://github.com/open-feature/dotnet-sdk) | 143 | **Apache-2.0** | cliente / servicios .NET |
+| Estado de los flags sin base de datos | [thomaspoignant/go-feature-flag](https://github.com/thomaspoignant/go-feature-flag) | 2.145 | **MIT** (1.072 B) | lee S3/Git/HTTP |
+| Consola + segmentos (si el cliente la quiere) | [Flagsmith/flagsmith](https://github.com/Flagsmith/flagsmith) | 8.533 | **BSD-3-Clause** (1.556 B) | self-host |
+| Estadística del experimento | [growthbook/growthbook](https://github.com/growthbook/growthbook) | 8.645 | **MIT Expat**, ⚠️ **excluyendo** `packages/{back-end/src,front-end,shared/src}/enterprise` | self-host |
+| Recomendación | [gorse-io/gorse](https://github.com/gorse-io/gorse) | 9.927 | **Apache-2.0** (11.356 B) | servicio |
+| Uplift (a quién le cambia la conducta) | [uber/causalml](https://github.com/uber/causalml) | 6.047 | **Apache-2.0** (561 B) | batch |
+| LTV / CLV bayesiano | [pymc-labs/pymc-marketing](https://github.com/pymc-labs/pymc-marketing) | 1.314 | **Apache-2.0** (11.357 B) | batch |
+
+**Cableado:**
+
+```
+Godot/Unity ──(evaluación de flag con contexto: player_id, banda_etaria, país)──┐
+                                                                               ▼
+                                            flagd  (Apache-2.0, sidecar)  ◀── flags.json en Git
+                                                 │        (el cambio entra por PR y queda firmado)
+                        ┌────────────────────────┴───────────────────┐
+                        ▼                                            ▼
+      GrowthBook (MIT core): asignación + estadística      gorse (Apache-2.0): ranking
+                        │                                            │
+                        └──── eventos ──▶ Nakama / plano de datos (cycle 16) ──▶ causalml + pymc-marketing (batch)
+```
+
+**Pasos:**
+
+1. Programá **contra OpenFeature**, nunca contra el SDK del proveedor. Es lo que
+   hace que cambiar de evaluador más adelante sea una línea de configuración.
+2. El estado de los flags vive en **Git**, no en una consola: el *quién, cuándo y
+   por qué* lo da el historial del repo, que es la evidencia que piden las cuatro
+   regiones de `intel/market.md`.
+3. Si el cliente exige consola, **Flagsmith** (BSD-3 sin carve-out) antes que
+   GrowthBook, y GrowthBook sólo si hace falta el motor de estadística.
+4. **Pasá la Receta 49 (gate de carve-out) antes de fijar GrowthBook en el
+   contrato**, y dejá por escrito que los tres directorios `enterprise/` quedan
+   fuera del entregable.
+5. ⚠️ **El último metro hay que escribirlo:** no existe SDK Unity ni Unreal
+   permisivo para esta capa (gap medido, cycle 19). El camino es un cliente delgado
+   sobre el protocolo OpenFeature; `dotnet-sdk` es el punto de partida para Unity.
+
+**Licencia del entregable:** 100 % Apache-2.0/MIT/BSD-3 si se respetan las dos
+exclusiones (los `enterprise/` de GrowthBook y **nada de Unleash v8**).
+
+---
+
+## 🆕 Receta 49: **Gate de carve-out (canal 7)** — medir qué proporción del repo NO es libre, y si está creciendo
+
+**Para qué:** las Recetas 36, 44 y 46 verifican *qué dice* la licencia. Ninguna
+verifica **cuánto del repo** cubre el pedazo propietario ni **hacia dónde va**. Un
+núcleo *"MIT con un directorio enterprise"* puede ser 0,7 % o 4,6 % del árbol, y la
+diferencia decide si el componente es adoptable.
+
+**Los comandos (sobre el clon *blobless* que ya pide la Receta 46):**
+
+```bash
+git clone --filter=blob:none --no-checkout https://github.com/<owner>/<repo> r && cd r
+
+# 1) ¿hay carve-out? (enumerar TODOS los archivos de licencia, no sólo la raíz)
+git ls-tree -r --name-only HEAD | grep -iE '(^|/)(licen[cs]e|copying)[^/]*$'
+
+# 2) censo de hoy: archivos bajo el carve-out / archivos totales
+git ls-tree -r --name-only HEAD | grep -cE '(^|/)(enterprise|ee)/'
+git ls-tree -r --name-only HEAD | wc -l
+
+# 3) DERIVA: lo mismo año por año, mismo clon
+for y in 2022 2023 2024 2025 2026; do
+  c=$(git rev-list -1 --before=$y-01-01 HEAD) || continue
+  [ -n "$c" ] && echo "$y $(git ls-tree -r --name-only $c | grep -cE '(^|/)(enterprise|ee)/') / $(git ls-tree -r --name-only $c | wc -l)"
+done
+
+# 4) fechar la decisión que lo movió
+git log --follow --format='%h %ad %s' --date=short -- LICENSE
+```
+
+**Criterio de decisión (y es el aporte de esta receta):**
+
+| Lectura | Veredicto |
+|---|---|
+| Carve-out **plano o decreciente en proporción** | Adoptable: el proveedor está ampliando el núcleo libre más rápido que el cerrado (**PostHog**: 7,35 % → 1,12 %) |
+| Carve-out **creciente en proporción** | 🟡 Adoptable **con exclusión escrita** y revisión en cada renovación (**GrowthBook**: 0,73 % → 4,55 %) |
+| Carve-out que toca la **ruta crítica** del entregable | ⛔ No adoptable: la exclusión no es implementable |
+| **Sin** archivos de licencia fuera de la raíz | ✅ Limpio (**Flagsmith**: BSD-3, cero carve-out medido) |
+
+**Lo que hay que leer además del conteo:** el texto del carve-out. El de GrowthBook
+(2.333 B) dice que las modificaciones y parches que escribas sobre ese código
+**quedan en propiedad del licenciante** — una cláusula que no aparece en ningún
+conteo y que decide si el equipo del cliente puede contribuir.
+
+**Regla para copiar a toda la familia de KBs:** *el conteo absoluto de archivos
+propietarios no es un indicador; la proporción sí, y la derivada de la proporción
+es el riesgo.* Un informe que dice "el carve-out se cuadruplicó" sin la proporción
+puede estar describiendo un repo que se volvió **más** libre.
+
+---
+
+## 🆕 Receta 50: **El interruptor de oferta** — un flag, tres jurisdicciones que piden cosas incompatibles, apagado por defecto
+
+**Para qué:** Brasil (Decreto 12.880/2026) puede exigir que la funcionalidad de
+loot box esté bloqueada o ausente para menores —y **si está apagada por defecto,
+exime de verificar edad**—; China (reglas de precios de plataforma, 10-abr-2026)
+prohíbe precio distinto por el mismo bien y exige poder **documentar las reglas de
+ranking**; EE.UU. tiene cuatro estados con leyes de *surveillance pricing*
+(Maryland en vigor desde 1-oct-2026) escritas para retail y de alcance incierto
+sobre juegos; la UE pone la oferta dirigida a jugadores vulnerables bajo el Art. 5
+en la lectura sectorial de *gambling*. **Las cuatro se satisfacen con la misma
+pieza.** Es la Receta 33 (el dato de edad como parámetro de runtime) llevada de la
+telemetría a la **monetización**.
+
+**El contrato del flag (una sola decisión, tres salidas):**
+
+```
+entradas:  banda_etaria (de la Receta 33)  +  jurisdicción_de_publicación  +  consentimiento
+          │
+          ▼
+offer_personalization = {
+   content_variation : bool   # qué se muestra  (lo permitido casi en todas partes)
+   price_variation   : bool   # cuánto cuesta   (DEFAULT FALSE SIEMPRE)
+   randomised_items  : bool   # loot box        (DEFAULT FALSE si menor o si jurisdicción=BR)
+}
+```
+
+**Matriz de configuración por defecto:**
+
+| Jurisdicción | `content_variation` | `price_variation` | `randomised_items` | Por qué |
+|---|---|---|---|---|
+| **Brasil** (menor o edad desconocida) | ✅ | ⛔ | ⛔ **apagado** | Decreto 12.880/2026; apagado por defecto **dispensa la verificación de edad** ⇒ es la opción barata *y* la conforme |
+| **China** | ✅ | ⛔ **uniforme** | según aprobación | Reglas de 10-abr-2026: mismo precio en condiciones similares + reglas de ranking exportables + *filing* del algoritmo |
+| **UE** | ✅ con registro | ⛔ para perfiles de vulnerabilidad | con divulgación | Art. 5 (lectura sectorial) + Digital Fairness Act sobre diseño adictivo y mecánicas aleatorizadas |
+| **EE.UU.** | ✅ | ⛔ **por diseño** | con consentimiento expreso (orden FTC/Epic) | Cuatro estados con leyes de *surveillance pricing*; alcance sobre juegos **no establecido** ⇒ no variar precio es la postura defendible |
+
+**Implementación concreta:**
+
+1. `flagd` (Apache-2.0) evalúa el flag con el contexto; el archivo de reglas vive en
+   **Git** (Receta 48, paso 2) ⇒ cada cambio tiene autor, fecha y revisor.
+2. `price_variation` **no existe como capacidad** en el cliente: el precio viene del
+   catálogo, no del motor de decisión. Lo que no se puede encender no hay que
+   defenderlo.
+3. La recomendación (`gorse`, Apache-2.0) corre **auto-hospedada** para poder
+   exportar las reglas de ranking como documento — requisito explícito de China que
+   un recomendador SaaS no puede cumplir de forma creíble.
+4. **Salida del proyecto (el entregable que se cobra):** la matriz de arriba
+   instanciada para el título, el `flags.json` versionado, y un registro de cambios
+   exportable. Eso es lo que se le muestra a un regulador: un registro, no una
+   declaración.
+
+⚠️ **Conflicto de fuentes que esta receta NO resuelve** (declarado en
+`intel/market.md`): tres lecturas distintas de si el ECA Digital brasileño **prohíbe**
+las loot boxes o sólo las somete a transparencia, y la definición de *"juego dirigido
+a niños"* no pudo leerse en la fuente primaria en esta sesión. La receta diseña para
+el escenario más restrictivo porque además es **el más barato** (dispensa de
+verificación).
+
+---
+
+## 🆕 Receta 51: **Salir de Unleash sin heredar la AGPL** — el caso concreto de un cliente que ya lo tiene instalado
+
+**El problema:** `Unleash/unleash` (14.337 ★) pasó de Apache-2.0 a **AGPL-3.0** el
+**2026-05-26** (commit `34b5661eb`, PR #12086) y el cambio rige **desde v8**; el
+paquete `unleash-server` 8.3.1 declara `"license": "AGPL-3.0-or-later"`. Un cliente
+que lo instaló en 2025 lo tiene como Apache-2.0 y no lo sabe; el día que actualice,
+cambia de régimen.
+
+**Árbol de decisión:**
+
+| Situación | Acción | Por qué |
+|---|---|---|
+| Está en **v7.x** y no hay que actualizar | **Quedarse**: v7.6.4 (2026-05-14) es el último release Apache-2.0 | El grant de la versión que ya tenés no cambia retroactivamente |
+| Está en v7.x y hay que actualizar | **Migrar a flagd o go-feature-flag** antes de subir a v8 | La actualización es lo que importa el copyleft de red |
+| Ya está en **v8** y el servidor es interno | 🟡 Evaluar: AGPL + uso interno **no** dispara distribución | Pero sí la dispara si el servidor se entrega al cliente como parte del producto |
+| Ya está en v8 y el servidor va **dentro del entregable** | ⛔ Reemplazar | Es copyleft de red en un componente que se distribuye |
+| Lo que está enlazado son **los SDKs** | ✅ **Nada que hacer** | `unleash-node-sdk`, `-go-sdk`, `-java-sdk`, `-dotnet-sdk`, `-ruby-sdk` son **Apache-2.0**; `-python-sdk` y `-php-sdk`, **MIT** |
+
+**Pasos de la migración (una tarde, no un trimestre):**
+
+1. Introducir **OpenFeature** como fachada en el código del cliente (`go-sdk`,
+   `dotnet-sdk`, `java-sdk`: Apache-2.0). A partir de acá el proveedor es
+   reemplazable.
+2. Exportar las definiciones de flags de Unleash y traducirlas a **`flagd`**
+   (Apache-2.0) o a **`go-feature-flag`** (MIT) — ambos leen un archivo, así que la
+   migración es un script, no una plataforma.
+3. Verificar con la **Receta 44** (canal 5) la historia de licencia del reemplazo
+   **antes** de firmarlo, y con la **Receta 49** si trae carve-out.
+4. ⚠️ Corregir las referencias: los SDKs **se renombraron** a
+   `unleash-<lenguaje>-sdk`. Los slugs viejos (`unleash-client-go`,
+   `unleash-proxy-client-js`) devuelven **422** y sobreviven sólo como redirect.
+5. ⚠️ Un dato que circula y que **no se pudo verificar en la fuente primaria**: que
+   *"la versión open source se apaga el 31-dic-2026"*. Esa fecha corresponde a
+   **Unleash Edge OSS**, no al servidor, y viene de la comparativa de un
+   **competidor**; `getunleash.io` y `docs.getunleash.io` no resuelven desde esta
+   sesión. **No usar ese dato en una propuesta sin confirmarlo.**
+
 
 ## 🆕 Receta 43: **Fábrica de build 100% permisiva** — la capa que estaba entre la Receta 37 (assets) y la 19 (QA) y no estaba escrita
 
@@ -577,11 +787,18 @@ grep -inE 'shall not be used|trademark of|notwithstanding the foregoing|amend' "
 
 ### Salida para el cliente
 
-Una tabla de 3 columnas que **separa el producto del andamio**, porque esa
-separación es la que cambia el precio:
+Una tabla de **5 columnas** que **separa el producto del andamio**, porque esa
+separación es la que cambia el precio. 🔴 **Corregido en el cycle 19:** el cycle 18
+dejó acá el **encabezado sin filas** —el defecto exacto que la regla de la casa
+prohíbe, porque un encabezado suelto se compila como entidad— y además decía *"3
+columnas"* sobre una tabla de 5. Va como **plantilla en bloque de código**, que es
+lo que es, y no como tabla vacía:
 
+```
 | Componente | Ruta | Grant | ¿Se embarca? | ¿Bloquea? |
 |---|---|---|---|---|
+| <nombre>   | <ruta en el árbol> | <SPDX + bytes> | sí/no | sí/no |
+```
 
 **Ejemplo real, Matrix-Game (medido 2026-11-22):** 28 archivos → 24 permisivos
 embarcables, 3 textos legacy de Eigen que no aplican al uso, **1 `CC BY-NC 4.0`

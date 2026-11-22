@@ -13,9 +13,12 @@ updated: 2026-11-22
 > rig, movimiento, música y SFX), desde el cycle 15 la **operativa de cara al
 > jugador**, desde el cycle 16 el **plano de datos del jugador** y —desde el cycle
 > 17— la **fábrica**: versionado de binarios, CI de build, caché de compilación,
-> seguimiento de producción y automatización de QA.
+> seguimiento de producción y automatización de QA. **Desde el cycle 19**, el
+> **plano de decisión**: *remote config*, *feature flags*, asignación de
+> experimentos, recomendación y valor del jugador — la capa que decide qué ve y
+> qué paga cada jugador, y la que la regulación de 2026 persigue por su nombre.
 >
-> **Último pass: 2026-11-22 (cycle 17).**
+> **Último pass: 2026-11-22 (cycle 19).**
 
 ## Estructura
 

@@ -7,7 +7,7 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22 cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 19)** (passes previos: 2026-11-22 cycles 18/17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > 🆕 **Canal 6, agregado el 2026-11-22 (cycle 18):** `git ls-tree -r HEAD` sobre un
 > clon `--filter=blob:none --no-checkout`. Los canales 1-5 necesitan **saber la ruta**
@@ -49,6 +49,76 @@ updated: 2026-11-22
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El hallazgo del cycle 19 (2026-11-22): **faltaba el PLANO DE DECISIÓN entero** — 8 plataformas permisivas, y ninguna con SDK de engine
+
+Esta página tenía el engine, el backend, el navmesh, el RL, los world models, la
+fábrica de assets, el plano de datos y la capa de voz. No tenía **nada** de la capa
+que decide, en runtime, **qué** configuración, contenido, oferta o precio recibe
+cada jugador: *remote config*, *feature flags*, asignación de experimentos,
+recomendación y valor del jugador. Antes de este pass había **cero** ocurrencias
+de `openfeature`, `growthbook`, `flagsmith`, `flipt`, `unleash` y `gorse` en las
+8 páginas.
+
+Lo que esta página aporta hoy, verificado el 2026-11-22 (existencia + ★ por
+`gh api search/repositories`; licencia por lectura en **bytes** de
+`raw.githubusercontent.com`):
+
+### Plano de decisión — flags, remote config y experimentos
+
+| Repo | ★ | Licencia (byte-read) | Último push | Por qué es fundacional |
+|---|---|---|---|---|
+| [open-feature/spec](https://github.com/open-feature/spec) | 1.299 | **Apache-2.0** (11.352 B) | 2026-11-21 | El estándar (CNCF) de la capa. Se programa contra la API y el proveedor queda intercambiable: **el único repo de esta tabla que no te casa con nadie**. |
+| [open-feature/flagd](https://github.com/open-feature/flagd) | 1.029 | **Apache-2.0** | 2026-11-19 | Evaluador de referencia: un demonio + un archivo de flags. Sin base de datos, sin consola, sin SaaS. |
+| [Flagsmith/flagsmith](https://github.com/Flagsmith/flagsmith) | 8.533 | **BSD-3-Clause** (1.556 B) | 2026-11-21 | La plataforma completa más limpia de licencia: BSD-3 **sin carve-out en el árbol** (canal 7 aplicado). |
+| [growthbook/growthbook](https://github.com/growthbook/growthbook) | 8.645 | **MIT Expat** + 317 archivos *Enterprise* (4,55 % del árbol) | 2026-11-21 | La única que trae **motor de estadística** (CUPED, secuencial) además de flags. Adoptable si se excluyen los 3 directorios `enterprise/`. |
+| [thomaspoignant/go-feature-flag](https://github.com/thomaspoignant/go-feature-flag) | 2.145 | **MIT** (1.072 B) | 2026-11-22 | El estado de los flags es **un archivo** (S3/Git/HTTP): encaja con un pipeline de build de juego y con un entorno sin salida a internet. |
+| [featurevisor/featurevisor](https://github.com/featurevisor/featurevisor) | 816 | **MIT** (1.102 B) | 2026-11-18 | Flags y experimentos **como artefacto de build**, versionados en Git. Cero infraestructura que operar en el cliente. |
+| [flipt-io/flipt](https://github.com/flipt-io/flipt) | 4.953 | ⚠️ **tres grants**: FCL-1.0-MIT (`v2`, rama por defecto) · GPL-3.0 (`main`/v1) · MIT (`sdk/go`, `errors/`, `rpc/flipt/`) | 2026-11-21 | Flags declarativos con *GitOps*. **Adoptable para servicios profesionales por cláusula expresa de la FCL**, no empaquetable como producto propio. |
+| [Unleash/unleash](https://github.com/Unleash/unleash) | 14.337 | ⛔ **AGPL-3.0-or-later** desde v8 (2026-05-26; antes Apache-2.0, 11.316 B) | 2026-11-20 | **La fila que hay que leer antes de copiar una comparativa.** Último release permisivo recuperable: **v7.6.4** (2026-05-14). Los SDKs siguen Apache-2.0/MIT. |
+
+### Personalización y valor del jugador
+
+| Repo | ★ | Licencia (byte-read) | Último push | Por qué es fundacional |
+|---|---|---|---|---|
+| [recommenders-team/recommenders](https://github.com/recommenders-team/recommenders) | 22.009 | **MIT** (1.212 B) | 2026-11-05 | Linux Foundation. Recetas de recomendador evaluadas punta a punta: el punto de partida por defecto. |
+| [gorse-io/gorse](https://github.com/gorse-io/gorse) | 9.927 | **Apache-2.0** (11.356 B) | 2026-11-20 | **Servicio**, no librería: se despliega al lado de Nakama y se alimenta de eventos. |
+| [VowpalWabbit/vowpal_wabbit](https://github.com/VowpalWabbit/vowpal_wabbit) | 8.742 | **BSD-3-Clause** (1.584 B) | 2026-10-15 | *Contextual bandits*: la alternativa al A/B cuando no hay volumen para esperar significancia. |
+| [py-why/dowhy](https://github.com/py-why/dowhy) | 8.410 | **MIT** | 2026-11-17 | Obliga a escribir el supuesto causal. Es lo que se muestra cuando preguntan si el evento **causó** el gasto. |
+| [uber/causalml](https://github.com/uber/causalml) | 6.047 | **Apache-2.0** (aviso corto, 561 B) | 2026-10-12 | *Uplift*: a quién le **cambia** la conducta la oferta. |
+| [py-why/EconML](https://github.com/py-why/EconML) | 4.861 | **MIT** + apéndice BSD-3 (2.978 B) | 2026-11-20 | Efectos heterogéneos: la base del *uplift*. |
+| [meta-pytorch/torchrec](https://github.com/meta-pytorch/torchrec) | 2.629 | **BSD-3-Clause** (1.530 B) | 2026-11-22 | Escala de catálogo grande. ⚠️ Slug nuevo: `pytorch/torchrec` ya no existe (422). |
+| [pymc-labs/pymc-marketing](https://github.com/pymc-labs/pymc-marketing) | 1.314 | **Apache-2.0** (11.357 B) | 2026-11-21 | **CLV/LTV bayesiano** (BG/NBD, Gamma-Gamma) y MMM. La base permisiva del modelo de LTV que el cycle 16 midió como inexistente. |
+| [facebookexperimental/Robyn](https://github.com/facebookexperimental/Robyn) | 1.539 | **MIT** | 2026-11-10 | MMM: repartir UA **sin** identificadores por usuario. |
+| [prebid/prebid-server](https://github.com/prebid/prebid-server) | 594 | **Apache-2.0** (10.760 B) | 2026-11-21 | Subasta de ads server-side auto-hospedable: la única pieza de ad-tech operable por el estudio. |
+| [hyodotdev/openiap](https://github.com/hyodotdev/openiap) | 171 | **MIT** (1.066 B) | 2026-11-21 | Protocolo unificado de compras in-app, sucesor vivo de `react-native-iap` (**archivado**, 3.219 ★). |
+
+### 📏 La corrección de método que sale de esta tabla: **Apache-2.0 tiene ≥6 byte-counts**
+
+El cycle 18 publicó (T70) que Apache-2.0 es íntegro en **cuatro** valores de bytes.
+Esta tabla, con seis repos Apache-2.0 legítimos, mide **seis valores distintos**:
+**10.760** (prebid-server) · **11.316** (Unleash pre-v8) · **11.344**
+(open-attribution) · **11.352** (open-feature/spec) · **11.356** (gorse) ·
+**11.357** (pymc-marketing). 600 B de dispersión.
+
+🔴 **Consecuencia operativa:** para Apache-2.0 el *checksum de bytes* —la técnica
+estrella de esta KB— **puede levantar la mano pero no puede dictaminar**. Hay que
+confirmar con la primera línea no vacía (`Apache License`) y con la presencia o
+ausencia del apéndice *"How to apply the Apache License to your work"*, que es de
+donde sale la mayor parte de la diferencia. Para MIT (1.066-1.102 B) y GPL-3.0
+(35.149 B, dos repos independientes) el checksum sigue siendo fiable.
+
+### 📉 Gap declarado y medido: **ninguna de las 8 plataformas tiene SDK de engine**
+
+Buscado explícitamente, para que el silencio no se lea como cobertura: **cero**
+paquetes Unity y **cero** Unreal entre las ocho plataformas permisivas. Las
+alternativas con SDK de engine son todas propietarias (Unity Remote Config / Game
+Overrides, GameAnalytics —SDK C++ abierto, plataforma cerrada—, Joystick). El
+camino permisivo existe y tiene una forma concreta: **OpenFeature define el
+protocolo**, `open-feature/dotnet-sdk` (Apache-2.0) es el punto de entrada natural
+para Unity, y `go-feature-flag` o `flagd` sirven el estado sin exigir backend
+propio. Es trabajo de SDK, no de plataforma: es la diferencia entre un proyecto de
+tres meses y uno de tres semanas.
 
 ## 🔴 El hallazgo del cycle 17 (2026-11-22): **faltaba la FÁBRICA entera** — versionado binario, CI, caché de compilación y seguimiento de producción, seis categorías con cero filas en 16 passes
 

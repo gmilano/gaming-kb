@@ -12,6 +12,97 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 19
+
+**Tema del pass:** el **plano de decisión** — la capa que decide qué ve y qué paga
+cada jugador (*remote config*, *feature flags*, asignación de experimentos,
+recomendación, LTV). En las 8 páginas de esta KB había **cero** ocurrencias de
+`openfeature`, `growthbook`, `flagsmith`, `flipt`, `unleash`, `gorse`, `bandit` y
+`remote config` antes de hoy. **Método nuevo: canal 7 — el censo del carve-out y su
+deriva.**
+
+### 🔴 El movimiento de licencia de la semana: Unleash dejó de ser Apache-2.0 (y es de mayo, no de hoy)
+
+| Medición | Valor |
+|---|---|
+| Commit | `34b5661eb` · **2026-05-26** · *"task: Move to AGPL-v3 (#12086)"* |
+| `LICENSE` antes → después | **11.316 B** (Apache-2.0) → **34.523 B** (AGPL-3.0) |
+| Paquete npm hoy | `unleash-server` **8.3.1**, `"license": "AGPL-3.0-or-later"` |
+| Último release permisivo | **v7.6.4**, 2026-05-14 |
+| SDKs | **siguen Apache-2.0 / MIT**, siete repos leídos uno por uno |
+| ⚠️ Renames | `unleash-client-go` y `unleash-proxy-client-js` → **422**; el patrón nuevo es `unleash-<lenguaje>-sdk` |
+
+**Por qué entra en un archivo de tendencia:** el relicenciamiento tiene **seis meses**
+y casi todas las comparativas y roundups lo siguen publicando como Apache-2.0. La
+tendencia no es el cambio: es **la latencia entre el cambio y lo que la web dice**.
+
+### 🔴 Tres licencias en un repo: `flipt-io/flipt`
+
+Rama por defecto `v2` = **FCL-1.0-MIT**; rama `main` (v1, viva, último commit
+2026-11-17) = **GPL-3.0** (35.149 B); `sdk/go/`, `errors/`, `rpc/flipt/` = **MIT**
+(1.076 B). Lo que decide cuál te toca **no es el repo, es el comando**. 🟢 La FCL
+permite expresamente el uso *"in connection with professional services that you
+provide to a licensee"* — primera licencia no-OSI de esta KB que contempla por
+escrito el modelo de una consultora.
+
+### 🆕 Agentes y herramientas nuevos verificados este pass (cycle 19)
+
+Existencia y ★ por `gh api search/repositories`; licencia por byte-read de
+`raw.githubusercontent.com`. Todo el 2026-11-22.
+
+| Repo | ★ | Licencia | Capa | Último push |
+|---|---|---|---|---|
+| [recommenders-team/recommenders](https://github.com/recommenders-team/recommenders) | 22.009 | **MIT** | personalización | 2026-11-05 |
+| [Unleash/unleash](https://github.com/Unleash/unleash) | 14.337 | ⛔ **AGPL-3.0** (v8) | flags | 2026-11-20 |
+| [gorse-io/gorse](https://github.com/gorse-io/gorse) | 9.927 | **Apache-2.0** | recomendación | 2026-11-20 |
+| [VowpalWabbit/vowpal_wabbit](https://github.com/VowpalWabbit/vowpal_wabbit) | 8.742 | **BSD-3-Clause** | bandits | 2026-10-15 |
+| [growthbook/growthbook](https://github.com/growthbook/growthbook) | 8.645 | 🟡 **MIT Expat** + carve-out 4,55 % | flags + estadística | 2026-11-21 |
+| [Flagsmith/flagsmith](https://github.com/Flagsmith/flagsmith) | 8.533 | ✅ **BSD-3-Clause** | flags + remote config | 2026-11-21 |
+| [py-why/dowhy](https://github.com/py-why/dowhy) | 8.410 | **MIT** | causalidad | 2026-11-17 |
+| [uber/causalml](https://github.com/uber/causalml) | 6.047 | **Apache-2.0** | uplift | 2026-10-12 |
+| [flipt-io/flipt](https://github.com/flipt-io/flipt) | 4.953 | 🟡 **FCL/GPL/MIT** (3 grants) | flags GitOps | 2026-11-21 |
+| [py-why/EconML](https://github.com/py-why/EconML) | 4.861 | **MIT** + apéndice BSD-3 | efectos heterogéneos | 2026-11-20 |
+| [RUCAIBox/RecBole](https://github.com/RUCAIBox/RecBole) | 4.620 | **MIT** | recomendación | ⚠️ 2025-02-24 |
+| [meta-pytorch/torchrec](https://github.com/meta-pytorch/torchrec) | 2.629 | **BSD-3-Clause** | recomendación a escala | 2026-11-22 |
+| [thomaspoignant/go-feature-flag](https://github.com/thomaspoignant/go-feature-flag) | 2.145 | ✅ **MIT** | flags sin DB | 2026-11-22 |
+| [facebookexperimental/Robyn](https://github.com/facebookexperimental/Robyn) | 1.539 | **MIT** | MMM / UA | 2026-11-10 |
+| [pymc-labs/pymc-marketing](https://github.com/pymc-labs/pymc-marketing) | 1.314 | **Apache-2.0** | CLV/LTV + MMM | 2026-11-21 |
+| [open-feature/spec](https://github.com/open-feature/spec) | 1.299 | ✅ **Apache-2.0** | estándar CNCF | 2026-11-21 |
+| [open-feature/flagd](https://github.com/open-feature/flagd) | 1.029 | ✅ **Apache-2.0** | evaluador | 2026-11-19 |
+| [featurevisor/featurevisor](https://github.com/featurevisor/featurevisor) | 816 | ✅ **MIT** | flags como build | 2026-11-18 |
+| [st-tech/zr-obp](https://github.com/st-tech/zr-obp) | 720 | **Apache-2.0** | off-policy eval | ⚠️ 2024-06-03 |
+| [prebid/prebid-server](https://github.com/prebid/prebid-server) | 594 | **Apache-2.0** | subasta de ads | 2026-11-21 |
+| [open-feature/go-sdk](https://github.com/open-feature/go-sdk) | 257 | ✅ **Apache-2.0** | SDK | 2026-11-22 |
+| [hyodotdev/openiap](https://github.com/hyodotdev/openiap) | 171 | ✅ **MIT** | compras in-app | 2026-11-21 |
+| [tryabby/abby](https://github.com/tryabby/abby) | 167 | ⛔ **AGPL-3.0** | flags | ⚠️ 2025-07-24 |
+| [open-feature/dotnet-sdk](https://github.com/open-feature/dotnet-sdk) | 143 | ✅ **Apache-2.0** | SDK (vía Unity) | 2026-11-22 |
+| [open-feature/java-sdk](https://github.com/open-feature/java-sdk) | 131 | ✅ **Apache-2.0** | SDK | 2026-11-16 |
+| [OpenAttribution/open-attribution](https://github.com/OpenAttribution/open-attribution) | 86 | **Apache-2.0** | MMP / atribución | ⚠️ 2025-09-28 |
+| [prebid/prebid-mobile-android](https://github.com/prebid/prebid-mobile-android) | 86 | **Apache-2.0** | ads cliente | 2026-11-20 |
+| [Unleash/unleash-edge](https://github.com/Unleash/unleash-edge) | 67 | **MIT** salvo `crates/enterprise/` | edge de flags | 2026-11-20 |
+| [statsig-io/statsig-server-core](https://github.com/statsig-io/statsig-server-core) | 23 | **ISC** | SDK (plataforma cerrada) | 2026-11-10 |
+
+**28 repos nuevos, 0 heredados.** Cuatro con ⚠️ por inactividad (RecBole 21 meses,
+zr-obp 29, abby 16, open-attribution 14) y se listan **con la marca puesta**, no
+omitidos: saber que algo existe y está parado es un dato distinto de no saber que
+existe.
+
+### 🔴 Tendencia de archivo: el muerto se queda con las estrellas
+
+`hyochan/react-native-iap` = **3.219 ★** y `archived=true`, con el sucesor declarado
+en su propia descripción. `hyodotdev/openiap` = **171 ★**, MIT, vivo. **19× a favor
+del archivado.** Cualquier ranking por tracción de esta capa corona el cadáver ⇒
+`archived` pasa de campo informativo a **filtro obligatorio**.
+
+### 📉 Lo que se buscó y no está (medido, no inferido)
+
+**Cero** SDKs Unity y **cero** Unreal entre las ocho plataformas permisivas de esta
+capa. **Cero** mediación de publicidad open source. **Un** MMP open source y
+dormido. El gap no es la plataforma: es **el último metro hasta el cliente de
+juego**.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 18
 
 **Tema del pass:** el **canal 6 — el árbol completo**. Los cycles 1-17 leyeron

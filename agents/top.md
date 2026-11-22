@@ -7,9 +7,19 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-22 (pass cycle 18)**. Passes previos: 2026-11-22
-> (cycles 17, 16, 15, 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
+> Última actualización: **2026-11-22 (pass cycle 19)**. Passes previos: 2026-11-22
+> (cycles 18, 17, 16, 15, 14, 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
 > 2026-10-26, 2026-07-02.
+>
+> 🔴 **Lo que el pass cycle 19 agrega a los seis canales:** el **canal 7 — el
+> censo del carve-out y su DERIVA**. Los canales 1-6 contestan *qué dice* la
+> licencia; ninguno contesta **qué proporción del repo** cubre el pedazo no libre
+> ni **si esa proporción crece**. Dos comandos sobre el clon *blobless* que ya
+> pide el canal 6. Primer resultado: el carve-out de GrowthBook pasó de
+> **0,73 % a 4,55 %** del árbol en 20 meses **sin cambiar de licencia**, mientras
+> el de PostHog creció en archivos (222 → 836) y **encogió** en proporción
+> (7,35 % → 1,12 %). El conteo absoluto engaña; la proporción no. Ver los
+> hallazgos del cycle 19.
 >
 > 🔴 **Lo que el pass cycle 18 agrega a los cinco canales:** el **canal 6 —
 > `git ls-tree -r HEAD` sobre un clon `--filter=blob:none --no-checkout`**. Los
@@ -86,6 +96,275 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 19): **el plano de DECISIÓN** —la capa que decide qué ve y qué paga cada jugador— y el **canal 7: el censo del carve-out y su deriva**
+
+Dieciocho passes auditaron lo que el jugador **ve, oye y juega**: NPCs, world
+models, voz, assets, accesibilidad, el plano de datos, la fábrica de build. Ninguno
+auditó la capa que decide **qué** ve cada jugador y **a qué precio**: *remote
+config*, *feature flags*, asignación de experimentos, personalización, LTV. En las
+8 páginas de esta KB, antes de este pass, había **cero** ocurrencias de
+`growthbook`, `unleash`, `flagsmith`, `openfeature`, `flipt`, `gorse`, `bandit`,
+`uplift` y `remote config`.
+
+No es una capa accesoria: es **la capa que la regulación de 2026 persigue por su
+nombre** (ofertas personalizadas, precios individualizados, loot boxes a menores,
+ver `intel/market.md`), y es la única capa de esta KB donde el entregable de
+Globant *es* la decisión, no el contenido.
+
+> 🟡 **Esto reencuadra —no contradice— el gap que el cycle 16 declaró** en
+> `verticals/solutions.md`: *"no existe una plataforma de live-ops open source y
+> permisiva para juegos"*. Medido hoy: **sí existen ocho plataformas permisivas y
+> auto-hospedables** para flags/experimentos/recomendación. Lo que **no** existe es
+> **el SDK de engine**: ninguna de las ocho publica paquete Unity o Unreal. El gap
+> no era la plataforma, era **el último metro hasta el cliente de juego**, y eso
+> cambia el presupuesto de un proyecto de "construir la plataforma" a "escribir dos
+> SDKs delgados sobre un protocolo abierto".
+
+### 🔴 Hallazgo nº1: el líder de la capa (**14.337 ★**) dejó de ser Apache-2.0 el **2026-05-26**, y casi toda la web lo sigue publicando como permisivo
+
+`Unleash/unleash` aparece en todas las comparativas como *"open source, Apache
+2.0"*. El **canal 5** (`git log --follow -- LICENSE`, incorporado en el cycle 17)
+lo fecha al día:
+
+```
+$ git clone --filter=blob:none --no-checkout https://github.com/Unleash/unleash
+$ git log --follow --format='%h %ad %s' --date=short -- LICENSE
+34b5661eb 2026-05-26 task: Move to AGPL-v3 (#12086)
+e6f6b9ac1 2020-05-12 fix: license year and company
+f80d9a882 2014-09-29 Initial commit
+```
+
+| Medición | Valor verificado hoy |
+|---|---|
+| Commit del relicenciamiento | `34b5661eb631a80f4af3b0fa6dabe9969b6c2d4a`, 2026-05-26 10:15:30 +0200, Christopher Kolstad, PR #12086 |
+| `LICENSE` **antes** | **11.316 B** = Apache-2.0 íntegro |
+| `LICENSE` **después** | **34.523 B** = GNU AGPL-3.0 |
+| Lo que instala npm hoy | `package.json` de HEAD: `"name": "unleash-server"`, `"version": "8.3.1"`, **`"license": "AGPL-3.0-or-later"`** |
+| Último release permisivo recuperable | **v7.6.4** (2026-05-14); el beta hermano es `v7.6.5-beta.0`, misma fecha |
+| Primera línea AGPL | la línea **v8** (el cambio se hizo efectivo con el salto de major) |
+
+**Y la mitad que salva el proyecto:** el corte es **por componente**, igual que
+AYON en el cycle 17. Los SDKs —lo que de verdad se enlaza dentro del juego o del
+backend del cliente— **siguen siendo permisivos**, uno por uno, leídos por badge
+hoy:
+
+| SDK | ★ | Licencia | Último push |
+|---|---|---|---|
+| [Unleash/unleash-node-sdk](https://github.com/Unleash/unleash-node-sdk) | 226 | **Apache-2.0** | 2026-11-20 |
+| [Unleash/unleash-go-sdk](https://github.com/Unleash/unleash-go-sdk) | 150 | **Apache-2.0** | 2026-08-20 |
+| [Unleash/unleash-java-sdk](https://github.com/Unleash/unleash-java-sdk) | 141 | **Apache-2.0** | 2026-10-30 |
+| [Unleash/unleash-python-sdk](https://github.com/Unleash/unleash-python-sdk) | 92 | **MIT** | 2026-11-19 |
+| [Unleash/unleash-dotnet-sdk](https://github.com/Unleash/unleash-dotnet-sdk) | 87 | **Apache-2.0** | 2026-11-09 |
+| [Unleash/unleash-php-sdk](https://github.com/Unleash/unleash-php-sdk) | 65 | **MIT** | 2026-11-12 |
+| [Unleash/unleash-ruby-sdk](https://github.com/Unleash/unleash-ruby-sdk) | 63 | **Apache-2.0** | 2026-08-24 |
+| [Unleash/unleash-edge](https://github.com/Unleash/unleash-edge) | 67 | **MIT salvo `crates/enterprise/`** (1.313 B; el propio archivo lo dice en su primera línea) | 2026-11-20 |
+
+⚠️ **Los siete SDKs están RENOMBRADOS.** `Unleash/unleash-client-go` y
+`Unleash/unleash-proxy-client-js` devuelven **HTTP 422** (la firma de
+*inexistente o renombrado* de esta KB, cycle 4): el patrón nuevo es
+`unleash-<lenguaje>-sdk`. Cualquier documentación interna, `go.mod` o README que
+apunte a los slugs viejos está apuntando a un redirect, no a un repo.
+
+### 🔴 Hallazgo nº2: `flipt-io/flipt` publica **TRES licencias en un repo**, y cuál te toca depende de la **rama** y del **subdirectorio**
+
+El badge dice `NOASSERTION`. Una comparativa de un tercero (Statsig) dice *"100%
+open source, sin ediciones de pago"*. Las dos cosas son falsas, y en direcciones
+distintas:
+
+| Lo que ejecutás | Qué resuelve | Licencia real (byte-read hoy) |
+|---|---|---|
+| `git clone` sin flags | rama por defecto = **`v2`** | **FCL-1.0-MIT** (*Fair Core License*), fuente disponible, **no** OSI |
+| la rama `main` (v1, viva: último commit 2026-11-17) | v1 | **GPL-3.0** íntegro, **35.149 B** |
+| `go get .../sdk/go`, `errors/`, `rpc/flipt/` | 3 subdirectorios del árbol v2 | **MIT**, 1.076 B cada uno |
+
+Cláusulas de la FCL-1.0-MIT leídas del archivo, no de un resumen:
+
+- **Permitted Purpose** = cualquier propósito **que no sea** *Competing Use*, y
+  *Competing Use* se define como ofrecer el software a terceros en un producto o
+  servicio comercial que **lo sustituya** o que ofrezca *"the same or substantially
+  similar functionality"*.
+- 🟢 **Y la cláusula que decide esto para una consultora:** los *Permitted Purposes*
+  incluyen explícitamente *"in connection with **professional services that you
+  provide to a licensee** using the Software"*. **Desplegar Flipt v2 dentro del
+  cliente, como servicio profesional, está expresamente permitido**; empaquetarlo
+  como *"la plataforma de flags de Globant"* es *Competing Use*. Es la primera
+  licencia no-OSI de esta KB que **contempla el modelo de negocio de Globant por
+  escrito**.
+- **Limitations:** prohibido *"move, change, disable, or circumvent the license key
+  functionality"*. El árbol lo confirma: `internal/coss/license/license.go`
+  (*coss* = commercial open source software).
+- **Grant of Future License:** licencia MIT adicional e irrevocable **efectiva en el
+  segundo aniversario** de la fecha en que cada versión se publicó. El código de
+  hoy es MIT en 2028, versión por versión.
+
+### 🆕 Canal 7 · **el censo del carve-out y su DERIVA** — y el número accionable es la **proporción**, no el conteo
+
+Los canales 1-6 contestan *qué dice la licencia*. Ninguno contesta **cuánto del
+repo** cubre el pedazo no libre, ni **si ese pedazo está creciendo**. Con el clon
+*blobless* del canal 6 ya descargado, son dos comandos:
+
+```bash
+# censo: qué parte del árbol está bajo el carve-out, hoy
+git ls-tree -r --name-only HEAD | grep -cE '(^|/)enterprise/'
+git ls-tree -r --name-only HEAD | wc -l
+
+# deriva: lo mismo, año por año, sin cambiar de clon
+for y in 2022 2023 2024 2025 2026; do
+  c=$(git rev-list -1 --before=$y-11-22 HEAD)
+  echo "$y $(git ls-tree -r --name-only $c | grep -cE '(^|/)ee/') / $(git ls-tree -r --name-only $c | wc -l)"
+done
+```
+
+Aplicado a las **dos** plataformas líderes de esta capa, el resultado va en
+**direcciones opuestas** — y ninguna de las dos cambió nunca de licencia:
+
+| Fecha | GrowthBook · `enterprise/` | % del árbol | PostHog · `ee/` | % del árbol |
+|---|---|---|---|---|
+| 2022-11-22 | — | — | 222 | **7,35 %** |
+| 2023-11-22 | 12 | **0,73 %** | 247 | — |
+| 2024-11-22 | 15 | **0,65 %** | 339 | **4,26 %** |
+| 2025-11-22 | 72 | **2,39 %** | 706 | — |
+| 2026-11-22 | **317** | **4,55 %** | **836** | **1,12 %** |
+
+- **GrowthBook: ×26 en archivos y ×6,2 en proporción** en 20 meses. La licencia no
+  cambió: cambió **cuánto cubre**. El `LICENSE` raíz (1.716 B) es *MIT Expat* con
+  tres directorios exceptuados (`packages/back-end/src/enterprise`,
+  `packages/front-end/enterprise`, `packages/shared/src/enterprise`), y el canal 5
+  fecha las dos mudanzas: `ae7a3862f` (2023-07-10, *"Move Enterprise code to separate
+  package"*) y `3467bdcff` (2025-03-01, *"Split enterprise code into multiple
+  directories"*).
+- **PostHog: creció en archivos (222 → 836) y ENCOGIÓ en proporción (7,35 % → 1,12 %)**,
+  porque el árbol libre creció más rápido (3.019 → 74.626 archivos). Un titular de
+  *"el carve-out de PostHog casi se cuadruplicó"* sería cierto y **engañoso**.
+- 🔴 **La regla:** el conteo absoluto no es un indicador; **la proporción sí**, y
+  **la derivada de la proporción** es lo que hay que poner en un informe de riesgo.
+  Dos productos de la misma capa, misma técnica de licencia, tendencias contrarias.
+
+El texto del carve-out de GrowthBook (`packages/back-end/src/enterprise/LICENSE`,
+2.333 B) agrega una cláusula que vale leer antes de contribuir: las modificaciones
+y parches que escribas sobre ese código quedan en propiedad de GrowthBook —
+*"You agree that GrowthBook and/or its licensors (as applicable) retain all right,
+title and interest in and to all such modifications and/or patches"*— y sólo pueden
+usarse con licencia Enterprise válida.
+
+### 🆕 Reglas nuevas de método (T71-T76)
+
+- **T71 · Un relicenciamiento no deja huella en el artefacto, sólo en la historia.**
+  Hoy el badge de Unleash dice AGPL, pero cada comparativa, roundup y README de
+  tercero sigue diciendo Apache-2.0 porque **el archivo no "cambió", fue
+  reemplazado**. El canal 5 da la fecha **y** el último tag permisivo recuperable;
+  sin él sólo hay opiniones con fecha desconocida.
+- **T72 · 🔴 CORRECCIÓN a la T70 del cycle 18 — el checksum de bytes de Apache-2.0
+  no tiene cuatro valores, tiene al menos SEIS.** Medidos en este pass, todos
+  Apache-2.0 legítimos: **10.760** (`prebid/prebid-server`), **11.316**
+  (Unleash pre-v8), **11.344** (`OpenAttribution/open-attribution`), **11.352**
+  (`open-feature/spec`), **11.356** (`gorse-io/gorse`), **11.357**
+  (`pymc-labs/pymc-marketing`). Con seis valores y 600 B de dispersión, para
+  Apache-2.0 el checksum **sólo puede levantar la mano, nunca dictaminar**: hay que
+  leer la primera línea y la presencia del apéndice. Para MIT (1.066-1.102 B) y
+  GPL-3.0 (35.149 B) sigue sirviendo.
+- **T73 · La partición del grant tiene un eje más: la RAMA POR DEFECTO.** El cycle 7
+  lo vio en `Unity-Technologies/ml-agents`; flipt lo reproduce con **tres** grants
+  simultáneos. Lo que decide cuál te toca **no es el repo, es el comando**:
+  `git clone`, `docker pull :v1` y `go get .../sdk/go` traen licencias distintas
+  del mismo slug.
+- **T74 · El repo archivado se queda con las estrellas, y el buscador ordena por
+  estrellas.** `hyochan/react-native-iap` tiene **3.219 ★** y `archived=true`; su
+  sucesor declarado en la propia descripción, `hyodotdev/openiap`, tiene **171 ★**,
+  MIT, vivo (2026-11-21). Cualquier ranking por tracción corona **el cadáver**. Es
+  el *runner-up promotion* del cycle 4, pero por **archivo** en vez de por rename, y
+  la señal también es distinta: acá el repo viejo responde 200 y se declara muerto
+  en su propio texto.
+- **T75 · No tomes un hecho de licencia o de ciclo de vida de la comparativa de un
+  competidor.** La comparativa de GrowthBook sobre Unleash afirma que *"la versión
+  open source se apaga el 31 de diciembre de 2026"*. Lo que tiene esa fecha de EOL
+  es **Unleash Edge OSS**, no el servidor. Dos productos, un titular. ⚠️ **No se
+  pudo verificar en la fuente primaria**: `getunleash.io` y `docs.getunleash.io`
+  **no resuelven desde esta sesión** (ENOTFOUND). Se publica como *claim de
+  tercero*, no como hecho.
+- **T76 · `NOASSERTION` en esta capa corrió 4 de 5 veces hacia lo PERMISIVO.**
+  Byte-read de los cinco: `uber/causalml` = Apache-2.0 (aviso corto de 561 B, por eso
+  el clasificador no lo ve), `VowpalWabbit/vowpal_wabbit` = BSD-3-Clause (1.584 B,
+  invisible por doble interlineado), `py-why/EconML` = MIT + apéndice BSD-3 de
+  scikit-learn (2.978 B), `growthbook/growthbook` = MIT Expat + carve-out. El único
+  que corrió hacia lo restringido fue `flipt-io/flipt`. Confirma la T60 del KB de
+  enterprise: **el badge ausente no es un veredicto, es la ausencia de uno.**
+
+### 🆕 Tabla nueva · **Plano de decisión: flags, remote config y experimentos**
+
+Todo verificado el 2026-11-22: existencia y ★ por `gh api search/repositories`,
+licencia por lectura en bytes de `raw.githubusercontent.com`.
+
+| Agente / herramienta | ★ | Licencia (verificada) | Último push | Para qué sirve en un juego |
+|---|---|---|---|---|
+| [Unleash/unleash](https://github.com/Unleash/unleash) | 14.337 | ⛔ **AGPL-3.0-or-later** desde v8 (antes Apache-2.0, 2026-05-26) | 2026-11-20 | Gestión de flags madura. **El servidor ya no es adoptable sin análisis**; los SDKs sí. |
+| [growthbook/growthbook](https://github.com/growthbook/growthbook) | 8.645 | 🟡 **MIT Expat** + 317 archivos bajo *Enterprise License* | 2026-11-21 | Flags **y** motor de estadística de experimentos (lo que Flagsmith no trae). |
+| [Flagsmith/flagsmith](https://github.com/Flagsmith/flagsmith) | 8.533 | ✅ **BSD-3-Clause** (1.556 B, sin carve-out en el árbol) | 2026-11-21 | Flags + *remote config* + segmentos. La más limpia de licencia de las tres grandes. |
+| [flipt-io/flipt](https://github.com/flipt-io/flipt) | 4.953 | 🟡 **FCL-1.0-MIT** (v2) · **GPL-3.0** (`main`) · **MIT** (`sdk/go`) | 2026-11-21 | Flags declarativos **versionados en Git**: el flag entra por PR, no por consola. |
+| [thomaspoignant/go-feature-flag](https://github.com/thomaspoignant/go-feature-flag) | 2.145 | ✅ **MIT** (1.072 B) | 2026-11-22 | Flags sin base de datos: el estado es un archivo (S3, Git, HTTP). Encaja con un build de juego. |
+| [open-feature/spec](https://github.com/open-feature/spec) | 1.299 | ✅ **Apache-2.0** (11.352 B) | 2026-11-21 | **El estándar CNCF de la capa.** Programás contra la API, no contra el vendor. |
+| [open-feature/flagd](https://github.com/open-feature/flagd) | 1.029 | ✅ **Apache-2.0** | 2026-11-19 | El evaluador de referencia de OpenFeature: un demonio, un archivo JSON, cero SaaS. |
+| [open-feature/go-sdk](https://github.com/open-feature/go-sdk) | 257 | ✅ **Apache-2.0** | 2026-11-22 | SDK Go de OpenFeature (el lenguaje de Nakama y de la mayoría de los backends de juego). |
+| [open-feature/dotnet-sdk](https://github.com/open-feature/dotnet-sdk) | 143 | ✅ **Apache-2.0** | 2026-11-22 | SDK .NET: **la vía más corta hacia Unity**, con las salvedades del gap declarado abajo. |
+| [open-feature/java-sdk](https://github.com/open-feature/java-sdk) | 131 | ✅ **Apache-2.0** | 2026-11-16 | SDK Java/Kotlin: servidores de juego JVM y Android. |
+| [featurevisor/featurevisor](https://github.com/featurevisor/featurevisor) | 816 | ✅ **MIT** (1.102 B) | 2026-11-18 | Flags, experimentos y *remote config* **como artefactos de build**: sin backend que operar. |
+| [statsig-io/statsig-server-core](https://github.com/statsig-io/statsig-server-core) | 23 | ✅ **ISC** | 2026-11-10 | Confirma el patrón: **el SDK es abierto, la plataforma no**. Útil como referencia, no como base. |
+| [tryabby/abby](https://github.com/tryabby/abby) | 167 | ⛔ **AGPL-3.0** | 2025-07-24 | ⚠️ **16 meses sin push.** Se lista para que no se vuelva a evaluar: copyleft **y** dormido. |
+
+### 🆕 Tabla nueva · **Personalización, uplift y valor del jugador**
+
+| Agente / herramienta | ★ | Licencia (verificada) | Último push | Para qué sirve en un juego |
+|---|---|---|---|---|
+| [recommenders-team/recommenders](https://github.com/recommenders-team/recommenders) | 22.009 | ✅ **MIT** (1.212 B) | 2026-11-05 | Proyecto de la Linux Foundation: recetas de recomendadores evaluadas de punta a punta. |
+| [gorse-io/gorse](https://github.com/gorse-io/gorse) | 9.927 | ✅ **Apache-2.0** (11.356 B) | 2026-11-20 | Motor de recomendación **desplegable**, no una librería: entra como servicio al lado de Nakama. |
+| [VowpalWabbit/vowpal_wabbit](https://github.com/VowpalWabbit/vowpal_wabbit) | 8.742 | ✅ **BSD-3-Clause** (1.584 B; badge `NOASSERTION`) | 2026-10-15 | *Contextual bandits* en producción: elegir oferta/dificultad **aprendiendo online**, sin esperar un A/B. |
+| [py-why/dowhy](https://github.com/py-why/dowhy) | 8.410 | ✅ **MIT** | 2026-11-17 | Inferencia causal con el supuesto **escrito**: lo que hay que mostrar cuando el cliente pregunta *"¿el evento causó el gasto?"*. |
+| [uber/causalml](https://github.com/uber/causalml) | 6.047 | ✅ **Apache-2.0** (aviso corto, 561 B; badge `NOASSERTION`) | 2026-10-12 | *Uplift modeling*: a **qué** jugador le cambia la conducta una oferta, no a cuál le gusta. |
+| [py-why/EconML](https://github.com/py-why/EconML) | 4.861 | ✅ **MIT** + apéndice BSD-3 scikit-learn (2.978 B) | 2026-11-20 | Efectos heterogéneos de tratamiento: la base estadística del *uplift* de arriba. |
+| [RUCAIBox/RecBole](https://github.com/RUCAIBox/RecBole) | 4.620 | ✅ **MIT** | 2025-02-24 | ⚠️ **21 meses sin push.** Sirve como banco de comparación de algoritmos, no como dependencia viva. |
+| [meta-pytorch/torchrec](https://github.com/meta-pytorch/torchrec) | 2.629 | ✅ **BSD-3-Clause** (1.530 B) | 2026-11-22 | Recomendadores a escala de catálogo grande. ⚠️ **Renombrado**: `pytorch/torchrec` → 422. |
+| [facebookexperimental/Robyn](https://github.com/facebookexperimental/Robyn) | 1.539 | ✅ **MIT** | 2026-11-10 | *Marketing mix modeling*: repartir presupuesto de UA **sin** identificadores por usuario (post-ATT). |
+| [pymc-labs/pymc-marketing](https://github.com/pymc-labs/pymc-marketing) | 1.314 | ✅ **Apache-2.0** (11.357 B) | 2026-11-21 | **CLV/LTV bayesiano** (BG/NBD, Gamma-Gamma) + MMM. La pieza que faltaba para el *"churn/LTV = cero"* del cycle 16. |
+| [st-tech/zr-obp](https://github.com/st-tech/zr-obp) | 720 | ✅ **Apache-2.0** | 2024-06-03 | ⚠️ **29 meses sin push.** *Off-policy evaluation*: evaluar una política de oferta **con el log**, sin exponer jugadores. Referencia académica, no dependencia. |
+
+### 🆕 Tabla nueva · **Monetización: compra, atribución y publicidad**
+
+| Agente / herramienta | ★ | Licencia (verificada) | Último push | Veredicto |
+|---|---|---|---|---|
+| [prebid/prebid-server](https://github.com/prebid/prebid-server) | 594 | ✅ **Apache-2.0** (10.760 B) | 2026-11-21 | Subasta de publicidad server-side, **auto-hospedable**: la única pieza de ad-tech de esta KB que un estudio puede operar. |
+| [prebid/prebid-mobile-android](https://github.com/prebid/prebid-mobile-android) | 86 | ✅ **Apache-2.0** | 2026-11-20 | El lado cliente del anterior, para juegos Android con publicidad. |
+| [hyodotdev/openiap](https://github.com/hyodotdev/openiap) | 171 | ✅ **MIT** (1.066 B) | 2026-11-21 | Protocolo unificado de compras in-app. **Sucesor declarado** de `react-native-iap`. |
+| [hyochan/react-native-iap](https://github.com/hyochan/react-native-iap) | 3.219 | **MIT**, `archived=true` | — | ⛔ **Archivado.** Se lista sólo para romper la trampa de la T74: tiene **19×** las ★ de su sucesor vivo. |
+| [OpenAttribution/open-attribution](https://github.com/OpenAttribution/open-attribution) | 86 | ✅ **Apache-2.0** (11.344 B) | 2025-09-28 | ⚠️ **~14 meses sin push.** El único MMP open source que devolvió la búsqueda. Existe, está permisivo, y **no está vivo**. |
+
+### 🟢 Control negativo y gaps medidos (la mitad del dato)
+
+- **SDK de engine para esta capa: CERO.** Ninguna de las ocho plataformas
+  permisivas publica paquete **Unity** ni **Unreal**. Lo que el mercado ofrece con
+  SDK de engine es propietario: **Unity Remote Config / Game Overrides**,
+  **GameAnalytics** (SDK C++ abierto, plataforma cerrada) y **Joystick**. El camino
+  permisivo existe pero hay que escribirlo: OpenFeature define el protocolo y el
+  `dotnet-sdk` es el punto de partida razonable para Unity.
+- **MMP / atribución móvil open source: UNO, dormido** (OpenAttribution, arriba).
+  No es un cero: es un *"existe y está parado"*, que es un dato distinto y peor de
+  ignorar.
+- **Mediación de publicidad open source: CERO** en esta búsqueda. Prebid cubre la
+  subasta, no la mediación entre redes.
+- **Modelo de churn de juego open source: sigue en CERO** (reconfirmado el gap del
+  cycle 16). Lo que cambia es que **la herramienta para construirlo** ya está
+  identificada y es Apache-2.0 (`pymc-marketing`), así que el gap pasa de *"no hay
+  nada"* a *"hay que entrenarlo, con esta base"*.
+- **Re-verificación de una fila vieja:** `Countly/countly-server` se releyó hoy y
+  sigue exactamente como lo publicó el cycle 16 — AGPL-3.0 con **§7 modificada**
+  (anti-*debranding*), `LICENSE` de **1.025 B**. Primera fila de esta KB verificada
+  dos veces por dos canales distintos **sin derivar**.
+- **Hosts que no resuelven desde esta sesión** (ENOTFOUND; se suman a la lista
+  muerta por política): `getunleash.io`, `docs.getunleash.io`, `bain.com`. Para
+  Unleash la sustitución fue **completa** (el repo es la fuente de verdad: historia,
+  `package.json` y tags); para Bain **no hay sustituto** y las cifras se publican
+  marcadas como fuente secundaria en `intel/market.md`.
+
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 18): **el canal 6 — el árbol completo**, y el grant no comercial que ningún canal anterior podía ver
 

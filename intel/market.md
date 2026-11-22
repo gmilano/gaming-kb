@@ -7,12 +7,46 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-22 (cycle 18)** (passes previos: 2026-11-22 cycles 17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 19)** (passes previos: 2026-11-22 cycles 18/17/16/15/14/13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🆕 Lo que cambió — pass cycle 19 (2026-11-22): **la regulación de 2026 dejó de hablar de la IA y empezó a hablar del PRECIO y de la OFERTA**
+
+Los cycles 10-18 siguieron la regulación del **contenido** generado (etiqueta,
+marcado, categoría de edad). Este pass busca la regulación de la **decisión**
+—qué oferta, qué precio, qué recomendación recibe cada jugador— y encuentra que es
+una familia distinta, con instrumentos distintos, y **ya en vigor en tres de las
+cuatro regiones**:
+
+| Región | Instrumento que pega en la capa de decisión | Estado al 2026-11-22 |
+|---|---|---|
+| **North America** | Leyes estatales de *surveillance pricing* (Maryland, Connecticut, New Jersey, New York) | **Maryland en vigor desde 1-oct-2026**; California AB 2564 aún en el Senado |
+| **EMEA** | AI Act Art. 50(2) (marcado legible por máquina) + Art. 5 (prácticas prohibidas) + Digital Fairness Act | **Art. 50(2): 2-dic-2026 ⇒ faltan 10 días** para sistemas anteriores al 2-ago-2026 |
+| **APAC** | *Rules for Price Behavior on Internet Platforms* (NDRC/SAMR/CAC, China) | **En vigor desde 10-abr-2026**, por 5 años |
+| **LATAM** | Brasil: Lei 15.211/2025 (ECA Digital) + **Decreto 12.880/2026** | **Ley en vigor 17-mar-2026**; decreto reglamentando loot boxes |
+
+🔴 **La consecuencia de arquitectura, que es lo que esta KB tiene para vender:** las
+cuatro familias piden lo mismo en términos de ingeniería aunque lo digan distinto —
+**poder apagar, por jugador y por jurisdicción, la personalización de oferta y
+precio, y poder probar cuándo se apagó**. Eso es un *feature flag* con el dato de
+edad y el país como entradas, más un registro de cambios. Es la capa que esta KB no
+tenía hasta hoy (ver `verticals/solutions.md` y la Receta 50).
+
+⚠️ **Límite declarado de todo lo anterior:** las leyes estatales de EE.UU. están
+redactadas para **comercio minorista**. **Que la oferta in-game y el precio de
+moneda virtual caigan en su ámbito no está establecido**, y este pass no lo
+resuelve: se publica como riesgo a dimensionar con el abogado del cliente, no como
+obligación.
+
+⚠️ **Hosts que no resuelven desde esta sesión** (ENOTFOUND, se agregan a la lista
+muerta por política): `bain.com`, `getunleash.io`, `docs.getunleash.io`. Las cifras
+de Bain de abajo quedan marcadas como **fuente secundaria sin verificar en la
+fuente**, y el comunicado específico de LATAM **no pudo leerse**: es un gap, no un
+dato.
 
 ## 🆕 Lo que cambió — pass cycle 18 (2026-11-22): **la geografía del riesgo de licencia**, y qué devolvió cada región este pass
 
@@ -1434,6 +1468,46 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 Oportunidad del pass cycle 19 (2026-11-22): **la primera prohibición de EE.UU. que apunta al precio personalizado ya está en vigor, y es de un estado**
+
+| Jurisdicción | Instrumento | Estado medido | Qué prohíbe / exige |
+|---|---|---|---|
+| **Maryland** | *Predatory Pricing Act* | **en vigor desde 1-oct-2026** | Primera prohibición expresa del país sobre prácticas de *surveillance pricing* en venta minorista |
+| **Connecticut** | ley de *surveillance pricing* | sancionada | Segunda del país; alcanza vendedores minoristas y plataformas de delivery |
+| **New Jersey** | ley de *surveillance pricing* | sancionada | **La primera con acción privada** (*private right of action*) ⇒ litigio sin regulador de por medio |
+| **New York** | régimen de divulgación | vigente | Exige **divulgar** el precio algorítmico personalizado, no lo prohíbe |
+| **California** | **AB 2564** (Ward, presentada 20-feb-2026) | **avanzó en la Asamblea el 27-may-2026**, en comisión del Senado en jun-2026 | Prohibiría fijar precios personalizados con información personal. **No es ley todavía** |
+| **California (enforcement)** | barrido investigativo del Fiscal General | anunciado en enero (2026) | Uso de la ley de privacidad estatal contra precios individualizados en viajes y retail |
+
+Según una de las alertas consultadas, **cuatro estados** ya tienen alguna forma de
+ley de *surveillance pricing*. 🔴 **Pero las seis filas están escritas para
+retail**, y ninguna fuente de este pass afirma que una tienda in-game o el precio
+de un paquete de moneda virtual estén dentro del ámbito.
+
+**El ángulo comercial, que es el que un estudio puede comprar hoy:** el diseño
+defendible para un lanzamiento en EE.UU. es **personalizar el contenido y no el
+precio** —misma lista de precios para todos, la variación va en qué se muestra y
+cuándo— más un registro que pruebe esa separación. Eso es exactamente lo que
+distingue un *feature flag* auditable de un modelo de *pricing* opaco, y es un
+entregable de dos semanas sobre
+[Flagsmith](https://github.com/Flagsmith/flagsmith) (BSD-3) o
+[flagd](https://github.com/open-feature/flagd) (Apache-2.0).
+
+**Antecedente de enforcement que ya existe y nadie discute** (y que sigue siendo la
+referencia más citada): la acción de la FTC contra **Epic Games** (2022-2023,
+**USD 520 M** en total — USD 275 M por COPPA y USD 245 M en reembolsos por *dark
+patterns*), cuya orden exige **consentimiento expreso e informado antes de cobrar**
+una compra in-game. ⚠️ Un resultado de este pass menciona además una acción de la
+FTC contra el publisher de *Genshin Impact* (USD 20 M y prohibición de vender loot
+boxes a menores): **no se pudo verificar** más allá del titular, se publica como
+pendiente.
+
+📉 **Gap medido en esta región:** se buscó una enmienda de COPPA de 2026 y acción de
+la FTC específicamente sobre **ofertas personalizadas**; los resultados sólo
+devolvieron los casos de 2022-2023. **Nada nuevo verificable en 2026 sobre este
+eje en NA**, y conviene decirlo antes de que alguien lo asuma.
+
+
 > 🆕 **cycle 18 (2026-11-22).** Nada nuevo de videojuegos, y **tercera confirmación
 > del homónimo**: el informe que el buscador devuelve como estado del arte
 > —UNLV/KPMG *State of AI in Gaming 2026*, AI Maturity Index **45/100**, abril
@@ -1852,6 +1926,52 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🔴 Oportunidad del pass cycle 19 (2026-11-22): **faltan 10 días para el 2-dic-2026**, y la Comisión ya dijo que apuntar ofertas a jugadores vulnerables puede ser práctica **prohibida**
+
+**1. El reloj concreto (y es el dato más perecedero de esta KB).** Los sistemas de
+IA generativa **puestos en el mercado antes del 2-ago-2026** tienen hasta el
+**2-dic-2026** para cumplir el **marcado legible por máquina + mecanismo de
+detección** del Art. 50(2). Los puestos en el mercado **el 2-ago-2026 o después
+no tienen período de gracia alguno**. El resto de las obligaciones del Art. 50 rige
+sin transición desde el 2-ago-2026, **también para sistemas heredados**.
+
+> **Al cierre de este pass (2026-11-22) quedan 10 días.** La Receta 7 de esta KB
+> (inventario + plan fechado) ya no alcanza como entregable: para un título vivo con
+> generación en runtime, lo único que se puede prometer en 10 días es el
+> **inventario cerrado + el marcado donde técnicamente se pueda + el memo que
+> documente lo que no**. Una de las notas consultadas (Cloud Security Alliance,
+> sep-2026) dice con todas las letras que un marcado robusto que sobreviva a
+> edición, truncado, paráfrasis y copiar-pegar es *"an open technical question"*, y
+> que **retro-encajarlo es más difícil que diseñarlo desde el principio**. Eso es
+> una frase para poner en el memo, no para esconder.
+
+**2. Lo nuevo de este pass, y es el gancho de la capa de decisión.** Un análisis
+sectorial (DLA Piper, 2026) sobre el **Art. 5** —prácticas prohibidas, no de alto
+riesgo— enumera como potencialmente prohibido *"AI-driven dynamic targeting of
+financially vulnerable players with higher-risk offers or bonus structures"* y los
+juegos diseñados para producir resultados de *"near-miss"*.
+
+⚠️ **Frontera de esta KB, que el cycle 8 declaró y acá hay que repetir:** esa
+fuente es del **sector de apuestas** (*gambling*), no de videojuegos. Se publica
+porque es **el análogo legal más cercano** que existe hoy a lo que hace la capa de
+decisión de un F2P, y porque la redacción del Art. 5 no distingue por sector — no
+porque un videojuego sea un casino.
+
+**3. Lo que ya estaba y sigue en pie.** El **Digital Fairness Act** como regulación
+de consumo que alcanza el *diseño adictivo* y las *mecánicas aleatorizadas*
+(⚠️ **fuentes en conflicto sobre su estado**: el cycle 10 de esta KB lo registró
+como publicado el 11-nov-2026; una fuente consultada hoy lo describe todavía como
+borrador previsto para el Q4-2026. **No se resuelve acá**), y la agenda 2026 de la
+**EGDF** —IA conducida por humanos, mercados justos, soberanía europea— que es el
+lenguaje con el que un estudio europeo compra: la capa de decisión
+**auto-hospedada** es un argumento de soberanía antes que de costo.
+
+**Qué se vende en EMEA con esto:** el *flag* de personalización no es una feature de
+producto, es **el punto de control que hace demostrable** que no se está apuntando
+ofertas a jugadores vulnerables. Sin él, la respuesta a un regulador es una
+declaración; con él, es un registro.
+
 
 > 🆕 **cycle 18 (2026-11-22).** Refinamiento operativo del Art. 50, a **10 días** del
 > 2-dic-2026: la excepción de videojuegos es **conjuntiva**. El contenido efímero
@@ -2366,6 +2486,51 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🔴 Oportunidad del pass cycle 19 (2026-11-22): **China reguló el PRECIO algorítmico en abril, y el requisito operativo es "poder apagarlo y poder documentarlo"**
+
+**Lo que entró en vigor el 10-abr-2026** (y rige por 5 años): las *Rules for Price
+Behavior on Internet Platforms*, emitidas por **NDRC + SAMR + CAC**. Lo medido en
+las fuentes de este pass:
+
+- Prohíben a las plataformas usar **datos, algoritmos o reglas de plataforma** para
+  cobrar **precios distintos por el mismo bien en condiciones similares** — lo que
+  en China se llama *"discriminación por big data"*.
+- Los reguladores pueden exigir **sistemas internos de cumplimiento de precios**,
+  **retención de datos de precios y transacciones**, cooperación en investigaciones
+  y **registro (filing) del algoritmo**.
+- Las plataformas deben **divulgar sus reglas de ranking y de recomendación** a los
+  comercios participantes.
+- Lectura de un analista citado en las fuentes: se espera que la práctica **se
+  vuelva encubierta** —cupones diferenciados en lugar de precios diferentes—, lo que
+  es exactamente el riesgo que un *flag* auditable ayuda a acotar.
+
+**Lo que ya existía y ahora cobra sentido junto con lo anterior:** las
+*Algorithm Recommendation Provisions* (2022) reconocen el derecho del usuario a
+**desactivar la recomendación personalizada** y exigen protección reforzada para
+**menores** y otros grupos vulnerables. Y las reglas de 2026 sobre servicios de IA
+**antropomórfica / de compañía** (en vigor **15-jul-2026**) agregan protecciones
+reforzadas para menores y personas mayores: eso toca directamente a los **NPC
+conversacionales** de esta KB, no sólo a la recomendación.
+
+**Corea:** hay **proyectos de ley** —no ley— para restringir la recomendación
+personalizada por IA a menores, con la KMCC como autoridad; una nota de prensa de
+ago-2026 observa que la función de recomendación se usa *"no sólo en redes sociales
+sino también en noticias, juegos y compras"*, y advierte que un alcance vago las
+haría inaplicables. Se registra como **señal, no como obligación**.
+
+📉 **Gap medido, explícito:** **no se encontró ninguna regla específica de juegos**
+sobre ofertas personalizadas ni en China ni en Corea. La exposición llega por la vía
+de **plataformas y precios**, no por la vía de la regulación de juegos — y ésa es la
+diferencia que hace que un estudio la descubra tarde.
+
+🟢 **El requisito de arquitectura para un lanzamiento en China, que se deduce de las
+tres filas de arriba:** el motor de recomendación tiene que poder (a) **apagarse por
+usuario**, (b) **exportar sus reglas de ranking** como documento presentable y
+(c) convivir con **precio uniforme**. Un recomendador SaaS de tercero no puede
+cumplir (b) de forma creíble; [gorse](https://github.com/gorse-io/gorse)
+(Apache-2.0, 9.927 ★) auto-hospedado sí, porque las reglas son archivos del cliente.
+
+
 > 🆕 **cycle 18 (2026-11-22).** Dos cifras nuevas, y las dos son **de instrumento**,
 > no de tendencia. **China:** CADPA (vía cobertura de ChinaJoy 2026) mide **86,36%**
 > de empresas usando AI, contra el **~60%** de Niko Partners que esta KB publica. No
@@ -2838,6 +3003,67 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🔴 Oportunidad del pass cycle 19 (2026-11-22): **Brasil es la única jurisdicción de esta KB donde la ley ya trae un INTERRUPTOR escrito — y apagarlo exime de verificar edad**
+
+**El instrumento:** la **Lei 15.211/2025** (*ECA Digital*), **en vigor desde el
+17-mar-2026**, con capítulo propio de juegos electrónicos y obligaciones para
+desarrolladores, distribuidoras y tiendas de aplicaciones. La reglamenta el
+**Decreto 12.880/2026**, que según el análisis consultado definió una lista de
+productos y servicios **prohibidos para menores** que incluye juegos de azar,
+apuestas, loterías **y caixas de recompensa (loot boxes) en juegos electrónicos**.
+
+🟢 **Y la cláusula que convierte esto en una decisión de ingeniería y no sólo de
+compliance:** el decreto prevé que un juego puede **ofrecer versiones sin loot
+boxes o bloquear esa funcionalidad por defecto**, y **en ese caso la verificación
+de edad queda dispensada**. Es decir: la ley **pone precio a la personalización de
+oferta** y el precio es *implementar verificación de edad*. Apagarla por defecto
+sale más barato que verificar, y es un *flag*.
+
+**Enforcement, ya en marcha:** una **Nota Técnica del Ministerio de Justicia**
+(proceso **08250.000382/2026-89**), que analiza los primeros seis meses de
+vigencia, **pide a la ANPD que monitoree** los juegos con caixas de recompensa que
+**no implementaron verificación de edad**.
+
+**Lo que ya existía:** la **Lei 14.852/2024** (*Marco Legal dos Jogos
+Eletrônicos*) exigía consentimiento de los padres para microtransacciones y loot
+boxes en juegos accesibles a menores. El ECA Digital refuerza eso y, según el
+análisis de ConJur, **va más allá al prohibir**.
+
+⚠️ **Conflicto de fuentes declarado y NO resuelto en este pass** (tres lecturas del
+mismo texto): la Nota Técnica del MJ afirma que la ley **veda la oferta de la
+funcionalidad** de caixas de recompensa; Agência Gov dice que están prohibidas **en
+juegos dirigidos a niños**; un análisis académico (UFJF) sostiene que la ley **no
+las prohíbe** y sólo exige transparencia absoluta. La diferencia práctica es enorme
+y depende de la definición de *"juego dirigido a niños"*, que **no se pudo leer en
+la fuente primaria en esta sesión**. Para una propuesta: se diseña para el escenario
+más restrictivo (**por defecto apagado**), que además es el más barato por la
+dispensa de verificación.
+
+**El lado comercial, que empuja en sentido contrario y por eso importa.** ⚠️ Cifras
+de **fuente secundaria** (*Bain & Company, Gaming Report 2026*, encuesta de jun-2026
+sobre **+5.300** jugadores, publicado ago-2026): **42 %** de los jugadores está más
+cómodo con IA en juegos que un año antes, y **59 %** entre adolescentes; **86 %** de
+los adolescentes gasta dinero en juegos cada mes; **84 %** de quienes ya compraron
+directo más de una vez dice que **una oferta personalizada** los haría volver a
+comprar; y cada venta movida de una tienda de terceros al canal directo mejora el
+margen **15-30 puntos porcentuales**. ⚠️ **`bain.com` no resuelve desde esta
+sesión**: hay un comunicado específico de LATAM —titulado alrededor de
+adolescentes, compra directa y personalización con IA— que **no pudo leerse**. Es un
+**gap declarado**, no un dato: las cifras de arriba son **globales**, no regionales.
+Complemento, también secundario: *Xsolla/GamesBeat, State of the LATAM Games
+Industry 2026* reporta **+335 M** de jugadores en la región y **72,6 M** en México.
+
+🔴 **La síntesis que hace de LATAM el mejor caso de esta capa:** es la región donde
+el **argumento comercial** de la personalización es más fuerte (adolescentes +
+compra directa + aceptación de IA, coherente con el 48,8 % de aceptación que esta KB
+ya tenía desde el cycle 4) **y** donde existe la **restricción legal más dura**
+contra ella. Las dos cosas se resuelven con la **misma** arquitectura: la
+personalización como *flag* con edad y jurisdicción como entrada, apagado por
+defecto y encendido con evidencia. Vender eso no es vender cumplimiento: es vender
+**la única forma de capturar el margen sin quedar del lado equivocado del Decreto
+12.880**.
+
 
 > 🆕 **cycle 18 (2026-11-22).** Confirmaciones y una advertencia de higiene.
 > **México:** **>76 M** jugadores (Endeavor) junto al 72,6 M de Xsolla ⇒ dos
