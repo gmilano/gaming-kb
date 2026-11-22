@@ -8,13 +8,62 @@ updated: 2026-11-22
 
 > Plataformas open source reales, customizables con una capa AI encima.
 > Modelo: partir de algo funcional y robusto, añadir agentes encima.
-> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22 cycles 11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22 cycles 13/12/11/10, 2026-11-21 cycle 9, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Todas las licencias de esta página se releyeron el 2026-11-20 en dos canales**
 > (`gh api search/repositories` para SPDX + `raw.../HEAD/` para el texto). El pass
 > de octubre corrigió dos filas y **publicó mal otras cuatro**; esas cuatro se
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
+
+## 🆕 Capa vertical nueva (2026-11-22, cycle 14): **la fábrica de assets** — la plataforma donde la licencia deja de ser metadato del repo y pasa a ser metadato del **artefacto**
+
+Las capas que esta página ya cubría (engine, backend, orquestación de
+servidores, diálogo/voz/moderación) comparten una propiedad: **lo que se entrega
+es código**. La fábrica de assets rompe eso — lo que se entrega es **una malla,
+una textura, un rig, una pista de audio** que el cliente mete en su juego y
+vende. La pregunta deja de ser *"¿puedo usar este repo?"* y pasa a ser
+**"¿puedo vender lo que este repo produjo?"**, y la respuesta no está en el
+mismo archivo.
+
+### El stack, con las **dos** licencias de cada fila explícitas
+
+| Subsistema | Elección recomendada | Licencia del **código** | Licencia de los **pesos / la salida** | La alternativa grande que se descarta, y por qué |
+|---|---|---|---|---|
+| **Pipeline completo, local** | [Bingeljell/image-to-3dlab](https://github.com/Bingeljell/image-to-3dlab) *(AssetFurnace, 1.244 ★)* | **Apache-2.0** (11.358 B + `NOTICE`) | el propio proyecto **escribe la licencia de cada asset que genera** | nada equivalente con grant permisivo de punta a punta |
+| **Imagen → malla + PBR** | [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2) *(13.144 ★)* | **MIT** | **MIT** (el README extiende el grant a los *models*); HDRIs de ejemplo **CC0** | ⛔ [Tencent-Hunyuan/Hunyuan3D-2.1](https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1) (4.519 ★): **sin grant en EU / UK / Corea del Sur**. ⛔ [Stability-AI/stable-fast-3d](https://github.com/Stability-AI/stable-fast-3d): licencia Stability con umbral + **22 meses dormido** |
+| ⚠️ **Render / preview del asset** | **hay que escribirlo** | — | — | 🔴 **los tres renderers que trae TRELLIS importan paquetes no comerciales** (`nvdiffrast`, `nvdiffrec`, `diffoctreerast`). Sustituto de extracción de malla: [nv-tlabs/FlexiCubes](https://github.com/nv-tlabs/FlexiCubes), **Apache-2.0** |
+| **Orquestación → engine** | [OpenDCAI/GameFactory-3A](https://github.com/OpenDCAI/GameFactory-3A) *(1.344 ★)* | **Apache-2.0** (11.338 B) | depende del modelo que se enchufe | exporta a **UE5, Unity, Godot 4, Blender y three.js**: es la única fila con salida a engine ya resuelta |
+| ⚠️ **Auto-rigging** | **ninguna limpia hoy** | — | — | 🔴 [UniRig](https://github.com/VAST-AI-Research/UniRig): MIT en la raíz, **GPL-3.0** en `src/model/michelangelo/` importado sin condición. ⚠️ [MDM](https://github.com/GuyTevet/motion-diffusion-model): MIT, pero **requiere SMPL** bajado de un Drive sin autenticación |
+| **Música y SFX** | [OpenMOSS/MOSS-TTS](https://github.com/OpenMOSS/MOSS-TTS) *(4.358 ★)* para SFX + [ace-step/ACE-Step](https://github.com/ace-step/ACE-Step) *(5.095 ★)* para música | **Apache-2.0** ambas | 🟢 **MOSS es la única que extiende Apache-2.0 a los pesos por escrito** | ⛔ [audiocraft](https://github.com/facebookresearch/audiocraft) (23.943 ★) y ⛔ [YuE](https://github.com/multimodal-art-projection/YuE) (13.656 ★): código permisivo, **pesos CC BY-NC 4.0** ⇒ el audio generado no se puede vender |
+| **App local + MCP** | [HamSanders/soundbox](https://github.com/HamSanders/soundbox) *(239 ★)* | **MIT + addendum** (1.713 B) | **no redistribuye pesos**: los baja con la cuenta de Hugging Face del operador | se lista pese a sus 239 ★ por el **patrón de diseño**, no por tracción: traslada la obligación de licencia al operador, por escrito. 21 herramientas MCP para Claude Code y Cursor |
+
+### 🔴 La regla que esta capa impone y las anteriores no
+
+> **El gate de licencia de un pipeline de assets se corre dos veces: una sobre
+> el código y otra sobre el peso.** Están en archivos distintos, con nombres
+> distintos (`LICENSE` vs `LICENSE_weights` vs `MODEL_LICENSE`), y **el canal
+> que los encuentra es la enumeración**, no la sonda — porque el segundo archivo
+> casi nunca se llama `LICENSE`.
+>
+> Medición de este pass: **3 de 3** proyectos de audio con pesos licenciados
+> aparte los tienen en **modo no comercial**. Ninguno lo dice en el badge.
+
+### 📉 Gap declarado: **no existe un ERP/CRM vertical para estudios de juego**
+
+La búsqueda del runbook (`open source platform gaming ERP CRM MIT Apache`,
+corrida este pass) devuelve **sólo plataformas horizontales**: Odoo, Dolibarr,
+EspoCRM, Operately (Apache-2.0). **Ninguna específica de producción de juegos.**
+El antecedente más cercano que devolvió es de cine (TACTIC, usado en el proyecto
+Gooseberry de la Blender Foundation), no de juegos.
+
+⇒ Esto **no se arregla inventando una fila.** Lo que esta página sostiene desde
+el cycle 9 sigue siendo la lectura correcta: en gaming la "vertical" no es un
+ERP, es el **engine + backend + pipeline**, y es ahí donde hay que buscar. El
+hallazgo sigue siendo el mismo tres passes después y ya se puede llamar
+estructural: **el equivalente de Odoo en gaming no existe, y el motivo es que
+el engine ya ocupa ese lugar.**
+
 
 ## 🆕 Capa vertical nueva (2026-11-22, cycle 13): **la plataforma de diálogo, voz y moderación** — la que convierte un LLM en algo que se puede enviar a certificación
 

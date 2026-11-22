@@ -7,7 +7,13 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-22 (cycle 13)** (passes previos: 2026-11-22 cycles 12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22 cycles 13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Canal 4, agregado el 2026-11-22 (cycle 14):** la sección `## License` del
+> `README.md`, con **cada dependencia que nombra resuelta como un repo más**.
+> Los canales 1-3 sólo ven el interior del repo; esta página publicaba dos filas
+> de **27.514 ★ sumadas** como MIT limpias cuando sus renderers dependen de
+> paquetes no comerciales. Ver el hallazgo del cycle 14.
 >
 > **Doble canal obligatorio en esta página.** El SPDX del API
 > (`gh api search/repositories -f q='repo:<slug>'`) y la lectura del archivo en
@@ -32,6 +38,81 @@ updated: 2026-11-22
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El hallazgo del cycle 14 (2026-11-22): **la capa de PRODUCCIÓN DE ASSETS faltaba entera** — y es la primera de esta página donde la licencia **no está dentro del repo**
+
+Trece passes, 233 slugs inventariados, **cero** repos de generación de malla,
+textura, rig, movimiento o música. Es la línea de coste más grande de un juego y
+no tenía una sola fila. Este pass la abre con **13 repos verificados** y **una
+corrección de método que afecta a toda la página**.
+
+### 🔴 El canal 4: la licencia de un repo es la licencia de su **clausura**, y vive en prosa
+
+Esta página declara desde el cycle 6 un método de **tres canales** (SPDX del
+API, byte-read del archivo, enumeración de archivos de licencia). Los tres
+operan **dentro** del repo. Medición de este pass:
+
+| Repo | ★ | Canal 1 (SPDX) | Canal 2 (byte-read) | Canal 3 (enumeración) | **Canal 4 (clausura declarada en README)** |
+|---|---|---|---|---|---|
+| [microsoft/TRELLIS](https://github.com/microsoft/TRELLIS) | 14.370 | `MIT` ✅ | MIT ✅ | 1 archivo ✅ | 🔴 `diffoctreerast` → **Gaussian-Splatting License, no comercial** |
+| [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2) | 13.144 | `MIT` ✅ | MIT ✅ | 2 archivos (el 2º es **CC0**) ✅ | 🔴 `nvdiffrast` + `nvdiffrec` → **NVIDIA Source Code License, no comercial** |
+
+**Los tres canales de la casa dan limpio y el veredicto es incorrecto.** El dato
+está escrito, en inglés, en la sección `## ⚖️ License` del `README.md`:
+*"certain dependencies operate under separate license terms"*. Coste de leerlo:
+un `curl` y un `grep -i licen`. Ahorro: 27.514 ★ de recomendación equivocada.
+
+> **Canal 4, obligatorio en esta página desde hoy:** leer la sección de licencia
+> del `README.md` y **resolver cada dependencia nombrada allí como un repo más**
+> de esta KB (SPDX + byte-read). Un proyecto no es más libre que la dependencia
+> menos libre que te manda a instalar.
+
+### 🆕 Fundacionales nuevos — generación de malla y textura
+
+| Repo | ★ | Licencia (byte-read) | Último push | Por qué es fundacional |
+|---|---|---|---|---|
+| [microsoft/TRELLIS](https://github.com/microsoft/TRELLIS) | 14.370 | **MIT** — código **y pesos** (README: *"TRELLIS models and the majority of the code are licensed under the MIT License"*) ⚠️ ver canal 4 | 2026-10-27 | líder abierto por estrellas en imagen→3D; única base cuyos **pesos** son MIT |
+| [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2) | 13.144 | **MIT** + HDRIs **CC0** (Poly Haven, `assets/hdri/license.txt`, 722 B) ⚠️ ver canal 4 | 2026-07-10 | sucesor con **PBR nativo**: base color, roughness, metallic — el formato que un engine consume sin conversión |
+| [Bingeljell/image-to-3dlab](https://github.com/Bingeljell/image-to-3dlab) | 1.244 | **Apache-2.0** (11.358 B) + `NOTICE` (1.162 B) | 2026-11-20 | *AssetFurnace*: el único pipeline **local y completo** (prompt → malla → textura → rig → animación) con grant permisivo de punta a punta |
+| [OpenDCAI/GameFactory-3A](https://github.com/OpenDCAI/GameFactory-3A) | 1.344 | **Apache-2.0** (11.338 B) | 2026-11-15 | orquesta imagen + 3D + motion + audio + CG-video y **exporta a UE5, Unity, Godot 4, Blender y three.js**: la capa de integración con engine que las demás no tienen |
+| [nv-tlabs/FlexiCubes](https://github.com/nv-tlabs/FlexiCubes) | 871 | **Apache-2.0** (`LICENSE.txt`, 11.357 B) | — | extracción de malla diferenciable; **el sustituto permisivo** del camino de render no comercial de TRELLIS |
+| [VAST-AI-Research/TripoSG](https://github.com/VAST-AI-Research/TripoSG) | 1.935 | **MIT** | 2025-04-18 ⚠️ **19 meses dormido** | imagen → malla por flow matching; se lista con la advertencia de dormancia, no como primera opción |
+
+### 🆕 Fundacionales nuevos — audio generativo
+
+| Repo | ★ | Licencia (byte-read) | Último push | Nota de grant |
+|---|---|---|---|---|
+| [ace-step/ACE-Step](https://github.com/ace-step/ACE-Step) | 5.095 | **Apache-2.0** | 2026-02-15 | ✅ sin carve-out detectado |
+| [OpenMOSS/MOSS-TTS](https://github.com/OpenMOSS/MOSS-TTS) | 4.358 | **Apache-2.0** (11.375 B) | 2026-09-06 | ✅ el README extiende el grant **a los pesos** de forma explícita: *"Models in MOSS-TTS Family are licensed under the Apache License 2.0"*. Es el **único** de esta tabla que lo hace |
+| [Stability-AI/stable-audio-tools](https://github.com/Stability-AI/stable-audio-tools) | 3.920 | **MIT** (código) | 2026-11-01 | ⚠️ los checkpoints van por licencia Stability aparte y **no se leyeron en este pass** (gap declarado) |
+| [facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft) | 23.943 | **MIT** / pesos **CC BY-NC 4.0** (`LICENSE_weights`, 19.333 B) | 2026-03-03 | ⛔ el audio generado **no se puede enviar** en un producto comercial |
+| [multimodal-art-projection/YuE](https://github.com/multimodal-art-projection/YuE) | 13.656 | **Apache-2.0** / pesos **CC BY-NC 4.0** (`MODEL_LICENSE`, 23.876 B) | 2026-11-01 | ⛔ idem |
+
+### ⚠️ Rigging y motion: la base existe, y **ninguna de las tres está limpia**
+
+| Repo | ★ | Licencia (byte-read) | Obstáculo medido |
+|---|---|---|---|
+| [VAST-AI-Research/UniRig](https://github.com/VAST-AI-Research/UniRig) | 2.189 | raíz **MIT** (1.124 B) | 🔴 `src/model/michelangelo/LICENSE` = **GPL-3.0** (35.148 B), importado **sin condición** por `src/model/parse_encoder.py` |
+| [GuyTevet/motion-diffusion-model](https://github.com/GuyTevet/motion-diffusion-model) | 4.154 | **MIT** | ⚠️ exige los body models **SMPL**, bajados de un Google Drive sin autenticación en vez del portal de MPI con aceptación de licencia |
+| [OpenMotionLab/MotionGPT](https://github.com/OpenMotionLab/MotionGPT) | 2.006 | **MIT** | ⚠️ **17 meses sin push** (2025-07-01) |
+
+⇒ **Conclusión honesta de esta sección: no hay hoy un auto-rigger abierto y
+limpio.** Lo que esta página puede recomendar es el camino de
+`Bingeljell/image-to-3dlab` (Apache-2.0 de punta a punta, auto-rig incluido), y
+verificar en el pass siguiente **qué** usa internamente para riggear — porque si
+usa UniRig, hereda la GPL-3.0. **Verificación pendiente, declarada.**
+
+### 📏 Un valor nuevo para la tabla de checksum de bytes de esta KB
+
+| Licencia | Bytes medidos | Fuente de la medición |
+|---|---|---|
+| **MIT + addendum de pesos** | **1.713** | `HamSanders/soundbox/LICENSE` |
+
+El MIT estándar mide ~1.070 B. **643 B de más = hay texto que no es MIT.** En
+este caso el addendum es benigno (aclara que los pesos van aparte y que el repo
+no los redistribuye), pero el detector funcionó: **un MIT que no mide ~1.070 B
+hay que leerlo entero.**
+
 
 ## 🔴 El hallazgo del cycle 13 (2026-11-22): **la capa de TEXTO Y VOZ del jugador faltaba entera** — 10 repos fundacionales, 265.000 ★ sumadas, cero filas en 12 passes
 

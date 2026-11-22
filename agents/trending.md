@@ -12,6 +12,91 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 14
+
+**La tendencia de este pass no es qué apareció: es DÓNDE se mudó la
+restricción.** Segundo eje consecutivo con tasa de novedad del 100% (24 de 24
+candidatos nuevos, 0 filas previas en 13 passes), ahora sobre **producción de
+assets**: malla, textura, rig, movimiento, música y SFX.
+
+### 🔴 El movimiento que esta página puede registrar hoy: la restricción salió del archivo de licencia y se mudó a **la lista de dependencias**
+
+Historia registrada en este mismo archivo, pass por pass — y la dirección es
+consistente:
+
+| Pass | Dónde vivía la restricción | Ejemplo medido |
+|---|---|---|
+| cycles 4-5 | **el archivo de licencia de la raíz** | MonoGame Ms-PL detrás de un badge MIT |
+| cycle 6-7 | **subdirectorios del mismo repo** | `Matrix-Game-4/` con grant propio |
+| cycle 10 | **el territorio** | Tencent: sin grant en EU / UK / Corea |
+| cycle 12 | **el carve-out por tipo de entregable** | `ee/`, PolyForm Shield |
+| cycle 13 | **el modelo de negocio del licenciatario** | YSPL 1.0, Fish Audio 1.0 (umbral US$ 500k) |
+| 🆕 **cycle 14** | **la clausura de dependencias, declarada sólo en prosa del README** | TRELLIS / TRELLIS.2 |
+
+Cada escalón es **menos visible para una auditoría automática** que el anterior.
+El de este pass es el primero que **ningún canal que opere sobre el repo puede
+ver**, porque el dato no está en el repo: está en lo que el repo te manda a
+instalar.
+
+### 🔴 El caso, con las dos cifras que lo hacen tendencia y no anécdota
+
+- [microsoft/TRELLIS](https://github.com/microsoft/TRELLIS) — **14.370 ★**,
+  SPDX `MIT`, `LICENSE` MIT estándar, un solo archivo de licencia en todo el
+  repo. Su `README.md` dice que `diffoctreerast` *"may have different
+  licenses"*. Ese paquete es un derivado declarado de la **Gaussian-Splatting
+  License** de Inria + MPII: *"THE USER CANNOT USE, EXPLOIT OR DISTRIBUTE THE
+  SOFTWARE FOR COMMERCIAL PURPOSES"*.
+- [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2) — **13.144 ★**,
+  mismo perfil. Sus dependencias de render son `nvdiffrast` y `nvdiffrec`,
+  ambas **NVIDIA Source Code License**: *"only may be used or intended for use
+  non-commercially … research or evaluation purposes only"*.
+
+**27.514 ★ sumadas.** Los dos proyectos más votados de la capa que todo el
+mercado está a punto de adoptar, y los dos tienen el mismo problema en el mismo
+lugar.
+
+### 🟡 Lo que NO se movió, y conviene decirlo
+
+La adopción. Las encuestas de 2026 que este pass encontró colocan la generación
+de assets en **~19% del uso reportado de AI**, contra **~81% en investigación y
+brainstorming** (GDC 2026, 2.300+ respondentes, vía resúmenes secundarios — el
+informe primario no se recuperó). ⇒ **Esta capa no es donde está la adopción
+hoy; es hacia donde se está moviendo.** Que las licencias se estén cerrando
+*antes* de que llegue el volumen es precisamente lo que la hace registrable
+ahora.
+
+### 🆕 Repos que aparecen por primera vez en esta KB (14 filas, todas verificadas hoy)
+
+| Repo | ★ | Licencia (byte-read) | Veredicto |
+|---|---|---|---|
+| [microsoft/TRELLIS](https://github.com/microsoft/TRELLIS) | 14.370 | MIT (código y pesos) | ⚠️ renderers NC |
+| [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2) | 13.144 | MIT + HDRIs CC0 | ⚠️ renderers NC |
+| [facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft) | 23.943 | MIT / pesos CC BY-NC 4.0 | ⛔ pesos |
+| [multimodal-art-projection/YuE](https://github.com/multimodal-art-projection/YuE) | 13.656 | Apache-2.0 / pesos CC BY-NC 4.0 | ⛔ pesos |
+| [ace-step/ACE-Step](https://github.com/ace-step/ACE-Step) | 5.095 | Apache-2.0 | ✅ |
+| [Tencent-Hunyuan/Hunyuan3D-2.1](https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1) | 4.519 | Tencent Community | ⛔ sin grant en EU/UK/KR |
+| [OpenMOSS/MOSS-TTS](https://github.com/OpenMOSS/MOSS-TTS) | 4.358 | Apache-2.0 **incl. pesos** | ✅ |
+| [GuyTevet/motion-diffusion-model](https://github.com/GuyTevet/motion-diffusion-model) | 4.154 | MIT | ⚠️ SMPL |
+| [Stability-AI/stable-audio-tools](https://github.com/Stability-AI/stable-audio-tools) | 3.920 | MIT (código) | ⚠️ checkpoints aparte |
+| [VAST-AI-Research/UniRig](https://github.com/VAST-AI-Research/UniRig) | 2.189 | MIT raíz / **GPL-3.0 en el path** | 🔴 |
+| [OpenMotionLab/MotionGPT](https://github.com/OpenMotionLab/MotionGPT) | 2.006 | MIT | ⚠️ 17 meses dormido |
+| [VAST-AI-Research/TripoSG](https://github.com/VAST-AI-Research/TripoSG) | 1.935 | MIT | ⚠️ 19 meses dormido |
+| [OpenDCAI/GameFactory-3A](https://github.com/OpenDCAI/GameFactory-3A) | 1.344 | Apache-2.0 | ✅ |
+| [Bingeljell/image-to-3dlab](https://github.com/Bingeljell/image-to-3dlab) | 1.244 | Apache-2.0 + NOTICE | ✅ |
+
+**Tasa limpia: 4 de 14.** Es el peor ratio que esta KB ha medido en una capa
+nueva — el cycle 13 (texto y voz) dio 9 de 24.
+
+### ⏱️ Sobre los deltas
+
+Este pass corre ~1 hora después del cycle 13. **No se reportan variaciones de
+★**: en 60 minutos ninguna se mueve de forma interpretable, y reescribir cifras
+heredadas sin cambio de significado destruye la serie que este archivo existe
+para conservar. Lo que sí es nuevo son **repos que nunca estuvieron aquí** y
+**un eje de restricción que nunca se había registrado**.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 13
 
 **El evento del pass no es un repo: es un eje.** Las búsquedas del runbook sobre

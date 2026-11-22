@@ -7,9 +7,18 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-22 (pass cycle 13)**. Passes previos: 2026-11-22
-> (cycles 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20, 2026-10-26,
-> 2026-07-02.
+> Última actualización: **2026-11-22 (pass cycle 14)**. Passes previos: 2026-11-22
+> (cycles 13, 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20,
+> 2026-10-26, 2026-07-02.
+>
+> 🔴 **Lo que el pass cycle 14 cambia de raíz:** los trece passes anteriores
+> asumieron que la licencia de un repo vive **dentro** del repo —badge, archivo,
+> enumeración de archivos—. Este pass mide que **no**: los dos generadores 3D
+> MIT más grandes del mundo (**27.514 ★ sumadas**) declaran en **prosa del
+> README**, y en ningún archivo de licencia, que sus renderers dependen de
+> paquetes **no comerciales**. La licencia de un proyecto es la licencia de su
+> **clausura de dependencias**. Canal 4, nuevo y obligatorio desde hoy. Ver los
+> hallazgos nº1 a nº5 del cycle 14.
 >
 > 🔴 **Lo que el pass cycle 13 cambia de raíz:** los doce passes anteriores
 > trabajaron el mismo eje (engines, MCP, NPCs, world models, backends) y ese eje
@@ -62,6 +71,291 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 14): **la capa de PRODUCCIÓN DE ASSETS — y el primer eje donde la licencia del código y la licencia de lo que el código PRODUCE son dos objetos distintos**
+
+> **Eje elegido aplicando la regla de método nº14 del cycle 13** (*la saturación
+> se mide, no se intuye*). El cycle 13 abrió la capa que el jugador **lee y
+> escucha** (diálogo, moderación, voz, localización). Queda abierta la capa que
+> el jugador **mira**, y que es la línea de coste más grande de un juego:
+> **malla → textura → rig → animación → música y SFX**. Medición previa a
+> escribir nada:
+>
+> | Eje | Candidatos devueltos por las búsquedas | Ya estaban en esta KB | Nuevos |
+> |-----|-----------------------------------------|------------------------|--------|
+> | Engine / MCP / NPC / backend (el eje histórico) | 8 re-verificados | **8** | 0 |
+> | Malla / textura / rig / motion / música-SFX | 24 | **0** | **24** |
+>
+> ⇒ Segundo eje consecutivo con tasa de novedad del **100%** y **cero** filas
+> previas después de trece passes. La KB tenía 233 slugs y ni uno solo de
+> generación de assets.
+>
+> **Canales usados: los tres de la casa, más uno nuevo que este pass se ve
+> obligado a inventar.** Ver el hallazgo nº2: hay una clase de restricción que
+> **ninguno de los tres canales puede ver**, porque no vive dentro del repo.
+
+### 🔴 Hallazgo nº1: **el slug que devuelve el buscador no es un repo** — 4 de 5 resultados apuntaban a un dueño que no existe
+
+La consulta `open source 3D asset generation game development 2026 mesh texture
+MIT Apache` devolvió **cinco** resultados para el mismo proyecto, *AssetFurnace*,
+bajo **cinco dueños distintos**. Verificados uno por uno:
+
+| Slug tal como lo devolvió el buscador | `search/repositories` | `raw.../HEAD/README.md` | Veredicto |
+|---|---|---|---|
+| `matteodante/AssetFurnace` (**el resultado nº1**) | HTTP **422** *"resources do not exist"* | HTTP **404**, 14 B | 🔴 **no existe** |
+| `johndeeC/image-to-3dlab` | 0 items | — | fork (search excluye forks) |
+| `vitalis/image-to-3dlab` | 0 items | — | fork |
+| `zorrobyte/image-to-3dlab` | 0 items | — | fork |
+| ✅ **`Bingeljell/image-to-3dlab`** | **1.244 ★**, `Apache-2.0`, push **2026-11-20**, `main` | HTTP **200**, 31.857 B | 🟢 **el repo real** |
+
+El `README.md` del repo real abre con `<h1 align="center">AssetFurnace</h1>` y
+`<sub>by Bingeljell</sub>`: **el proyecto se llama AssetFurnace y el repo se
+llama `image-to-3dlab`.** El buscador sintetizó el slug juntando el nombre del
+proyecto con el dueño de un fork, y lo hizo mal cuatro veces de cinco.
+
+> **Regla de método nº15 (para copiar a toda la familia de KBs): el título de un
+> resultado de búsqueda no es un identificador.** El único identificador es el
+> par `(owner, repo)` que sobrevive a `search/repositories` **y** a un `raw`
+> 200. Y los dos códigos de error significan cosas distintas y hay que
+> distinguirlos: **422** = el owner/repo no existe o no es visible; **0 items
+> con HTTP 200** = existe pero es un **fork** (la búsqueda de GitHub los excluye
+> por defecto). Tratar los dos como "no encontrado" borra la información que
+> dice *dónde está el upstream*.
+
+Licencia del repo real, leída en bytes: `LICENSE` **11.358 B = Apache-2.0**
+estándar, más un `NOTICE` de 1.162 B. ✅ Usable.
+
+### 🔴 Hallazgo nº2: **los dos generadores 3D MIT más grandes del mundo no son usables comercialmente tal como se envían** — y la restricción no está en ningún archivo del repo
+
+Éste es el hallazgo caro del pass. `microsoft/TRELLIS` (**14.370 ★**) y
+`microsoft/TRELLIS.2` (**13.144 ★**) son, por estrellas, los líderes abiertos de
+imagen-a-3D. Los **tres** canales de la casa dicen que son limpios:
+
+| Canal | TRELLIS | TRELLIS.2 |
+|---|---|---|
+| 1. `search/repositories` → SPDX | `MIT` | `MIT` |
+| 2. `raw.../HEAD/LICENSE` byte-read | MIT estándar | MIT estándar |
+| 3. `search/code filename:LICENSE` (enumeración) | `LICENSE` (1 archivo) | `LICENSE` + `assets/hdri/license.txt` (**CC0**, Poly Haven) |
+
+Y sin embargo el propio `README.md` lo dice, en prosa, en su sección `## ⚖️ License`:
+
+> **TRELLIS** — *"TRELLIS models and the majority of the code are licensed under
+> the MIT License. **The following submodules may have different licenses**"* →
+> `diffoctreerast`, derivado de `diff-gaussian-rasterization`.
+>
+> **TRELLIS.2** — *"Please note that **certain dependencies operate under
+> separate license terms**"* → `nvdiffrast`, `nvdiffrec`.
+
+Esas dependencias, leídas byte a byte en su propio repo:
+
+| Dependencia | Repo | Bytes | Licencia | Cláusula operativa (literal) |
+|---|---|---|---|---|
+| `diff-gaussian-rasterization` (1.512 ★) | [graphdeco-inria/diff-gaussian-rasterization](https://github.com/graphdeco-inria/diff-gaussian-rasterization) | 4.275 | **Gaussian-Splatting License** (Inria + MPII) | *"THE USER CANNOT USE, EXPLOIT OR DISTRIBUTE THE SOFTWARE FOR COMMERCIAL PURPOSES"* |
+| `diffoctreerast` | [JeffreyXiang/diffoctreerast](https://github.com/JeffreyXiang/diffoctreerast) (66 ★, `NOASSERTION`) | 3.645 | derivado de la anterior — *"This Software is a derivative work of the Original Software"* | idem, misma frase literal |
+| `nvdiffrast` (1.942 ★) | [NVlabs/nvdiffrast](https://github.com/NVlabs/nvdiffrast) | 4.445 | **Nvidia Source Code License (1-Way Commercial)** | *"only may be used or intended for use **non-commercially** … means for research or evaluation purposes only"* |
+| `nvdiffrec` (2.301 ★) | [NVlabs/nvdiffrec](https://github.com/NVlabs/nvdiffrec) | 4.312 | **NVIDIA Source Code License** | *"3.3 Use Limitation … only may be used or intended for use non-commercially"* |
+
+**Dónde entra cada una, medido en el código (no inferido):**
+
+| Archivo de TRELLIS | Import | Momento | Licencia efectiva de ese camino |
+|---|---|---|---|
+| `trellis/renderers/mesh_renderer.py` | `import nvdiffrast.torch as dr` (línea 2) | **top-level, incondicional** | ⛔ no comercial |
+| `trellis/renderers/gaussian_render.py` | `from diff_gaussian_rasterization import …` (línea 58) | dentro de función (lazy) | ⛔ no comercial |
+| `trellis/renderers/octree_renderer.py` | `diffoctreerast` | módulo | ⛔ no comercial |
+| `trellis/renderers/__init__.py` | `importlib` en `__getattr__` | **lazy**: nada se importa hasta que se nombra el renderer | — |
+
+⇒ **Los tres renderers de TRELLIS importan un paquete no comercial. No hay un
+cuarto.** La parte buena, y es la que hace accionable el hallazgo: `setup.sh`
+expone `--nvdiffrast`, `--diffoctreerast`, `--kaolin` como **flags opcionales**
+—no se instalan por defecto— y el `__init__.py` es **perezoso**. Es decir: el
+camino de *generación* (MIT, pesos incluidos: el README dice *"TRELLIS **models**
+and the majority of the code"*) **se puede ejecutar sin tocar ningún renderer**.
+Lo que no se puede es **enviar el código de visualización del repo**.
+
+> **Regla de método nº16, la central de este pass: la enumeración cubre el repo;
+> no cubre lo que el repo te manda a instalar.** La licencia de un proyecto es
+> la licencia de su **clausura de dependencias**, y el único lugar donde esa
+> clausura está declarada es **prosa en el README** — que ningún canal
+> automático lee. El cycle 13 cerró la brecha entre *sonda* y *enumeración*.
+> Ésta es la brecha siguiente: entre *enumeración* y **clausura**.
+>
+> **Canal 4 (nuevo, obligatorio para esta página desde hoy):** leer la sección
+> `## License` del `README.md` y **resolver cada dependencia nombrada en ella
+> como si fuera un repo de esta KB**. Coste: 1 `curl` + 1 `grep -i licen` por
+> repo. En este pass cambió el veredicto de **27.514 ★** en dos filas.
+
+**Sustituto medido, no especulado.** `nv-tlabs/FlexiCubes` —la extracción de
+malla que TRELLIS usa en versión modificada— es **Apache-2.0** (`LICENSE.txt`,
+11.357 B), sin restricción. La ruta malla-sin-render es la que un juego
+necesita; la de *preview* es la que hay que reescribir. Ver la **Receta 36** en
+`compose/patterns.md`.
+
+### 🔴 Hallazgo nº3: **en esta capa los PESOS son un objeto de licencia aparte, y están medidos como NO comerciales en 3 de 3 casos**
+
+La KB ya tenía el eje *pesos-vs-código* anotado desde el cycle 6, pero con un
+solo ejemplo parcial. En la capa de audio el eje no es una excepción: **es la
+norma**, y el canal que lo detecta es la enumeración (canal 3), porque el
+segundo archivo tiene un **nombre distinto de `LICENSE`**.
+
+| Proyecto | ★ | Código (byte-read) | **Pesos** (archivo separado, byte-read) | ¿Se puede enviar el audio generado? |
+|---|---|---|---|---|
+| [facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft) | 23.943 | `LICENSE` → **MIT** | `LICENSE_weights` → **CC BY-NC 4.0** (19.333 B) | ⛔ **no** — MusicGen/AudioGen son NC |
+| [multimodal-art-projection/YuE](https://github.com/multimodal-art-projection/YuE) | 13.656 | `LICENSE` → **Apache-2.0** (11.358 B) | `MODEL_LICENSE` → **CC BY-NC 4.0** (23.876 B), literal: *"The YuE2-3B, YuE2-Vae and YuE2-Vae-legacy checkpoint weights are licensed under CC BY-NC 4.0"* | ⛔ **no** |
+| [HamSanders/soundbox](https://github.com/HamSanders/soundbox) | 239 | `LICENSE` → **MIT** (1.713 B) | el propio MIT trae un addendum: *"This MIT licence covers the … application code only. It does not cover the machine-learning model weights … several of which prohibit commercial use"* | ⚠️ **depende del modelo que cargues** |
+
+**El caso `soundbox` es el más instructivo y por eso entra pese a sus 239 ★.**
+Su MIT pesa **1.713 B** contra los ~1.070 B del MIT estándar: **+643 B de
+addendum**. Ése es exactamente el *checksum de bytes* de la casa funcionando
+como estaba diseñado — un MIT que no mide ~1.070 B **no es un MIT limpio**. Y el
+addendum resuelve el problema de la forma correcta: *"does not redistribute any
+model weights … downloads them from Hugging Face at the user's direction, using
+the user's own account"*. ⇒ la app es MIT de verdad; **la obligación de licencia
+se transfiere al operador**, por diseño y por escrito.
+
+⚠️ **Nota de inventario:** el texto de licencia de `soundbox` nombra al producto
+**"Mirli"**, no "soundbox". Repo y producto no coinciden — el mismo patrón del
+hallazgo nº1.
+
+### 🟡 Hallazgo nº4: la plantilla territorial de Tencent **no es una peculiaridad de los world models: es la plantilla de la casa** — 4º repo, línea de producto distinta
+
+El cycle 10 encontró la exclusión EU / UK / Corea del Sur en los **tres** repos
+de world models de Tencent y la llamó *"la plantilla de la casa"*. Este pass la
+confirma fuera de esa línea de producto, en generación de malla:
+
+| Repo | ★ | SPDX | Licencia leída en bytes | Territorio |
+|---|---|---|---|---|
+| 🆕 [Tencent-Hunyuan/Hunyuan3D-2.1](https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1) | 4.519 | `NOASSERTION` | **Tencent Hunyuan 3D 2.1 Community License** (`LICENSE`, 17.914 B, release 13-jun-2025) | ⛔ **no aplica en EU / UK / Corea del Sur** |
+
+Primera línea del archivo, **idéntica carácter por carácter** a la de los tres
+repos del cycle 10:
+
+```
+THIS LICENSE AGREEMENT DOES NOT APPLY IN THE EUROPEAN UNION, UNITED KINGDOM
+AND SOUTH KOREA AND IS EXPRESSLY LIMITED TO THE TERRITORY, AS DEFINED BELOW.
+```
+
+⇒ La exclusión territorial pasa de **3 repos / 1 línea de producto** a **4 repos
+/ 2 líneas**. Para un engagement en EMEA o en Corea esto ya no es un dato sobre
+*world models*: es un dato sobre **el proveedor**. La regla práctica que esta KB
+puede publicar hoy con 4 observaciones y 0 contraejemplos: **asumir exclusión
+territorial en cualquier release abierto de Tencent-Hunyuan y verificar la
+primera línea del archivo de licencia antes de evaluar nada.**
+
+### 🆕 Agentes y repos nuevos verificados este pass (cycle 14)
+
+Los 3 canales de siempre + el canal 4 (clausura declarada en README) sobre cada
+fila. ★ y `pushed_at` leídos hoy, 2026-11-22.
+
+#### Generación de malla y textura
+
+| Agente / repo | Repo | Licencia (byte-read) | ★ | Último push | Qué hace |
+|---|---|---|---|---|---|
+| **TRELLIS** | [microsoft/TRELLIS](https://github.com/microsoft/TRELLIS) | **MIT** (código **y pesos**) ⚠️ renderers con dependencias NC — ver hallazgo nº2 | 14.370 | 2026-10-27 | imagen/texto → 3D con representación latente estructurada; salida 3DGS, radiance field y malla |
+| **TRELLIS.2** | [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2) | **MIT** + `assets/hdri/license.txt` **CC0** (Poly Haven) ⚠️ idem | 13.144 | 2026-07-10 | sucesor; PBR nativo (base color / roughness / metallic) |
+| **TripoSG** | [VAST-AI-Research/TripoSG](https://github.com/VAST-AI-Research/TripoSG) | **MIT** | 1.935 | 2025-04-18 ⚠️ **19 meses sin push** | imagen → malla con flow matching rectificado |
+| **AssetFurnace** | [Bingeljell/image-to-3dlab](https://github.com/Bingeljell/image-to-3dlab) | **Apache-2.0** (11.358 B) + `NOTICE` | 1.244 | 2026-11-20 | pipeline local completo prompt/imagen → personaje texturizado, riggeado y animado, en Apple Silicon o NVIDIA; **anota la licencia de cada asset que produce** |
+| **3AGameFactory** | [OpenDCAI/GameFactory-3A](https://github.com/OpenDCAI/GameFactory-3A) | **Apache-2.0** (11.338 B) | 1.344 | 2026-11-15 | framework de generación imagen + 3D + motion + audio + CG-video con salida a UE5, Blender, Unity, Godot 4 y three.js |
+
+#### Rigging y animación
+
+| Agente / repo | Repo | Licencia (byte-read) | ★ | Último push | Qué hace |
+|---|---|---|---|---|---|
+| ⚠️ **UniRig** | [VAST-AI-Research/UniRig](https://github.com/VAST-AI-Research/UniRig) | badge **MIT**, raíz MIT (1.124 B) — **pero `src/model/michelangelo/` es GPL-3.0 (35.148 B) y está en el camino por defecto**. Ver hallazgo nº5 | 2.189 | 2026-06-04 | auto-rigging: predice esqueleto y skinning weights con un transformer autorregresivo (SIGGRAPH'25, Tsinghua + Tripo) |
+| ⚠️ **MDM** | [GuyTevet/motion-diffusion-model](https://github.com/GuyTevet/motion-diffusion-model) | **MIT** en el código; `utils/PYTORCH3D_LICENSE` aparte. ⚠️ **requiere los body models SMPL**, que `prepare/download_smpl_files.sh` baja de un **Google Drive sin autenticación** en vez del portal con click-through de MPI | 4.154 | 2025-10-01 | texto → movimiento humano (diffusion); salida a `.obj` por frame, integrable en Blender/Maya |
+| **MotionGPT** | [OpenMotionLab/MotionGPT](https://github.com/OpenMotionLab/MotionGPT) | **MIT** | 2.006 | 2025-07-01 ⚠️ 17 meses | movimiento humano tratado como lenguaje; texto↔motion en un solo modelo |
+
+#### Música, SFX y foley
+
+| Agente / repo | Repo | Licencia (byte-read) | ★ | Último push | Qué hace |
+|---|---|---|---|---|---|
+| ✅ **ACE-Step** | [ace-step/ACE-Step](https://github.com/ace-step/ACE-Step) | **Apache-2.0**, confirmado en README (`## 📜 License & Disclaimer`) | 5.095 | 2026-02-15 | generación musical con letra; extender, versionar y *repaint* de una pista |
+| ✅ **MOSS-TTS** (familia, incluye **MOSS-SoundEffect**) | [OpenMOSS/MOSS-TTS](https://github.com/OpenMOSS/MOSS-TTS) | **Apache-2.0** (11.375 B); README literal: *"Models in MOSS-TTS Family are licensed under the Apache License 2.0"* ⇒ **cubre los pesos** | 4.358 | 2026-09-06 | SFX de hasta 30 s a 48 kHz desde prompt de texto, además de TTS |
+| ✅ **stable-audio-tools** | [Stability-AI/stable-audio-tools](https://github.com/Stability-AI/stable-audio-tools) | **MIT** en el código ⚠️ los checkpoints de Stability van por *Stability AI Community License* aparte | 3.920 | 2026-11-01 | entrenamiento e inferencia de modelos generativos de audio |
+| ⚠️ **audiocraft** | [facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft) | **MIT** código / **CC BY-NC 4.0** pesos (`LICENSE_weights`) | 23.943 | 2026-03-03 | MusicGen + AudioGen + EnCodec |
+| ⚠️ **YuE** | [multimodal-art-projection/YuE](https://github.com/multimodal-art-projection/YuE) | **Apache-2.0** código / **CC BY-NC 4.0** pesos (`MODEL_LICENSE`) | 13.656 | 2026-11-01 | canción completa de larga duración con voz y letra |
+| ⚠️ **soundbox** | [HamSanders/soundbox](https://github.com/HamSanders/soundbox) | **MIT + addendum de pesos** (1.713 B) | 239 | 2026-11-22 | app local tipo ElevenLabs/Suno con **servidor MCP de 21 herramientas** para Claude Code y Cursor; no redistribuye pesos |
+
+### ⚫ Candidatos nuevos evaluados y **rechazados** este pass (cycle 14)
+
+Se listan con la causa medida, porque un rechazo sin causa se vuelve a evaluar
+el pass siguiente (regla heredada del cycle 4: *los rechazos caducan como las
+recomendaciones*).
+
+| Repo | ★ | Causa medida (byte-read) | Bytes |
+|---|---|---|---|
+| [Stability-AI/stable-fast-3d](https://github.com/Stability-AI/stable-fast-3d) | 1.947 | **Stability AI Community License** — no es SPDX permisiva; umbral de facturación. Además **sin push desde 2025-01-22** (22 meses) | 11.727 |
+| [ZeyueT/AudioX](https://github.com/ZeyueT/AudioX) | 1.559 | **CC BY-NC 4.0** — prohibición comercial directa | 19.355 |
+| [declare-lab/TangoFlux](https://github.com/declare-lab/TangoFlux) | 887 | literal: *"created for **non-commercial, research-only** purposes"* | 2.528 |
+| [Tencent-Hunyuan/Hunyuan3D-2.1](https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1) | 4.519 | sin grant en **EU / UK / Corea del Sur** (hallazgo nº4). Utilizable sólo fuera de ese territorio | 17.914 |
+| [openai/jukebox](https://github.com/openai/jukebox) | 8.027 | **`archived: true`**, último push 2024-06-19 | — |
+| [backblaze-labs/awesome-audio-generation](https://github.com/backblaze-labs/awesome-audio-generation) | **12** | CC0-1.0 y vivo, pero **12 ★**: índice útil para investigar, no una base sobre la que construir | — |
+| `matteodante/AssetFurnace` | — | **no existe** (hallazgo nº1) | — |
+
+### 🔴 Hallazgo nº5: `VAST-AI-Research/UniRig` — badge **MIT**, y **GPL-3.0 en el camino de importación por defecto**
+
+El único auto-rigger abierto serio de la lista. Los canales 1 y 2 lo dan limpio:
+SPDX `MIT`, raíz `LICENSE` = MIT (1.124 B). **El canal 3 lo rompe.**
+`search/code -f q='repo:VAST-AI-Research/UniRig filename:LICENSE'` devuelve
+**tres** archivos:
+
+| Ruta | Bytes | Licencia |
+|---|---|---|
+| `LICENSE` (raíz) | 1.124 | **MIT** |
+| `src/model/pointcept/LICENSE` | 1.065 | MIT |
+| 🔴 **`src/model/michelangelo/LICENSE`** | **35.148** | **GNU GPL-3.0** |
+
+Y **no es código muerto vendorizado**: la cabecera del propio archivo lo declara,
+y la cadena de imports es incondicional.
+
+```
+# This file is part of UniRig.
+# This file is derived from https://github.com/NeuralCarver/Michelangelo
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License ...
+```
+
+```
+src/model/parse_encoder.py:3:  from .michelangelo.get_model import get_encoder as get_encoder_michelangelo
+src/model/parse_encoder.py:4:  from .michelangelo.get_model import AlignedShapeLatentPerceiver
+src/model/unirig_ar.py:63:    isinstance(self.mesh_encoder, MAP_MESH_ENCODER.michelangelo) or ...
+src/model/unirig_skin.py:258: isinstance(self.global_encoder, MAP_MESH_ENCODER.michelangelo_encoder)
+```
+
+**Confirmación aguas arriba:** el upstream nombrado en la cabecera,
+[NeuralCarver/Michelangelo](https://github.com/NeuralCarver/Michelangelo)
+(**486 ★**), es **GPL-3.0 también en su badge SPDX** — o sea que UniRig no
+malinterpretó nada: vendorizó correctamente un proyecto GPL y **lo declaró en el
+archivo**, pero el badge del repo contenedor sigue diciendo MIT.
+
+`parse_encoder.py` importa el subárbol GPL **en el import de módulo, sin
+condición**, y es quien construye los encoders que usan tanto el modelo
+autorregresivo (`unirig_ar`) como el de skinning (`unirig_skin`) — los dos
+modelos que son UniRig. ⇒ **El badge MIT es correcto para el archivo de la raíz
+y engañoso para el artefacto.** Un estudio que enlace UniRig dentro de una
+herramienta propietaria está distribuyendo GPL-3.0.
+
+**El 35.148 B es el checksum.** GPL-3.0 ≈ 35.200 B es una de las ocho entradas
+de la tabla de checksum derivada en el cycle 4. Funcionó exactamente para lo que
+fue construida: ningún humano leyó 35 KB, el tamaño lo delató.
+
+### 📏 Lo que este pass NO puede medir, dicho explícitamente
+
+- **La licencia de SMPL.** `GuyTevet/motion-diffusion-model` baja los body
+  models desde un enlace de Google Drive sin autenticación
+  (`prepare/download_smpl_files.sh`, verificado byte a byte) en lugar del portal
+  de MPI, que tiene aceptación de licencia. **El host `smpl.is.tue.mpg.de` no
+  resuelve desde esta sesión** (fuera de los dominios permitidos), así que
+  **esta KB no afirma cuáles son los términos de SMPL**: afirma sólo lo que
+  verificó — que el script **evita el portal donde se aceptan**. Gap declarado,
+  pendiente para el pass siguiente con el dominio habilitado.
+- **Los pesos publicados en Hugging Face.** Esta sesión sólo tiene canal a
+  GitHub (`search/*` + `raw`). Donde el repo no trae un archivo de licencia de
+  pesos, esta KB **no infiere**: lo deja en blanco. Es el caso de
+  `Stability-AI/stable-audio-tools` (el código es MIT; los checkpoints se
+  distribuyen aparte y **no se leyeron**).
+- **Deltas de ★.** El pass anterior corrió hace ~1 hora. No se reportan
+  variaciones de estrellas, por la misma razón que en los cycles 10-13.
+
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 13): **la capa de texto y voz que mira el jugador nunca se auditó en 12 passes — y vive bajo tres familias de licencia que esta KB no tenía**
 

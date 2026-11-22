@@ -8,10 +8,11 @@ updated: 2026-11-22
 
 > Knowledge base de la industria **Gaming** para Globant AI Studios.
 > NPC agents, procedural content, soporte in-game, anti-cheat, game analytics,
-> y —desde el cycle 13— la capa de **diálogo autorado, voz, moderación de chat y
-> localización**.
+> desde el cycle 13 la capa de **diálogo autorado, voz, moderación de chat y
+> localización**, y —desde el cycle 14— la de **producción de assets**: malla,
+> textura, rig, movimiento, música y SFX.
 >
-> **Último pass: 2026-11-22 (cycle 13).**
+> **Último pass: 2026-11-22 (cycle 14).**
 
 ## Estructura
 
@@ -50,6 +51,17 @@ gaming-kb/
   **cero** archivos de licencia puede tener el grant **declarado en el README y
   alojado afuera** (`QwenLM/Qwen3`). **`enumeración = 0` es ambiguo, no
   negativo:** el procedimiento para resolverlo es la **Receta 30**.
+  🔴 **Y la sexta, del cycle 14: el repo no es su clausura.** La restricción
+  puede vivir **fuera del repo**, en una dependencia que sólo se nombra en la
+  prosa del `README.md` — `microsoft/TRELLIS` y `TRELLIS.2` (**27.514 ★
+  sumadas**) pasan los tres canales de esta casa como MIT limpias y sus tres
+  renderers importan paquetes **no comerciales**. El procedimiento es el
+  **canal 4** y la **Receta 36**.
+- **En la capa de modelos generativos, código y pesos son dos licencias
+  distintas, en archivos con nombres distintos** (`LICENSE_weights`,
+  `MODEL_LICENSE`, o un addendum dentro del propio `LICENSE`). Medición del
+  cycle 14: **3 de 3** proyectos de audio con pesos licenciados aparte los
+  tienen en **modo no comercial**.
 - **Las oportunidades de `intel/market.md` están organizadas bajo un único
   encabezado `## Opportunities by region`** con una subsección por región
   (North America / EMEA / APAC / LATAM). **Los gaps se escriben como gaps**: un

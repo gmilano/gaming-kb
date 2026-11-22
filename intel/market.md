@@ -7,12 +7,187 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-22 (cycle 13)** (passes previos: 2026-11-22 cycles 12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22 cycles 13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🔴 Lo que cambió — pass cycle 14 (2026-11-22): **la primera restricción de este mercado que se decide por JURISDICCIÓN DEL LICENCIANTE, no del cliente**
+
+Los passes anteriores de esta página siguieron la regulación: quién obliga a
+etiquetar, quién obliga a verificar edad, quién prohíbe qué. Este pass mide un
+eje distinto y **anterior a la regulación**: en la capa de producción de assets,
+**la licencia del software decide en qué región se puede vender el resultado** —
+y lo decide antes de que ningún regulador opine.
+
+### 🔵 1. El mapa de la capa de assets, puesto por región — y no es simétrico
+
+| Opción de generación 3D | Licenciante | NA | EMEA | APAC | LATAM |
+|---|---|---|---|---|---|
+| `microsoft/TRELLIS` + `TRELLIS.2` (27.514 ★) — **generación** | Microsoft (NA) | ✅ MIT | ✅ MIT | ✅ MIT | ✅ MIT |
+| …sus **renderers** (`nvdiffrast`, `nvdiffrec`) | **NVIDIA** (NA) | ⛔ no comercial | ⛔ | ⛔ | ⛔ |
+| …su **renderer de splatting** (`diffoctreerast` ← `diff-gaussian-rasterization`) | **Inria + MPII** (FR/DE, **EMEA**) | ⛔ no comercial | ⛔ | ⛔ | ⛔ |
+| `Tencent-Hunyuan/Hunyuan3D-2.1` (4.519 ★) | Tencent (APAC) | ✅ | ⛔ **sin grant** | ⛔ **sin grant en Corea** / ✅ resto | ✅ |
+| `Bingeljell/image-to-3dlab`, `OpenDCAI/GameFactory-3A` | — | ✅ Apache-2.0 | ✅ | ✅ | ✅ |
+
+**Las dos lecturas que salen del cuadro:**
+
+1. 🔴 **EMEA es la región con menos opciones de esta capa, y por dos causas
+   independientes que se suman.** La alternativa china **no tiene grant** en la
+   UE ni el Reino Unido (exclusión territorial explícita de Tencent), y el
+   renderer de splatting que el líder MIT necesita es de **Inria + MPII**, con
+   prohibición comercial literal — una restricción **de origen europeo**. Lo que
+   queda en pie para un engagement europeo es el stack Apache/MIT puro:
+   `image-to-3dlab`, `GameFactory-3A`, `MOSS-TTS`, `ACE-Step`.
+2. 🟡 **Corea del Sur recibe el golpe dos veces.** Queda fuera del grant de
+   Tencent **y** es la jurisdicción de APAC con la ley de AI más amplia (AI
+   Basic Act, vigente **22-ene-2026**).
+
+### 🔵 2. Dónde está la adopción de esta capa — y por qué el número importa para el pitch
+
+Resúmenes secundarios de **GDC 2026** (2.300+ respondentes; **el informe
+primario no se recuperó en este pass y se declara**): la **generación de assets**
+es ~**19%** del uso reportado de AI, contra ~**81%** en investigación y
+brainstorming. Cifras de adopción total que **discrepan por un factor de 2,4×**
+porque miden cosas distintas: 36% (uso personal), 52% (estudios con genAI en
+producción), ~50% (BCG), 73% (a16z Games AI Survey), 88% (expectativa de que sea
+estándar).
+
+⇒ **El pitch correcto no es "todos ya lo usan".** Es: *"casi nadie lo usa
+todavía en producción, y las licencias de las cuatro herramientas que vas a
+elegir ya se están cerrando"*. Ninguna de estas cifras se promueve a número de
+referencia de esta KB.
+
+### 🟡 3. Carril casino — se cita, no se promueve
+
+**Malta, 18-sep-2026:** MGA + MDIA publicaron el *AI Gaming Charter*,
+**voluntario**, 48 páginas, seis áreas de guía, con clasificación de
+herramientas por impacto en el jugador; consulta previa el 8-may-2026;
+seguimiento de nov-2026 reporta brechas de supervisión entre licenciatarios.
+⚠️ **Es gambling, no videojuegos** — frontera establecida en el cycle 8 y
+revalidada por quinta vez. Lo único transferible es la **forma del entregable**
+(inventario de herramientas AI clasificadas por impacto en el jugador), que es
+el mismo artefacto que pide el Art. 50 del AI Act.
+
+### Datos nuevos por región — este pass
+
+#### North America
+
+- 🔴 **Los dos licenciantes que bloquean la capa de assets son norteamericanos y
+  tienen nombre.** `nvdiffrast` y `nvdiffrec` son de **NVIDIA**, bajo *"NVIDIA
+  Source Code License"* — y la variante de `nvdiffrast` se llama literalmente
+  **"1-Way Commercial"**, con la restricción escrita: *"only may be used or
+  intended for use non-commercially … research or evaluation purposes only"*.
+  ⇒ a diferencia de una exclusión territorial, **acá hay una contraparte
+  corporativa identificable** a la que un cliente norteamericano puede
+  plantearle una licencia comercial por los canales normales. **Esta KB no
+  afirma que NVIDIA la otorgue**: afirma que existe el interlocutor, que es más
+  de lo que hay en los otros bloqueos de este pass.
+- Estimaciones de agregadores secundarios ubican a NA en ~**40%** del ingreso de
+  AI-en-gaming. ⚠️ Fuentes terciarias con metodologías distintas: **no se
+  promueve a cifra de referencia**.
+- ⚠️ **El homónimo de casino volvió a dominar la consulta regional**, por sexto
+  pass consecutivo. `AI gaming North America 2026 adoption regulation players`
+  devuelve KPMG, SIGMA y AiR HUB — los tres de **gambling**. Sus datos (Alberta
+  publicó en ene-2026 reglas para detectar software automatizado usado por
+  jugadores; Colorado enmendó sus reglas de juego responsable el mismo mes;
+  >80% de operadores usando genAI para contenido e insights, con adopción
+  **agéntica limitada** por compliance) se registran **como mercado adyacente**.
+
+#### EMEA
+
+- 🔴 **La restricción comercial de origen europeo.** La *Gaussian-Splatting
+  License* es de **Inria** (Francia) y el **Max Planck Institut für Informatik**
+  (Alemania), con el software *"in the process of being registered with the
+  Agence pour la Protection des Programmes (APP)"*. Texto literal: *"THE USER
+  CANNOT USE, EXPLOIT OR DISTRIBUTE THE SOFTWARE FOR COMMERCIAL PURPOSES"*. Es
+  el renderer sobre el que se construyó buena parte de la generación 3D abierta
+  de los últimos dos años. ⇒ **el bloqueo no viene sólo de fuera de Europa.**
+- ⛔ **La alternativa china no existe en EMEA.** `Hunyuan3D-2.1` (4.519 ★) suma
+  el cuarto repo de Tencent sin grant en **UE y Reino Unido**. Para un
+  engagement europeo no es "una licencia restrictiva": es **ausencia de
+  licencia**, ni siquiera para evaluar.
+- 🔵 **Malta, 18-sep-2026:** AI Gaming Charter voluntario (MGA + MDIA). Carril
+  casino — ver arriba.
+- 🔴 **EMEA no es un mercado, y esto se puede medir.** El informe *State of AI in
+  Gaming 2026* (AiR HUB) registra actividad regulatoria sobre AI concentrada en
+  **Norteamérica y Europa occidental**, y **ninguna** en **Europa Central y del
+  Este** ni en **Medio Oriente y África**. ⇒ el gancho regulatorio que funciona
+  en París o Estocolmo **no existe** en Varsovia, Bucarest, Dubái o
+  Johannesburgo, y vender el mismo entregable ahí es vender aire. Para esa mitad
+  de EMEA el argumento tiene que ser **coste y pipeline**, no compliance.
+- 🔵 **Reconciliación de fechas del Art. 50, porque dos fuentes de este pass
+  parecían contradecir a esta KB.** Un análisis de estudio jurídico (WH
+  Partners) fecha la entrada en vigor del Art. 50 el **2-ago-2026**; esta página
+  viene trabajando con el **2-dic-2026**. **No es una contradicción:** son las
+  dos patas del mismo artículo — obligación para sistemas nuevos desde agosto,
+  y plazo para los **ya puestos en el mercado** en diciembre. Las recetas 7, 13
+  y 18 están dimensionadas para la segunda, que es la que le aplica a un
+  catálogo existente. **Sin corrección.**
+
+#### APAC
+
+- ⛔ **Corea del Sur queda fuera del grant de Tencent** (`Hunyuan3D-2.1`, 4.519 ★
+  — cuarto repo con la misma cláusula). Un estudio coreano no puede usar la
+  línea abierta de Tencent **ni para evaluar**.
+- 🔵 **Corea — AI Basic Act**, vigente **22-ene-2026**: transparencia y
+  supervisión humana para sistemas de alto impacto. Dato nuevo de este pass:
+  un período de gracia de **al menos un año antes de que empiecen las multas**,
+  con tope reportado en **KRW 30 M**. ⚠️ Fuentes de compliance-vendor, no texto
+  oficial: **verificar antes de poner una fecha en una propuesta**.
+- 🔵 **China:** la enmienda a la Ley de Ciberseguridad agregó una cláusula de
+  gobernanza de AI en **ene-2026**, con multas de hasta **RMB 10 M**, sobre el
+  régimen ya existente de **registro obligatorio de servicios generativos y
+  etiquetado de contenido**. ⇒ **el etiquetado cae exactamente sobre esta capa**:
+  si el asset final que ve el jugador lo generó un modelo, hay obligación de
+  etiqueta. Es el único régimen del mundo donde la capa de producción de assets,
+  y no la de NPCs, es el centro de la obligación.
+- 🔵 **Japón:** enfoque liviano — *AI Promotion Act* **sin sanciones directas**,
+  guías voluntarias, y un **AI Basic Plan adoptado en jul-2026**.
+- 🔵 Señales de producto: **Capcom** negó públicamente usar AI generativa en
+  contenido de juego; la desarrolladora de **PUBG** anunció un modo de compañero
+  AI para 2026. ⚠️ Vía resumen de industria, sin confirmación primaria.
+
+#### LATAM
+
+- 🔴 **Cero medido, no silencio: la consulta regional de videojuegos no existe
+  como tal.** `AI gaming LATAM Latin America 2026 adoption regulation players
+  Brazil` devolvió **sólo apuestas e iGaming** — ni un resultado de videojuegos.
+  Esto ya es un hallazgo en sí: **para LATAM, el buscador no distingue "gaming"
+  de "gambling" en absoluto**, mientras que en NA y EMEA al menos devuelve
+  ambos. La frontera del cycle 8 es **más cara de sostener en LATAM** que en
+  ninguna otra región.
+- 🔵 Lo que sí devolvió, registrado **como mercado adyacente**: Brasil opera
+  bajo la **Ley 14.790/2023** (apuestas deportivas dic-2023, casino online fines
+  de 2024) y la **SPA pasó de recomendar a sancionar desde el 1-ene-2026**;
+  las *selfies* estáticas ya **no satisfacen los estándares PAD** (Presentation
+  Attack Detection) del regulador, explícitamente planteado como defensa contra
+  deepfakes generativos. Perú combina transmisión certificada de datos con una
+  dirección supervisora propia. ⚠️ Reuters reportó en sep-2026 una posible
+  medida federal brasileña que prohibiría el casino online conservando las
+  apuestas deportivas — **sin segunda fuente, no se da por hecho**.
+- 📏 **Presencia LATAM en la capa de assets: medida, con el instrumento corto en
+  español.** Tres consultas en español sobre generación de assets, música y
+  rigging devolvieron **`total_count: 0`** cada una. Una cuarta devolvió
+  exactamente **un** repo:
+
+  | Repo | ★ | Licencia (byte-read) | Push | Qué es |
+  |---|---|---|---|---|
+  | [facundoAlmon/AssetCrisol](https://github.com/facundoAlmon/AssetCrisol) | **1** | **GPL-3.0** (35.149 B — coincide con el checksum de la casa) | 2026-11-13 | *"De una imagen a assets de juego 2D y 3D, con IA local y open source"*; salida a **sprites, `.glb` y escenas de Godot 4**; Blender 5.1; Linux + NVIDIA 16 GB |
+
+  ⚠️ **Límite del instrumento, declarado:** "repo en español" **no es** "repo de
+  origen LATAM" — los canales de esta sesión (`search/*` + `raw`) **no permiten
+  medir el país del dueño**. Lo que se afirma es lo medido: **1 repo
+  hispanohablante, vivo, de 1 ★ y GPL-3.0**, contra 14 filas nuevas en el resto
+  del mundo. El ecosistema de producción de assets **no tiene hoy una pieza
+  LATAM sobre la que construir**, y decirlo con el número es más útil que no
+  decir nada.
+- 🟢 **El dato estructural de LATAM de esta KB sigue siendo el del cycle 9** (la
+  aceptación de AI por parte de jugadores, con su corrección de muestra). Este
+  pass **no lo toca** y no agrega un argumento LATAM que no haya medido.
+
 
 ## 🔴 Lo que cambió — pass cycle 13 (2026-11-22): **la regulación de 2026 dejó de pedir una etiqueta y pasó a pedir una CATEGORÍA DE EDAD por usuario — y el mismo dato tiene tres ciclos de vida incompatibles**
 
@@ -1045,6 +1220,21 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 Oportunidad del pass cycle 14 (2026-11-22): **auditoría de clausura de licencias del pipeline de assets — y la negociación que sí tiene contraparte**
+
+**El gancho, en una línea:** *"Tu pipeline de generación de assets dice MIT en
+los cuatro repos. Tres de los cuatro renderers que instalaste prohíben el uso
+comercial por escrito, y lo dice el README, no la licencia."*
+
+| Qué | Detalle |
+|---|---|
+| **Disparador** | `microsoft/TRELLIS` + `TRELLIS.2` suman **27.514 ★** y son el punto de partida por defecto de cualquier equipo que arranque imagen→3D en 2026. Los dos declaran dependencias no comerciales **sólo en prosa del README** |
+| **Entregable 1** | **Clausura de licencias del pipeline**: por cada repo, resolver toda dependencia nombrada en su sección de licencia como un repo más (SPDX + byte-read). Es el **canal 4** documentado en `repos/foundations.md` |
+| **Entregable 2** | **Separación generación / visualización.** El camino de generación de TRELLIS es MIT **incluidos los pesos**; `setup.sh` instala los renderers sólo con flags explícitas y `renderers/__init__.py` es perezoso ⇒ se puede generar sin importarlos. Lo que hay que reescribir es el **preview**. Sustituto medido de extracción de malla: `nv-tlabs/FlexiCubes`, **Apache-2.0** |
+| **Entregable 3** | 🆕 **La vía que sólo existe en NA:** los licenciantes que bloquean (**NVIDIA**, `nvdiffrast` / `nvdiffrec`) son una empresa con la que el cliente ya tiene relación comercial. A diferencia de una exclusión territorial, acá hay **a quién preguntarle**. Entregable: el expediente técnico para pedir licencia comercial, con los archivos y versiones exactas |
+| **Por qué ahora** | La adopción de esta capa es **~19%** del uso de AI (GDC 2026, vía resúmenes secundarios): el cliente está eligiendo pipeline **este trimestre**, y lo elige para tres años |
+| **Lo que NO se vende** | Nada del carril casino (KPMG/SIGMA/AiR HUB, Alberta, Colorado). **Es gambling.** |
+
 #### 🆕 Oportunidad del pass cycle 12 (2026-11-22): **mapa de alcance estado-por-estado para NPC conversacionales + barrido biométrico**
 
 **El gancho, en una línea:** *"No está resuelto si tu NPC es un companion chatbot
@@ -1346,6 +1536,21 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 Oportunidad del pass cycle 14 (2026-11-22): **el pipeline de assets viable en Europa es un conjunto más chico, y hay que demostrarlo con la licencia en la mano**
+
+**El gancho, en una línea:** *"En Europa, dos de las tres rutas estándar de
+generación 3D están cerradas — y una de las dos está cerrada por una licencia
+europea."*
+
+| Qué | Detalle |
+|---|---|
+| **Disparador 1** | ⛔ **La ruta china no existe acá.** `Tencent-Hunyuan/Hunyuan3D-2.1` (4.519 ★) es el **cuarto** repo de Tencent cuya licencia declara en su primera línea que **no aplica en la UE ni el Reino Unido**. No es restrictiva: es **ausencia de grant**, ni siquiera para evaluar |
+| **Disparador 2** | 🔴 **La ruta MIT está cerrada por Inria + MPII.** El renderer de splatting sobre el que se apoya la generación 3D abierta lleva la *Gaussian-Splatting License* (Francia + Alemania, en registro ante la **APP**): *"THE USER CANNOT USE, EXPLOIT OR DISTRIBUTE THE SOFTWARE FOR COMMERCIAL PURPOSES"* |
+| **Entregable 1** | **Mapa de rutas viables en UE/UK**, con el archivo y los bytes de cada grant: `Bingeljell/image-to-3dlab` (Apache-2.0), `OpenDCAI/GameFactory-3A` (Apache-2.0), `OpenMOSS/MOSS-TTS` (Apache-2.0 **incl. pesos**), `ace-step/ACE-Step` (Apache-2.0), `nv-tlabs/FlexiCubes` (Apache-2.0) |
+| **Entregable 2** | **Inventario de herramientas AI clasificadas por impacto en el jugador** — el mismo artefacto que pide el Art. 50 y que el *AI Gaming Charter* maltés (18-sep-2026) formaliza para el carril casino. Se reusa la **forma**, no el régimen |
+| **Entregable 3** | 🆕 **Segmentación interna de EMEA.** El *State of AI in Gaming 2026* registra **cero** actividad regulatoria de AI en **Europa Central y del Este** y en **Medio Oriente y África**. Para esa mitad de EMEA el gancho de compliance **no aplica** y el pitch tiene que ser coste y pipeline. Entregable: dos versiones de la propuesta, no una |
+| **Por qué ahora** | El plazo del Art. 50 para sistemas **ya en el mercado** (2-dic-2026) está a días; la obligación para sistemas nuevos corre desde ago-2026 |
 
 #### 🆕 Oportunidad del pass cycle 12 (2026-11-22): **auditoría de parecido real (*deepfake*) y de defendibilidad del activo generado**
 
@@ -1730,6 +1935,20 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 Oportunidad del pass cycle 14 (2026-11-22): **etiquetado de assets generados para el mercado chino, y el doble bloqueo coreano**
+
+**El gancho, en una línea:** *"China es la única jurisdicción donde la obligación
+cae sobre el ASSET, no sobre el NPC — y tu pipeline no sabe qué assets generó."*
+
+| Qué | Detalle |
+|---|---|
+| **Disparador 1** | **China:** registro obligatorio de servicios generativos + **etiquetado de contenido**, ahora con la cláusula de gobernanza de AI agregada a la Ley de Ciberseguridad en **ene-2026** y multas de hasta **RMB 10 M**. La obligación de etiqueta cae **exactamente sobre el artefacto final** que ve el jugador |
+| **Disparador 2** | ⛔ **Corea, doble golpe.** `Hunyuan3D-2.1` **excluye Corea del Sur** del grant, y el **AI Basic Act** está vigente desde el **22-ene-2026** (transparencia + supervisión humana para sistemas de alto impacto; período de gracia reportado de ≥1 año antes de multas, tope KRW 30 M — ⚠️ fuente de compliance-vendor, verificar) |
+| **Entregable 1** | **Procedencia por asset**: registro, por cada malla/textura/pista, de qué modelo la generó, con qué licencia y qué grado de intervención humana tuvo. Es el insumo del etiquetado chino y, de paso, del Art. 50 europeo. Precedente de producto: `Bingeljell/image-to-3dlab` ya **escribe la licencia de cada asset que genera** |
+| **Entregable 2** | **Matriz proveedor × jurisdicción** para el cliente coreano o con publicación en Corea: qué modelos tiene permitido siquiera evaluar |
+| **Entregable 3** | Stack de generación sin dependencia china ni de renderers no comerciales, para clientes que publican en los tres mercados de APAC a la vez |
+| **Contexto de mercado** | **Japón** va liviano: *AI Promotion Act* sin sanciones directas y *AI Basic Plan* adoptado en jul-2026 ⇒ el gancho en Japón **no es regulatorio**. Señales de producto: Capcom negó públicamente usar AI generativa en contenido; la desarrolladora de PUBG anunció modo de compañero AI para 2026 |
+
 #### 🆕 Oportunidad del pass cycle 12 (2026-11-22): **"AI sólo en el backend" como oferta explícita — con un AAA japonés respaldándola en público**
 
 **El gancho, y es el más fuerte del pass:** *"Capcom negó públicamente usar AI
@@ -2080,6 +2299,21 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 Oportunidad del pass cycle 14 (2026-11-22): **la capa de assets no tiene pieza local — y eso es exactamente el espacio**
+
+**El gancho, en una línea:** *"En producción de assets con AI, el ecosistema
+abierto en español es un repo de 1 ★ bajo GPL-3.0. No hay nada que adoptar: hay
+que construirlo."*
+
+| Qué | Detalle |
+|---|---|
+| **Disparador (medido, no supuesto)** | Tres consultas en español sobre generación de assets 3D, música de videojuego y rigging automático devolvieron **`total_count: 0`** cada una. Una cuarta devolvió **un solo repo**: [facundoAlmon/AssetCrisol](https://github.com/facundoAlmon/AssetCrisol) — **1 ★**, **GPL-3.0** (35.149 B), vivo (push 2026-11-13), con salida a **Godot 4** y Blender 5.1 |
+| ⚠️ **Límite del instrumento** | "Repo en español" **no es** "repo de origen LATAM": los canales de esta sesión no permiten medir el país del dueño. Se afirma lo medido, no más |
+| **Entregable 1** | **Pipeline de assets 100% permisivo y auditado**, armado y documentado para el cliente: `image-to-3dlab` + `GameFactory-3A` + `MOSS-TTS` + `ACE-Step`, con la clausura de dependencias resuelta. Ninguna de las cuatro tiene restricción territorial ⇒ **LATAM es la única región de este cuadro sin bloqueo de ningún tipo** |
+| **Entregable 2** | **Salida a Godot como criterio de selección.** Tanto `AssetCrisol` como `GameFactory-3A` exportan a Godot 4, que es la base que esta KB recomienda desde el primer pass. Es la fila donde el stack LATAM y el stack recomendado coinciden sin esfuerzo |
+| **Entregable 3** | Si el cliente quiere contribuir: `AssetCrisol` es **GPL-3.0**, así que contribuir ahí **no** es compatible con un producto propietario. El camino limpio es contribuir upstream a los Apache-2.0 |
+| ⚠️ **Lo que NO se vende** | Nada del carril apuestas. La consulta regional de este pass devolvió **exclusivamente** iGaming (Brasil Ley 14.790/2023, SPA sancionando desde 1-ene-2026, estándares PAD contra deepfakes; Perú con dirección supervisora propia). En LATAM el buscador **no distingue gaming de gambling en absoluto**, y por eso acá la frontera hay que enunciarla en la primera reunión |
 
 #### 🆕 Oportunidad del pass cycle 12 (2026-11-22): **"AI que no se note" — las cuatro cifras del PGB juntas cambian la oferta**
 

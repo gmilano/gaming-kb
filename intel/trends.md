@@ -6,9 +6,117 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-22 (cycle 13)** (passes previos: 2026-11-22 cycles 12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22 cycles 13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 14 (2026-11-22)
+
+### 🔴 Tendencia nº1 del pass: **la restricción de licencia se mudó fuera del repo** — y es el primer escalón que ninguna auditoría automática puede ver
+
+Señal, no opinión. Esta KB lleva registrada la trayectoria completa, pass por
+pass, de **dónde vive la restricción**:
+
+| Pass | Dónde vivía | Caso medido | ¿La ve un escáner de licencias? |
+|---|---|---|---|
+| cycle 4 | archivo de licencia de la raíz | MonoGame = Ms-PL, no MIT | ✅ sí |
+| cycle 6-7 | subdirectorios del repo | `Matrix-Game-4/` con grant propio | ⚠️ sólo si recorre el árbol |
+| cycle 10 | **territorio** | Tencent: sin grant en EU / UK / Corea | ❌ no |
+| cycle 12 | carve-out por entregable | `ee/`, PolyForm Shield | ❌ no |
+| cycle 13 | **modelo de negocio del licenciatario** | YSPL 1.0; Fish Audio (umbral US$ 500k) | ❌ no |
+| 🆕 **cycle 14** | **la clausura de dependencias, declarada sólo en prosa** | **TRELLIS + TRELLIS.2** | ❌ **no, y tampoco la enumeración de archivos** |
+
+**El caso, con las cifras.** [microsoft/TRELLIS](https://github.com/microsoft/TRELLIS)
+(14.370 ★) y [microsoft/TRELLIS.2](https://github.com/microsoft/TRELLIS.2)
+(13.144 ★) — **27.514 ★ sumadas**, los líderes abiertos de imagen→3D — son MIT
+en el badge, MIT en el archivo, y limpios en la enumeración. Su `README.md`
+dice, en prosa, que sus renderers dependen de `diffoctreerast` /
+`nvdiffrast` / `nvdiffrec`. Leídos en su propio repo: **Gaussian-Splatting
+License (Inria+MPII)** y **NVIDIA Source Code License**, las dos con prohibición
+comercial literal.
+
+⇒ **La tendencia registrable: en la capa de modelos generativos, el grant del
+repo ya no describe el artefacto.** Hay que resolver la clausura.
+
+### 🔴 Tendencia nº2: **el peso es un objeto de licencia separado, y en audio está medido como no comercial en 3 de 3**
+
+| Proyecto | ★ | Código | Pesos | Archivo donde vive el segundo grant |
+|---|---|---|---|---|
+| audiocraft | 23.943 | MIT | **CC BY-NC 4.0** | `LICENSE_weights` |
+| YuE | 13.656 | Apache-2.0 | **CC BY-NC 4.0** | `MODEL_LICENSE` |
+| soundbox | 239 | MIT | *"does not cover the machine-learning model weights"* | addendum dentro del propio `LICENSE` |
+
+Tres proyectos, tres **nombres de archivo distintos**, ninguno llamado
+`LICENSE`. Y la contraparte positiva, que es la que marca el estándar que un
+proyecto serio debería seguir: [OpenMOSS/MOSS-TTS](https://github.com/OpenMOSS/MOSS-TTS)
+(4.358 ★) escribe en su README *"Models in MOSS-TTS Family are licensed under
+the Apache License 2.0"* — **extiende el grant a los pesos explícitamente**. Es
+el único de la capa que lo hace.
+
+### 🟡 Tendencia nº3: la **adopción** de esta capa todavía no llegó — y eso es información, no una objeción
+
+Los números que este pass encontró sobre generación de assets (todos de
+resúmenes secundarios de GDC 2026, 2.300+ respondentes; **el informe primario no
+se recuperó y se declara como tal**):
+
+- **~19%** del uso reportado de AI corresponde a **generación de assets**.
+- **~81%** del uso de genAI es **investigación y brainstorming**, no assets
+  terminados.
+- Cifras de adopción total que **no coinciden entre sí** y miden cosas
+  distintas: 36% (uso personal), 52% (estudios con genAI en producción), ~50%
+  (BCG), 73% (a16z Games AI Survey), 88% (expectativa de que sea estándar).
+
+⇒ **Lectura honesta: la capa de assets es futuro inmediato, no presente.** Y
+eso hace *más* valiosas las tendencias nº1 y nº2: las licencias se están
+cerrando **antes** de que llegue el volumen. Un estudio que elija su pipeline
+este trimestre lo elige para los próximos tres años.
+
+> ⚠️ **No se promueve ninguna de esas cifras a número de referencia de esta KB.**
+> Provienen de resúmenes de terceros, miden cosas distintas y discrepan entre
+> sí por un factor de 2,4×. Se publican **con su dispersión a la vista**, que es
+> la regla de método nº… de esta página desde el cycle 5: *un número sin su
+> muestra no es un número*.
+
+### 🟡 Tendencia nº4: la **plantilla territorial de Tencent** se confirma fuera de los world models
+
+El cycle 10 la encontró en los tres repos de world models y la llamó *"la
+plantilla de la casa"*. Este pass agrega el **cuarto repo, en otra línea de
+producto** ([Tencent-Hunyuan/Hunyuan3D-2.1](https://github.com/Tencent-Hunyuan/Hunyuan3D-2.1),
+4.519 ★, generación de malla), con la **misma primera línea carácter por
+carácter**: exclusión de **EU, Reino Unido y Corea del Sur**.
+
+⇒ Con 4 observaciones y 0 contraejemplos, esta KB eleva el hallazgo de
+*"peculiaridad de una línea"* a **política de proveedor**: asumir exclusión
+territorial en cualquier release abierto de Tencent-Hunyuan y verificar la
+primera línea del archivo antes de evaluar.
+
+### 🔵 Señal regulatoria nueva del pass — y **la frontera que esta KB no cruza**
+
+- **Malta, 18-sep-2026:** la **MGA** y la **MDIA** publicaron el *AI Gaming
+  Charter*, **voluntario**, 48 páginas, seis áreas de guía, con clasificación de
+  herramientas por impacto en el jugador y reporte de incidentes graves de
+  sistemas de alto riesgo bajo el AI Act. Consulta previa lanzada el 8-may-2026.
+  Un seguimiento de nov-2026 reporta **brechas de supervisión** entre
+  licenciatarios.
+- ⚠️ **Es carril casino, no videojuegos.** La frontera que esta KB estableció en
+  el cycle 8 y revalidó en los cycles 9, 12 y 13 se vuelve a aplicar aquí: se
+  cita **como mercado adyacente** y **no** se promueve a dato de gaming.
+  Confundirlos quema la credibilidad en la primera reunión con un estudio.
+- 🔵 Lo que sí es transferible del documento maltés: **la clasificación de
+  herramientas AI por impacto en el jugador** es exactamente el inventario que
+  el Art. 50 del AI Act va a exigir a un estudio. El entregable se parece; el
+  régimen legal no.
+
+### 🟢 Una práctica de producto que vale como tendencia temprana
+
+[Bingeljell/image-to-3dlab](https://github.com/Bingeljell/image-to-3dlab)
+(*AssetFurnace*, Apache-2.0, 1.244 ★) vende como **característica** que escribe
+*"la licencia de cada asset"* que produce. En 14 passes es el primer proyecto
+que esta KB encuentra tratando la **procedencia de licencia del artefacto
+generado** como parte del producto. Si la capa de assets escala, esto deja de
+ser una curiosidad y se convierte en requisito de compra — igual que pasó con
+las SBOM en software.
+
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 13 (2026-11-22)
 

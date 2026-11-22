@@ -11,6 +11,70 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 14
+
+**El barrido cambió de eje por tercera vez: de *texto y voz* (cycle 13) a
+*producción de assets*.** El motivo está medido: el eje histórico (engines, MCP,
+NPC, backends) devolvió **8 de 8 candidatos ya listados** en la re-verificación
+de este pass. Tasa de novedad del eje viejo: **0%**.
+
+### 📏 El dato de tendencia que sólo se ve con la historia de este archivo
+
+Cuatro de los repos nuevos de este pass **no cambiaron de licencia**: cambiaron
+de **dónde** está la restricción. Puesto en la serie que este archivo conserva:
+
+| Pass | Señal registrada | Qué canal la detectó |
+|---|---|---|
+| 2026-11-20 (cycle 4) | MonoGame es Ms-PL, no MIT | checksum de bytes |
+| 2026-11-21 (cycle 8) | un `LICENSE` puede estar **roto** | byte-read + manifiesto |
+| 2026-11-22 (cycle 10) | Tencent excluye **EU / UK / Corea** | byte-read de la 1ª línea |
+| 2026-11-22 (cycle 13) | YSPL 1.0 y Fish Audio: umbral de **facturación** | enumeración |
+| 🆕 **2026-11-22 (cycle 14)** | **TRELLIS: la restricción está en una dependencia nombrada sólo en el README** | **ninguno de los tres — hizo falta un canal 4** |
+
+### 🔴 Movimiento nº1: `matteodante/AssetFurnace` — **el repo trending que no existe**
+
+El resultado nº1 de la búsqueda de assets 3D de este pass, repetido por **cinco
+dueños distintos**, apunta a un slug que devuelve **HTTP 422** en
+`search/repositories` y **HTTP 404 (14 bytes)** en `raw.githubusercontent.com`.
+El proyecto es real —se llama **AssetFurnace**— pero el repo se llama
+[`Bingeljell/image-to-3dlab`](https://github.com/Bingeljell/image-to-3dlab)
+(**1.244 ★**, Apache-2.0, push 2026-11-20) y los otros cuatro resultados eran
+**forks** (`0 items` con HTTP 200, que es la firma de un fork: la búsqueda de
+GitHub los excluye).
+
+> **Para la serie de este archivo:** es el tercer caso registrado de *slug
+> fantasma* (cycle 4: `pelican-dev/panel`; cycle 10: 4 slugs con 422; hoy). La
+> diferencia es que **esta vez el slug fantasma era el resultado nº1 del
+> buscador**, no una fila heredada. El trending de terceros propaga nombres de
+> proyecto, no identificadores.
+
+### 🔴 Movimiento nº2: el copyleft bajó de los packs de skills al **modelo**
+
+El cycle 6 registró que *"el copyleft se mudó hacia arriba del stack — ahora
+vive en los packs de skills"*. Este pass lo encuentra **abajo**, dentro del peso
+del modelo: [`VAST-AI-Research/UniRig`](https://github.com/VAST-AI-Research/UniRig)
+(2.189 ★) lleva badge **MIT** y un subárbol **GPL-3.0 de 35.148 B**
+(`src/model/michelangelo/`) importado **sin condición** por el encoder que
+construye sus dos modelos. El checksum de bytes de la casa (GPL-3.0 ≈ 35.200 B)
+lo detectó sin que nadie leyera el archivo.
+
+### 🟢 Movimiento nº3: un proyecto que hace bien **exactamente lo que esta KB mide**
+
+[`Bingeljell/image-to-3dlab`](https://github.com/Bingeljell/image-to-3dlab)
+(AssetFurnace) describe su propia salida como *"con la licencia de cada asset
+escrita"*. Es el primer repo que esta KB encuentra en 14 passes que trata la
+**procedencia de licencia del asset generado** como una característica del
+producto y no como una nota al pie. Vale como señal de hacia dónde va la capa:
+cuando el output es un asset comercializable, **la licencia deja de ser
+metadato del repo y pasa a ser metadato del artefacto**.
+
+### ⏱️ Sobre los deltas de ★
+
+~1 hora desde el cycle 13. **No se reportan variaciones.** Las ★ de este pass
+son primeras lecturas, no deltas.
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 13
 
 **El barrido de este pass cambió de eje: de *engines y agentes* a la capa de

@@ -7,8 +7,17 @@ updated: 2026-11-22
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-11-22 (cycle 13)** (passes previos: 2026-11-22
-> cycles 12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 14)** (passes previos: 2026-11-22
+> cycles 13/12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Las del cycle 14 son la 36** (auditoría de **clausura** de licencias: el
+> gate que corre ANTES de los otros, porque la restricción que detecta no vive
+> dentro del repo — dos repos de 27.514 ★ sumadas pasan los tres canales de esta
+> casa y no son comerciales), la **37** (fábrica de assets 100% permisiva, con
+> **procedencia por artefacto** — el manifiesto que sirve a la vez para el
+> etiquetado chino, el Art. 50 europeo y la due diligence de un publisher) y la
+> **38** (elegir generador 3D **por jurisdicción de publicación**, con la causa
+> medida en cada ⛔).
 >
 > 🆕 **Las del cycle 13 son la 33** (el dato de edad como parámetro de runtime:
 > un solo campo y tres jurisdicciones incompatibles — Texas obliga a borrar lo
@@ -38,6 +47,182 @@ updated: 2026-11-22
 > concretos de este ciclo: una fecha límite regulatoria en la UE, world models
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
 > benchmark publicado de agentes que juegan.
+
+## 🆕 Receta 36: **Auditoría de CLAUSURA de licencias** — el gate que ningún gate anterior de esta KB detecta
+
+**Caso de uso**: cualquier pipeline que instale modelos generativos. Es el gate
+que hay que correr **antes** de los otros cinco de esta página, porque los cinco
+operan dentro del repo y esta clase de restricción **no está dentro del repo**.
+
+**El caso que la motiva, con números**: `microsoft/TRELLIS` (14.370 ★) y
+`microsoft/TRELLIS.2` (13.144 ★) pasan **los tres canales** de esta KB —SPDX
+`MIT`, `LICENSE` MIT estándar byte a byte, enumeración limpia— y **no son
+usables comercialmente tal como se envían**. El dato está en prosa, en la
+sección `## ⚖️ License` del `README.md`.
+
+### El procedimiento, 4 pasos y ~1 minuto por repo
+
+```bash
+SLUG=microsoft/TRELLIS
+
+# 1. Los tres canales de siempre (siguen siendo obligatorios)
+gh api -X GET search/repositories -f q="repo:$SLUG" \
+  --jq '.items[] | "\(.stargazers_count)★ \(.license.spdx_id) arch=\(.archived) \(.pushed_at)"'
+curl -s "https://raw.githubusercontent.com/$SLUG/HEAD/LICENSE" | wc -c
+gh api -X GET search/code -f q="repo:$SLUG filename:LICENSE" --jq '.items[].path'
+
+# 2. 🆕 CANAL 4 — la clausura declarada en prosa
+curl -s "https://raw.githubusercontent.com/$SLUG/HEAD/README.md" | grep -n -i "licen" 
+
+# 3. Por cada dependencia que el paso 2 nombre, repetir 1 y 2 sobre ELLA
+#    (no sobre el repo original)
+
+# 4. 🆕 Verificar DÓNDE entra: top-level vs lazy decide si se puede evitar
+curl -s "https://raw.githubusercontent.com/$SLUG/HEAD/<modulo>.py" | grep -n "^import\|^from\|    from"
+```
+
+### Lo que devolvió aplicado a los dos repos de este pass
+
+| Paso | TRELLIS | TRELLIS.2 |
+|---|---|---|
+| 1. tres canales | ✅ limpio | ✅ limpio (+ `assets/hdri/license.txt` = **CC0**) |
+| 2. canal 4 | *"submodules may have different licenses"* → `diffoctreerast` | *"certain dependencies operate under separate license terms"* → `nvdiffrast`, `nvdiffrec` |
+| 3. resolución | **Gaussian-Splatting License** (Inria+MPII): *"CANNOT USE, EXPLOIT OR DISTRIBUTE … FOR COMMERCIAL PURPOSES"* | **NVIDIA Source Code License**: *"only may be used … non-commercially"* |
+| 4. dónde entra | `mesh_renderer.py:2` **top-level**; `gaussian_render.py:58` **lazy**; `octree_renderer.py` módulo | idem |
+
+### El veredicto operativo, que es lo que hace útil al paso 4
+
+🟢 **Se puede usar la generación.** El README dice *"TRELLIS **models** and the
+majority of the code are licensed under the MIT License"* ⇒ **los pesos son
+MIT**. `setup.sh` expone `--nvdiffrast`, `--diffoctreerast`, `--kaolin` como
+**flags opcionales** (no se instalan por defecto) y `trellis/renderers/__init__.py`
+importa con `importlib` dentro de `__getattr__` ⇒ **nada del subárbol de
+renderers se carga hasta que se nombra un renderer.**
+
+⛔ **No se puede enviar la visualización.** Los **tres** renderers del repo
+importan un paquete no comercial. No hay un cuarto.
+
+🟢 **El sustituto de extracción de malla está medido**: `nv-tlabs/FlexiCubes`,
+**Apache-2.0** (`LICENSE.txt`, 11.357 B).
+
+### Gate de CI (copiar a toda la familia de KBs)
+
+```bash
+# falla el build si un README de dependencia nombra una licencia que no está
+# en la allowlist, o si aparece una frase de prohibición comercial
+for slug in $(cat pipeline-repos.txt); do
+  curl -s "https://raw.githubusercontent.com/$slug/HEAD/README.md" \
+  | grep -i -E "non-commercial|not for commercial|research (purposes )?only|separate license|different licenses" \
+  && { echo "REVISAR CLAUSURA: $slug"; exit 1; }
+done
+```
+
+> **La regla, en una línea: un proyecto no es más libre que la dependencia menos
+> libre que te manda a instalar — y esa dependencia casi nunca está en un
+> archivo de licencia.**
+
+---
+
+## 🆕 Receta 37: **Fábrica de assets 100% permisiva, con procedencia por artefacto**
+
+**Caso de uso**: estudio que quiere generar mallas, texturas, rigs y audio con
+AI y **vender el resultado**, en cualquier región, sin un abogado por asset.
+
+**El criterio de selección es la licencia, no la calidad**, porque en esta capa
+la calidad converge rápido y el grant no. Las cuatro piezas, todas verificadas
+byte a byte en el cycle 14:
+
+| Etapa | Repo | ★ | Licencia (byte-read) | Por qué ésta y no la grande |
+|---|---|---|---|---|
+| **Pipeline local completo** | [Bingeljell/image-to-3dlab](https://github.com/Bingeljell/image-to-3dlab) *(AssetFurnace)* | 1.244 | **Apache-2.0** (11.358 B) + `NOTICE` (1.162 B) | ⚠️ ojo al slug: el proyecto se llama *AssetFurnace* y el repo **no**. `matteodante/AssetFurnace` **no existe** (422 + 404) |
+| **Orquestación → engine** | [OpenDCAI/GameFactory-3A](https://github.com/OpenDCAI/GameFactory-3A) | 1.344 | **Apache-2.0** (11.338 B) | única con salida ya resuelta a **UE5, Unity, Godot 4, Blender, three.js** |
+| **SFX** | [OpenMOSS/MOSS-TTS](https://github.com/OpenMOSS/MOSS-TTS) | 4.358 | **Apache-2.0** (11.375 B) — **y el README extiende el grant a los pesos**: *"Models in MOSS-TTS Family are licensed under the Apache License 2.0"* | ⛔ `audiocraft` (23.943 ★) y ⛔ `YuE` (13.656 ★) tienen **pesos CC BY-NC 4.0** |
+| **Música** | [ace-step/ACE-Step](https://github.com/ace-step/ACE-Step) | 5.095 | **Apache-2.0** | idem |
+| **Extracción de malla** | [nv-tlabs/FlexiCubes](https://github.com/nv-tlabs/FlexiCubes) | 871 | **Apache-2.0** (11.357 B) | sustituye el camino de render no comercial de TRELLIS |
+| **Interfaz de agente** | [HamSanders/soundbox](https://github.com/HamSanders/soundbox) | 239 | **MIT + addendum de pesos** (1.713 B) | **21 herramientas MCP** para Claude Code / Cursor; **no redistribuye pesos**: los baja con la cuenta HF del operador |
+
+### ⚠️ Las dos piezas que NO se pueden cerrar hoy, dicho explícitamente
+
+- **Auto-rigging.** [UniRig](https://github.com/VAST-AI-Research/UniRig) (2.189 ★)
+  es MIT en la raíz y lleva **GPL-3.0** en `src/model/michelangelo/` (35.148 B),
+  importado **sin condición** por `src/model/parse_encoder.py`, que construye
+  los encoders de sus dos modelos. [MDM](https://github.com/GuyTevet/motion-diffusion-model)
+  (4.154 ★) es MIT pero exige los body models **SMPL**, bajados de un Google
+  Drive **sin autenticación** en lugar del portal de MPI con aceptación de
+  licencia.
+  ⇒ **Acción**: usar el auto-rig de `image-to-3dlab` y **verificar en el pass
+  siguiente qué usa internamente** — si usa UniRig, hereda la GPL-3.0.
+- **Los checkpoints de Stability** (`stable-audio-tools`, MIT en el código) van
+  por licencia aparte y **no se leyeron**. Gap declarado.
+
+### El entregable que distingue esta receta: **procedencia por asset**
+
+`image-to-3dlab` ya escribe *"la licencia de cada asset"* que produce. Eso se
+extiende a un manifiesto por artefacto —modelo, versión de pesos, licencia de
+esos pesos, prompt, grado de intervención humana— que sirve **tres veces**:
+
+1. **China**: el etiquetado de contenido generado cae sobre el artefacto final.
+2. **UE**: es el insumo del inventario del Art. 50.
+3. **Due diligence**: es lo que pregunta un comprador o un publisher.
+
+```json
+{
+  "asset": "props/barrel_01.glb",
+  "generator": {"repo": "Bingeljell/image-to-3dlab", "license": "Apache-2.0"},
+  "model": {"name": "<modelo>", "weights_license": "<leída, no inferida>"},
+  "human_in_the_loop": "retopo + UV manual",
+  "territory_restrictions": "ninguna"
+}
+```
+
+---
+
+## 🆕 Receta 38: **Elegir generador 3D por jurisdicción de publicación, no por benchmark**
+
+**Caso de uso**: el cliente ya decidió generar assets con AI. La pregunta no es
+cuál es mejor — es **cuál tiene grant donde el cliente vende**.
+
+### La tabla de decisión, con la causa medida en cada ⛔
+
+| Opción | Licenciante | NA | EMEA | APAC | LATAM | Causa del bloqueo (byte-read) |
+|---|---|---|---|---|---|---|
+| `TRELLIS` / `TRELLIS.2` — **generación** | Microsoft | ✅ | ✅ | ✅ | ✅ | MIT, pesos incluidos |
+| …sus **renderers** | NVIDIA / Inria+MPII | ⛔ | ⛔ | ⛔ | ⛔ | *"non-commercially … research or evaluation purposes only"* / *"CANNOT USE … FOR COMMERCIAL PURPOSES"* |
+| `Hunyuan3D-2.1` | Tencent | ✅ | ⛔ | ⛔ **sólo Corea** | ✅ | *"THIS LICENSE AGREEMENT DOES NOT APPLY IN THE EUROPEAN UNION, UNITED KINGDOM AND SOUTH KOREA"* (17.914 B) |
+| `stable-fast-3d` | Stability AI | ⚠️ | ⚠️ | ⚠️ | ⚠️ | Stability Community License (11.727 B) + **22 meses sin push** |
+| `image-to-3dlab`, `GameFactory-3A` | — | ✅ | ✅ | ✅ | ✅ | Apache-2.0, sin cláusula territorial |
+
+### Las tres reglas que salen de la tabla
+
+1. **El territorio es un eje de partición del grant** (regla nº14 del cycle 10),
+   y es el único que **no se puede resolver leyendo el repo**: hay que saber
+   dónde publica el cliente. Con `Hunyuan3D-2.1` son ya **4 repos de Tencent /
+   2 líneas de producto / 0 contraejemplos** ⇒ **asumir exclusión territorial
+   en cualquier release abierto de Tencent-Hunyuan** y verificar la primera
+   línea del archivo antes de evaluar nada.
+2. **EMEA pierde las dos rutas no-Apache a la vez**, y una de las dos la pierde
+   por una licencia **de origen europeo** (Inria + MPII, en registro ante la
+   APP). Para un engagement europeo, el stack Apache/MIT de la Receta 37 no es
+   una preferencia: es el conjunto completo.
+3. **LATAM es la única región sin bloqueo de ningún tipo en este cuadro.** No
+   por mérito local —la medición de este pass encontró **un** repo
+   hispanohablante de generación de assets, de **1 ★ y GPL-3.0**
+   ([facundoAlmon/AssetCrisol](https://github.com/facundoAlmon/AssetCrisol))—
+   sino porque ninguna de las cláusulas territoriales la nombra. Es un
+   argumento **estructural y verificable**, no de coste.
+
+### Checklist de kickoff (5 preguntas, antes de escribir código)
+
+1. ¿En qué jurisdicciones publica el cliente? → descarta filas enteras.
+2. ¿El entregable es el asset o la herramienta? → decide si el gate de la
+   Receta 32 (tipo de entregable) también aplica.
+3. ¿Se envía código de visualización? → si sí, **Receta 36 obligatoria**.
+4. ¿Los pesos se redistribuyen o los baja el operador? → el patrón `soundbox`
+   traslada la obligación por escrito.
+5. ¿Hay manifiesto de procedencia por asset? → si no, se construye ahora, no
+   cuando lo pida el publisher.
+
+---
 
 ## 🆕 Receta 33: **El dato de edad como parámetro de runtime** — un solo campo, tres jurisdicciones que piden cosas incompatibles
 
