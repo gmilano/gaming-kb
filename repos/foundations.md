@@ -7,7 +7,7 @@ updated: 2026-11-22
 # 🏗️ Repos fundacionales — Gaming
 
 > Bases sobre las cuales construir. Licencia verificada primera mano.
-> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22 cycles 11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 13)** (passes previos: 2026-11-22 cycles 12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > **Doble canal obligatorio en esta página.** El SPDX del API
 > (`gh api search/repositories -f q='repo:<slug>'`) y la lectura del archivo en
@@ -32,6 +32,82 @@ updated: 2026-11-22
 > `raw.githubusercontent.com` son **exactamente 14 bytes** (`404: Not Found`), y
 > `curl` sin `-f` sale con código 0. **Todo byte-count < 50 es un no-hallazgo.**
 > Las sondas de este pass usan `curl -sS -w "|%{http_code}"` y descartan ≠ 200.
+
+## 🔴 El hallazgo del cycle 13 (2026-11-22): **la capa de TEXTO Y VOZ del jugador faltaba entera** — 10 repos fundacionales, 265.000 ★ sumadas, cero filas en 12 passes
+
+Esta página tiene engines, backends, navmesh, RL, world models y SLMs. **No tenía
+un solo repo del camino que recorre una línea de diálogo**: autorarla, decirla,
+traducirla y moderar lo que el jugador contesta. Medido: de 24 candidatos de esa
+capa, **24 eran nuevos**.
+
+### Diálogo autorado — los dos estándares de la industria
+
+| Repo | ★ | Licencia (byte-read) | Bytes | Push | Por qué es fundacional |
+|------|---|----------------------|-------|------|------------------------|
+| [inkle/ink](https://github.com/inkle/ink) | 5.029 | **MIT** `LICENSE.txt` @ `master` | 1.067 | 2026-11-16 | Lenguaje + runtime de narrativa ramificada de inkle (*80 Days*, *Heaven's Vault*). Compila a JSON y corre en Unity, Godot, web y servidor. **Es el formato intermedio natural entre un LLM y el juego.** |
+| [YarnSpinnerTool/YarnSpinner](https://github.com/YarnSpinnerTool/YarnSpinner) | 2.876 | **MIT** `LICENSE.md` @ `main` | 1.138 | 2026-11-20 | Compilador + runtime del lenguaje Yarn: el diálogo se escribe como guion, con variables, condiciones y comandos al juego. Ecosistema de ports oficiales. |
+| [inkle/inky](https://github.com/inkle/inky) | 2.758 | **MIT declarada en el `README.md`**, sin archivo de licencia | — | ⚠️ 2026-05-05 | Editor de escritorio para *ink*. Badge SPDX `null`; el grant está en el README con cuerpo verbatim, titular y año ⇒ resuelto como MIT. Ver `agents/top.md`, hallazgo nº2. |
+
+⚠️ **Los ports de Yarn Spinner NO comparten licencia** — ver la tabla completa en
+`agents/top.md` (hallazgo nº1). Resumen operativo: **Godot C# y Unity son MIT;
+Godot-GDScript y Unreal son YSPL 1.0**, que prohíbe construir con ese código una
+herramienta de diálogo reutilizable entre clientes.
+
+### Voz — entrada y salida, con la línea de licencia marcada
+
+| Repo | ★ | Licencia (byte-read) | Bytes | Push | Rol |
+|------|---|----------------------|-------|------|-----|
+| [openai/whisper](https://github.com/openai/whisper) | 113.247 | **MIT** | 1.063 | 2026-08-31 | STT de referencia. Modelo y código bajo el mismo grant. |
+| [ggml-org/whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 55.409 | **MIT** | 1.078 | 2026-11-20 | Whisper en C/C++ con cuantización: **corre en el cliente**, sin enviar la voz del jugador a un servidor. Relevante para privacidad de menores (ver `intel/market.md`, NA). |
+| [SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper) | 26.929 | **MIT** | 1.064 | 2026-11-12 | Misma calidad, ~4× más rápido con CTranslate2. Es el que aguanta moderación de voz en vivo del lado servidor. |
+| [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) | 15.633 | **MIT** | 1.068 | 2026-11-03 | TTS con clonado por *flow matching*. 🟢 **La opción permisiva de TTS**: es la que queda en pie después de descartar fish-speech y piper. |
+
+⛔ **Los dos TTS más grandes del mercado abierto quedan afuera, y por motivos
+distintos:** `fishaudio/fish-speech` (33.825 ★) por la **Fish Audio Community
+License 1.0** (umbral de US$ 500k medido **sobre el cliente**), y `piper` porque
+el repo MIT (`rhasspy/piper`, 11.336 ★) está **archivado** y el sucesor vivo
+(`OHF-Voice/piper1-gpl`, 6.347 ★) es **GPL-3.0**. `coqui-ai/TTS` (46.266 ★,
+MPL-2.0) está **sin commits desde 2024-08-16**. ⇒ **F5-TTS no es la opción
+preferida por calidad: es la única permisiva, viva y grande que queda.** Es un
+riesgo de concentración que conviene decir en voz alta.
+
+### Moderación y guardrails — la capa sin líder
+
+| Repo | ★ | Licencia (byte-read) | Bytes | Push | Rol |
+|------|---|----------------------|-------|------|-----|
+| [guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) | 7.635 | **Apache-2.0** | 11.357 ✅ | 2026-11-18 | Validadores componibles sobre salida de LLM: esquema, PII, toxicidad, política propia. Se interpone entre el modelo y el juego. |
+| [NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails) | 7.544 | **Apache-2.0** (SPDX short-form) | 654 ⚠️ | 2026-11-19 | Rieles conversacionales en Colang: define de qué puede hablar un NPC y qué hace si el jugador lo saca del riel. ⚠️ badge `NOASSERTION`; ⚠️ rename desde `NVIDIA/NeMo-Guardrails`. |
+| [meta-llama/PurpleLlama](https://github.com/meta-llama/PurpleLlama) → `LlamaFirewall/` | 4.488 (repo) | **MIT** | 1.088 | 2026-11-20 | Guardrail para agentes: prompt injection, acciones inseguras. **El `LICENSE` de la raíz es Llama 3.2 Community y NO aplica a esta carpeta.** |
+| [unitaryai/detoxify](https://github.com/unitaryai/detoxify) | 1.320 | **Apache-2.0** | 11.357 ✅ | 2026-11-11 | Clasificador de toxicidad entrenado, multilingüe, corre local. El único componente de la capa que es *específicamente* un detector de toxicidad y es permisivo. |
+
+🔴 **Gap de mercado medido, no silenciado:** la consulta `toxicity detection chat
+moderation` ordenada por ★ devuelve, completa, repos de **0 a 8 ★**. **No existe
+un proyecto open source líder de moderación de chat de juego.** Los cuatro de
+arriba son genéricos de LLM y hay que adaptarlos. Es, a la vez, la mala noticia
+(no hay base lista) y la oportunidad (ver `intel/market.md`).
+
+### Localización
+
+| Repo | ★ | Licencia | Push | Nota |
+|------|---|----------|------|------|
+| [i18next/i18next](https://github.com/i18next/i18next) | 8.666 | **MIT** (1.082 B) | 2026-11-21 | Runtime de i18n: el lado del juego/cliente. |
+| [WeblateOrg/weblate](https://github.com/WeblateOrg/weblate) | 6.178 | ⚠️ **GPL-3.0** | 2026-11-22 | Plataforma de traducción continua con memoria de traducción y revisión humana. **Se despliega como servicio del equipo de loc; no se embebe en el juego** ⇒ la GPL no contamina el entregable. |
+| [HIllya51/LunaTranslator](https://github.com/HIllya51/LunaTranslator) | 14.258 | ⚠️ **GPL-3.0** | 2026-11-21 | Traducción en vivo de juegos (hook de texto + MTL/LLM). Enorme y vivo. ✅ herramienta de escritorio del equipo; ⛔ embebido. |
+
+> **📐 La regla de licencia que esta página venía aplicando bien y conviene dejar
+> escrita:** una **GPL en una herramienta que se despliega aparte** (Weblate,
+> LunaTranslator) **no contamina el entregable**; una GPL en una **librería que
+> se linkea en el build del juego** (piper1-gpl) sí. La pregunta no es *"¿qué
+> licencia tiene?"* sino **"¿cruza el límite del binario que se le entrega al
+> jugador?"**.
+
+### 🆕 Movimiento (steering) — una fila vieja que faltaba
+
+| Repo | ★ | Licencia | Push | Nota |
+|------|---|----------|------|------|
+| [GDQuest/godot-steering-ai-framework](https://github.com/GDQuest/godot-steering-ai-framework) | 1.598 | **MIT** | ⚠️ 2024-09-13 | Comportamientos de steering (seek, flee, flocking, path following) para Godot. Sin commits hace 26 meses, pero es un framework **cerrado en alcance**: la ausencia de commits aquí pesa menos que en una librería que sigue una API externa. Alternativa viva y ya listada: `limboai`. |
+
+---
 
 ## 🔴 El hallazgo del cycle 12 (2026-11-22): **el modelo que NVIDIA te invita a correr dentro del juego no tiene licencia en su repo**, y la capa de SLM on-device faltaba entera
 

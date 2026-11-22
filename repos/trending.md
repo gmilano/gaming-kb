@@ -11,6 +11,66 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 13
+
+**El barrido de este pass cambió de eje: de *engines y agentes* a la capa de
+TEXTO Y VOZ que consume el jugador.** El motivo está medido arriba en
+`agents/trending.md`: el eje de engines devolvió 13 de 15 candidatos ya listados.
+
+### 📏 El dato de tendencia que sólo se puede ver con la historia de este archivo
+
+Tres de los proyectos más grandes de la capa nueva **cambiaron de licencia o de
+repo en los últimos 15 meses**, y los tres cambios van en la misma dirección:
+
+| Proyecto | Antes | Ahora | Fecha del cambio |
+|----------|-------|-------|------------------|
+| **Piper** (TTS) | `rhasspy/piper` — **MIT** | `OHF-Voice/piper1-gpl` — **GPL-3.0** | repo viejo archivado 2025-08-26 |
+| **fish-speech** (TTS) | permisiva en releases previas | **Fish Audio Community License 1.0** (umbral US$ 500k, evaluado sobre el cliente) | **13-oct-2026** |
+| **Yarn Spinner** (diálogo) | MIT en todos los ports | **YSPL 1.0** en los ports Godot-GDScript y Unreal | `NOASSERTION` vigente hoy |
+
+⇒ **La tendencia no es "más proyectos": es menos permisividad en la capa más
+cercana al jugador.** Las licencias nuevas de 2026 no prohíben el uso: lo
+**condicionan por modelo de negocio** (facturación del cliente, producto
+competidor, hosting, entrenamiento de AI). Son más difíciles de auditar
+automáticamente que una GPL, porque un badge SPDX las reporta como
+`NOASSERTION` o directamente como `MIT`.
+
+### 🆕 Repos fundacionales nuevos de este pass
+
+| Repo | ★ | Licencia (byte-read) | Para qué entra |
+|------|---|----------------------|----------------|
+| [openai/whisper](https://github.com/openai/whisper) | 113.247 | MIT | referencia de STT |
+| [ggml-org/whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 55.409 | MIT | STT en el cliente del juego |
+| [SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper) | 26.929 | MIT | STT en servidor (moderación de voz) |
+| [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) | 15.633 | MIT | TTS permisivo — reemplazo de fish-speech |
+| [i18next/i18next](https://github.com/i18next/i18next) | 8.666 | MIT | runtime de idioma |
+| [guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) | 7.635 | Apache-2.0 | validación de salida de LLM |
+| [NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails) | 7.544 | Apache-2.0 (SPDX short-form) | rieles conversacionales |
+| [inkle/ink](https://github.com/inkle/ink) | 5.029 | MIT | lenguaje de narrativa |
+| [YarnSpinnerTool/YarnSpinner](https://github.com/YarnSpinnerTool/YarnSpinner) | 2.876 | MIT | lenguaje de diálogo |
+| [unitaryai/detoxify](https://github.com/unitaryai/detoxify) | 1.320 | Apache-2.0 | clasificador de toxicidad local |
+
+### 🔄 Rename nuevo de este pass
+
+**`NVIDIA/NeMo-Guardrails` → `NVIDIA-NeMo/Guardrails`.** Firma medida: el slug
+viejo da **HTTP 422** en `search/repositories` (*"resources do not exist or you do
+not have permission"*), el nuevo da `total_count: 1`. Suma a la lista histórica de
+renames de esta KB (`justinpbarnett`→`CoplayDev`, `googleforgames`→`agones-dev`,
+`minetest`→`luanti-org`, `princeton-nlp/SWE-agent`→`SWE-agent/SWE-agent`,
+`rivet-gg/opengb`→cadena de 3 saltos).
+
+### 🔧 Defecto de instrumento medido este pass: la rama por defecto
+
+`YarnSpinnerTool/YarnSpinner-Godot` **no tiene rama `main`**. Sondear
+`raw.githubusercontent.com/.../main/LICENSE` devolvió 404 en los 8 nombres de
+archivo probados ⇒ *"repo sin licencia"*. En `master` el archivo está y es **MIT
+(1.104 B)**. El cycle 7 había medido que `raw` aliasea `master`→`main` en
+`Unity-Technologies/ml-agents`; **este repo es el contraejemplo**. ⇒ el aliasing
+es propiedad del repo, no del canal: **sondear siempre las dos ramas antes de
+declarar un gap.**
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 12
 
 **El barrido de este pass cambió de eje otra vez: por ORGANIZACIÓN y por

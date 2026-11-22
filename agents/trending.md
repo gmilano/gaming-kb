@@ -12,6 +12,100 @@ updated: 2026-11-22
 
 ---
 
+## 🆕 2026-11-22 — pass cycle 13
+
+**El evento del pass no es un repo: es un eje.** Las búsquedas del runbook sobre
+engines / MCP / NPC devolvieron **15 candidatos, de los cuales 13 ya estaban en
+esta KB** (tasa de novedad: 13%). Las mismas búsquedas corridas sobre **diálogo
+autorado, moderación de chat, voz y localización** devolvieron **24 candidatos, de
+los cuales 24 eran nuevos** (tasa de novedad: 100%). Doce passes de profundidad
+sobre un eje y **cero** sobre el otro.
+
+⇒ La tendencia que esta página puede registrar hoy y no podía ayer: **la capa de
+texto y voz que mira el jugador se está consolidando bajo licencias que no son
+MIT ni Apache**, y eso pasó en los últimos ~6 meses.
+
+### 🔴 Movimiento de licencia nº1: nace la **Yarn Spinner Public Licence (YSPL) 1.0**
+
+Yarn Spinner —el estándar de diálogo junto con *ink*— mantiene **seis repos
+oficiales** y ya **no** los publica todos igual:
+
+- `YarnSpinner` (2.876 ★), `YarnSpinner-Unity` (854 ★), `YarnSpinner-Godot`
+  (218 ★, C#): **MIT**, leído en bytes.
+- `YarnSpinner-Rust` (299 ★): **MIT + Apache** (dual).
+- `YarnSpinner-Godot-GDScript` (99 ★) y `YarnSpinner-UnrealEngine` (52 ★):
+  **YSPL 1.0** — 17.709 B, badge `NOASSERTION`.
+
+**El motor que elige el equipo decide la licencia.** Y la YSPL trae una cláusula
+que ninguna otra licencia de esta KB tenía: **prohíbe alimentar el código a
+sistemas de entrenamiento de AI**, exigiendo que las herramientas asistidas que
+se usen sobre el árbol no retengan el fuente. Es la primera restricción de esta
+KB sobre el **tooling** del integrador y no sobre su entregable.
+
+### 🔴 Movimiento de licencia nº2: **Fish Audio Community License 1.0 — fechada 13-oct-2026**
+
+`fishaudio/fish-speech` (33.825 ★, vivo) estrena una licencia **de hace seis
+semanas** con un mecanismo nuevo para esta KB: **umbral de facturación**
+(US$ 500k/año) — **y el umbral se mide sobre el cliente del integrador**, con
+*"contractor, integrator, consultant"* nombrados en el texto. El TTS abierto más
+grande del mercado queda fuera de alcance para entrega de software a cualquier
+estudio que facture, y dentro de alcance para entrega de **output** (doblaje,
+voiceover). Carve-out explícito: *"game or app characters"* no es `Hosted Service`.
+
+### 🔴 Movimiento de licencia nº3: **Piper pasó de MIT a GPL-3.0 al mudarse de repo**
+
+`rhasspy/piper` (11.336 ★, **MIT**) quedó **archivado** el 2025-08-26. El sucesor
+vivo es `OHF-Voice/piper1-gpl` (6.347 ★, **GPL-3.0**, `COPYING` de 35.148 B,
+commit de ayer). **El cambio de licencia está anunciado en el propio nombre del
+repo** y aun así no aparece en ninguna guía de stack: quien escribió *"Piper,
+MIT"* en un documento de arquitectura está citando un repo muerto.
+
+### 🆕 Repos nuevos de este pass — 16 filas, las 16 con licencia leída byte a byte
+
+| Repo | ★ | Licencia (byte-read) | Capa | Push |
+|------|---|----------------------|------|------|
+| [openai/whisper](https://github.com/openai/whisper) | 113.247 | MIT (1.063 B) | voz / STT | 2026-08-31 |
+| [ggml-org/whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 55.409 | MIT (1.078 B) | voz / STT on-device | 2026-11-20 |
+| [SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper) | 26.929 | MIT (1.064 B) | voz / STT servidor | 2026-11-12 |
+| [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) | 15.633 | MIT (1.068 B) | voz / TTS | 2026-11-03 |
+| [i18next/i18next](https://github.com/i18next/i18next) | 8.666 | MIT (1.082 B) | localización | 2026-11-21 |
+| [guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) | 7.635 | Apache-2.0 (11.357 B) | moderación | 2026-11-18 |
+| [NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails) | 7.544 | Apache-2.0 (SPDX, 654 B) | moderación | 2026-11-19 |
+| [WeblateOrg/weblate](https://github.com/WeblateOrg/weblate) | 6.178 | GPL-3.0 (⚠️ servicio, no embeber) | localización | 2026-11-22 |
+| [inkle/ink](https://github.com/inkle/ink) | 5.029 | MIT (1.067 B) | diálogo | 2026-11-16 |
+| [meta-llama/PurpleLlama](https://github.com/meta-llama/PurpleLlama) → `LlamaFirewall/`, `CodeShield/`, `SensitiveDocClassification/` | 4.488 | **MIT** (1.088 / 1.060 B) ⚠️ la raíz NO | moderación | 2026-11-20 |
+| [YarnSpinnerTool/YarnSpinner](https://github.com/YarnSpinnerTool/YarnSpinner) | 2.876 | MIT (1.138 B) | diálogo | 2026-11-20 |
+| [inkle/inky](https://github.com/inkle/inky) | 2.758 | MIT **en el README** | diálogo / editor | 2026-05-05 |
+| [GDQuest/godot-steering-ai-framework](https://github.com/GDQuest/godot-steering-ai-framework) | 1.598 | MIT | movimiento / steering | 2024-09-13 ⚠️ |
+| [unitaryai/detoxify](https://github.com/unitaryai/detoxify) | 1.320 | Apache-2.0 (11.357 B) | moderación | 2026-11-11 |
+| [YarnSpinnerTool/YarnSpinner-Unity](https://github.com/YarnSpinnerTool/YarnSpinner-Unity) | 854 | MIT (1.079 B) | diálogo | 2026-11-20 |
+| [YarnSpinnerTool/YarnSpinner-Godot](https://github.com/YarnSpinnerTool/YarnSpinner-Godot) | 218 | MIT (1.104 B, `master`) | diálogo | 2026-10-22 |
+
+### ⛔ Rechazos medidos de este pass — se publican: el silencio se lee como cobertura
+
+| Candidato | ★ | Motivo medido |
+|-----------|---|---------------|
+| `fishaudio/fish-speech` | 33.825 | Fish Audio Community 1.0: umbral US$ 500k **del cliente** |
+| `coqui-ai/TTS` | 46.266 | MPL-2.0 ✅ pero **27 meses sin commit** (`archived=false` miente) |
+| `HIllya51/LunaTranslator` | 14.258 | GPL-3.0 — ✅ como tool del equipo de loc, ⛔ embebido |
+| `rhasspy/piper` | 11.336 | MIT ✅ pero `archived=true` |
+| `OHF-Voice/piper1-gpl` | 6.347 | GPL-3.0 sobre binario distribuido al jugador |
+| `YarnSpinner-Godot-GDScript`, `YarnSpinner-UnrealEngine` | 99 / 52 | **YSPL 1.0**: prohíbe construir herramientas de diálogo reutilizables |
+| pesos `Llama-Guard*` / `Llama-Prompt-Guard-2*` | — | Llama 2 / 3.2 / 4 Community — no open source |
+
+### 🟡 La búsqueda que devolvió casi nada, y vale escribirlo
+
+`toxicity detection chat moderation` y `content moderation LLM guardrails`
+ordenadas por ★ devuelven, en su totalidad, repos de **0 a 8 ★** (ejercicios de
+curso, TPs). **No existe un proyecto open source líder de moderación de chat de
+juego.** Los candidatos reales no aparecen por esa consulta: hay que ir a buscarlos
+por nombre (`detoxify`, `guardrails`, `NeMo Guardrails`, `LlamaFirewall`), y
+ninguno es específico de gaming. ⇒ **es un hueco de mercado medido**, no una
+ausencia de búsqueda — y es el hueco donde cae la regulación de 2026 (ver
+`intel/market.md`, Texas SB 2420 y Roblox).
+
+---
+
 ## 🆕 2026-11-22 — pass cycle 12
 
 **Tema del pass: la licencia dejó de vivir en el repositorio.** Tres repos

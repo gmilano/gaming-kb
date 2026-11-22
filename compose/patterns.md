@@ -7,8 +7,16 @@ updated: 2026-11-22
 # Patrones de composición — Gaming AI
 
 > Recetas concretas: repos reales, licencias verificadas, cómo se cablean.
-> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22
-> cycles 11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 13)** (passes previos: 2026-11-22
+> cycles 12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+>
+> 🆕 **Las del cycle 13 son la 33** (el dato de edad como parámetro de runtime:
+> un solo campo y tres jurisdicciones incompatibles — Texas obliga a borrar lo
+> que Connecticut obliga a conservar), la **34** (capa de moderación de chat y
+> NPC 100% MIT/Apache, que hay que **construir** porque está medido que no existe
+> para comprar) y la **35** (diálogo → voz → idioma con la licencia decidida
+> **antes** del motor: con Yarn Spinner, el port que elegís decide si tu licencia
+> es MIT o YSPL).
 >
 > 🆕 **Las del cycle 12 son la 29** (NPC on-device: la arquitectura que *apaga*
 > la obligación de topología de datos en vez de documentarla), la **30** (triage
@@ -30,6 +38,285 @@ updated: 2026-11-22
 > concretos de este ciclo: una fecha límite regulatoria en la UE, world models
 > jugables ejecutables en hardware de consumidor, y la aparición del primer
 > benchmark publicado de agentes que juegan.
+
+## 🆕 Receta 33: **El dato de edad como parámetro de runtime** — un solo campo, tres jurisdicciones que piden cosas incompatibles
+
+**Problema.** La Receta 18 clasifica audiencia por **título** (PEGI/ESRB) para
+decidir si aplica el Art. 50, y cruza con Connecticut PA 26-15, que usa la edad
+del **usuario** para decidir la **cadencia** del recordatorio. Falta el tercer
+régimen, que es el que hoy tiene más fuerza ejecutoria: **Texas SB 2420**,
+vigente desde el 1-ene-2026 y **exigible desde el 4-jun-2026** (el Quinto
+Circuito levantó la cautelar; la Corte Suprema dejó que Texas siga ejecutando).
+
+Y los tres **no se apilan**: uno de ellos obliga a **borrar** lo que otro obliga
+a **conservar**.
+
+| Régimen | La edad decide… | Fuente del dato | Retención |
+|---------|-----------------|-----------------|-----------|
+| **EU — AI Act Art. 50** | **si** hay obligación de etiquetar | clasificación del **título** (PEGI) | no aplica (no es dato de usuario) |
+| **Connecticut — PA 26-15** | **con qué frecuencia** recordar que es una AI (≥1/h menores, ≥1/3 h adultos) | el **usuario** | implica conocerla **durante la sesión** |
+| **Texas — SB 2420** | **si** se permite descarga y compra in-app | la **tienda**, en 4 categorías (<13 · 13-15 · 16-17 · adulto) | 🔴 **obligación de BORRAR tras verificar** |
+
+🔴 **El conflicto, en una línea: un build que persiste `user.age` para cumplir
+Connecticut incumple el deber de borrado de Texas.**
+
+### Implementación
+
+**Paso 1 — no persistir la edad. Persistir dos derivados y un reloj.**
+
+```
+// ❌ MAL — viola el deber de borrado de TX y guarda más de lo necesario
+player.age = 14;
+player.birthdate = "2012-03-01";
+
+// ✅ BIEN — se conserva lo mínimo derivado, se descarta la fuente
+session.ageBand       = "13_15";   // categoría de SB 2420, no la edad
+session.isMinor       = true;      // único booleano que usa la lógica de producto
+session.reminderEvery = 3600;      // segundos — Connecticut como PARÁMETRO
+// el dato de edad recibido de la tienda se descarta en el mismo flujo
+```
+
+La categoría de SB 2420 es **ya** una generalización: el régimen que exige
+borrarla no exige borrar la decisión que se tomó con ella. Lo que no puede
+quedar guardado es la **edad o la fecha de nacimiento**.
+
+**Paso 2 — la cadencia es configuración, no constante de build.** Es el mismo
+punto de la Receta 18 (paso 2) llevado a su consecuencia: `reminderEvery` y los
+flags de gating viajan en configuración por jurisdicción, no compilados. Un
+título que publica el mismo día en EU, Texas y Connecticut hace **un build** y
+**tres configuraciones**.
+
+**Paso 3 — poner la verificación delante del CANAL SOCIAL, no del producto.**
+Es el diseño de referencia que ya validó la plataforma más grande del segmento:
+Roblox exige verificación de edad **para acceder al chat**, globalmente, desde
+enero de 2026 — el acceso al juego sigue abierto. Traducido a arquitectura:
+
+```
+juego           -> abierto
+chat / voz      -> requiere ageBand verificada
+NPC con LLM     -> requiere ageBand (decide persona, filtros y cadencia de aviso)
+compras in-app  -> requiere ageBand + consentimiento parental (SB 2420)
+```
+
+**Paso 4 — reclamar el puerto seguro.** SB 2420 prevé **safe harbor** para quien
+siga de buena fe estándares de industria ampliamente adoptados de verificación de
+edad y consentimiento parental. ⇒ **el entregable incluye el documento que dice
+qué estándar se siguió y desde cuándo**, no sólo el código. Es el mismo principio
+de la Receta 18, paso 4: lo que protege al cliente es haber decidido con
+fundamento en una fecha.
+
+**Paso 5 — dimensionar dónde aplica.** Leyes de age assurance a nivel
+tienda/dispositivo: **Texas, Utah, Louisiana, Alabama, California**. Sanción en
+TX: **prácticas comerciales engañosas** bajo ley estatal.
+
+**Esfuerzo:** 3-5 días si la edad ya entra al sistema; 2-3 semanas si hay que
+abrir el flujo de la tienda. **Encaja con:** va **después** de la Receta 18 y
+**antes** de la 13. **Reutiliza** el mismo parámetro que la 18 promovió a entrada.
+
+---
+
+## 🆕 Receta 34: **Capa de moderación de chat y NPC, 100% MIT/Apache** — la que hay que construir porque no existe para comprar
+
+**Caso de uso**: juego con chat entre jugadores y/o NPCs conversacionales que
+debe operar en NA y EU después de las fechas de la Receta 33, sin mandar la voz
+ni el texto de menores a una API de terceros.
+
+**Por qué se construye y no se integra, con la medición al lado:** la consulta
+`toxicity detection chat moderation` ordenada por ★ devuelve, completa, repos de
+**0 a 8 ★**. **No hay plataforma open source líder de moderación de chat de
+juego.** Hay cuatro primitivas buenas, genéricas de LLM, y el trabajo es
+ensamblarlas y agregarles lo específico de juego.
+
+### Las piezas, con licencia leída byte a byte
+
+| Pieza | Repo | ★ | Licencia | Rol en la cadena |
+|-------|------|---|----------|------------------|
+| Clasificador de toxicidad | [unitaryai/detoxify](https://github.com/unitaryai/detoxify) | 1.320 | **Apache-2.0** (11.357 B) | corre **local**, multilingüe, sin API. Primer filtro, barato. |
+| Rieles conversacionales | [NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails) | 7.544 | **Apache-2.0** (SPDX, 654 B) | define de qué habla el NPC y qué hace si lo sacan del riel |
+| Validadores de salida | [guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) | 7.635 | **Apache-2.0** (11.357 B) | esquema, PII, política propia sobre lo que devuelve el LLM |
+| Guardrail de agente | [meta-llama/PurpleLlama](https://github.com/meta-llama/PurpleLlama) → **`LlamaFirewall/`** | 4.488 (repo) | 🔴 **MIT** (1.088 B) — **la raíz NO**, ver abajo | prompt injection y acciones inseguras cuando el NPC tiene herramientas |
+| STT para moderar voz | [SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper) | 26.929 | **MIT** (1.064 B) | servidor; o [whisper.cpp](https://github.com/ggml-org/whisper.cpp) (55.409 ★, MIT) **en el cliente** si la voz del menor no debe salir del dispositivo |
+
+🔴 **La trampa de licencia de esta receta, que cuesta el proyecto si se lee mal:**
+`meta-llama/PurpleLlama` tiene en la **raíz** un `LICENSE` que es la **Llama 3.2
+Community License (7.669 B) — no open source**. Enumerado, el repo tiene **14
+archivos de licencia y 5 grants**: `LlamaFirewall/`, `CodeShield/`,
+`CybersecurityBenchmarks/` y `SensitiveDocClassification/` son **MIT verbatim**,
+y **todos los pesos** (`Llama-Guard*`, `Llama-Prompt-Guard-2*`) son Llama 2 / 3.2
+/ 4 Community. ⇒ **se usa el framework MIT con un modelo propio o abierto; no se
+usan los pesos de Meta.**
+
+### Cableado
+
+```
+          jugador escribe                    jugador habla
+                |                                  |
+                |                      whisper.cpp (cliente, MIT)
+                |                      o faster-whisper (servidor, MIT)
+                v                                  v
+        +---------------------------------------------------+
+        | 1. detoxify (Apache-2.0) — local, ~ms, multilingüe |
+        |    toxicidad > umbral  -> cortar aca, no gastar LLM|
+        +---------------------------------------------------+
+                |  pasa
+                v
+        +---------------------------------------------------+
+        | 2. NeMo Guardrails (Apache-2.0) — rieles Colang    |
+        |    tema fuera de alcance -> respuesta de desvio    |
+        |    ageBand (Receta 33) -> elige el riel            |
+        +---------------------------------------------------+
+                |  pasa
+                v
+             LLM del NPC  (+ LlamaFirewall MIT si el NPC usa herramientas)
+                |
+                v
+        +---------------------------------------------------+
+        | 3. guardrails-ai (Apache-2.0) — valida la SALIDA   |
+        |    PII, esquema, politica propia del titulo        |
+        +---------------------------------------------------+
+                |
+                v
+        texto final -> (Receta 35: voz y localizacion)
+```
+
+**Las dos reglas de diseño que hacen que esto sea barato:**
+
+1. **El filtro barato va primero.** detoxify corre local en milisegundos; el LLM
+   cuesta. Cortar en el paso 1 ahorra la llamada completa, y en un chat de juego
+   la mayoría de lo que hay que cortar es obvio.
+2. **`ageBand` de la Receta 33 selecciona el riel**, no se reimplementa acá. Un
+   solo parámetro recorre las dos recetas.
+
+### Lo que hay que construir encima (no viene con ninguna pieza)
+
+- **Jerga y ofuscación de juego**: `l33t`, separadores, abreviaturas de partida.
+  detoxify no las cubre: hay que normalizar antes de clasificar.
+- **Contexto de partida**: *"te voy a matar"* en un shooter no es lo mismo que en
+  el lobby. El riel necesita el estado del juego como entrada.
+- **Multi-idioma con el perfil real del título**: para LATAM y APAC el inglés es
+  minoría; detoxify es multilingüe pero hay que medir por idioma, no asumirlo.
+
+**Esfuerzo:** 2-3 semanas para la cadena funcionando con telemetría; el trabajo
+largo es el corpus de jerga por título y por idioma. **Encaja con:** **después**
+de la Receta 33 (necesita `ageBand`), **antes** de la 35.
+
+---
+
+## 🆕 Receta 35: **Diálogo → voz → idioma, con la licencia decidida ANTES del motor**
+
+**Caso de uso**: un título con NPCs conversacionales que hay que escribir, decir
+en voz alta y entregar en varios idiomas — sin que una licencia aparezca a
+mitad del sprint.
+
+**Por qué esta receta existe:** en esta capa, **la elección de motor arrastra la
+licencia**. No es una consideración legal posterior: es la primera decisión
+técnica.
+
+### Paso 1 — Autoría: el LLM no escribe al juego, escribe a un formato
+
+```
+LLM  ->  .ink / .yarn  ->  compilador  ->  runtime en el juego
+```
+
+Meter la salida del LLM en un formato de diálogo autorado **antes** del runtime
+da tres cosas gratis: es **revisable por un narrative designer**, es
+**diffeable en git**, y es **determinista en ejecución** — lo que a su vez
+simplifica el registro del Art. 50, porque el contenido queda fijado en build y
+no generado en vivo.
+
+| Formato | Repo | ★ | Licencia | Cuándo |
+|---------|------|---|----------|--------|
+| **ink** | [inkle/ink](https://github.com/inkle/ink) | 5.029 | **MIT** (1.067 B) | narrativa ramificada con estado; compila a JSON ⇒ el LLM genera JSON válido directamente |
+| **Yarn** | [YarnSpinnerTool/YarnSpinner](https://github.com/YarnSpinnerTool/YarnSpinner) | 2.876 | **MIT** (1.138 B) | diálogo tipo guion con comandos al juego; más legible para escritores |
+
+### Paso 2 — 🔴 El gate de motor: **con Yarn Spinner, el port decide tu licencia**
+
+| Motor | Repo del port | ★ | Licencia | Veredicto |
+|-------|---------------|---|----------|-----------|
+| Unity | `YarnSpinner-Unity` | 854 | **MIT** | ✅ |
+| Godot **C#** | `YarnSpinner-Godot` | 218 | **MIT** (en rama `master`) | ✅ |
+| Rust / Bevy | `YarnSpinner-Rust` | 299 | **MIT** (dual con Apache) | ✅ |
+| Godot **GDScript** | `YarnSpinner-Godot-GDScript` | 99 | 🔴 **YSPL 1.0** | ⚠️ condicionado |
+| Unreal | `YarnSpinner-UnrealEngine` | 52 | 🔴 **YSPL 1.0** | ⚠️ condicionado |
+
+**Qué permite y qué prohíbe la YSPL 1.0, para decidir sin abogado:**
+
+- ✅ **Hacer y vender el juego del cliente: permitido.**
+- ✅ **Globant como contratista: permitido y nombrado** — la licencia define
+  `"Contractor"` incluyendo *contractor, freelancer, or porting service provider*.
+- ⛔ **Construir un acelerador de diálogo reutilizable entre cuentas: prohibido.**
+  Define `"Competing Product"` como toda herramienta cuyo propósito primario sea
+  habilitar a terceros a crear diálogo ramificado o narrativa no lineal.
+  **Excepción escrita:** herramienta **interna de una sola Legal Entity, no
+  distribuida** ⇒ un tool interno de un estudio sí se puede.
+- 🔴 **Prohíbe alimentar el código a sistemas de entrenamiento de AI.** Permite
+  usar herramientas asistidas para construir el juego, pero exige esfuerzo
+  razonable para que **no envíen el fuente a entrenamiento**.
+
+> 🔴 **Regla operativa, y es la primera de esta KB sobre el tooling propio:** si
+> el proyecto toca un árbol con YSPL, **la configuración de retención de los
+> agentes de código es parte del alcance técnico**, y se verifica al inicio
+> (settings del proveedor), no al cierre. Si el programa de AI-assisted
+> development del cliente no permite desactivar retención, **se elige `ink` (MIT)
+> o el port C# de Godot**, y la decisión se registra.
+
+### Paso 3 — Voz, con la lista de descartes explícita
+
+| Rol | Elección | Licencia | Por qué no el más grande |
+|-----|----------|----------|--------------------------|
+| STT en cliente | [whisper.cpp](https://github.com/ggml-org/whisper.cpp) (55.409 ★) | **MIT** | — |
+| STT en servidor | [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (26.929 ★) | **MIT** | — |
+| **TTS** | [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) (15.633 ★) | **MIT** (1.068 B) | `fish-speech` (33.825 ★) **bloquea por facturación del CLIENTE**; `rhasspy/piper` MIT está **archivado**; `piper1-gpl` es **GPL-3.0**; `coqui-ai/TTS` lleva **27 meses sin commits**. |
+
+🔴 **La cláusula de fish-speech que hay que saber de memoria**, porque define el
+modelo de entrega y no sólo la licencia: la Fish Audio Community License 1.0
+(13-oct-2026) permite uso comercial sólo con `Annual Revenue` < **US$ 500.000**,
+y **si operás el software para un tercero como contratista o integrador, el
+umbral se mide sobre ESE tercero**. Dos salidas escritas:
+
+- ✅ **entregar sólo el output** (archivos de audio: doblaje, voiceover) **no**
+  queda sujeto al umbral del cliente ⇒ **modelo de servicio de producción de voz**;
+- ⛔ **entregar el software** a un estudio que factura > US$ 500k ⇒ **sin licencia**.
+
+Y el carve-out útil: *"game or app characters"* está **explícitamente excluido**
+de la definición de `Hosted Service` ⇒ para un juego el problema nunca es el
+hosting; es la facturación.
+
+### Paso 4 — Idioma, con el límite del binario como criterio
+
+| Pieza | Repo | Licencia | Dónde vive |
+|-------|------|----------|------------|
+| Runtime de i18n | [i18next](https://github.com/i18next/i18next) (8.666 ★) | **MIT** | **dentro** del juego ⇒ tiene que ser permisiva |
+| Plataforma de traducción | [Weblate](https://github.com/WeblateOrg/weblate) (6.178 ★) | **GPL-3.0** | **fuera**: servicio del equipo de loc ⇒ no contamina el entregable |
+| Traducción en vivo / análisis | [LunaTranslator](https://github.com/HIllya51/LunaTranslator) (14.258 ★) | **GPL-3.0** | **fuera**: herramienta de escritorio del equipo |
+
+> **📐 La pregunta correcta no es "¿qué licencia tiene?" sino "¿cruza el límite
+> del binario que se le entrega al jugador?".** Una GPL del lado del equipo es
+> gratis; la misma GPL linkeada en el build es un bloqueo. Es el criterio que
+> salva Weblate y LunaTranslator, y el que hunde a `piper1-gpl`.
+
+### El stack completo, 100% permisivo
+
+```
+ink (MIT) o YarnSpinner núcleo (MIT)
+   + port MIT del motor  [Unity | Godot C# | Rust]     <- Paso 2
+   + whisper.cpp / faster-whisper (MIT)                <- STT
+   + F5-TTS (MIT)                                      <- TTS
+   + detoxify + NeMo Guardrails + guardrails-ai (Apache-2.0)  <- Receta 34
+   + LlamaFirewall (MIT, subcarpeta)                   <- Receta 34
+   + i18next (MIT) en runtime, Weblate (GPL, aparte)   <- Paso 4
+   + ageBand como parámetro                            <- Receta 33
+```
+
+**Cero licencias condicionadas, cero copyleft cruzando el límite del binario,
+cero pesos bajo licencia bespoke.** Todas las filas leídas byte a byte en este
+pass.
+
+**Esfuerzo:** 1 día el gate de licencia (pasos 1-2 y 4), que es lo que evita el
+rediseño; 3-4 semanas el pipeline completo. **Encaja con:** **después** de la 33
+y la 34.
+
+---
 
 ## 🆕 Receta 29: **NPC conversacional sin topología de datos** — SLM on-device que apaga la obligación en vez de documentarla
 

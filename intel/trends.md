@@ -6,9 +6,108 @@ updated: 2026-11-22
 
 # Tendencias — Gaming AI
 
-> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22 cycles 11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 13)** (passes previos: 2026-11-22 cycles 12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 > Cada tendencia lleva la señal que la sostiene. Donde este pass **refuta** algo
 > que el propio KB publicaba, se dice.
+
+## 🆕 Tendencias nuevas y correcciones — pass cycle 13 (2026-11-22)
+
+### 🔴 Tendencia nº1 del pass: **la capa más cercana al jugador se está cerrando — y lo hace con licencias que un badge SPDX no detecta**
+
+Señal, no opinión. Tres de los proyectos más grandes de diálogo y voz cambiaron
+de régimen de licencia en los últimos 15 meses, **todos en la misma dirección**:
+
+| Proyecto | ★ | Antes | Ahora | Fecha |
+|----------|---|-------|-------|-------|
+| **Piper** (TTS) | 11.336 → 6.347 | `rhasspy/piper`, **MIT** | `OHF-Voice/piper1-gpl`, **GPL-3.0** | repo MIT archivado 2025-08-26 |
+| **fish-speech** (TTS) | 33.825 | permisiva | **Fish Audio Community License 1.0** — umbral US$ 500k **medido sobre el cliente** | **13-oct-2026** |
+| **Yarn Spinner** (diálogo) | 2.876 (núcleo) | MIT en todo | **YSPL 1.0** en los ports Godot-GDScript y Unreal | vigente |
+
+**Lo que define a esta generación de licencias: no prohíben, condicionan por
+modelo de negocio.** Umbral de facturación, prohibición de producto competidor,
+prohibición de hosting, prohibición de entrenar AI con el código. Y las tres son
+**invisibles para una auditoría automática**: GitHub las reporta como
+`NOASSERTION` (fish-speech, los ports YSPL) o directamente **no las ve**
+(`inkle/inky` aparece como `null` teniendo MIT en el README).
+
+⇒ **Consecuencia de método, y vale para todas las KBs de la familia: a partir de
+2026 el badge de licencia pierde valor como filtro de triage.** La única entrada
+confiable al inventario es la lectura del archivo en bytes, y el rechazo
+automático por badge `NOASSERTION` descarta proyectos usables (NeMo Guardrails es
+Apache) al mismo tiempo que deja pasar proyectos bloqueados (fish-speech sale
+`NOASSERTION` igual que NeMo).
+
+### 🔵 Tendencia nº2: **el eje regulatorio se mudó de la ETIQUETA a la EDAD**
+
+Lo que esta página venía siguiendo —Art. 50, disclosure de Steam, etiquetado
+chino— es **transparencia sobre el contenido**. Lo que entró en vigor y es
+exigible **hoy** en Estados Unidos es otra cosa: **verificación de categoría de
+edad por usuario**, con la tienda como punto de control (Texas SB 2420, exigible
+desde el 4-jun-2026; cinco estados con leyes equivalentes) y con la plataforma
+más grande del segmento ya alineada (Roblox: verificación de edad obligatoria
+para acceder al chat, global, desde ene-2026).
+
+Y la señal de que no es sólo norteamericano: **Linklaters** describe el escrutinio
+regulatorio **europeo** como impulsado sobre todo por **seguridad infantil,
+privacidad de datos de menores y explotación financiera** — los mismos tres ejes.
+
+⇒ **La inversión en etiquetado sirve en una jurisdicción. La inversión en una
+capa de edad + moderación sirve en las dos.** Si hay que elegir dónde poner el
+sprint, el dato dice edad.
+
+### 📏 Tendencia nº3: **tercera confirmación independiente de que la adopción está en el pipeline, no en la pantalla** — y la primera que viene de un censo
+
+| Fuente | Tipo | Qué dice |
+|--------|------|----------|
+| KPMG (Scott Purdy), predicciones 2026 | opinión experta | las integraciones más profundas serán **en el back end** |
+| Bird & Bird, *The Future of Play* 2026 (EMEA) | opinión legal sectorial | la adopción genAI es más fértil en **prototipado y concept art** |
+| Steam disclosures (medición propia de esta KB) | **censo** | 49,9% de títulos declaran AI; **sólo ~3% es generación dentro del gameplay** |
+| Encuesta Unity 2026 (ya en esta página) | encuesta | código 62% > narrativa 44% > **NPC 40%** |
+
+Cuatro instrumentos distintos, misma conclusión. **Es de las afirmaciones mejor
+sostenidas de esta KB** y conviene usarla como ancla comercial: *"AI en el
+pipeline"* tiene cuatro fuentes; *"AI en la pantalla"* tiene marketing.
+
+### 🟡 Tendencia nº4: el *backlash* ahora tiene acompañamiento económico en los dos sentidos
+
+- **Omdia** lista el *"emerging AI backlash"* entre las tendencias clave de games
+  tech 2026, junto con **costos crecientes de servidores e infraestructura**.
+- **>10.000 puestos** eliminados globalmente en el período que cubre una revisión
+  de mitad de 2026 — es el contexto en el que el jugador lee cualquier anuncio
+  de AI de un estudio.
+- **AlixPartners** (pronóstico, declarado como tal): las compañías de gaming que
+  integren AI con IP fuerte tendrían múltiplos de valuación **2-3× superiores** a
+  los rezagados.
+- ~**90% de los desarrolladores** usan AI en algún punto del pipeline (encuesta
+  citada por GamesBeat). Una encuesta de proveedor sobre 50+ líderes dice **94%**;
+  se registra con el sesgo declarado.
+
+⇒ **Las dos presiones son reales y apuntan a lo mismo:** el mercado de capitales
+premia integrar AI, el mercado de jugadores castiga mostrarla. **La estrategia
+que satisface a los dos es la del pipeline**, que es exactamente lo que miden las
+cuatro fuentes de la tendencia nº3.
+
+### ⛔ Hueco de oferta medido: no hay líder open source de moderación de chat de juego
+
+Consultas `toxicity detection chat moderation` y `content moderation LLM
+guardrails` sobre `search/repositories`, ordenadas por ★: **el máximo de toda la
+lista es 8 ★**. Lo que existe son componentes **genéricos de LLM** (detoxify
+1.320 ★ Apache-2.0, Guardrails 7.635 ★ Apache-2.0, NeMo Guardrails 7.544 ★
+Apache-2.0, LlamaFirewall MIT). **Ninguno es de gaming**: no manejan jerga de
+partida, ofuscación `l33t`, voz, ni el perfil multi-idioma de LATAM y APAC.
+
+Es un hueco **medido**, y coincide en el tiempo con la ola regulatoria de la
+tendencia nº2. Ver `intel/market.md` y `compose/patterns.md` (Receta 34).
+
+### 🟡 Corrección a esta KB: el *throttle* de aprobaciones de China aflojó
+
+Esta KB describía el régimen de la NPPA como cuello de botella creciente.
+Medición de este pass: **aprobaciones de juegos +19% interanual en 2026 vs 2025**,
+leído como normalización regulatoria. El **lead time** del registro previo de
+servicios de AI generativa ante la CAC **sigue vigente** y sigue entrando en el
+cronograma; lo que cambia de signo es el indicador de aprobaciones. Se corrige.
+
+---
 
 ## 🆕 Tendencias nuevas y correcciones — pass cycle 12 (2026-11-22)
 

@@ -7,11 +7,19 @@ updated: 2026-11-22
 # 🎮 Agentes AI — Gaming
 
 > Agentes y herramientas AI open source. Foco: MIT / Apache 2.0 / BSD / Zlib.
-> Última actualización: **2026-11-22 (pass cycle 12)**. Passes previos: 2026-11-22
-> (cycles 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20, 2026-10-26,
+> Última actualización: **2026-11-22 (pass cycle 13)**. Passes previos: 2026-11-22
+> (cycles 12, 11, 10), 2026-11-21 (cycles 9, 8, 7, 6, 5), 2026-11-20, 2026-10-26,
 > 2026-07-02.
 >
-> 🔴 **Lo que este pass cambia de raíz:** los seis passes anteriores afinaron
+> 🔴 **Lo que el pass cycle 13 cambia de raíz:** los doce passes anteriores
+> trabajaron el mismo eje (engines, MCP, NPCs, world models, backends) y ese eje
+> está **medido como saturado**: 13 de 15 candidatos ya estaban escritos. La capa
+> que el jugador **lee y escucha** —diálogo autorado, moderación de chat, voz,
+> localización— tenía **cero filas** y aporta **24 repos nuevos** y **tres
+> familias de licencia que esta KB no tenía** (YSPL 1.0, Fish Audio Community
+> 1.0, SPDX short-form). Ver los hallazgos nº1 a nº6 del cycle 13.
+>
+> 🔴 **Lo que el pass cycle 12 cambió de raíz:** los seis passes anteriores afinaron
 > *cómo leer una licencia*. Este pass descubre que **la lista de repos sobre la
 > que se aplicaba esa lectura tenía un agujero de 50.000 ★** — y que el checksum
 > de bytes, la técnica estrella de la casa, **produce falsos negativos medidos**.
@@ -54,6 +62,358 @@ updated: 2026-11-22
 > (403/200 del proxy, no del repo). Control negativo de `search/repositories`:
 > `repo:gmilano/control-does-not-exist-xyz-999` → HTTP 422 *"resources do not
 > exist or you do not have permission"*. ✅
+
+## 🔴 Lo más importante del pass 2026-11-22 (cycle 13): **la capa de texto y voz que mira el jugador nunca se auditó en 12 passes — y vive bajo tres familias de licencia que esta KB no tenía**
+
+Los doce passes anteriores trabajaron sobre el mismo eje: **engines, MCP, NPCs,
+world models, backends**. Este pass lo mide antes de seguir, y el número es la
+razón para cambiar de eje:
+
+| Eje | Candidatos encontrados por las búsquedas del runbook | Ya estaban en esta KB | Nuevos |
+|-----|------------------------------------------------------|------------------------|--------|
+| Engine / MCP / NPC / nav (el eje de siempre) | 15 | **13** | 2 |
+| Diálogo autorado, moderación, voz, localización | 24 | **0** | **24** |
+
+⇒ **El eje de siempre está saturado: 13 de 15 ya estaban escritos.** La capa que
+el jugador efectivamente *lee y escucha* —el texto del diálogo, el chat que hay
+que moderar, la voz del NPC, el idioma en que se entrega— tenía **cero filas**
+después de doce passes. Y no está vacía por falta de proyectos: está llena de
+proyectos **grandes, vivos, y con licencias que esta KB no había visto nunca**.
+
+> **Regla de método nº14 (para copiar a toda la familia de KBs): la saturación de
+> un eje se mide, no se intuye.** Si la tasa de "ya estaba" de una búsqueda supera
+> ~80%, el pass siguiente no debe refinar esa búsqueda: debe cambiar de eje. Un KB
+> que repite su eje productivo converge a reescribir sus propias filas con
+> ★ actualizadas, y eso se parece mucho a trabajar.
+
+### 🆕 Hallazgo nº1: **la Yarn Spinner Public Licence (YSPL) 1.0** — el motor que elegís decide tu licencia, y hay una cláusula que regula **tus agentes de código**, no tu producto
+
+`YarnSpinnerTool` es *un solo proyecto* con seis repos oficiales. Leídos byte a
+byte, tienen **cuatro estados de licencia distintos**:
+
+| Repo | ★ | Badge SPDX | **Licencia leída en bytes** | Bytes | Archivo / rama |
+|------|---|-----------|------------------------------|-------|----------------|
+| [YarnSpinnerTool/YarnSpinner](https://github.com/YarnSpinnerTool/YarnSpinner) | 2.876 | MIT | **MIT** ✅ | 1.138 | `LICENSE.md` @ `main` |
+| [YarnSpinnerTool/YarnSpinner-Unity](https://github.com/YarnSpinnerTool/YarnSpinner-Unity) | 854 | MIT | **MIT** ✅ | 1.079 | `LICENSE.md` @ `main` |
+| [YarnSpinnerTool/YarnSpinner-Godot](https://github.com/YarnSpinnerTool/YarnSpinner-Godot) | 218 | MIT | **MIT** ✅ | 1.104 | `LICENSE` @ **`master`** (no existe `main`) |
+| [YarnSpinnerTool/YarnSpinner-Rust](https://github.com/YarnSpinnerTool/YarnSpinner-Rust) | 299 | Apache-2.0 | **MIT** (hay `LICENSE-MIT`; el badge eligió una de las dos ⇒ **dual**) | 1.091 | `LICENSE-MIT` @ `main` |
+| [YarnSpinnerTool/YarnSpinner-Godot-GDScript](https://github.com/YarnSpinnerTool/YarnSpinner-Godot-GDScript) | 99 | `NOASSERTION` | 🔴 **YSPL 1.0** | 17.709 | `LICENSE.md` @ `main` |
+| [YarnSpinnerTool/YarnSpinner-UnrealEngine](https://github.com/YarnSpinnerTool/YarnSpinner-UnrealEngine) | 52 | `NOASSERTION` | 🔴 **YSPL 1.0** | 17.709 | `LICENSE.md` @ `main` |
+
+**La consecuencia operativa es directa sobre el stack recomendado de esta KB
+(Godot + Nakama + MCP):** hay **dos** ports de Godot y **no comparten licencia**.
+`YarnSpinner-Godot` (C#, 218 ★) es MIT; `YarnSpinner-Godot-GDScript` (99 ★) es
+YSPL. Un equipo que trabaja en GDScript y elige "el port de Godot" por nombre
+se lleva la licencia restrictiva sin enterarse.
+
+**Qué dice la YSPL 1.0, leída en el operativo (no en el *Quick Summary*, que el
+propio texto declara sin efecto legal):**
+
+- ✅ **Hacer y vender un juego que la embebe: permitido.** Define `"Licensed
+  Product"` como el producto final con contenido original propio.
+- ✅ **Contratistas: permitidos y nombrados.** Define `"Contractor"` = *"any third
+  party, including any contractor, freelancer, or porting service provider,
+  engaged by You to perform work on Your Licensed Product on Your behalf"*.
+  ⇒ **Globant como integrador de un cliente está explícitamente contemplado.**
+- ⛔ **Construir una herramienta de diálogo con ese código: prohibido.** Define
+  `"Competing Product"` como cualquier tool/plugin/librería/servicio cuyo
+  propósito primario sea habilitar a terceros a crear sistemas de diálogo
+  ramificado, narrativa no lineal, editores de árboles de conversación, o *"a
+  compiler, runtime, or interpreter for the Yarn language"*. ⇒ **un acelerador de
+  diálogo reutilizable entre cuentas es exactamente lo prohibido.** La excepción
+  escrita: una herramienta **interna de una sola Legal Entity, no distribuida**,
+  no es Competing Product.
+- ⛔ **Redistribuir el fuente sin modificar: prohibido.** Fork público con
+  modificaciones genuinas: permitido, bajo la misma licencia.
+- 🔴 **Y la cláusula nueva para esta KB:** *"Want to feed our code to an AI
+  training system? Also no. You can use AI tools to help you build your game, but
+  you must do your best to make sure those tools do not send our source code back
+  for training purposes."*
+
+> 🔴 **Es la primera licencia de esta KB que regula el TOOLING de Globant y no el
+> producto de Globant.** Todas las restricciones catalogadas hasta acá acotaban
+> *qué se puede enviar al cliente*. Ésta acota *con qué herramientas se puede
+> trabajar el repo*: obliga a que los agentes de código que se pasen sobre ese
+> árbol estén configurados sin retención/entrenamiento. Para un AI Studio que
+> vende pipelines asistidos por agentes, es una condición de arquitectura, no una
+> nota al pie — y es verificable antes de empezar (settings de retención del
+> proveedor), no después.
+
+### 🆕 Hallazgo nº2: **el grant puede vivir en el README** — `inkle/inky`, 2.758 ★, badge `null`, y sin un solo archivo de licencia
+
+[`inkle/ink`](https://github.com/inkle/ink) (5.029 ★) es el runtime del lenguaje
+**ink** — el motor narrativo detrás de *80 Days*, *Heaven's Vault* y una parte
+grande de la narrativa indie. Su licencia es **MIT verificada en bytes**
+(`LICENSE.txt` @ `master`, 1.067 B, *"Copyright (c) 2025 inkle Ltd."*).
+
+Su editor oficial, [`inkle/inky`](https://github.com/inkle/inky) (2.758 ★), es
+otra historia. Badge SPDX: **`null`**. Sondas sobre `master` y `main` para
+`LICENSE`, `LICENSE.md`, `LICENSE.txt`, `License.txt`, `license.txt`, `LICENCE`,
+`COPYING` y `NOTICE`: **404 en las ocho**. Por la regla vigente de esta KB eso se
+publicaba como *gap declarado*.
+
+**No es un gap. El grant está en el `README.md`, con el cuerpo completo:**
+
+```
+## License
+**Inky** and **ink** are released under the MIT license. [...]
+### The MIT License (MIT)
+Copyright (c) 2016 inkle Ltd.
+Permission is hereby granted, free of charge, to any person obtaining a copy...
+```
+
+> **📐 Regla de método nº15 — 8º testigo de la lista de sondas: `README.md`,
+> sección *License*. Y la distinción que la hace utilizable:**
+> - un README que **nombra** una licencia (*"MIT licensed"*) es una **afirmación**:
+>   no otorga nada, y se registra como gap igual que antes;
+> - un README que **contiene el cuerpo verbatim + el titular del copyright + el
+>   año** es un **grant**: es el mismo texto que estaría en el archivo, en otro
+>   archivo.
+>
+> `inky` es el segundo caso: cuerpo completo, titular (*inkle Ltd.*) y año (2016).
+> ⇒ **se resuelve como MIT, no como gap.** El badge `null` de GitHub sólo dice que
+> el detector busca archivos, no prosa.
+
+⚠️ Nota de estado, que es una cosa distinta de la licencia: `inky` lleva **sin
+commits desde 2026-05-05** (~6,5 meses). El runtime `ink` sí está vivo
+(2026-11-16). Se recomienda `ink` como runtime; el editor, con la advertencia.
+
+### 🆕 Hallazgo nº3: `meta-llama/PurpleLlama` — **el padre es MENOS libre que sus hijos**, y hay un 9º eje de partición del grant
+
+El pass cycle 12 estableció que *"el derivado puede ser MENOS libre que su
+padre"*. Este pass mide el caso **inverso**, y es el que cuesta plata.
+
+`meta-llama/PurpleLlama` (4.488 ★, badge `NOASSERTION`) tiene en la raíz un
+`LICENSE` de **7.669 B** que es la **LLAMA 3.2 COMMUNITY LICENSE AGREEMENT** — no
+es open source. Leer sólo la raíz ⇒ **rechazar el repo entero**. Eso es lo que
+habría hecho esta KB.
+
+Con el canal de **enumeración** (`gh api search/code -f q='repo:<slug>
+filename:LICENSE'`) aparecen **14 archivos de licencia** y **cinco grants
+distintos**:
+
+| Ruta | Bytes | Grant leído | ¿Usable por Globant? |
+|------|-------|-------------|----------------------|
+| `LICENSE` (raíz) | 7.669 | Llama 3.2 Community | ⛔ no |
+| `CodeShield/LICENSE` | 1.088 | **MIT** | ✅ **sí** |
+| `LlamaFirewall/LICENSE` | 1.088 | **MIT** | ✅ **sí** |
+| `CybersecurityBenchmarks/LICENSE` | 1.088 | **MIT** | ✅ **sí** |
+| `SensitiveDocClassification/LICENSE` | 1.060 | **MIT** (*"Copyright (c) 2025 Meta"*) | ✅ **sí** |
+| `Llama-Guard/LICENSE`, `Llama-Guard2/LICENSE` | 6.753 | Llama **2** Community | ⛔ no |
+| `Llama-Guard3/1B/`, `/8B/`, `/11B-vision/LICENSE` | 7.668 | Llama **3.2** Community | ⛔ no |
+| `Llama-Guard4/12B/LICENSE` | 7.553 | Llama **4** Community | ⛔ no |
+| `Llama-Prompt-Guard-2/86M/`, `/22M/LICENSE` | 7.553 | Llama **4** Community | ⛔ no |
+| `CybersecurityBenchmarks/website/docs/LICENSE.md` | 12.457 | Meta Llama **3** Community | ⛔ no (es doc del sitio) |
+
+Dos conclusiones, las dos nuevas:
+
+1. 🟢 **Se rescatan cuatro herramientas MIT que el rechazo por raíz habría
+   tirado** — entre ellas **LlamaFirewall**, que es exactamente una capa de
+   guardrail para agentes (prompt injection, salidas inseguras) y entra en el
+   stack de moderación de abajo. **El código es MIT; los pesos no lo son.** La
+   línea no corre entre repos: corre **dentro** del repo, entre `/` (modelo) y
+   `/<tool>/` (código).
+2. 🔴 **9º eje de partición de un grant: POR TAMAÑO DE MODELO.** `Llama-Guard3/1B`
+   y `Llama-Guard3/8B` comparten grant (Llama 3.2), pero `Llama-Guard4/12B` y
+   `Llama-Prompt-Guard-2/22M` están bajo **Llama 4 Community**, que es otro
+   documento. ⇒ **elegir el checkpoint chico para moderación on-device y el
+   grande para servidor es elegir dos generaciones de licencia distintas en el
+   mismo sprint.** Ningún eje anterior de esta KB (por repo, por organización,
+   por subdirectorio, por dependencia vendorizada, por rama, por producto, por
+   región, por audiencia) cubría esto.
+
+### 🔴 Hallazgo nº4: **4º defecto medido del checksum de bytes** — el SPDX short-form da falso negativo
+
+El checksum de bytes de esta KB (MIT≈1.100 / Ms-PL≈3.900 / Apache≈11.350 /
+MPL≈16.700 / CC-BY≈18.650 / LGPL2.1≈26.400 / AGPL≈34.500 / GPL3≈35.200) tenía
+tres defectos documentados. Éste es el cuarto, y lo cazó un repo grande:
+
+[`NVIDIA-NeMo/Guardrails`](https://github.com/NVIDIA-NeMo/Guardrails) — 7.544 ★,
+badge **`NOASSERTION`**, `LICENSE.md` de **654 bytes**. 654 no se parece a ningún
+valor de la tabla ⇒ el checksum dice *"licencia rara, probablemente bespoke"*.
+**Es Apache-2.0.** El archivo completo es un *short-form*:
+
+```
+SPDX-FileCopyrightText: Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES.
+SPDX-License-Identifier: Apache-2.0
+
+Licensed under the Apache License, Version 2.0 (the "License"); ...
+```
+
+> **📐 Regla de método nº16 — corrección al checksum:** si el archivo pesa
+> **< 1.000 B** y contiene la cadena `SPDX-License-Identifier:`, **el
+> identificador manda y el conteo de bytes no aplica**. El short-form SPDX es un
+> grant por referencia, no un grant por transcripción; medir su longitud es medir
+> la referencia, no la licencia. Verificado en las dos ramas (`main` y `develop`:
+> 654 B idénticos).
+>
+> ⚠️ Y el rename que lo acompaña: **`NVIDIA/NeMo-Guardrails` → `NVIDIA-NeMo/Guardrails`**.
+> El slug viejo da **HTTP 422** en `search/repositories`. Cualquier documento que
+> cite el slug viejo cita un repo que ya no responde a la API.
+
+### 🔴 Hallazgo nº5: **`fishaudio/fish-speech` — una licencia nueva (13-oct-2026) cuyo umbral se evalúa sobre el CLIENTE, no sobre Globant**
+
+[`fishaudio/fish-speech`](https://github.com/fishaudio/fish-speech) — 33.825 ★,
+badge `NOASSERTION`, vivo (2026-11-14). `LICENSE` = **19.685 B**: *"FISH AUDIO
+COMMUNITY LICENSE AGREEMENT, Version 1.0 — Last Updated: October 13, 2026"*.
+Familia de licencia **nueva en esta KB**: *umbral por facturación*.
+
+Lo que dice, en el orden en que le pega a un AI Studio:
+
+- Investigación y uso no comercial: **gratis**.
+- Uso comercial: **permitido sólo mientras tu `Annual Revenue` sea < US$ 500.000**
+  (12 meses móviles, **agregando afiliadas**, todas las fuentes de ingreso, no
+  sólo las derivadas del software).
+- 🔴 **La cláusula que apunta al integrador:** *"If You deploy, install, host, or
+  operate the Fish Audio Materials [...] for a particular third party [...] **(for
+  example, as a contractor, integrator, consultant, or on-premises vendor)**, the
+  license [...] extends to that work only if **that third party's Annual Revenue**
+  [...] is also less than the Revenue Threshold."*
+  ⇒ **El umbral se evalúa sobre el cliente.** Un estudio con más de US$ 500k de
+  facturación —es decir, cualquier cuenta objetivo de esta KB— **no tiene licencia**,
+  y el integrador tampoco la tiene *por* él.
+- ✅ **Dos salidas escritas, las dos utilizables:**
+  1. **Entregar sólo el output.** *"delivering to a third party only output (such
+     as audio files) that You generate Yourself, for example as an agency, studio,
+     or freelancer producing voiceovers, dubbing, or audiobooks for a client"* —
+     **no** está sujeto al umbral del cliente. Modelo *servicio de doblaje*, no
+     *entrega de software*.
+  2. **Producto propio generalmente disponible** cuyos usuarios no reciben copia
+     de los materiales.
+- ⛔ **`Hosted Service` nunca está licenciado**, sin importar facturación: ninguna
+  API/SDK/web cuyo propósito primario sea TTS o clonado de voz.
+- ✅ **Pero los NPCs están carve-out EXPLÍCITO del `Hosted Service`:** *"generating
+  speech for content that You create, select, or control, or that Your own
+  product generates (for example, narration, dubbing, **game or app characters**,
+  or an assistant's spoken replies)"* **no es** Hosted Service.
+  ⇒ **Para un juego, el bloqueo no es la cláusula de hosting: es el umbral de
+  facturación del cliente.** La licencia nombra "game characters" y los deja pasar.
+- Atribución obligatoria: archivo `Notice` con texto verbatim + *"Built with Fish
+  Audio"* visible en sitio/UI/docs.
+- Cláusula de `Feedback`: licencia perpetua, irrevocable y sublicenciable sobre
+  cualquier comentario que mandes.
+
+> 🔴 **Segunda licencia de esta KB que restringe a Globant y no al cliente** — la
+> primera fue `defold/defold` (cycle 7). Pero ésta invierte el mecanismo: defold
+> restringe *lo que hace el integrador*; fish-speech **mide la facturación del
+> cliente y se la aplica al integrador**. La due diligence deja de ser "¿qué
+> licencia tiene el repo?" y pasa a ser "**¿cuánto factura la cuenta?**" — un dato
+> que el área comercial ya tiene y que legal nunca le pidió.
+
+### 🔴 Hallazgo nº6: **Piper se relicenció de MIT a GPL-3.0 al cambiar de repo** — y el repo MIT está archivado
+
+El TTS open source más citado para voz de NPC en CPU:
+
+| Repo | ★ | Licencia (byte-read) | Bytes | Estado |
+|------|---|----------------------|-------|--------|
+| [`rhasspy/piper`](https://github.com/rhasspy/piper) | 11.336 | MIT (`LICENSE.md`) | 1.071 | 🔴 **ARCHIVADO** — último push 2025-08-26 |
+| [`OHF-Voice/piper1-gpl`](https://github.com/OHF-Voice/piper1-gpl) | 6.347 | 🔴 **GPL-3.0** (`COPYING`) | 35.148 | ✅ vivo — push 2026-11-21 |
+
+El repo sucesor **lo dice en el nombre**. ⇒ cualquier documento de arquitectura
+que diga *"Piper, MIT"* está citando **un repo archivado hace 15 meses**; el que
+se instala hoy es **copyleft fuerte**. Para TTS embebido en un cliente de juego
+distribuido, GPL-3.0 es un bloqueo, no una molestia.
+
+⚠️ Y el vecino: [`coqui-ai/TTS`](https://github.com/coqui-ai/TTS) — 46.266 ★,
+**MPL-2.0** (permisiva por archivo), **no archivado**… y **sin un commit desde
+2024-08-16** (27 meses). Es el patrón `0ad` otra vez: **`archived=false` no
+significa vivo.** Se mide con `pushed_at`, no con el flag.
+
+### 🆕 Filas nuevas de este pass — 16 repos, los 16 con licencia leída byte a byte
+
+#### Diálogo autorado y narrativa
+
+| Agente / repo | ★ | Licencia (byte-read) | Qué hace |
+|---------------|---|----------------------|----------|
+| [inkle/ink](https://github.com/inkle/ink) | 5.029 | **MIT** (1.067 B) | Lenguaje + runtime de narrativa ramificada. El estándar de facto indie. Integraciones Unity/Godot/web. |
+| [YarnSpinnerTool/YarnSpinner](https://github.com/YarnSpinnerTool/YarnSpinner) | 2.876 | **MIT** (1.138 B) | Compilador y runtime del lenguaje Yarn: diálogo como guion, con variables y comandos. |
+| [inkle/inky](https://github.com/inkle/inky) | 2.758 | **MIT en el README** (sin archivo) | Editor de escritorio para *ink*. ⚠️ sin commits desde 2026-05-05. |
+| [YarnSpinnerTool/YarnSpinner-Unity](https://github.com/YarnSpinnerTool/YarnSpinner-Unity) | 854 | **MIT** (1.079 B) | Integración oficial Unity. |
+| [YarnSpinnerTool/YarnSpinner-Rust](https://github.com/YarnSpinnerTool/YarnSpinner-Rust) | 299 | **MIT** (dual con Apache; 1.091 B) | Runtime Rust — la vía para Bevy. |
+| [YarnSpinnerTool/YarnSpinner-Godot](https://github.com/YarnSpinnerTool/YarnSpinner-Godot) | 218 | **MIT** (1.104 B, rama `master`) | Port Godot **C#**. ✅ el que hay que usar. |
+| [YarnSpinnerTool/YarnSpinner-Godot-GDScript](https://github.com/YarnSpinnerTool/YarnSpinner-Godot-GDScript) | 99 | 🔴 **YSPL 1.0** (17.709 B) | Port Godot **GDScript**. ⚠️ licencia restrictiva: ver hallazgo nº1. |
+| [YarnSpinnerTool/YarnSpinner-UnrealEngine](https://github.com/YarnSpinnerTool/YarnSpinner-UnrealEngine) | 52 | 🔴 **YSPL 1.0** (17.709 B) | Port Unreal. ⚠️ misma licencia. |
+
+#### Moderación, guardrails y seguridad de contenido — la capa que faltaba entera
+
+| Agente / repo | ★ | Licencia (byte-read) | Qué hace |
+|---------------|---|----------------------|----------|
+| [guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) | 7.635 | **Apache-2.0** (11.357 B ✅ checksum) | Framework de validadores sobre salidas de LLM: estructura, PII, toxicidad, política propia. |
+| [NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails) | 7.544 | **Apache-2.0** (SPDX short-form, 654 B) | Rieles conversacionales programables (Colang): acota de qué habla un NPC y qué no. |
+| [meta-llama/PurpleLlama → `LlamaFirewall/`](https://github.com/meta-llama/PurpleLlama) | 4.488 (repo) | **MIT** (1.088 B) | Guardrail para agentes: prompt injection, acciones inseguras. **El código es MIT; los pesos NO.** |
+| [meta-llama/PurpleLlama → `CodeShield/`](https://github.com/meta-llama/PurpleLlama) | 4.488 (repo) | **MIT** (1.088 B) | Filtro de código inseguro generado por LLM — aplica al pipeline de dev, no al juego. |
+| [unitaryai/detoxify](https://github.com/unitaryai/detoxify) | 1.320 | **Apache-2.0** (11.357 B ✅ checksum) | Clasificador de toxicidad entrenado (multilingüe). Corre local, sin API. Vivo 2026-11-11. |
+
+#### Voz de NPC — STT y TTS
+
+| Agente / repo | ★ | Licencia (byte-read) | Qué hace |
+|---------------|---|----------------------|----------|
+| [openai/whisper](https://github.com/openai/whisper) | 113.247 | **MIT** (1.063 B) | STT de referencia. Entrada de voz del jugador. |
+| [ggml-org/whisper.cpp](https://github.com/ggml-org/whisper.cpp) | 55.409 | **MIT** (1.078 B) | Whisper en C/C++: corre en el cliente, sin servidor. Vivo 2026-11-20. |
+| [SYSTRAN/faster-whisper](https://github.com/SYSTRAN/faster-whisper) | 26.929 | **MIT** (1.064 B) | Whisper con CTranslate2: ~4× más rápido, mismo modelo. Para el lado servidor. |
+| [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) | 15.633 | **MIT** (1.068 B) | TTS con clonado por *flow matching*. 🟢 **La alternativa permisiva a fish-speech.** |
+
+#### Localización
+
+| Repo | ★ | Licencia (byte-read) | Nota |
+|------|---|----------------------|------|
+| [i18next/i18next](https://github.com/i18next/i18next) | 8.666 | **MIT** (1.082 B) | Framework de i18n. La capa de *runtime* del idioma. |
+| [WeblateOrg/weblate](https://github.com/WeblateOrg/weblate) | 6.178 | ⚠️ **GPL-3.0** | Plataforma de traducción continua. **Se usa como servicio, no se embebe** ⇒ utilizable. |
+
+### ⛔ Rechazos **medidos** de este pass — se publican porque el silencio se lee como cobertura
+
+| Candidato | ★ | Motivo medido |
+|-----------|---|---------------|
+| [fishaudio/fish-speech](https://github.com/fishaudio/fish-speech) | 33.825 | Fish Audio Community License 1.0 (19.685 B): umbral de **US$ 500k evaluado sobre el cliente**. ⛔ para entrega de software; ✅ sólo para entrega de output. |
+| [OHF-Voice/piper1-gpl](https://github.com/OHF-Voice/piper1-gpl) | 6.347 | **GPL-3.0** (35.148 B) — copyleft fuerte sobre un binario que se distribuye al jugador. |
+| [coqui-ai/TTS](https://github.com/coqui-ai/TTS) | 46.266 | MPL-2.0 ✅, pero **27 meses sin commits**. Licencia buena, proyecto muerto. |
+| [rhasspy/piper](https://github.com/rhasspy/piper) | 11.336 | MIT ✅ pero **`archived=true`** desde 2025-08-26. |
+| `meta-llama/PurpleLlama` → **todos los pesos** `Llama-Guard*`, `Llama-Prompt-Guard-2*` | — | Llama 2 / 3.2 / 4 Community (6.753 / 7.668 / 7.553 B): no open source. **Sólo el código MIT se admite.** |
+| [HIllya51/LunaTranslator](https://github.com/HIllya51/LunaTranslator) | 14.258 | **GPL-3.0**. Herramienta de traducción de juegos enorme y viva (2026-11-21), pero no embebible. ✅ como tool de escritorio del equipo de loc. |
+
+### 🔧 Mapa de instrumentos de ESTA sesión — y un defecto en la sonda que el propio runbook prescribe
+
+El runbook de ingesta dice *"verificá cada URL con `curl -sI`"*. **En esta sesión
+esa sonda devuelve un falso positivo para todo**, y se demuestra con un slug
+inventado:
+
+```
+$ curl -sI https://github.com/definitely-not-a-real-owner-zz9/definitely-not-a-real-repo-zz9
+HTTP/1.1 200 Connection Established     <-- ❌ ESTO ES EL PROXY, NO GITHUB
+
+HTTP/1.1 403 Forbidden                  <-- esto es el origen
+```
+
+**Hay DOS líneas de estado.** La primera es la respuesta `CONNECT` del proxy de
+la sesión y vale 200 para cualquier host alcanzable, exista el repo o no.
+Cualquier verificación que lea `head -1` —y es lo natural— **promueve 404s a
+"verificado"**. El origen, además, responde **403 tanto a lo real como a lo
+falso**, así que `curl` no distingue ni leyendo la segunda línea.
+
+| Canal | Estado en esta sesión | Qué entrega |
+|-------|------------------------|-------------|
+| `curl -sI https://github.com/<slug>` | ❌ **inservible** | 200 del proxy + 403 del origen, para repos reales e inventados |
+| `gh api repos/<owner>/<repo>` | ❌ **403** | *"GitHub access to this repository is not enabled for this session"* |
+| `gh api repos/<o>/<r>/contents/<path>` | ❌ **403** | ídem |
+| ✅ `gh api -X GET search/repositories -f q='repo:<slug>'` | ✅ **funciona** | `total_count` + ★ + SPDX + `pushed_at` + `archived`. **Sustituye al endpoint bloqueado.** |
+| ✅ `gh api -X GET search/code -f q='repo:<slug> filename:LICENSE'` | ✅ **funciona** | enumeración completa (14 rutas en PurpleLlama) |
+| ✅ `raw.githubusercontent.com/<slug>/<rama>/<archivo>` | ✅ **funciona** | el grant en bytes; 404 limpio cuando no está |
+| `WebFetch` sobre hosts generales | ❌ **ENOTFOUND** | `github.blog` no resuelve: fuera de los dominios permitidos |
+
+> **📐 Regla de método nº17: la prueba de existencia de un repo es
+> `search/repositories -f q='repo:<slug>'` → `total_count == 1`.** Control
+> negativo ejecutado este pass: `repo:NVIDIA/NeMo-Guardrails` (slug viejo, real
+> hasta el rename) → **HTTP 422**; `repo:Textractor/Textractor` (slug mal
+> escrito) → **HTTP 422**. La sonda distingue; `curl -sI` no.
+
+> **📐 Regla de método nº18: la rama por defecto no siempre es `main`, y `raw` no
+> siempre aliasea.** El cycle 7 midió que `raw` resuelve `master` → `main` en
+> `Unity-Technologies/ml-agents`. **`YarnSpinnerTool/YarnSpinner-Godot` es el
+> contraejemplo**: no tiene `main`, y sondear sólo `main` devolvió *"sin archivo
+> de licencia"* sobre un repo **que es MIT en `master`**. ⇒ el aliasing es por
+> repo, no del canal. **Sondear siempre `main` y `master` antes de declarar un gap.**
+
+---
 
 ## 🔴 Lo más importante del pass 2026-11-22 (cycle 12): **la organización no es el repo, el repo no es el producto, y el derivado puede ser MENOS libre que su padre**
 

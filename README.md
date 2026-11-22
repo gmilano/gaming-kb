@@ -7,7 +7,11 @@ updated: 2026-11-22
 # 🎮 Gaming KB
 
 > Knowledge base de la industria **Gaming** para Globant AI Studios.
-> NPC agents, procedural content, soporte in-game, anti-cheat, game analytics
+> NPC agents, procedural content, soporte in-game, anti-cheat, game analytics,
+> y —desde el cycle 13— la capa de **diálogo autorado, voz, moderación de chat y
+> localización**.
+>
+> **Último pass: 2026-11-22 (cycle 13).**
 
 ## Estructura
 
@@ -35,9 +39,13 @@ gaming-kb/
 - **Toda licencia de esta KB está leída en bytes del archivo del repo**, no
   tomada del badge de la API. Las reglas de método viven en `agents/top.md` y el
   procedimiento ejecutable en `compose/patterns.md` → **Receta 20**.
-  🔴 **Cuatro cosas que esta KB aprendió a no confiar: el badge no es el grant,
-  el conteo de bytes no es el grant, la rama default no es el repo, y —desde el
-  cycle 12— *el repo no es la organización*.** Un producto MIT puede tener al
+  🔴 **Cinco cosas que esta KB aprendió a no confiar: el badge no es el grant,
+  el conteo de bytes no es el grant, la rama default no es el repo, *el repo no
+  es la organización* (cycle 12), y —desde el cycle 13— **la raíz no es el
+  repo**: `meta-llama/PurpleLlama` tiene **14 archivos de licencia y 5 grants**,
+  con la raíz **menos** libre que cuatro de sus subcarpetas, que son MIT.
+  Y el grant puede estar **en el `README.md`** (`inkle/inky`: 2.758 ★, badge
+  `null`, MIT verbatim en la prosa).** Un producto MIT puede tener al
   lado un repo auxiliar sin ningún grant (`TaloDev/hosting`), y un repo con
   **cero** archivos de licencia puede tener el grant **declarado en el README y
   alojado afuera** (`QwenLM/Qwen3`). **`enumeración = 0` es ambiguo, no

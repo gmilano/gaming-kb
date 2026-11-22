@@ -7,12 +7,185 @@ updated: 2026-11-22
 # Mapa de mercado — Gaming AI
 
 > Key players, market map y oportunidades **por región**.
-> Última actualización: **2026-11-22 (cycle 12)** (passes previos: 2026-11-22 cycles 11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
+> Última actualización: **2026-11-22 (cycle 13)** (passes previos: 2026-11-22 cycles 12/11/10, 2026-11-21 cycles 9/8/7/6/5, 2026-11-20, 2026-10-26, 2026-07-02).
 >
 > En el pass anterior las secciones de North America, EMEA y APAC decían
 > literalmente `- To research` y sólo LATAM tenía contenido. Las cuatro regiones
 > de este archivo ahora tienen hallazgos propios, y donde una región no devolvió
 > nada se dice explícitamente qué se buscó y qué faltó.
+
+## 🔴 Lo que cambió — pass cycle 13 (2026-11-22): **la regulación de 2026 dejó de pedir una etiqueta y pasó a pedir una CATEGORÍA DE EDAD por usuario — y el mismo dato tiene tres ciclos de vida incompatibles**
+
+Los passes anteriores de esta página siguieron la transparencia (Art. 50,
+disclosure de Steam, etiquetado chino). Este pass mide un desplazamiento: **el
+instrumento con más fuerza ejecutoria hoy en gaming no es el de etiquetado de AI:
+es el de verificación de edad**, y está vigente y exigible en Estados Unidos
+desde junio de 2026.
+
+### 🔵 1. El dato de edad: un solo campo, tres regímenes que piden cosas distintas
+
+| Jurisdicción | Qué exige | Qué decide la edad | Retención del dato |
+|--------------|-----------|--------------------|--------------------|
+| **EU** (AI Act Art. 50) | etiquetar contenido generado por AI | **si hay obligación** (según la audiencia declarada del título, PEGI) | — (es clasificación de producto, no dato de usuario) |
+| **Connecticut** (PA 26-15) | recordatorio de que se habla con una AI | **con qué frecuencia** cumplir (≥1/hora menores, ≥1/3 h adultos) | implica **conocer y conservar** la edad del usuario en sesión |
+| **Texas** (SB 2420) | la tienda clasifica al usuario y el desarrollador debe usar esa clasificación | **si la descarga y la compra están permitidas** | 🔴 **obliga a BORRAR el dato de edad después de verificar** |
+
+> 🔴 **La contradicción es operativa, no teórica: Connecticut empuja a conservar
+> la edad del usuario para poder cumplir una cadencia; Texas obliga a borrarla
+> después de verificar.** Un build que guarda `user.age` para satisfacer a CT
+> incumple la obligación de borrado de TX. La salida está en el diseño, no en el
+> abogado: conservar **la categoría derivada mínima** y el **reloj**, no la edad.
+> Ver `compose/patterns.md`, **Receta 21**.
+
+### 🔵 2. Qué dice exactamente SB 2420, porque cambia quién hace el trabajo
+
+- **Vigente 1-ene-2026; exigible desde el 4-jun-2026.** El Quinto Circuito
+  levantó la medida cautelar y la Corte Suprema dejó que Texas siga ejecutándola
+  mientras avanza la apelación. ⇒ **no es derecho futuro: está en ejecución.**
+- **Cuatro categorías** que fija la tienda: menor de 13; 13-15; 16-17; adulto.
+- **Obligación del desarrollador** (no de la tienda): usar la categoría que la
+  tienda le entrega, verificarla, y confirmar que hay consentimiento parental
+  cuando corresponde. **Los padres aprueban cada descarga y cada compra in-app.**
+- **Borrado** de la información de edad después de la verificación.
+- **Puerto seguro** si se siguen estándares de industria ampliamente adoptados de
+  buena fe.
+- Violaciones tratadas como **prácticas comerciales engañosas** bajo la ley de
+  Texas.
+- **Estados con leyes de age assurance a nivel tienda/dispositivo: Texas, Utah,
+  Louisiana, Alabama y California.**
+
+### 🔵 3. El precedente de producto: Roblox
+
+Desde **enero de 2026**, Roblox exige **verificación de edad para acceder al chat
+a todos sus usuarios, globalmente** (estimación facial; los de 13+ pueden usar
+documento). Las demandas de los fiscales generales de **Texas y Louisiana**
+precedieron al cambio. Roblox además integró una coalición de seguridad infantil
+con la **Attorney General Alliance**.
+
+⇒ **El patrón para vender:** la obligación legal llega como requisito de tienda y
+de fiscalía estatal, y la respuesta de la plataforma más grande del segmento fue
+**poner verificación de edad delante de la comunicación, no del juego**. Ese es
+el diseño de referencia: se restringe el **canal social**, no el acceso al
+producto.
+
+### 🟡 4. Corrección a esta KB: el *throttle* de aprobaciones de China se está AFLOJANDO
+
+Esta página venía describiendo el régimen de la NPPA como un **cuello de botella
+de aprobaciones**. La medición de este pass dice lo contrario: **las aprobaciones
+de juegos subieron ~19% interanual en 2026 frente a 2025**, lo que se lee como
+normalización regulatoria. **El lead time sigue existiendo** —y hay que meterlo en
+el cronograma igual—, pero la dirección del indicador cambió de signo. Se corrige.
+
+### 📏 5. Tres fuentes independientes dicen lo mismo sobre DÓNDE está la adopción
+
+| Fuente | Medición | Dice |
+|--------|----------|------|
+| KPMG (Scott Purdy), predicciones 2026 | cualitativa | las integraciones más profundas serán **en el back end**, no en contenido generado de cara al jugador |
+| Bird & Bird, *The Future of Play* 2026 | cualitativa, EMEA | la adopción de genAI es más fértil en **prototipado temprano y concept art** |
+| Steam, disclosures (medición propia de esta KB) | censo, NA | 49,9% de los títulos declaran AI, pero **sólo ~3% es generación dentro del gameplay** |
+
+⇒ **Tercera confirmación independiente, y la primera que viene de un censo y no de
+una opinión.** El discurso comercial que se sostiene con datos es
+**"AI en el pipeline"**, no "AI en la pantalla". Lo contrario es exactamente lo
+que dispara el *backlash* que Omdia lista entre las tendencias de 2026.
+
+### Datos nuevos por región — este pass
+
+#### North America
+
+- **Texas SB 2420** vigente 1-ene-2026, **exigible desde 4-jun-2026**; Quinto
+  Circuito levantó la cautelar, la Corte Suprema permitió que la ejecución siga.
+  Cuatro categorías de edad; deber de **borrado**; puerto seguro por estándares
+  de industria; sanción por prácticas engañosas.
+- **Cinco estados** con leyes de age assurance a nivel tienda o dispositivo:
+  **TX, UT, LA, AL, CA**.
+- **Roblox**: verificación de edad obligatoria para chat, global, desde ene-2026;
+  precedida por demandas de los AG de **TX y LA**; coalición de seguridad infantil
+  con la **Attorney General Alliance**.
+- ⚠️ **El homónimo volvió a dominar la consulta regional.** `AI gaming North
+  America 2026 adoption regulation players` devuelve, en los primeros puestos, el
+  informe **KPMG/UNLV *State of AI in Gaming 2026*** — que es de **casino**, no de
+  videojuegos (frontera establecida en el cycle 8 y **revalidada hoy**). Su dato
+  —índice de madurez de AI promedio **45/100**, regulación concentrada en NA y
+  Europa occidental, escepticismo regulatorio hacia la autorregulación— **se cita
+  como mercado adyacente, no como gaming**.
+- Encuesta de proveedor (declarada como tal): **94% de los estudios** usan AI de
+  alguna forma, sobre una muestra de 50+ líderes. Sesgo de proveedor y muestra
+  chica ⇒ **no se promueve a cifra de referencia**.
+
+#### EMEA
+
+- ⏱️ **Art. 50: faltan 10 días** (2-dic-2026) para los sistemas ya en mercado.
+  Las recetas 7, 13 y 18 están dimensionadas para ese plazo.
+- **EGDF** fija la agenda 2026 en tres ejes: **AI dirigida por humanos**, mercados
+  de plataforma más justos y **soberanía tecnológica europea**. Posición explícita:
+  la AI asiste al desarrollador, no reemplaza el control creativo. Malestar
+  declarado dentro de la comunidad de desarrollo por el *"AI slop"*.
+- **Video Games Europe**: sector de **€24.500 M**, **53% de la población** juega.
+  Posición: enfoque regulatorio equilibrado que proteja a los creadores humanos.
+- **Bird & Bird**: más regulación **y más fiscalización**; adopción de genAI
+  concentrada en **prototipado y concept art**.
+- **Linklaters**: el escrutinio regulatorio europeo está impulsado sobre todo por
+  **seguridad infantil, privacidad de datos de menores y explotación financiera**
+  — los mismos tres ejes de la ola norteamericana. ⇒ **la inversión en la capa de
+  edad + moderación sirve en las dos jurisdicciones**; la de etiquetado, sólo en
+  una.
+- **Cuarta corroboración** del aplazamiento post-Omnibus: acuerdo provisional
+  Parlamento-Consejo de **mayo de 2026** que posterga los requisitos de alto
+  riesgo a **dic-2027 y ago-2028**. El Art. 50 **no** se mueve.
+
+#### APAC
+
+- **China**: ~**60% de los estudios** chinos ya usan AI en su pipeline (Niko
+  Partners) — generación de contenido, comportamiento de NPC y live ops. Reglas de
+  **etiquetado de contenido generado por AI vigentes desde septiembre de 2025**.
+  **Aprobaciones de juegos +19% interanual en 2026** ⇒ normalización, no throttle
+  (corrige a esta KB).
+- **Japón**: **AI Promotion Act** (mayo de 2025) — ley marco de política nacional,
+  **sin penalidades** y sin reglas específicas de gaming.
+- **Corea del Sur**: el marco cubre sistemas de alto impacto, **disclosure y
+  etiquetado de AI generativa**, y obligaciones para proveedores extranjeros vía
+  **representante local** — este último punto es el que le pega a un estudio que
+  publica desde fuera.
+- **Disclosure obligatorio de contenido generado por AI**: comentario legal
+  (Linklaters) señala a **China y Singapur** como los modelos que otras
+  jurisdicciones están mirando.
+- ⚠️ **Gap declarado:** no se encontró dato 2026 de adopción de AI por parte de
+  **jugadores** japoneses o coreanos, ni regulación específica de AI en
+  videojuegos en esos dos países más allá de los marcos generales. Se buscó con
+  `AI gaming APAC Asia 2026 adoption regulation players China Japan Korea video
+  games`.
+
+#### LATAM
+
+- **335 millones+ de jugadores** en la región (Xsolla/GamesBeat 2026), **Brasil el
+  mercado más grande**, mobile-first y esports de base. **México: 72,6 millones de
+  jugadores = 61% de la población de 6 años o más.**
+- **Bain (ago-2026)**: el futuro del gaming en Latinoamérica estará definido por
+  **adolescentes, compra directa y personalización con IA**. ⇒ la personalización
+  con AI aparece como eje de crecimiento **del lado de la demanda**, que es
+  coherente con el 48,8% de aceptación de jugadores que ya mide esta KB.
+- **Brasil**: **sandbox regulatorio piloto de IA y protección de datos**, más
+  consulta pública de **ANATEL** sobre uso ético de IA en telecomunicaciones. Son
+  medidas generales de IA, **no específicas de videojuegos**.
+- **PNUD**: Latinoamérica y el Caribe **rezagados en adopción de IA**.
+- 📏 **Medición de oferta, no silencio: cero repos de gaming AI de origen
+  hispano/lusoparlante con tracción.** Instrumento: consultas en español y
+  portugués sobre `search/repositories`, ordenadas por ★:
+  `videojuego agente IA NPC` → **total = 0**; `juego IA generativa godot` →
+  **total = 0**; `jogo IA agente NPC` → **total = 0**;
+  `videojuegos inteligencia artificial` → 128 resultados, **el máximo es 3 ★**
+  (ejercicios de curso). ⇒ **La ventaja de LATAM en esta KB es de demanda
+  (jugadores, aceptación, volumen), no de oferta (repos, herramientas).** Un
+  discurso de "ecosistema open source local" no tiene respaldo medible; uno de
+  "mercado de lanzamiento racional para AI de cara al jugador" sí lo tiene.
+- ⚠️ **El homónimo también domina acá.** La consulta regional de LATAM devuelve
+  casi en su totalidad **iGaming / apuestas** (Ley 14.790 de Brasil, nueva ley de
+  juego de México). Medición cruzada de este pass: **el homónimo contamina las
+  consultas regionales de NA y LATAM, y NO las de EMEA ni APAC** — útil para saber
+  dónde hay que desambiguar la búsqueda y dónde no.
+
+---
 
 ## 🔴 Lo que cambió — pass cycle 12 (2026-11-22): **la cifra de adopción que esta KB nunca tuvo desglosada, y una contradicción entre dos búsquedas sobre ACE que se resuelve hacia abajo**
 

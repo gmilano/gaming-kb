@@ -16,6 +16,60 @@ updated: 2026-11-22
 > corrigen ahora y están marcadas 🔴. El detector que las encontró es el **checksum
 > de bytes** del archivo de licencia, documentado en `agents/top.md`.
 
+## 🆕 Capa vertical nueva (2026-11-22, cycle 13): **la plataforma de diálogo, voz y moderación** — la que convierte un LLM en algo que se puede enviar a certificación
+
+Las capas que esta página ya cubría (engine, backend, orquestación de servidores,
+pipeline de assets) terminan donde empieza el jugador. **Falta la plataforma de
+lo que el jugador lee, escucha, escribe y entiende en su idioma.** No es un
+repo: son cuatro subsistemas con una restricción de licencia distinta cada uno.
+
+### El stack, con la licencia como criterio de selección (no como nota al pie)
+
+| Subsistema | Elección recomendada | Licencia (byte-read) | La alternativa grande que se descarta, y por qué |
+|------------|----------------------|----------------------|--------------------------------------------------|
+| **Autoría de diálogo** | [inkle/ink](https://github.com/inkle/ink) (5.029 ★) o [YarnSpinner](https://github.com/YarnSpinnerTool/YarnSpinner) (2.876 ★) | **MIT** (1.067 / 1.138 B) | ninguna: las dos son MIT en el núcleo. ⚠️ pero **los ports de Yarn Spinner para Godot-GDScript y Unreal son YSPL 1.0**, no MIT. |
+| **STT (voz del jugador)** | [ggml-org/whisper.cpp](https://github.com/ggml-org/whisper.cpp) (55.409 ★) en cliente; [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (26.929 ★) en servidor | **MIT** | — |
+| **TTS (voz del NPC)** | [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) (15.633 ★) | **MIT** (1.068 B) | `fish-speech` (33.825 ★) por umbral de facturación **del cliente**; `piper` MIT por **archivado**; `piper1-gpl` por **GPL-3.0**; `coqui-ai/TTS` por **27 meses sin commits**. |
+| **Moderación** | [unitaryai/detoxify](https://github.com/unitaryai/detoxify) + [NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails) + `PurpleLlama/LlamaFirewall/` | **Apache-2.0 / MIT** | los **pesos** `Llama-Guard*` (Llama 2/3.2/4 Community): no open source. Se usa el framework, no el modelo de Meta. |
+| **Localización** | [i18next](https://github.com/i18next/i18next) (runtime, **MIT**) + [Weblate](https://github.com/WeblateOrg/weblate) (plataforma, **GPL-3.0 desplegada aparte**) | mixta, con el límite del binario como criterio | `LunaTranslator` (14.258 ★, GPL-3.0): ✅ como tool del equipo, ⛔ embebido. |
+
+### 🔴 Por qué esta capa es *vertical* y no *horizontal*: la regulación la toca directo
+
+Las otras capas de esta página (engine, servidores, assets) son indiferentes a la
+jurisdicción. **Ésta no.** Lo que el jugador lee, dice y escucha es exactamente
+el objeto de los tres instrumentos que vencen o rigen ahora mismo:
+
+- **EU AI Act Art. 50** — transparencia sobre contenido generado por AI, con
+  **2-dic-2026** para sistemas ya en mercado: **faltan 10 días**. Afecta al
+  diálogo generado y a la voz sintética, no al navmesh.
+- **Texas SB 2420 (App Store Accountability Act)** — vigente desde el 1-ene-2026
+  y **exigible desde el 4-jun-2026**: la tienda le pasa al desarrollador la
+  **categoría de edad del usuario**, y el desarrollador debe **borrarla** después
+  de verificar. Afecta a qué chat y qué NPC se le habilita a quién.
+- **Roblox** exige desde ene-2026 **verificación de edad para acceder al chat, a
+  escala global**. Es el precedente de producto, no sólo el legal.
+
+⇒ **Una plataforma de diálogo/voz/moderación sin un parámetro de edad en runtime
+no es incompleta: es no-entregable** en NA y, a partir del 2-dic, en EMEA. Ver
+`compose/patterns.md`, Receta 21.
+
+### 🟢 La pieza de plataforma que NO existe, medida
+
+No hay ninguna plataforma vertical open source de **moderación de chat de juego**
+—el equivalente a lo que Nakama es para backend o Agones para servidores—.
+Búsquedas por `toxicity detection chat moderation` y `content moderation LLM
+guardrails`, ordenadas por ★: el máximo es **8 ★**. Lo que hay son **componentes
+genéricos de LLM** (detoxify, Guardrails, NeMo, LlamaFirewall) que hay que
+ensamblar y a los que hay que agregarles lo específico de juego: jerga,
+ofuscación (`l33t`), contexto de partida, voz además de texto, y multi-idioma con
+el perfil de LATAM y APAC.
+
+> **Para posicionamiento:** es la única capa de este KB donde el entregable de
+> Globant **no compite con un producto open source consolidado**, porque no
+> existe. Las otras capas son integración; ésta es construcción sobre primitivas.
+
+---
+
 ## 🆕 Movimiento de plataforma (2026-11-22, cycle 12): **Talo no era un repo, era una organización de cinco — y el que faltaba es el que no tiene licencia**
 
 Esta página recomienda Talo desde varios passes con la frase *"MIT completo, sin
