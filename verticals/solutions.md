@@ -4,6 +4,54 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 24) — plataformas reales del **plano del cable**, y la capa gestionada que se vació en 2026
+
+### Plataformas open source customizables (el equivalente a Odoo en esta capa)
+
+El "Odoo" de esta capa es **el servidor de sesión**: un sistema completo,
+desplegable, que el estudio customiza con lógica de juego en vez de reescribir el
+backend. Licencia leída en **bytes del archivo del repo**.
+
+| Plataforma | Repo | Licencia **medida** | ★ | Qué se customiza encima |
+|---|---|---|---|---|
+| **Nakama** | https://github.com/heroiclabs/nakama | 🟢 **Apache-2.0** (`LICENSE`, **11.358 B**) | — | **La recomendación de esta KB.** Backend completo: realtime, matchmaking, leaderboards, chat, storage. Se extiende con módulos en Go/Lua/TS |
+| **Colyseus** | https://github.com/colyseus/colyseus | 🟢 **MIT** (`LICENSE`, 1.075 B) | **7.6k** | **Servidor autoritativo de rooms.** Sincronización de estado por delta y matchmaking propio. La vía corta para navegador y móvil. 2.318 commits |
+| **Open Match** | https://github.com/googleforgames/open-match | 🟢 **Apache-2.0** (`LICENSE`, **11.345 B**) | **3.4k** | **Sólo matchmaking**, con *match functions* enchufables: entra un modelo propio. Se usa **junto a** Agones. Su README sigue declarando *"in active development"* |
+| **Mirror** | https://github.com/MirrorNetworking/Mirror | 🟢 **MIT** (`LICENSE`, 1.149 B) | **6.4k** | **La capa alta de Unity con grant permisivo.** Replicación servidor-autoritativa, `[Command]`/`[ClientRpc]`, transporte sustituible. 9.192 commits |
+| **lightyear** | https://github.com/cBournhonesque/lightyear | 🟢 **dual MIT / Apache-2.0** | **1.2k** | La plataforma completa para **Bevy/Rust**: predicción, interpolación, **WebTransport y WASM** de fábrica |
+| **coturn** | https://github.com/coturn/coturn | 🟢 **BSD-3** (`LICENSE`, 1.621 B) | — | **El relay propio.** TURN/STUN de referencia. Es la pieza que convierte una decisión de latencia en una decisión de protección de datos (ver `intel/market.md` §3) |
+| **rivet** | https://github.com/rivet-gg/rivet | 🟢 **Apache-2.0** (`LICENSE`, **11.349 B**) | — | Orquestación de *game rooms* autoalojable. ⚠️ **El proyecto repivotó en 2026 a infraestructura de agentes**; sigue corriendo rooms, pero la dirección del producto ya no es juegos |
+
+### 🔴 El mapa propietario contra el que compiten — y las dos bajas de 2026
+
+Esta es la primera capa de esta KB donde **la oferta gestionada se contrajo
+mientras la open source se mantuvo entera**:
+
+| Plataforma gestionada | Estado medido | Consecuencia para una propuesta |
+|---|---|---|
+| **Hathora** | 🔴 **CERRADA el 2026-05-05**, tras adquisición por Fireworks AI | Un cliente que la eligió en 2025 **tuvo que migrar en 2026** |
+| **Rivet** (gestionado) | 🟠 **Repivotó a infraestructura de agentes** en 2026 | El open source sigue, la hoja de ruta de juegos no es prioridad |
+| **Unity Gaming Services** (Relay / Lobby / Matchmaker) | 🟢 Vivo, propietario | Recoge **IP + Player ID** por defecto, retención 30 días, y 🔴 **sin funcionalidad nativa para ejecutar borrados**: el *controller* es el estudio |
+| **Photon / PlayFab / Epic Online Services** | 🟢 Vivos, propietarios | Siguen siendo el default de mercado. El argumento de reemplazo es **soberanía del dato**, no precio |
+
+🔵 **La lección de esta capa, que no aplicaba a ninguna anterior:** en el plano del
+dispositivo (cycle 23) el riesgo era *homologación*; en el de la puerta (cycle 22),
+*conformidad*. Aquí el riesgo medido es **supervivencia del proveedor**: dos de las
+plataformas gestionadas que un estudio habría puesto en una comparativa de 2025
+**cambiaron o desaparecieron en los 12 meses siguientes**. Las siete plataformas
+open source de la tabla de arriba **siguen todas en pie**. Es un argumento de
+autoalojado basado en evidencia, no en preferencia.
+
+### ⛔ Lo que NO entra a esta tabla, con el motivo medido
+
+| Plataforma | Motivo |
+|---|---|
+| **FishNet** (https://github.com/FirstGearGames/FishNet) | Licencia propia, **3.640 B**, §2.b **prohíbe implementarla en otra solución de red**. Un entregable de red para un cliente queda fuera del grant. 2.1k ★, viva |
+| **Netcode for GameObjects v2/v3** (https://github.com/Unity-Technologies/com.unity.netcode.gameobjects) | **Unity Companion License** (501 B) en la rama default, condicionada a *"Unity-dependent projects"*. **MIT sólo en v1** (`develop`, `release/1.0.0`) |
+| **SpacetimeDB** (https://github.com/clockworklabs/SpacetimeDB) | **BUSL-1.1**: grant limitado a **una instancia en producción**. Change Date re-fechada a **2031-11-22**; Change License **AGPL-3.0 + linking exception** |
+| **libdatachannel / libjuice** | 🟠 **MPL-2.0** (16.726 B cada uno). No es rechazo: es **copyleft débil por archivo**, usable en binario cerrado si no se modifica la librería. Alternativa permisiva equivalente: **pion/webrtc** y **pion/turn**, MIT |
+
+---
 ## 🆕 Pass 2026-11-25 (cycle 23) — plataformas reales del **plano del dispositivo**, y el mapa propietario contra el que compiten
 
 ### Plataformas open source customizables (el equivalente a Odoo en esta capa)

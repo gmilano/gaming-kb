@@ -4,6 +4,214 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo más importante del pass 2026-11-25 (cycle 24): **el plano del CABLE** —cómo dos jugadores comparten un mismo estado: transporte, replicación, rollback, relay— y el **canal 11: el censo de RAMAS, porque la rama es la versión y la versión es la licencia**
+
+Los 23 passes anteriores midieron qué hace el juego, cómo se produce, cómo se
+opera, cómo se mira, quién entra y cómo se toca. **Ninguno midió el cable**: el
+sustrato por el que dos jugadores comparten un estado. Medición sobre los 9
+archivos de esta KB, *antes* de escribir una línea:
+
+| Término | Archivos | Ocurrencias | Nota |
+|---|---|---|---|
+| `netcode` | 0 | **0** | El nombre de la capa |
+| `rollback` | 0 | **0** | La técnica que la define |
+| `replication` | 0 | **0** | El problema que resuelve |
+| `dedicated server` | 0 | **0** | — |
+| `FishNet` | 0 | **0** | 2.1k ★, una de las dos libs de red más usadas de Unity |
+| `lightyear` / `replicon` | 0 | **0** | La capa en Rust/Bevy |
+| `msquic` / `quiche` | 0 | **0** | El transporte moderno |
+
+`Agones`, `Nakama` y `matchmaking` sí estaban: la KB tenía **dónde corre** el
+servidor y **cómo se emparejan** los jugadores, y no tenía **qué viaja por el
+cable entre ellos**. Es el hueco más grande encontrado en 24 passes sobre una
+capa que **todo juego multijugador atraviesa sin excepción**.
+
+---
+
+### 🔴 Hallazgo nº1 del pass: `com.unity.netcode.gameobjects` **dejó de ser MIT en la v2.0.0**, y el texto MIT sigue vivo en otra rama del mismo repo
+
+Esto no es un repo con dos licencias por subdirectorio (eje 9, cycle 22). Es un
+repo donde **la licencia cambió con la versión mayor**, y donde las dos licencias
+**coexisten hoy**, cada una en su rama. Censo de ramas, byte a byte:
+
+| Rama | `LICENSE.md` | Bytes | Grant leído |
+|---|---|---|---|
+| `release/1.0.0` | 200 | **1.075** | **MIT License** · © 2021 Unity Technologies |
+| `develop` | 200 | **1.075** | **MIT License** · © 2021 Unity Technologies |
+| `release/2.0.0` | 200 | **501** | 🔴 **Unity Companion License (UCL)** · © 2021-2024 |
+| **`develop-3.x.x`** ← **rama default** | 200 | **501** | 🔴 **Unity Companion License (UCL)** · © 2021-2024 |
+| `main` / `master` | **404** | — | No existen: una sonda que sólo pruebe `main`/`master` declara **404 sobre un repo vivo de 2.3k ★** |
+
+**La frontera está en la v2.0.0.** NGO v1 es MIT; v2 y v3 son UCL. El texto de 501 B
+no es una licencia: es un **puntero** a un destino propietario, con el grant
+condicionado a *"Unity-dependent projects"*:
+
+> `Licensed under the Unity Companion License for Unity-dependent projects (see`
+> `https://unity3d.com/legal/licenses/unity_companion_license).`
+
+**Por qué importa tres veces:**
+
+1. **Es el mismo instrumento que el cycle 23 encontró en `Unity-Technologies/InputSystem`** (491 B, UCL, *"Unity-dependent projects"*). Dos capas distintas, mismo proveedor, mismo puntero de ~500 B. La octava lección de esta KB —*el archivo más corto puede ser el más restrictivo*— **se confirma en una segunda capa, y ahora con fecha de cambio**.
+2. **Novena lección, nueva: el proveedor no es la licencia, y la licencia no es el repo — es la VERSIÓN.** El mismo `Unity-Technologies` publica **MIT** en el cable (NGO v1) y **propietario** en el cable (NGO v2/v3) y **propietario** en la entrada (InputSystem). No se puede decir "Unity es X".
+3. **Una cita verdadera puede ser falsa hoy.** *"NGO es MIT"* fue cierto y sigue siendo verificable en `develop` y `release/1.0.0`. Un equipo que arranca en 2026 toma la rama default y toma **UCL**. El dato que envejeció no se contradice: **se quedó en una rama**.
+
+**Veredicto:** ⛔ **NGO v2/v3 fuera de la ruta permisiva.** NGO v1 (MIT, 1.075 B) es
+usable pero es una línea que Unity ya no desarrolla. Alternativa permisiva viva
+medida este pass: **`MirrorNetworking/Mirror`** (MIT, 1.149 B, 6.4k ★).
+
+---
+
+### 🔴 Hallazgo nº2: `FirstGearGames/FishNet` — 2.1k ★, vivo, y su licencia contiene una **cláusula de NO COMPETENCIA**
+
+Primera vez en 24 passes que esta KB mide un grant que **excluye por campo de uso
+exactamente al comprador que lo querría**. `LICENSE.md`, **3.640 B**, sin
+identificador SPDX, sin título de familia reconocible. El grant (§1.a) es amplio:
+
+> *"FirstGearGames grants to you a worldwide, non-exclusive, no-charge, and*
+> *royalty-free license to reproduce, modify, and use the Software for developed*
+> *game, or other content with Software."*
+
+La exclusión (§2.b) es la que decide:
+
+> 🔴 *"Other products of like Software (explicitly **networking solutions**) may*
+> *not use, reverse engineer, or implement Software in part or full."*
+
+| Campo | Valor medido |
+|---|---|
+| Repo | https://github.com/FirstGearGames/FishNet |
+| Estrellas / `archived` | **2.1k ★** / sin aviso de archivo — **vivo** |
+| Archivo de licencia | `LICENSE.md`, **3.640 B** |
+| Familia | 🔴 **Ninguna.** Licencia propia, no OSI, sin SPDX |
+| Restricción que decide | §2.b — prohíbe implementarlo en **otra solución de red** |
+| Tier pago | `FishNet-Pro`, misma licencia; distribución limitada a **≤20 miembros** (§3.b) |
+| Terminación | §5.a — inmediata ante litigio de patentes, incluida reconvención |
+| Ley aplicable | Florida, EEUU; foro exclusivo **Flagler County** (§6.a) |
+
+**Lectura para Globant, que es exactamente el caso excluido:** un juego hecho *con*
+FishNet está permitido (§2.d lo dice: *"Exclusions do not apply ... to games
+developed with Software"*). Un **producto de red** para un cliente —un SDK, un
+middleware, una plataforma de sesión— **no** lo está. La frase *"in part or full"*
+alcanza a leer el código para reimplementar la idea.
+
+**Contraste medido con el cycle 19.** FLIPT usa **FCL-1.0-MIT**, que *permite
+explícitamente* *"professional services provided to a licensee"* — escribe el
+modelo de consultoría **dentro** del grant. FishNet hace lo inverso: escribe la
+**competencia fuera** del grant. Son los dos extremos del mismo eje, medidos en
+dos capas distintas de esta misma KB:
+
+| Grant | Capa | Qué dice del tercero que cobra por integrar |
+|---|---|---|
+| **FCL-1.0-MIT** (FLIPT, cycle 19) | plano de decisión | ✅ Lo **permite por escrito** |
+| 🔴 **FishNet propia** (cycle 24) | plano del cable | ⛔ Lo **excluye por escrito**, si el entregable es de red |
+
+**Y el badge no avisa.** 3.640 B es un peso plausible para una licencia permisiva
+larga; nada en el tamaño sugiere una restricción de campo de uso. Sólo el texto
+lo dice.
+
+---
+
+### 🔵 Hallazgo nº3 (correctivo, sobre el método de esta casa): **tres formas de leer mal una licencia, las tres cometidas en este pass y corregidas**
+
+Esta KB sostiene que la licencia se lee en bytes del archivo. Este pass **falló
+tres veces con ese procedimiento** antes de acertar, y las tres fallas son
+reproducibles:
+
+| # | Falla | Caso medido | Qué la causó | Corrección |
+|---|---|---|---|---|
+| 1 | **Falso ENUM=0** (dije "sin grant" sobre un repo MIT) | `lucasteles/Backdash` y `Delta3-Studio/Backdash` | El archivo se llama **`LICENCE.md`** — ortografía **británica**. 18 rutas probadas; sólo esa existe | Enumerar `LICEN[CS]E*` en **las dos ortografías**, siempre |
+| 2 | **Falso UNKNOWN** (MIT no reconocida) | `lsalzman/enet` (1.060 B), `godot-rollback-netcode` (1.062 B), `Facepunch.Steamworks` (1.065 B) | **El grant MIT no lleva título.** Arrancan en `Copyright (c) …`, sin la línea `MIT License` | Buscar la **cláusula operativa** `"Permission is hereby granted, free of charge"`, **nunca el título** |
+| 3 | **Falso positivo** (una licencia donde hay dos) | `gschup/ggrs`: `LICENSE` de **216 B** | Es un **PUNTERO a dos hermanos**, y nombra *"Apache License"* en el texto del puntero. Un grep lo lee como Apache-2.0 simple | Si el archivo es corto **y nombra otro archivo**, resolver los hermanos antes de concluir |
+
+**El caso 3, completo**, porque es el que más se parece a un acierto:
+
+```
+gschup/ggrs  LICENSE          216 B  → "GGRS is dual-licensed under either
+                                        * MIT License (./LICENSE-MIT ...)
+                                        * Apache License, Version 2.0 (./LICENSE-APACHE ...)
+                                        at your option."
+             LICENSE-MIT    1.037 B  → MIT License        ← el grant real, opción A
+             LICENSE-APACHE 10.174 B → Apache License     ← el grant real, opción B
+```
+
+Es la **séptima lección de esta KB** (*el archivo de licencia no es la licencia;
+puede ser un puntero*) en su forma más benigna: el puntero no oculta una
+restricción, **oculta una opción** — y una opción a favor del usuario.
+
+#### 🔵 Corrección de instrumento: **el conteo de bytes de este pass estuvo -1 durante media sesión**
+
+El primer barrido midió `open-match` en **11.344 B**; el registro de esta KB dice
+**11.345 B**. La KB tenía razón. Causa, encontrada y reproducible: la sustitución
+de comandos de shell **`$(curl …)` elimina los `\n` finales**, así que todo
+archivo terminado en salto de línea medía **exactamente un byte menos**.
+
+```bash
+bytes=$(curl -s "$URL" | wc -c)        # ❌ -1 si el archivo termina en \n
+curl -s -o f.bin "$URL"; wc -c < f.bin # ✅ el byte real
+```
+
+Las cifras de este pass están **re-medidas sobre archivo**, no sobre variable.
+Consecuencia de método: **un byte de diferencia no es deriva de licencia hasta
+haber descartado el idioma de la herramienta.**
+
+---
+
+### 🟠 Hallazgo nº4: `SpacetimeDB` movió su reloj BUSL **sin cambiar de tamaño** — y eso rompe el byte-count como detector de cambio
+
+El cycle 22 (2026-11-21) registró SpacetimeDB como rechazo medido. Re-medido hoy,
+4 días después:
+
+| Campo | cycle 22 (2026-11-21) | **cycle 24 (2026-11-25)** | ¿Cambió? |
+|---|---|---|---|
+| `LICENSE.txt` bytes | **42.562** | **42.562** | ⬜ **No** |
+| Licensed Work | `SpacetimeDB 2.16.2` | **`SpacetimeDB 2.16.3`** | 🔴 **Sí** |
+| **Change Date** | `2031-11-20` | 🔴 **`2031-11-22`** | 🔴 **Sí, +2 días** |
+| Change License | AGPL-3.0 + linking exception | AGPL-3.0 + linking exception | ⬜ No |
+| Additional Use Grant | 1 instancia en producción | 1 instancia en producción | ⬜ No |
+
+**Mismo número de bytes, fecha de liberación distinta.** El cycle 19 había
+aprendido a medir *deriva de licencia como share en el tiempo* porque una
+licencia puede empeorar sin cambiar de texto; este pass encuentra algo más
+afilado: **la licencia cambió de contenido sin cambiar de tamaño**. Un detector
+de cambios por `size` —el que esta KB usa como primer filtro— **no habría visto
+nada**.
+
+**Y el dato operativo que se deduce:** el reloj BUSL **no es del proyecto, es de
+la versión**. Cada release vuelve a fechar el `Change Date` a ~5 años. Decir *"en
+2031 se libera"* es falso en general: se libera **la versión que uno congeló**.
+Actualizar a la siguiente **mueve el propio reloj hacia adelante**.
+
+---
+
+### 🟢 Los 5+ agentes/SDK de la capa, con licencia leída en bytes sobre archivo
+
+**Son 10 filas reales, todas verificadas.** La capa de rollback es la única de
+esta KB donde el líder histórico está **quieto** y los sucesores vivos son
+**diminutos** — se registra así, no se maquilla:
+
+| # | Pieza | Repo | ★ | Licencia **medida** | Estado | Qué hace |
+|---|---|---|---|---|---|---|
+| 1 | **GGPO** | https://github.com/pond3r/ggpo | **3.6k** | **MIT** (`LICENSE`, 1.109 B) | ⚠️ El original; última release pública **0.32 (2015)** | El SDK que definió el rollback. `ggpo/ggpo` y `GGPONet/ggpo` son **404**: el slug canónico es `pond3r` |
+| 2 | **GGRS** | https://github.com/gschup/ggrs | 707 | 🟢 **dual MIT (1.037 B) / Apache-2.0 (10.174 B)** vía puntero de 216 B | ✅ Vivo | Reimaginación de GGPO en **Rust**. Devuelve *requests* en vez de callbacks |
+| 3 | **GekkoNet** | https://github.com/HeatXD/GekkoNet | 69 | 🟢 **BSD-2-Clause** (`LICENSE`, 1.305 B) | ✅ Vivo, 284 commits | SDK P2P rollback **C/C++**. Trae **espectador, replay y detección de desync** de fábrica |
+| 4 | **Backdash** | https://github.com/lucasteles/Backdash | 180 | **MIT** (**`LICENCE.md`**, 1.083 B) | ✅ Vivo | Rollback en **C#/.NET**, async IO. Espejo exacto en `Delta3-Studio/Backdash` (mismo 1.083 B) |
+| 5 | **BestoNet** | https://github.com/bestogames/bestonet | — | **MIT** (`LICENSE`, 1.067 B) | ✅ Vivo | Rollback inspirado en GekkoNet |
+| 6 | **Rollback-Core** | https://github.com/gregorik/Rollback-Core | 26 | **MIT** (`LICENSE`, 1.067 B) | ✅ Vivo (15 commits) | Rollback para **UE5**: paso fijo, captura por reflexión de SaveGame, UDP con ACK. ⚠️ **Open-core**: el tier pago `Rollback Core Pro` (Fab EULA) es el que trae **matchmaking** y debugging de editor |
+| 7 | **netplayjs** | https://github.com/rameshvarun/netplayjs | — | 🔵 **ISC** (`LICENSE`, **742 B**) — **no MIT** | ✅ Vivo | Rollback + WebRTC para navegador, sin servidor propio |
+| 8 | **rollback-netcode (TS)** | https://github.com/someusername6/rollback-netcode | — | **MIT** (`LICENSE`, 1.070 B) | ⚠️ *"under active development. APIs may change"* (su propio README) | Rollback P2P para juegos de navegador |
+| 9 | **godot-rollback-netcode** | https://gitlab.com/snopek-games/godot-rollback-netcode | — | **MIT** (`LICENSE.txt`, 1.062 B, **sin título**) | ⚠️ © 2021-2022 | 🔴 **Vive sólo en GitLab: `404` en GitHub en `main` y `master`.** Rama default `main`, no `master` |
+| 10 | **Backroll** | https://github.com/HouraiTeahouse/Backroll | 139 | **MIT** (`LICENSE`, 1.144 B) | 🔴 **ARCHIVADO 2022-11-16**, read-only | Reimplementación C#/Unity de GGPO. *"alpha-quality"* por su propio README |
+
+**Dos filtros aplicados, y ambos cambiaron el resultado:**
+
+- **`archived` (regla T74, cycle 19).** Backroll pasa el canal de licencia
+  limpiamente —MIT, 1.144 B— y está **muerto desde el 16-nov-2022**. La licencia
+  no dice nada del latido.
+- **Host (regla del cycle 23, canal 10).** `godot-rollback-netcode` es la única
+  pieza de rollback para Godot que esta casa encontró, y **no está en GitHub**. Un
+  censo que sólo mire GitHub reporta *"cero rollback para Godot"* — un **gap
+  falso**, del mismo tipo que `0ad` → Gitea.
+
+---
 ## 🔴 Lo más importante del pass 2026-11-25 (cycle 23): **el plano del DISPOSITIVO** —cómo el jugador toca el juego: entrada, mando, háptica, runtime XR, manos y ojos— y el **canal 10: el censo de forks como instrumento de licencia cuando el upstream es inalcanzable**
 
 Los 22 passes anteriores midieron qué hace el juego (NPC, assets, diálogo), cómo

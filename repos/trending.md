@@ -11,6 +11,82 @@ updated: 2026-11-25
 
 ---
 
+## 🆕 2026-11-25 — pass cycle 24
+
+Canal de ★: **`WebFetch` sobre `github.com`** (ver `agents/trending.md` para la
+tabla de canales vivos/muertos de este pass). Licencias en **bytes de archivo**.
+
+### El cluster que define la semana: **el cable, por tamaño de estrella**
+
+Lo que distingue a esta capa de las 23 anteriores: **los repos grandes son los de
+transporte, y los de rollback son diminutos**. El orden es el hallazgo.
+
+| Repo | ★ | Licencia **medida** | Eslabón |
+|---|---|---|---|
+| [skywind3000/kcp](https://github.com/skywind3000/kcp) | **17.0k** | 🟢 **MIT** (1.091 B) | Transporte — **el mayor de toda la capa** |
+| [ValveSoftware/GameNetworkingSockets](https://github.com/ValveSoftware/GameNetworkingSockets) | **10.1k** | 🟢 **BSD-3** (1.488 B) | Transporte — el patrón de facto |
+| [colyseus/colyseus](https://github.com/colyseus/colyseus) | **7.6k** | 🟢 **MIT** (1.075 B) | Replicación (navegador/móvil) |
+| [MirrorNetworking/Mirror](https://github.com/MirrorNetworking/Mirror) | **6.4k** | 🟢 **MIT** (1.149 B) | Replicación (Unity) |
+| [RevenantX/LiteNetLib](https://github.com/RevenantX/LiteNetLib) | **3.6k** | 🟢 **MIT** (1.090 B) | Transporte (C#) |
+| [pond3r/ggpo](https://github.com/pond3r/ggpo) | **3.6k** | 🟢 **MIT** (1.109 B) | Rollback — ⚠️ quieto desde 2015 |
+| [googleforgames/open-match](https://github.com/googleforgames/open-match) | **3.4k** | 🟢 **Apache-2.0** (11.345 B) | Sesión (matchmaking) |
+| [lsalzman/enet](https://github.com/lsalzman/enet) | **3.3k** | 🟢 **MIT** (1.060 B, **sin título**) | Transporte |
+| [paullouisageneau/libdatachannel](https://github.com/paullouisageneau/libdatachannel) | **2.8k** | 🟠 **MPL-2.0** (16.726 B) | Relay / WebRTC |
+| [Unity-Technologies/com.unity.netcode.gameobjects](https://github.com/Unity-Technologies/com.unity.netcode.gameobjects) | **2.3k** | 🔴 **UCL** (501 B, rama default) | Replicación — **relicenciado** |
+| [FirstGearGames/FishNet](https://github.com/FirstGearGames/FishNet) | **2.1k** | ⛔ **propia** (3.640 B, no-competencia) | Replicación |
+| [cBournhonesque/lightyear](https://github.com/cBournhonesque/lightyear) | **1.2k** | 🟢 dual **MIT**/Apache | Replicación (Bevy/Rust) |
+| [gschup/ggrs](https://github.com/gschup/ggrs) | **707** | 🟢 dual **MIT**/Apache-2.0 | Rollback — **el mayor vivo** |
+| [projectharmonia/bevy_replicon](https://github.com/projectharmonia/bevy_replicon) | **664** | 🟢 dual **MIT**/Apache | Replicación (Bevy) |
+| [lucasteles/Backdash](https://github.com/lucasteles/Backdash) | **180** | 🟢 **MIT** (`LICENCE.md`) | Rollback (C#) |
+| [HouraiTeahouse/Backroll](https://github.com/HouraiTeahouse/Backroll) | **139** | 🟢 MIT — 🔴 **ARCHIVADO 2022-11-16** | Rollback (muerto) |
+| [HeatXD/GekkoNet](https://github.com/HeatXD/GekkoNet) | **69** | 🟢 **BSD-2** (1.305 B) | Rollback (C/C++) |
+| [gregorik/Rollback-Core](https://github.com/gregorik/Rollback-Core) | **26** | 🟢 **MIT** (1.067 B) | Rollback (UE5, open-core) |
+
+🔵 **La forma de la tabla es el dato.** El transporte tiene repos de 17k, 10k y
+3,3k ★ y está **resuelto**: hay varias opciones permisivas, maduras y
+sustituibles. El rollback tiene su máximo vivo en **707 ★** y su clásico
+**quieto desde 2015**. Conclusión de inversión: en transporte **se elige**; en
+rollback **se construye**, y conviene presupuestarlo como desarrollo, no como
+integración.
+
+### Repos sin ★ publicadas este pass (medidos sólo por licencia)
+
+No se inventa la cifra. Licencia leída, ★ no consultada por presupuesto de
+canal: [zpl-c/enet](https://github.com/zpl-c/enet) (MIT 1.146 B) ·
+[microsoft/msquic](https://github.com/microsoft/msquic) (MIT 1.074 B) ·
+[cloudflare/quiche](https://github.com/cloudflare/quiche) (BSD-2 1.306 B) ·
+[coturn/coturn](https://github.com/coturn/coturn) (BSD-3 1.621 B) ·
+[pion/webrtc](https://github.com/pion/webrtc) (MIT 1.093 B) ·
+[pion/turn](https://github.com/pion/turn) (MIT 1.093 B) ·
+[paullouisageneau/libjuice](https://github.com/paullouisageneau/libjuice) (MPL-2.0 16.726 B) ·
+[geckosio/geckos.io](https://github.com/geckosio/geckos.io) (BSD-3 1.550 B) ·
+[nxrighthere/NetStack](https://github.com/nxrighthere/NetStack) (MIT 1.098 B) ·
+[SoftwareGuy/Ignorance](https://github.com/SoftwareGuy/Ignorance) (MIT 1.194 B) ·
+[bestogames/bestonet](https://github.com/bestogames/bestonet) (MIT 1.067 B) ·
+[someusername6/rollback-netcode](https://github.com/someusername6/rollback-netcode) (MIT 1.070 B) ·
+[rameshvarun/netplayjs](https://github.com/rameshvarun/netplayjs) (**ISC** 742 B) ·
+[JohannesDeml/NetCoreNetworkBenchmark](https://github.com/JohannesDeml/NetCoreNetworkBenchmark) (MIT 1.070 B) ·
+[Unity-Technologies/multiplayer-community-contributions](https://github.com/Unity-Technologies/multiplayer-community-contributions) (MIT 1.075 B) ·
+[rivet-gg/rivet](https://github.com/rivet-gg/rivet) (Apache-2.0 11.349 B).
+
+### 🔵 El instrumento que este pass agrega al repertorio: **el banco de pruebas como pieza de catálogo**
+
+[JohannesDeml/NetCoreNetworkBenchmark](https://github.com/JohannesDeml/NetCoreNetworkBenchmark)
+(**MIT**, 1.070 B) compara transportes UDP de .NET bajo la misma carga. No es una
+fundación: es **el árbitro** entre las fundaciones 3-8 de
+`repos/foundations.md`. Esta KB tenía 23 passes eligiendo piezas por licencia y
+por estrellas; es la primera vez que entra un repo cuyo valor es **medir a los
+demás**. Se usa en la **Receta 70**.
+
+### ⬜ Medido y ausente
+
+- **Mediación de anuncios open source: cero** (confirmado desde el cycle 19).
+- **Agentes de IA para netcode: cero** (nuevo este pass, ver `agents/trending.md`).
+- **LightnerX**: anunciado 2026-11-22 como lib C++17 sobre GameNetworkingSockets;
+  **sin repo de GitHub localizable** (2 slugs probados, 404). No entra al
+  catálogo.
+
+---
 ## 🆕 2026-11-25 — pass cycle 23
 
 Canal de estrellas **recuperado** (ver `agents/top.md` §4.3): `search/repositories`

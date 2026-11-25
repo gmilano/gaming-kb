@@ -4,6 +4,83 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo que cambió — pass cycle 24 (2026-11-25): **el plano del cable es la primera capa donde la gran pregunta regulatoria de 2026 se respondió NO**
+
+El cycle 20 midió una capa que **2026 abrió por ley en cuatro regiones** (el
+camino del dinero). El cycle 22 midió una capa donde **una norma nombra un
+repositorio**. Este pass mide la capa de la sesión y encuentra lo contrario: la
+pregunta regulatoria más grande de la capa —*¿puede un publisher apagar el
+servidor y dejar el juego inservible?*— **se formuló con 1,29 millones de firmas
+verificadas y la Comisión respondió que no legislará**.
+
+Un cero medido es información. Esta sección lo registra como tal.
+
+### 🔵 1. La tabla que organiza el pass: el estado real de la decisión europea
+
+| Hito | Fecha | Qué pasó |
+|---|---|---|
+| Presentación de la ICE *Stop Destroying Videogames* | **2026-01-26** | **1.294.188** declaraciones de apoyo verificadas |
+| Debate en plenario del Parlamento Europeo | **2026-05-21** | — |
+| **Respuesta de la Comisión** | **2026-06-16** | 🔴 **No propondrá requisitos obligatorios.** Vía elegida: **código de conducta voluntario** sobre el fin de vida comercial |
+| Compromiso de la Comisión | **fin de 2026** | Reunir publishers y asociaciones de consumidores para redactarlo |
+| Estado del código | **a 2026-11-15** | ⬜ **No publicado. Sin fecha de implementación** |
+| Siguiente intento de la campaña | en curso | Enmienda a la **Digital Fairness Act**. ⚠️ **No se pudo verificar que haya sido presentada** |
+| Reino Unido | 2026 | Sin planes de modificar la ley de consumo; sólo aplica la existente |
+
+**Lectura para un engagement:** el requisito de *fin de vida* del servidor **no es
+obligación legal en EMEA hoy**, y durante 2026 se negocia como compromiso
+voluntario. Para una propuesta esto significa que una **arquitectura de apagado
+digno** (servidor dedicado entregable, modo LAN, cliente que sobrevive al
+backend) es **diferenciador comercial y anticipación de un código voluntario**, no
+cumplimiento de una norma. Venderlo como obligación legal sería incorrecto.
+
+### 🔵 2. El mapa de players de la capa: lo que se consolidó y lo que murió en 2026
+
+| Player | Posición medida | Movimiento 2026 |
+|---|---|---|
+| **Valve** — GameNetworkingSockets | 🟢 **BSD-3**, 10.1k ★ | El stack de Steam usable **sin Steam**. Es el patrón de facto del transporte |
+| **Unity** — Netcode for GameObjects | 🔴 **UCL (propietaria)** en v2/v3; MIT sólo en v1 | 🔴 **Relicenció el cable.** Ver `agents/top.md` hallazgo nº1 |
+| **Mirror** (comunidad) | 🟢 **MIT**, 6.4k ★ | **El beneficiario directo** del movimiento de Unity: es la única capa alta de Unity con grant permisivo y masa crítica |
+| **FishNet** | 🔴 Licencia propia con **no-competencia** | 2.1k ★, vivo. Inutilizable si el entregable es un producto de red |
+| **Heroic Labs** — Nakama | 🟢 Apache-2.0 (11.358 B) | Sigue siendo la recomendación de sesión de esta KB |
+| **Google** — Open Match / Agones | 🟢 Apache-2.0 | Open Match **3.4k ★**, README *"in active development"* |
+| **Clockwork Labs** — SpacetimeDB | 🟠 **BUSL-1.1**, 1 instancia | Reloj movido a **2031-11-22** sin cambiar de bytes |
+| **Rivet** | 🟢 Apache-2.0 (11.349 B) | 🔵 **Repivotó a infraestructura de agentes** en 2026; sigue corriendo *game rooms* |
+| **Hathora** | ⛔ **Muerto** | 🔴 **Cerró el 2026-05-05** tras su adquisición por Fireworks AI. Un hosting de servidores de juego menos |
+
+🔴 **La lección de mercado del pass:** de las dos plataformas gestionadas de sesión
+que un estudio habría evaluado en 2025, **una cerró (Hathora) y la otra cambió de
+industria (Rivet → agentes)**. La capa de sesión gestionada se está vaciando
+mientras la capa open source permisiva (Nakama, Open Match, Agones, Colyseus)
+sigue entera. Para Globant eso **mueve la recomendación hacia el autoalojado**, no
+por ideología sino por **riesgo de proveedor medido dos veces en un año**.
+
+### 🔵 3. El eje que esta capa agrega y ninguna otra tenía: **la arquitectura ES una decisión de protección de datos**
+
+En P2P, la dirección IP de cada jugador **llega a los demás jugadores**. En relay,
+no: llega al relay. Eso convierte una elección de latencia en una elección
+jurídica. Lo medido, con las dos caras:
+
+| Fuente | Qué dice exactamente |
+|---|---|
+| Documentación de **Unity Relay** | Recoge por defecto **IP address** y **Authentication Player ID**; **Unity = *processor*, el estudio = *controller***; retención **30 días**; 🔴 *"this service has **no native functionality to support data deletion requests**. You, the developer, are responsible for actioning them"* |
+| Decisión del **DPA de Hesse** (archivos EDPB, `dehe_2020-11`) | Sobre un ataque al matchmaking P2P: la **IP dinámica no se almacena** en el servidor de matchmaking, y por eso concluyó que **no era una brecha notificable** bajo Art. 33/34 GDPR |
+
+⚠️ **Honestidad sobre el alcance:** la decisión de Hesse **corta en contra** de la
+lectura intuitiva —no todo tratamiento de IP en P2P es una brecha—, pero es **una
+decisión de una autoridad nacional sobre unos hechos concretos**, no una regla
+general de que exponer IPs entre pares sea indiferente. Se registra como **dato
+medido con su límite**, no como permiso.
+
+**Lo operativo, que sí es firme:** si el estudio usa un relay gestionado, el
+*controller* es el estudio y **las solicitudes de borrado son suyas, sin
+herramienta del proveedor para ejecutarlas**. Un relay propio (`coturn`, BSD-3, o
+`pion/turn`, MIT) mantiene el dato en infraestructura propia y hace ejecutable el
+borrado. Es el argumento técnico más fuerte de esta capa, y es de licencia y de
+GDPR a la vez.
+
+---
+
 ## 🔴 Lo que cambió — pass cycle 23 (2026-11-25): **el plano del dispositivo tiene UN estándar de software y CUATRO homologaciones de hardware que no se sustituyen entre sí**
 
 El cycle 22 midió que las cuatro regiones legislaron **la misma puerta en cuatro
@@ -1881,6 +1958,30 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 Pass cycle 24 (2026-11-25) — plano del cable
+
+
+- **Oportunidad 1 — La auditoría de licencia de red, con dos gatillos concretos.**
+  Un estudio que arrancó un proyecto Unity en 2024-2025 con NGO **cree que su
+  capa de red es MIT**, y en la rama default de 2026 es **UCL**. Y un estudio que
+  eligió FishNet **no puede** revender nada de red. Un barrido de licencia sobre
+  el stack de red (procedimiento: **Receta 68**) es un entregable corto, barato y
+  con resultado binario. Es la oportunidad más vendible del pass en NA porque el
+  cliente **no sabe que tiene el problema**.
+- **Oportunidad 2 — Reemplazo NGO→Mirror o NGO→transporte propio.** Consecuencia
+  directa de la anterior, y es trabajo de ingeniería real, no de compliance.
+- **Contexto de adopción medido:** GDC 2026 — **52%** de los desarrolladores dice
+  que la IA generativa tiene efecto **negativo** en la industria (desde 30% y 18%
+  en los dos años previos), mientras **36%** la usa. La capa del cable es
+  territorio **neutral** en esa discusión: es infraestructura, no contenido
+  generado, así que **no carga el backlash** que sí cargan assets y voces.
+- **Regulación:** KPMG sitúa el foco regulatorio de NA (y Europa occidental) en
+  **protección y seguridad del jugador**. ⬜ **Gap medido:** esta casa **no
+  encontró** norma federal ni estatal de NA que regule el apagado de servidores o
+  el netcode. Una fuente secundaria menciona un proyecto de ley de California
+  caído en comisión del Senado; **no se pudo verificar contra fuente primaria y
+  no se usa**.
+
 #### 🆕 2026-11-25 (cycle 23) — plano del dispositivo
 
 **Lo medido.** No se encontró ninguna norma federal específica de dispositivo XR.
@@ -2465,6 +2566,29 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 Pass cycle 24 (2026-11-25) — plano del cable
+
+
+- **Oportunidad 1 — "Apagado digno" como producto, antes del código voluntario.**
+  La Comisión negocia durante 2026 un código de conducta de fin de vida. Llegar
+  con una arquitectura ya hecha —servidor dedicado entregable al jugador, modo
+  LAN, cliente que sobrevive al backend— es posicionamiento anticipado. El stack
+  permisivo para construirlo existe entero y está medido arriba (**Receta 70**).
+- **Oportunidad 2 — Relay propio como entregable de soberanía.** Las prioridades
+  2026 de la **EGDF** son *human-led AI, fair markets y **European
+  sovereignty***. Un relay autoalojado (`coturn` BSD-3 / `pion/turn` MIT) en
+  infraestructura europea responde a la vez a soberanía y a la ejecutabilidad del
+  borrado GDPR (§3). Es la receta **71**.
+- **Regulación con fecha:** la obligación de transparencia del **AI Act** sobre
+  contenido sintético (Art. 50, deepfakes) **aplica desde 2026-08-02**. La
+  **Digital Fairness Act** está planificada como borrador para **Q4 2026**,
+  apuntando a diseño adictivo y mecánicas aleatorias. **Video Games Europe**
+  presiona por limitar las obligaciones de etiquetado alegando secreto comercial
+  y coste desproporcionado.
+- ⬜ **Gap medido:** ninguna norma EMEA vigente obliga a arquitectura de red,
+  localización de servidor ni continuidad de servicio para videojuegos. La única
+  candidata (la ICE) fue respondida con **no**.
 
 #### 🆕 2026-11-25 (cycle 23) — plano del dispositivo
 
@@ -3177,6 +3301,36 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 Pass cycle 24 (2026-11-25) — plano del cable
+
+
+- **Oportunidad 1 — El socio de publicación es la arquitectura, en China.**
+  ⬜ **Gap medido explícitamente:** esta casa buscó una obligación de **alojar el
+  servidor dentro de China** para videojuegos y **no la encontró**. Lo que sí
+  está medido es más restrictivo en la práctica: el título necesita **aprobación
+  de la NPPA**, el solicitante debe ser una **unidad de publicación online
+  licenciada**, un publisher extranjero **no puede** tenerla y la **lista
+  negativa de IED (vigente 2024-11-01)** prohíbe inversión extranjera en
+  servicios de publicación online. Volumen: **35 títulos extranjeros aprobados en
+  H1 2026 (−39%)** contra **917 domésticos (+21%)**. El trabajo vendible no es
+  compliance de datos: es **arquitectura de desacople** para que un cliente
+  apoye el servicio chino en el socio local sin bifurcar el juego.
+- **Oportunidad 2 — Vietnam, antes del decreto.** La **Ley de Ciberseguridad
+  2025 aplica desde 2026-07-01** y **mantiene** el requisito de localización de
+  datos; el decreto de implementación está **pendiente**, así que el alcance para
+  operadores de juego **todavía no está definido**. Diseñar hoy con la frontera
+  de datos como parámetro —no como reescritura futura— es la propuesta.
+- **Contexto de adopción, el más alto del mundo:** Japón — **JOGA 2026**
+  encuentra que **todas** las empresas de juego online encuestadas usan IA
+  generativa (Gemini el más usado, **94%**), y **CESA** mide **85,8%** de uso en
+  desarrolladores, desde **51%** un año antes. China: **>60%** de los
+  desarrolladores con IA en el pipeline. 🔵 **El contraste con el 52% de rechazo
+  de GDC (NA) es el dato regional más fuerte del pass**: misma tecnología, dos
+  mercados en direcciones opuestas.
+- **Dato de acceso:** China acordó el **2026-11-18** tratar los juegos coreanos
+  **no menos favorablemente** que otros extranjeros en la pre-revisión; **sin
+  cuota**.
+
 #### 🆕 2026-11-25 (cycle 23) — plano del dispositivo
 
 **Es la región donde el dispositivo se homologa país por país y donde el
@@ -3845,6 +3999,34 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 Pass cycle 24 (2026-11-25) — plano del cable
+
+
+- **Oportunidad 1 — Latencia como producto, que es exactamente esta capa.** El
+  ecosistema medido es de **más de 335 millones** de jugadores (informe
+  GamesBeat/Xsolla), con **México en 72,6 millones** = **61% de la población de
+  6+ años**. La región **no tiene** la densidad de datacenters de NA o EMEA, así
+  que el trabajo de esta capa —predicción, interpolación, rollback, elección de
+  relay— **vale más aquí que en cualquier otra región**: es la diferencia entre
+  jugable e injugable, no una optimización. Receta **70**.
+- **Oportunidad 2 — Aceptación del jugador como permiso comercial.** El estudio
+  **PGB Latam 2026** (presentado en gamescom latam) mide que una parte grande de
+  los jugadores latinoamericanos **está dispuesta a consumir juegos desarrollados
+  con herramientas de IA**. Contra el 52% de rechazo de GDC, LATAM es la región
+  donde el componente de IA **no es un pasivo de marketing**.
+- **Regulación:** ⬜ **Gap medido, y se escribe como gap:** esta casa buscó norma
+  de IA específica para videojuegos en Brasil, México y Colombia y **no encontró
+  ninguna**; todo el material regulatorio que devuelven las consultas es de
+  **apuestas / iGaming**, que esta KB mantiene como carril separado y **no mezcla
+  con videojuegos**. Lo único fiscal medido: la reforma tributaria de Brasil **no
+  da tasa reducida al software de juego**, y grava igual lo importado y lo
+  doméstico.
+- **Contexto:** el PNUD advierte que América Latina y el Caribe **van por detrás**
+  en adopción de IA — lo que para un proveedor de servicios es mercado, no
+  obstáculo.
+
+---
 
 #### 🆕 2026-11-25 (cycle 23) — plano del dispositivo
 

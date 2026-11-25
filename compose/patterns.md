@@ -4,6 +4,240 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Recetas del pass cycle 24 (2026-11-25) — el plano del cable
+
+### 🧩 Receta 68: **Canal 11 — el censo de RAMAS, para detectar una relicenciación por versión mayor**
+
+**Problema.** Un repo declara una licencia y la declaración **es cierta en una
+rama y falsa en otra**. Caso medido este pass:
+`Unity-Technologies/com.unity.netcode.gameobjects` es **MIT** en `develop` y
+`release/1.0.0`, y **Unity Companion License** en `release/2.0.0` y en
+`develop-3.x.x` (**la rama default**). Los diez canales anteriores de esta casa
+—incluido leer el archivo en bytes— **devuelven la respuesta de una sola rama**, y
+si esa rama es la vieja, el veredicto se invierte.
+
+**Por qué los canales previos no lo ven.** El canal de grant lee
+`raw.githubusercontent.com/{slug}/{branch}/LICENSE`. **La rama es un parámetro
+obligatorio del canal**, y hasta este pass se elegía por convención
+(`master`, luego `main`). Para NGO **las dos convenciones dan 404** sobre un repo
+vivo de 2.3k ★.
+
+**Procedimiento ejecutable.**
+
+```bash
+SLUG=Unity-Technologies/com.unity.netcode.gameobjects
+RAW=https://raw.githubusercontent.com
+
+# 1. La rama default NO se adivina: se lee de la página del repo.
+#    (WebFetch sobre github.com responde 200 donde curl da 403 — ver paso 4)
+#    Para NGO la default es develop-3.x.x, ni main ni master.
+
+# 2. Censo: el MISMO archivo en TODAS las ramas candidatas, en bytes de archivo.
+for B in develop develop-3.x.x develop-2.x.x release/1.0.0 release/2.0.0 main master; do
+  for F in LICENSE.md LICENSE LICENSE.txt LICENCE.md LICENCE; do
+    C=$(curl -sI -o /dev/null -w '%{http_code}' "$RAW/$SLUG/$B/$F")
+    if [ "$C" = 200 ]; then
+      curl -s -o lic.bin "$RAW/$SLUG/$B/$F"
+      printf "%-18s %-12s %6s B  %s\n" "$B" "$F" \
+        "$(wc -c < lic.bin | tr -d ' ')" "$(head -1 lic.bin)"
+    fi
+  done
+done
+
+# 3. Dos pesos distintos en dos ramas vivas = relicenciación. Localizar la frontera
+#    por el número de version de las ramas release/*.
+```
+
+**Salida real de este pass** (es el patrón a reconocer):
+
+```
+release/1.0.0      LICENSE.md     1075 B  MIT License
+develop            LICENSE.md     1075 B  MIT License
+release/2.0.0      LICENSE.md      501 B  Unity Companion License (UCL License)
+develop-3.x.x      LICENSE.md      501 B  Unity Companion License (UCL License)   <- default
+main / master      404
+```
+
+**Regla de salida.** Toda afirmación de licencia de esta KB sobre un repo con
+ramas de versión **lleva la rama o la versión donde se midió**. Sin ese
+calificador la afirmación es incompleta, y la parte que falta puede invertir el
+veredicto.
+
+---
+
+### 🧩 Receta 69: **Enumerar licencias sin producir falsos ENUM=0 ni falsos UNKNOWN**
+
+**Problema.** Tres fallas reales de este pass, todas con el procedimiento
+"correcto" de esta casa, todas reproducibles:
+
+1. **`lucasteles/Backdash` → "sin grant"**, cuando es MIT: el archivo se llama
+   **`LICENCE.md`** (ortografía británica). 18 rutas probadas, sólo esa existe.
+2. **`lsalzman/enet` → "UNKNOWN"**, cuando es MIT: el texto **no lleva título**;
+   arranca en `Copyright (c) 2002-2024 Lee Salzman`.
+3. **`gschup/ggrs` → "Apache-2.0"**, cuando es **dual MIT/Apache a elección del
+   usuario**: el `LICENSE` de **216 B** es un **puntero** que nombra ambos.
+
+**Procedimiento ejecutable.**
+
+```bash
+# A. Enumerar en LAS DOS ORTOGRAFÍAS, y con sufijos.
+NAMES="LICENSE LICENSE.md LICENSE.txt LICENCE LICENCE.md LICENCE.txt \
+       COPYING COPYING.txt LICENSE-MIT LICENSE-APACHE MIT-LICENSE NOTICE \
+       license license.md License License.md .github/LICENSE docs/LICENSE"
+
+# B. Clasificar por CLÁUSULA OPERATIVA, nunca por título.
+grant_of () {   # $1 = archivo de licencia ya descargado
+  grep -qi "Permission is hereby granted, free of charge" "$1" && echo "MIT-o-ISC"
+  grep -qi "Permission to use, copy, modify, and/or distribute" "$1" && echo "ISC"
+  grep -qi "Redistribution and use in source and binary" "$1" && echo "BSD"
+  grep -qi "Licensed under the Apache License" "$1" && echo "Apache-2.0"
+  grep -qi "Mozilla Public License Version 2.0" "$1" && echo "MPL-2.0"
+  grep -qi "Business Source License" "$1" && echo "BUSL — leer Additional Use Grant"
+  grep -qi "Unity Companion License" "$1" && echo "UCL — PROPIETARIA"
+}
+# MIT e ISC comparten el incipit en una variante: desambiguar por la línea
+# "The ISC License" o por "and/or distribute". netplayjs es ISC (742 B), no MIT.
+
+# C. Si el archivo es CORTO y NOMBRA otro archivo => es un PUNTERO: resolver hermanos.
+if [ "$(wc -c < lic.bin)" -lt 600 ] && grep -qiE "see |\./LICENSE|licenses/" lic.bin; then
+  echo "PUNTERO — no concluir; resolver los destinos"; cat lic.bin
+fi
+```
+
+**Las dos subfamilias de MIT medidas este pass**, que explican la falla nº2:
+
+| Subfamilia | Rango | Detectable por título |
+|---|---|---|
+| Con línea `MIT License` | 1.036 – 1.149 B | ✅ |
+| **Sin título**, arranca en `Copyright (c)` | 1.060 – 1.065 B | ❌ `enet` · `godot-rollback-netcode` · `Facepunch.Steamworks` |
+
+⚠️ **Los rangos se solapan: el peso NO distingue las subfamilias.** Sólo la
+cláusula operativa lo hace.
+
+#### Corrección de instrumento que acompaña a esta receta
+
+```bash
+bytes=$(curl -s "$URL" | wc -c)          # ❌ -1 byte si el archivo termina en \n
+curl -s -o f.bin "$URL"; wc -c < f.bin   # ✅ el byte real
+```
+
+La sustitución de comandos **come los `\n` finales**. El primer barrido de este
+pass midió `open-match` en 11.344 B contra los 11.345 B del registro de la KB; la
+KB tenía razón. **Un byte de diferencia no es deriva de licencia hasta haber
+descartado el idioma de la herramienta.**
+
+---
+
+### 🧩 Receta 70: **Stack de multijugador de acción, 100% permisivo, con el gate de licencia por delante**
+
+**Para.** Un juego de acción/pelea donde la latencia decide el género (el caso
+LATAM por excelencia: ver `intel/market.md` → *Opportunities by region* → LATAM).
+
+**Lo que decide la arquitectura, antes de elegir piezas:** el rollback **no es
+intercambiable** con la interpolación servidor-autoritativa. Rollback para
+≤4 jugadores con simulación determinista; autoritativo para todo lo demás.
+
+**Las piezas, con licencia leída en bytes y rol exacto.**
+
+| Eslabón | Pieza elegida | Licencia **medida** | Por qué ésta |
+|---|---|---|---|
+| **Rollback** | [HeatXD/GekkoNet](https://github.com/HeatXD/GekkoNet) | **BSD-2** (1.305 B) | 69 ★, pero **el único que trae espectador + replay + detección de desync de fábrica**. En Rust: [gschup/ggrs](https://github.com/gschup/ggrs) (dual MIT/Apache, 707 ★) |
+| **Transporte** | [ValveSoftware/GameNetworkingSockets](https://github.com/ValveSoftware/GameNetworkingSockets) | **BSD-3** (1.488 B) | 10.1k ★, cifrado incluido, **sin dependencia de Steam**. Alternativa mínima: [lsalzman/enet](https://github.com/lsalzman/enet) (MIT 1.060 B) |
+| **Árbitro de transporte** | [JohannesDeml/NetCoreNetworkBenchmark](https://github.com/JohannesDeml/NetCoreNetworkBenchmark) | **MIT** (1.070 B) | 🔵 **Mide** los candidatos bajo la misma carga en vez de elegir por estrellas |
+| **Relay (cuando el P2P no conecta)** | [coturn/coturn](https://github.com/coturn/coturn) | **BSD-3** (1.621 B) | TURN propio. Embebible como lib: [pion/turn](https://github.com/pion/turn) (MIT 1.093 B) |
+| **Matchmaking** | [googleforgames/open-match](https://github.com/googleforgames/open-match) | **Apache-2.0** (11.345 B) | 3.4k ★, *match functions* propias: entra el modelo del cliente |
+| **Rating** | [vivekjoshy/openskill.py](https://github.com/vivekjoshy/openskill.py) | **MIT** (1.068 B) | Weng-Lin. Alimenta las *match functions* de Open Match |
+| **Sesión / persistencia** | [heroiclabs/nakama](https://github.com/heroiclabs/nakama) | **Apache-2.0** (11.358 B) | Identidad, storage, leaderboards, chat |
+| **Capa alta (si es Unity)** | [MirrorNetworking/Mirror](https://github.com/MirrorNetworking/Mirror) | **MIT** (1.149 B) | 6.4k ★. ⛔ **No NGO v2/v3 (UCL), no FishNet (no-competencia)** |
+| **Capa alta (si es Bevy)** | [bevy_replicon](https://github.com/projectharmonia/bevy_replicon) + [lightyear](https://github.com/cBournhonesque/lightyear) | dual **MIT/Apache** | Replicon no trae I/O por diseño: se enchufa al backend |
+
+**El cableado, en orden de dependencia.**
+
+```
+                   ┌─ openskill.py ──► rating ──┐
+cliente ──► GekkoNet (rollback, BSD-2)          ├─► open-match (Apache-2.0)
+              │                                 │        │
+              └─► GameNetworkingSockets (BSD-3) │        ▼
+                    │        │                  │   Agones: asigna el servidor
+                    │        └── si falla NAT ──►│        │
+                    │            coturn (BSD-3)  │        ▼
+                    └────────────────────────────┴──► Nakama (Apache-2.0)
+                                                      identidad · storage · chat
+```
+
+**El gate que va PRIMERO, antes de escribir código** (y que es el entregable
+vendible del pass, Receta 68 + 69):
+
+```bash
+# Barrido de licencia sobre el stack de red del cliente. Resultado binario.
+#  ⛔ FishNet                -> §2.b prohíbe entregables de red. BLOQUEANTE si
+#                               el producto es un SDK/middleware/plataforma.
+#  ⛔ NGO v2/v3              -> UCL (501 B), condicionada a "Unity-dependent projects".
+#     NGO v1                 -> MIT (1075 B), pero línea que Unity ya no desarrolla.
+#  ⛔ SpacetimeDB            -> BUSL: UNA instancia en producción.
+#  🟠 libdatachannel/libjuice-> MPL-2.0: copyleft débil POR ARCHIVO. Usable en
+#                               binario cerrado si no se modifica la librería;
+#                               si se modifica, se publica el archivo modificado.
+#                               Gemelo permisivo: pion/webrtc (MIT).
+#  🔴 Backroll               -> MIT impecable y ARCHIVADO 2022-11-16. Licencia ≠ latido.
+```
+
+---
+
+### 🧩 Receta 71: **Elegir P2P o relay como decisión de protección de datos, no de latencia**
+
+**Problema.** En P2P la **IP de cada jugador llega a los demás jugadores**. En
+relay, llega al relay. La misma decisión que se toma por milisegundos **fija quién
+trata un dato personal y quién debe poder borrarlo**.
+
+**Lo medido, con las dos caras y su límite.**
+
+| Fuente | Qué dice exactamente |
+|---|---|
+| Documentación de **Unity Relay** | Recoge por defecto **IP address** + **Authentication Player ID**; **Unity = *processor*, el estudio = *controller***; retención **30 días**; 🔴 *"no native functionality to support data deletion requests. You, the developer, are responsible for actioning them"* |
+| **DPA de Hesse** (archivos EDPB, `dehe_2020-11`) | Sobre un ataque al matchmaking P2P: la **IP dinámica no se almacena** en el servidor de matchmaking ⇒ **no era brecha notificable** (Art. 33/34 GDPR) |
+
+⚠️ **El límite, explícito:** la decisión de Hesse **corta en contra** de la lectura
+intuitiva, pero es **una autoridad nacional sobre hechos concretos**, no una regla
+general de que exponer IPs entre pares sea indiferente. Se usa como **dato con su
+alcance**, no como permiso.
+
+**Procedimiento de decisión.**
+
+```
+1. ¿El juego es ≤4 jugadores, determinista, y la latencia decide el género?
+   NO  -> servidor autoritativo (Mirror/Colyseus/lightyear + Agones). FIN:
+          la IP del jugador nunca llega a otro jugador.
+   SÍ  -> sigue.
+
+2. ¿El estudio puede ser controller de las IPs de sus jugadores
+   (registro de tratamiento, base legal, ruta de borrado ejecutable)?
+   NO  -> relay OBLIGATORIO.
+   SÍ  -> P2P admisible; documentar que los pares ven la IP.
+
+3. Si relay: ¿propio o gestionado?
+   PROPIO     -> coturn (BSD-3) o pion/turn (MIT) en infraestructura del cliente.
+                 El borrado es ejecutable porque el log es propio.
+                 🔵 En EMEA suma el argumento de soberanía (prioridad 2026 de EGDF).
+   GESTIONADO -> el estudio SIGUE siendo controller y el proveedor NO ejecuta
+                 borrados por él. Hay que construir esa ruta igual.
+
+4. Frontera de datos por región (ver intel/market.md):
+   - APAC/Vietnam: Ley de Ciberseguridad 2025 desde 2026-07-01, localización
+     RETENIDA, decreto PENDIENTE -> el relay regional es parámetro de diseño HOY.
+   - APAC/China:   no hay regla de servidor medida; la restricción real es el
+     socio de publicación licenciado. El relay chino va del lado del socio.
+   - EMEA:         sin obligación de arquitectura; coturn propio por soberanía.
+   - NA / LATAM:   sin norma medida de arquitectura de red.
+```
+
+**Lo que esta receta entrega.** Un diagrama de flujo de datos donde, para cada
+región, está escrito **qué pieza ve la IP, cuánto la retiene y quién ejecuta el
+borrado** — y donde la respuesta no es *"usamos un relay"* sino *"usamos
+`coturn` BSD-3 en infraestructura del cliente porque el borrado tiene que ser
+ejecutable por el controller"*.
+
+---
 ## 🆕 Recetas del pass cycle 23 (2026-11-25) — el plano del dispositivo
 
 ### 🧩 Receta 64: **Canal 10 — medir el grant de un repo cuyo host es inalcanzable, por censo de forks**

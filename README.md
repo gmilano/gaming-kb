@@ -65,7 +65,22 @@ updated: 2026-11-25
 > **11-sep-2026**, mientras el upstream es *steward* y no entra hasta el
 > **11-dic-2027, sin sanciones**.
 
-> **Último pass: 2026-11-25 (cycle 23).**
+> **Desde el cycle 24**, el **plano del cable**: cómo dos jugadores comparten un
+> mismo estado — transporte, replicación, rollback, relay y sesión. Es la capa que
+> **todo juego multijugador atraviesa sin excepción** y la que esta KB tenía más
+> vacía: `netcode`, `rollback`, `replication` y `dedicated server` medían **cero
+> ocurrencias en 23 passes**. Es la **primera capa donde la gran pregunta
+> regulatoria de 2026 se respondió NO**: la ICE *Stop Destroying Videogames* llegó
+> con **1.294.188 firmas verificadas** y la Comisión contestó el **16-jun-2026**
+> que **no propondrá requisitos obligatorios**, sólo un **código de conducta
+> voluntario** —no publicado a 2026-11-15—, así que el *apagado digno* del
+> servidor es **diferenciador de producto, no requisito legal**. Y es la primera
+> capa donde el riesgo medido no es conformidad ni homologación sino
+> **supervivencia del proveedor**: **Hathora cerró el 5-may-2026** y **Rivet
+> repivotó a infraestructura de agentes**, mientras las siete plataformas open
+> source de la capa siguen en pie.
+
+> **Último pass: 2026-11-25 (cycle 24).**
 
 ## Estructura
 
@@ -135,6 +150,54 @@ gaming-kb/
   byte-count puede ser **tipográfica**, no jurídica. El procedimiento del upstream
   inalcanzable es el **canal 10** y la **Receta 64**; el de no confundir un canal
   muerto con un recurso muerto, la **Receta 65**.
+  🔴 **Y la novena, del cycle 24: el proveedor no es la licencia, y la licencia
+  puede ser función de la VERSIÓN.** `Unity-Technologies/com.unity.netcode.gameobjects`
+  (**2.3k ★**) es **MIT** (1.075 B) en `develop` y `release/1.0.0`, y **Unity
+  Companion License** (501 B, propietaria, condicionada a *"Unity-dependent
+  projects"*) en `release/2.0.0` y en **`develop-3.x.x`, que es la rama default**.
+  La frontera está en la **v2.0.0** y **las dos licencias coexisten hoy** en el
+  mismo repo. Las 23 particiones de grant catalogadas antes eran **espaciales**
+  (repo, organización, subdirectorio, raíz, rama, archivo); ésta es **temporal**.
+  Corolario obligatorio: **toda afirmación de licencia lleva la rama o la versión
+  donde se midió** — *"NGO es MIT"* no es falso, es **incompleto**, y lo que falta
+  invierte el veredicto. El procedimiento es el **canal 11** y la **Receta 68**.
+  Y el mismo proveedor publica **MIT en el cable (v1)**, **UCL en el cable (v2/v3)**
+  y **UCL en la entrada** (`InputSystem`, 491 B, cycle 23): no se puede decir
+  "Unity es X".
+  🔴 **Y la décima: un grant puede prohibir la competencia por escrito.**
+  `FirstGearGames/FishNet` (**2.1k ★**, vivo) tiene una licencia propia de
+  **3.640 B**, sin SPDX, cuyo §2.b dice que *"other products of like Software
+  (explicitly **networking solutions**) may not use, reverse engineer, or
+  implement Software in part or full"*. Un juego hecho con FishNet está permitido
+  (§2.d); **un entregable de red para un cliente no**. Es el extremo opuesto de
+  **FCL-1.0-MIT** (cycle 19), que *permite por escrito* los *"professional
+  services provided to a licensee"*. **Las licencias de 2026 codifican el modelo
+  de negocio del licenciante, a favor o en contra del integrador — y ninguna de
+  las dos se detecta por peso de archivo.**
+  🔵 **Y la corrección de instrumento del cycle 24: el conteo de bytes se mide
+  sobre ARCHIVO, no sobre variable de shell.** `$(curl …)` **elimina los `\n`
+  finales**, así que todo archivo terminado en salto de línea mide **un byte
+  menos**: el primer barrido de este pass dio `open-match` = 11.344 B contra los
+  **11.345 B** correctos del registro. **Un byte de diferencia no es deriva de
+  licencia hasta haber descartado el idioma de la herramienta.** Y en el mismo
+  pass, `SpacetimeDB` movió su **Change Date de 2031-11-20 a 2031-11-22** (v2.16.2
+  → v2.16.3) **con el archivo en los mismos 42.562 B**: la licencia cambió de
+  contenido **sin cambiar de tamaño**, de modo que un detector por `size` no ve
+  nada. El reloj BUSL **es de la versión, no del proyecto**.
+  🔵 **Y las tres formas de leer mal un grant, las tres cometidas y corregidas en
+  el cycle 24 (Receta 69):** (1) **falso ENUM=0** — `lucasteles/Backdash` es MIT
+  en un archivo llamado **`LICENCE.md`**, ortografía *británica*, invisible a una
+  sonda que enumere sólo `LICENSE*`; (2) **falso UNKNOWN** — **el grant MIT puede
+  no llevar título** y arrancar en `Copyright (c)` (`enet` 1.060 B,
+  `godot-rollback-netcode` 1.062 B, `Facepunch.Steamworks` 1.065 B), así que hay
+  que buscar la **cláusula operativa** y nunca el título; (3) **falso positivo** —
+  el `LICENSE` de **216 B** de `gschup/ggrs` es un **puntero** que nombra *"Apache
+  License"* y en realidad ofrece **dual MIT/Apache a elección del usuario**.
+- **`curl` y `WebFetch` no son el mismo canal contra el mismo host.** Medido en el
+  cycle 24: `github.com` responde **403 a `curl`** y **200 a `WebFetch`** (★,
+  `archived`, rama default), mientras `raw.githubusercontent.com` responde **200 a
+  ambos** y `api.github.com/repos/...` y `codeload.github.com` dan **403**. Antes
+  de declarar un host política-muerto, **probar los dos canales**.
 - **En la capa de modelos generativos, código y pesos son dos licencias
   distintas, en archivos con nombres distintos** (`LICENSE_weights`,
   `MODEL_LICENSE`, o un addendum dentro del propio `LICENSE`). Medición del

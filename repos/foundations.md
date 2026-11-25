@@ -4,6 +4,106 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 24) — fundaciones del **plano del cable**: transporte → replicación → rollback → relay → sesión
+
+La capa es una cadena de cinco eslabones y, a diferencia del plano del espectador
+(cycle 21, donde **cero de 12** repos del lado píxel eran permisivos), **aquí la
+permisividad es la norma**: de 20 fundaciones medidas, **18 son MIT / BSD /
+Apache-2.0 / ISC**. El copyleft aparece una sola vez (MPL-2.0, débil y por
+archivo), y lo no-open-source aparece exactamente donde están los **motores
+comerciales**: Unity (UCL) y FishNet (licencia propia).
+
+**Licencia leída en bytes del archivo del repo** (re-medida sobre archivo, no
+sobre variable de shell — ver corrección de instrumento en `agents/top.md`):
+
+### Eslabón 1 — El transporte: mover un datagrama sin perder la mano
+
+| # | Fundación | Repo | ★ | Licencia **medida** | Qué resuelve |
+|---|---|---|---|---|---|
+| 1 | **GameNetworkingSockets** | https://github.com/ValveSoftware/GameNetworkingSockets | **10.1k** | 🟢 **BSD-3** (`LICENSE`, **1.488 B**) | **El patrón de la capa.** UDP fiable + no fiable, cifrado, el stack de Steam **sin exigir Steam**. Requiere OpenSSL ≥1.1 |
+| 2 | **KCP** | https://github.com/skywind3000/kcp | **17.0k** | 🟢 **MIT** (`LICENSE`, 1.091 B) | **El repo más estrellado de toda la capa.** ARQ fiable sobre UDP: cambia ~30-40% de ancho de banda por latencia baja |
+| 3 | **ENet** | https://github.com/lsalzman/enet | **3.3k** | 🟢 **MIT** (`LICENSE`, 1.060 B, **sin título**) | El clásico: UDP fiable, canales, secuenciación. © hasta 2024 |
+| 4 | **enet (zpl-c)** | https://github.com/zpl-c/enet | — | 🟢 **MIT** (`LICENSE`, 1.146 B) | ENet en **un solo header**, para meterlo en un build sin CMake |
+| 5 | **LiteNetLib** | https://github.com/RevenantX/LiteNetLib | **3.6k** | 🟢 **MIT** (`LICENSE.txt`, 1.090 B) | El transporte UDP de referencia en **C#**. 1.445 commits |
+| 6 | **msquic** | https://github.com/microsoft/msquic | — | 🟢 **MIT** (`LICENSE`, 1.074 B) | **QUIC** de Microsoft: multiplexado sin *head-of-line blocking*, 0-RTT |
+| 7 | **quiche** | https://github.com/cloudflare/quiche | — | 🟢 **BSD-2** (`COPYING`, 1.306 B) | QUIC + HTTP/3 de Cloudflare, en Rust. La otra mitad del par QUIC |
+| 8 | **NetStack** | https://github.com/nxrighthere/NetStack | — | 🟢 **MIT** (`LICENSE`, 1.098 B) | Estructuras sin asignación para el hot path: buffers, compresión de bits |
+
+### Eslabón 2 — La replicación: que dos máquinas crean en el mismo mundo
+
+| # | Fundación | Repo | ★ | Licencia **medida** | Qué resuelve |
+|---|---|---|---|---|---|
+| 9 | **Mirror** | https://github.com/MirrorNetworking/Mirror | **6.4k** | 🟢 **MIT** (`LICENSE`, 1.149 B) | **La recomendación permisiva de esta KB para Unity.** Replicación servidor-autoritativa de alto nivel. 9.192 commits |
+| 10 | **Ignorance** | https://github.com/SoftwareGuy/Ignorance | — | 🟢 **MIT** (`LICENSE`, 1.194 B) | ENet **como transporte de Mirror**: el pegamento del eslabón 1 al 2 |
+| 11 | **multiplayer-community-contributions** | https://github.com/Unity-Technologies/multiplayer-community-contributions | — | 🟢 **MIT** (`LICENSE.md`, **1.075 B**) | Transportes y utilidades de comunidad para NGO. 🔵 **Es MIT mientras el NGO v3 que acompaña es UCL** — el satélite quedó más libre que el planeta |
+| 12 | **Colyseus** | https://github.com/colyseus/colyseus | **7.6k** | 🟢 **MIT** (`LICENSE`, 1.075 B) | **Servidor autoritativo para navegador/móvil**: rooms, sincronización de estado delta, matchmaking propio. 2.318 commits |
+| 13 | **lightyear** | https://github.com/cBournhonesque/lightyear | **1.2k** | 🟢 **dual MIT (1.036 B) / Apache-2.0** | La capa completa para **Bevy/Rust**: predicción de cliente, interpolación de snapshots, **WebTransport y WASM** |
+| 14 | **bevy_replicon** | https://github.com/projectharmonia/bevy_replicon | 664 | 🟢 **dual MIT (1.078 B) / Apache-2.0** | Replicación servidor-autoritativa para Bevy, con **visibilidad por entidad**. 🔵 **Sin I/O propio** por diseño: se enchufa a un backend (`bevy_replicon_renet`, `aeronet_replicon`) |
+
+### Eslabón 3 — El rollback
+
+Las 10 piezas de rollback están tabuladas en `agents/top.md` (GGPO · GGRS ·
+GekkoNet · Backdash · BestoNet · Rollback-Core · netplayjs · rollback-netcode ·
+godot-rollback-netcode · Backroll). Resumen de fundación: **el original
+(`pond3r/ggpo`, MIT, 3.6k ★) está quieto desde 2015 y no hay un sucesor grande
+— hay seis sucesores vivos y pequeños**, el mayor de 707 ★.
+
+### Eslabón 4 — El relay y el atravesado de NAT: cuando el P2P no conecta
+
+| # | Fundación | Repo | ★ | Licencia **medida** | Qué resuelve |
+|---|---|---|---|---|---|
+| 15 | **coturn** | https://github.com/coturn/coturn | — | 🟢 **BSD-3** (`LICENSE`, 1.621 B) | **El servidor TURN/STUN de referencia.** El relay propio: sin él, el P2P expone IPs (ver `intel/market.md` §3) |
+| 16 | **libdatachannel** | https://github.com/paullouisageneau/libdatachannel | **2.8k** | 🟠 **MPL-2.0** (`LICENSE`, **16.726 B**) | WebRTC DataChannels en C/C++ sin el stack de navegador. **Copyleft débil, por archivo** |
+| 17 | **libjuice** | https://github.com/paullouisageneau/libjuice | — | 🟠 **MPL-2.0** (`LICENSE`, **16.726 B**) | Sólo ICE/STUN/TURN: el atravesado de NAT aislado del resto |
+| 18 | **pion/webrtc** | https://github.com/pion/webrtc | — | 🟢 **MIT** (`LICENSE`, 1.093 B) | WebRTC en **Go**, puro. La vía permisiva al mismo trabajo que libdatachannel |
+| 19 | **pion/turn** | https://github.com/pion/turn | — | 🟢 **MIT** (`LICENSE`, 1.093 B) | TURN embebible en Go: relay propio **como biblioteca**, no como demonio |
+| 20 | **geckos.io** | https://github.com/geckosio/geckos.io | — | 🟢 **BSD-3** (`LICENSE`, 1.550 B) | UDP real desde el navegador vía WebRTC, con API de sockets |
+
+### Eslabón 5 — La sesión: emparejar, asignar, persistir
+
+Ya en la KB desde passes anteriores, re-medidos hoy: **Agones**,
+[**Nakama**](https://github.com/heroiclabs/nakama) (Apache-2.0, `LICENSE`,
+**11.358 B**), [**Open Match**](https://github.com/googleforgames/open-match)
+(Apache-2.0, `LICENSE`, **11.345 B**, **3.4k ★**, su README sigue diciendo *"in
+active development"*), [**rivet**](https://github.com/rivet-gg/rivet)
+(Apache-2.0, `LICENSE`, **11.349 B**).
+
+---
+
+### 🔵 El corolario de método del pass: **Apache-2.0 midió un NOVENO peso, y es el más liviano hasta ahora**
+
+El cycle 19 cerró con *"Apache-2.0 tiene ≥6 byte-counts, así que el checksum
+FLAGEA pero no DECIDE"*; el cycle 22 lo llevó a 8 pesos (9.452–11.606). Este pass
+agrega uno **por debajo de todo el rango conocido**:
+
+| Peso Apache-2.0 medido | Repo | Nota |
+|---|---|---|
+| **10.174 B** | `gschup/ggrs` → `LICENSE-APACHE` | 🔴 **Nuevo. El más liviano registrado por esta KB** |
+| 11.345 B | `googleforgames/open-match` | — |
+| 11.349 B | `rivet-gg/rivet` | — |
+| 11.358 B | `heroiclabs/nakama` | Mismo peso que `OpenXR-SDK` (cycle 23) |
+
+**Y el contraste que vale como regla.** En el mismo pass, **MPL-2.0 midió
+16.726 B en dos repos** (`libdatachannel`, `libjuice`) — pero ambos son del
+**mismo autor** (`paullouisageneau`), así que **no son evidencia independiente**:
+es un archivo copiado entre dos proyectos de una misma mano. La evidencia fuerte
+sigue siendo la del cycle 22 (**GPL-3.0 = 35.149 B en tres repos no
+relacionados**). Se registra la distinción porque es la diferencia entre *"esta
+familia tiene texto canónico"* y *"este autor copia su propio archivo"*.
+
+**La familia MIT, en cambio, se parte en dos subfamilias por el título**, medido
+sobre 14 archivos MIT de este pass:
+
+| Subfamilia MIT | Rango medido | Ejemplos |
+|---|---|---|
+| **Con** línea `MIT License` | **1.036 – 1.149 B** | ggrs 1.037 · Backdash 1.083 · NGO v1 1.075 · Mirror 1.149 |
+| 🔵 **Sin** título, arranca en `Copyright (c)` | **1.060 – 1.065 B** | `enet` 1.060 · `godot-rollback-netcode` 1.062 · `Facepunch.Steamworks` 1.065 |
+
+Los rangos **se solapan**, así que el peso no distingue las subfamilias: lo único
+que las distingue es **la cláusula operativa**. Un detector que busque el título
+pierde las tres de la segunda fila — y las tres son MIT de verdad.
+
+---
 ## 🆕 Pass 2026-11-25 (cycle 23) — fundaciones del **plano del dispositivo**: estándar → runtime → transporte → entrada → manos
 
 La capa es una cadena de cinco eslabones y, a diferencia del plano de la puerta

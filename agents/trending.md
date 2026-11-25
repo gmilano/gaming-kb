@@ -12,6 +12,74 @@ updated: 2026-11-25
 
 ---
 
+## 🆕 2026-11-25 — pass cycle 24
+
+**Canal de estrellas de este pass: `WebFetch` sobre `github.com`.** Medido
+endpoint por endpoint, lo disponible cambió otra vez respecto del cycle 23:
+
+| Canal | Estado medido hoy | Qué da |
+|---|---|---|
+| `raw.githubusercontent.com` | 🟢 **200** | **Bytes de licencia y texto.** El canal de grant de esta casa |
+| `github.com` vía **WebFetch** | 🟢 **200** | ★, `archived`, rama default, prosa del README |
+| `github.com` vía `curl` | 🔴 **403** (proxy) | Nada — **no es lo mismo que WebFetch** |
+| `api.github.com/repos/...` | 🔴 **403** | Nada. *"GitHub access to this repository is not enabled for this session"* |
+| `codeload.github.com` | 🔴 **403** | Nada |
+
+🔵 **Corrección operativa que vale para los próximos passes:** `curl` y `WebFetch`
+**no son el mismo canal** contra el mismo host. `github.com` responde 403 a `curl`
+y 200 a `WebFetch`. El cycle 23 dio por muertos varios hosts sobre evidencia de
+`curl`; **al menos uno de ellos está vivo por el otro canal.** Antes de declarar
+un host política-muerto, probar **los dos**.
+
+### El evento del pass: **Unity relicenció el cable y el reemplazo ya está elegido**
+
+No es un repo nuevo: es un **grant que se movió**, y el beneficiario es un repo
+viejo.
+
+| Pieza | ★ | Grant medido | Movimiento |
+|---|---|---|---|
+| [com.unity.netcode.gameobjects](https://github.com/Unity-Technologies/com.unity.netcode.gameobjects) | **2.3k** | 🔴 **UCL** (501 B) en `develop-3.x.x` (default) y `release/2.0.0` · **MIT** (1.075 B) en `develop` y `release/1.0.0` | **Relicenciado en la v2.0.0.** Las dos licencias coexisten hoy en el mismo repo |
+| [MirrorNetworking/Mirror](https://github.com/MirrorNetworking/Mirror) | **6.4k** | 🟢 **MIT** (1.149 B) | **El reemplazo permisivo.** 9.192 commits, vivo |
+| [multiplayer-community-contributions](https://github.com/Unity-Technologies/multiplayer-community-contributions) | — | 🟢 **MIT** (1.075 B) | 🔵 El **satélite oficial de NGO quedó más libre que NGO** |
+
+### Lo nuevo de la semana en la capa de rollback
+
+Seis sucesores vivos de GGPO, ninguno grande. Se publica el tamaño real porque
+**el tamaño es el dato**: esta capa no tiene un líder open source vivo.
+
+| Pieza | ★ | Licencia **medida** | Nota del pass |
+|---|---|---|---|
+| [gschup/ggrs](https://github.com/gschup/ggrs) | **707** | 🟢 dual **MIT** (1.037 B) / **Apache-2.0** (10.174 B) | El mayor de los sucesores. Rust. **Apache de 10.174 B = el más liviano que esta KB midió nunca** |
+| [HeatXD/GekkoNet](https://github.com/HeatXD/GekkoNet) | **69** | 🟢 **BSD-2** (1.305 B) | El más completo por features: espectador + replay + **detección de desync** |
+| [lucasteles/Backdash](https://github.com/lucasteles/Backdash) | **180** | 🟢 **MIT** (`LICENCE.md`, 1.083 B) | C#. 🔵 **Ortografía británica del archivo**: invisible a una sonda que sólo enumere `LICENSE*` |
+| [gregorik/Rollback-Core](https://github.com/gregorik/Rollback-Core) | **26** | 🟢 **MIT** (1.067 B) | UE5. ⚠️ **Open-core**: el matchmaking está en el tier pago (`Rollback Core Pro`, Fab EULA) |
+| [bestogames/bestonet](https://github.com/bestogames/bestonet) | — | 🟢 **MIT** (1.067 B) | Inspirado en GekkoNet |
+| [pond3r/ggpo](https://github.com/pond3r/ggpo) | **3.6k** | 🟢 **MIT** (1.109 B) | ⚠️ El original, **quieto**: última release pública 0.32 (2015). `ggpo/ggpo` es **404** |
+
+### 🔴 Bajas y rechazos medidos este pass
+
+| Pieza | Veredicto | Motivo **medido** |
+|---|---|---|
+| [HouraiTeahouse/Backroll](https://github.com/HouraiTeahouse/Backroll) | 🔴 **Muerto** | **`archived` el 2022-11-16**, read-only. Licencia MIT impecable (1.144 B) y **cero latido** |
+| [FirstGearGames/FishNet](https://github.com/FirstGearGames/FishNet) | ⛔ **Fuera** | Licencia propia (3.640 B) con **cláusula de no-competencia** (§2.b): prohíbe implementarlo en otra solución de red |
+| [clockworklabs/SpacetimeDB](https://github.com/clockworklabs/SpacetimeDB) | ⛔ **Fuera** (confirmado) | BUSL-1.1, 1 instancia en producción. 🔵 **Change Date movida 2031-11-20 → 2031-11-22 con el archivo en los mismos 42.562 B** |
+| **Hathora** | ⛔ **Cerrado** | **2026-05-05**, tras su adquisición por Fireworks AI |
+| **LightnerX** | ⬜ **No verificable** | Anunciado el **2026-11-22** (v0.2.0-beta, C++17 sobre GameNetworkingSockets) en un blog de gamedev.net. **Dos slugs de GitHub probados, ambos 404.** Se registra como anuncio sin repo localizable, **no como hallazgo** |
+
+### ⬜ Gaps de la capa, escritos como gaps
+
+- **Agente de IA específico del cable: cero.** Esta casa buscó agentes de IA para
+  netcode —tuning de predicción, detección de desync asistida, generación de
+  pruebas de red— y **no encontró ninguno**. La capa es **infraestructura
+  clásica**; su contacto con la IA es que es el **sustrato** de los agentes de
+  juego, no que tenga agentes propios. Se escribe porque el silencio parece
+  cobertura.
+- **Rollback para Godot en GitHub: cero — y es un gap FALSO.** La pieza existe
+  ([snopek-games/godot-rollback-netcode](https://gitlab.com/snopek-games/godot-rollback-netcode),
+  **MIT**, `LICENSE.txt` 1.062 B) y **vive sólo en GitLab**: 404 en GitHub en
+  `main` y en `master`. Mismo patrón que `0ad` → Gitea (cycle 18).
+
+---
 ## 🆕 2026-11-25 — pass cycle 23
 
 **Este pass sí publica estrellas.** El cycle 22 escribió que `api.github.com`

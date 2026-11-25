@@ -4,6 +4,98 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Tendencias — pass cycle 24 (2026-11-25)
+
+### 1. 🔴 La tendencia de fondo: **la regulación llegó a esta capa y decidió NO legislar**
+
+Secuencia que esta KB puede leer en sus propios passes, ahora con un término que
+faltaba: el **no**.
+
+| Momento | Dónde estaba la fricción | Cómo se resolvió |
+|---|---|---|
+| cycles 10-11 | Etiquetar contenido AI (Art. 50) | En el pipeline de contenido |
+| cycle 19 | Qué ve y qué paga cada jugador | En el plano de decisión |
+| cycle 20 | Cobrar fuera de la tienda del fabricante | **Por ley**, en cuatro regiones |
+| cycle 22 | Quién entra y con qué edad | Cuatro arquitecturas de software |
+| cycle 23 | Cómo el jugador toca el juego | Software convergió solo; hardware divergió por regulación |
+| **cycle 24** | **Si el publisher puede apagar el servidor** | 🔴 **1.294.188 firmas verificadas → la Comisión respondió que NO legislará.** Vía: código de conducta **voluntario**, sin publicar a 2026-11-15 |
+
+**La novedad no es que la capa esté desregulada. Es que se intentó regularla con
+el instrumento democrático más fuerte que tiene la UE —una iniciativa ciudadana
+con 1,29 M de firmas— y el resultado fue un compromiso voluntario.** Para esta KB
+eso es tan informativo como una obligación: define que, en esta capa, el
+*fin de vida digno* es **diferenciador de producto**, no requisito de entrada.
+
+### 2. 🔴 El grant como arma competitiva: de "permite consultoría" a "prohíbe competencia"
+
+Dos passes, dos extremos del mismo eje, los dos medidos en texto de licencia:
+
+| Pass | Grant | Qué hace con el tercero que cobra por integrar |
+|---|---|---|
+| cycle 19 | **FCL-1.0-MIT** (FLIPT) | ✅ Lo **permite por escrito**: *"professional services provided to a licensee"* |
+| **cycle 24** | **FishNet propia** (3.640 B) | ⛔ Lo **excluye por escrito** si el entregable es *"networking solutions"* |
+
+**La tendencia que esto marca:** las licencias de 2026 dejaron de ser sólo una
+elección entre permisivo y copyleft y empezaron a **codificar el modelo de negocio
+del licenciante** — a favor (FCL) o en contra (FishNet) del integrador. Ninguna
+de las dos es OSI. Ninguna de las dos se detecta por peso de archivo. **Las dos
+deciden si Globant puede o no tomar el trabajo.**
+
+### 3. 🔵 La relicenciación por versión mayor, que es nueva en esta KB
+
+Unity movió `com.unity.netcode.gameobjects` de **MIT (v1)** a **Unity Companion
+License (v2, v3)**. Las 23 formas de partición de grant que esta KB había
+catalogado eran **espaciales** (por repo, por organización, por subdirectorio,
+por raíz, por rama, por archivo). Ésta es **temporal**: la licencia es función de
+la **versión**, y las dos versiones **coexisten hoy** en ramas vivas del mismo
+repo.
+
+**Consecuencia de método, generalizable fuera de gaming:** una afirmación de
+licencia **tiene que llevar la versión o la rama donde se midió**. *"NGO es MIT"*
+no es falso: es **incompleto**, y la parte que falta invierte el veredicto.
+
+### 4. 🟢 Donde esta capa está resuelta y donde no: la forma de la curva de estrellas
+
+| Eslabón | Máximo vivo medido | Lectura |
+|---|---|---|
+| **Transporte** | **17.0k ★** (kcp) · 10.1k (GNS) · 3.3k (enet) | 🟢 **Resuelto.** Varias opciones permisivas, maduras, sustituibles entre sí |
+| **Replicación** | **7.6k ★** (Colyseus) · 6.4k (Mirror) | 🟢 **Resuelto en permisivo**, y con el competidor propietario (NGO v3, FishNet) por debajo en ★ |
+| **Rollback** | 🔴 **707 ★** (ggrs); el clásico `pond3r/ggpo` **quieto desde 2015** | 🔴 **No resuelto.** Seis sucesores vivos, todos pequeños. Se **construye**, no se elige |
+| **Relay / NAT** | 2.8k ★ (libdatachannel, MPL-2.0) | 🟠 Resuelto, con el único copyleft de la capa — y con gemelo permisivo (pion) |
+
+### 5. 🔵 La divergencia regional de adopción de IA alcanzó su máximo medido
+
+No es tendencia de la capa, es del mercado, y este pass la mide en su punto más
+extremo hasta ahora:
+
+| Región | Cifra medida 2026 | Fuente |
+|---|---|---|
+| **APAC** (Japón) | **100%** de las empresas de juego online encuestadas usan IA generativa (Gemini 94%) | JOGA 2026 |
+| **APAC** (Japón) | **85,8%** de desarrolladores, desde **51%** un año antes | CESA |
+| **APAC** (China) | **>60%** con IA en el pipeline | prensa sectorial |
+| **North America** | 🔴 **52%** dice que la IA generativa es **negativa** para la industria (desde 30% y 18%); **36%** la usa | GDC 2026 |
+| **LATAM** | Parte grande de los jugadores **dispuesta** a consumir juegos hechos con IA | PGB Latam 2026 (gamescom latam) |
+
+**Misma tecnología, dos mercados en direcciones opuestas.** Japón pasó de 51% a
+85,8% en un año mientras NA pasó de 18% a 52% **de rechazo**. 🔵 **Y la capa de
+este pass es el refugio de esa tensión:** el cable es infraestructura, no
+contenido generado, así que **no carga el backlash** que sí cargan assets, voces
+y arte. Un proyecto de IA en gaming con riesgo reputacional bajo vive en el
+backend, no en el pixel — que es exactamente lo que KPMG anticipó para 2026
+(*"las integraciones más profundas de IA llegarán por el back end"*).
+
+### 6. ⬜ Lo que esta capa NO tiene, medido y escrito como ausencia
+
+- **Agentes de IA para netcode: cero.** Ni tuning de predicción, ni detección de
+  desync asistida, ni generación de cargas de prueba. Buscado explícitamente.
+- **Mediación de anuncios open source: cero** (sin cambio desde el cycle 19).
+- **Norma de arquitectura de red para videojuegos: cero en las cuatro regiones.**
+  Lo más cerca es el requisito de **localización de datos de Vietnam** (Ley de
+  Ciberseguridad 2025, aplica desde **2026-07-01**, decreto de implementación
+  **pendiente**) y, en China, no una regla de servidor sino el **socio de
+  publicación licenciado** obligatorio.
+
+---
 ## 🆕 Tendencias — pass cycle 23 (2026-11-25)
 
 ### 1. 🔴 La tendencia de fondo: **el estándar de software ganó; la frontera se movió al objeto físico**
