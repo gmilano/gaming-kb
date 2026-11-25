@@ -4,6 +4,51 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 22) — plataformas reales del **plano de la puerta**, y el mapa propietario contra el que compiten
+
+### Plataformas open source customizables (el equivalente a Odoo en esta capa)
+
+| Plataforma | Repo | Licencia **medida** | Qué se customiza encima |
+|---|---|---|---|
+| **Keycloak** | https://github.com/keycloak/keycloak | **Apache-2.0** (11.358 B) | SPI en Java: *authenticators* propios. Es donde se **inserta el paso de edad** como un nodo más del flujo de login, sin tocar el juego |
+| **Ory** (Kratos/Hydra/Oathkeeper) | https://github.com/ory/kratos | **Apache-2.0** (11.357 B) | Flujos por configuración + UI propia. La opción cuando la pantalla de login es parte de la marca del juego |
+| **Casdoor** | https://github.com/casdoor/casdoor | **Apache-2.0** (11.357 B) | IdP con UI y multi-tenancy ya hechos: varios títulos de un publisher como tenants separados |
+| **authentik** | https://github.com/goauthentik/authentik | 🟡 **MIT + 3 carve-outs** (1.870 B) | *Flows* declarativos. Permisivo **si se excluye `authentik/enterprise/`** |
+| **Logto** | https://github.com/logto-io/logto | **MPL-2.0** (16.725 B) | CIAM de consumo; copyleft **por archivo**, tolerable en servidor |
+| **Zitadel** | https://github.com/zitadel/zitadel | 🔴 **AGPL-3.0** (34.522 B) | Potente y API-first, pero **AGPL en un servicio de cara al jugador obliga a liberar**. Se nombra para descartarlo con fundamento |
+| **Yivi** (irmago) | https://github.com/privacybydesign/irmago | **Apache-2.0** (10.773 B) | Wallet + stack de credenciales desplegable por el propio estudio o por un consorcio regional |
+| **walt.id** | https://github.com/walt-id/waltid-identity | **Apache-2.0** (11.357 B) | Emisor y verificador propios: útil cuando el cliente **quiere ser** el emisor de la credencial |
+
+### El mapa propietario contra el que compite esta capa
+
+Esta capa tiene, a diferencia de otras de esta KB, **un vendor nativo de
+videojuegos** — y conviene saber su nombre antes de una conversación con cliente:
+
+| Proveedor | Posición medida | Nota |
+|---|---|---|
+| **k-ID** | El vendor **nacido en gaming**. Más de **US$ 50 M** levantados (PitchBook reporta US$ 55,3 M; Tracxn US$ 51 M; CB Insights todavía muestra sólo la Serie A de US$ 45 M de 2024, liderada por Lightspeed y a16z) ⇒ **las fuentes no coinciden y se publican las tres** | Vende SDK + "Compliance Developer Kit": age assurance, consentimiento parental y **reglas por jurisdicción** en un solo lugar. Impulsa la iniciativa **OpenAge** con Persona, Incode y Veratad |
+| **Yoti** | El que ganó las cuentas de plataforma | **PlayStation** (UK/IE) y **Minecraft** (ene-2026) enrutan sus chequeos por Yoti. Certificado en el registro ACCS contra **ACCS 1:2025** e **ISO/IEC 27566-1:2025** |
+| **VerifyMy** | Segundo proveedor de Microsoft | Certificación ACCS emitida **21-may-2026**, válida a **20-may-2029**. Su inferencia de edad por email se distribuye **a través del kit de k-ID** |
+| **Privately, Incode, Persona, Veratad, SuperAwesome (Epic)** | Campo de especialistas | Privately figura certificado; **k-ID no figura en ese mismo registro** |
+
+> 🔴 **El dato que vale para una propuesta:** las tres consolas ya eligieron
+> proveedor y **ninguna construyó**. Microsoft, Sony y Minecraft **compraron**
+> age assurance a terceros certificados. ⇒ Proponerle a un cliente "te
+> construimos la verificación" compite contra una decisión que el mercado ya
+> tomó en contra. Lo que **sí** está sin resolver es la **integración**: el
+> último metro dentro del engine, la política por jurisdicción y la que ninguno
+> de estos vendors entrega — la **sesión** (qué pasa cuando la edad cambia el
+> comportamiento del juego, no sólo el acceso).
+
+### 🟡 Un precedente de producto que conviene tener a mano: el *bypass* por antigüedad
+
+Microsoft dejó de exigir verificación completa para acceso ininterrumpido a
+funciones sociales en Xbox **cuando la cuenta tiene actividad de larga data**.
+Técnicamente es **usar el historial de la cuenta como señal de edad**. Es la
+única señal de las medidas que **no le cuesta nada al jugador**, y la única que un
+estudio ya tiene en su propia base de datos. Para un título con años de
+operación, es la primera que conviene evaluar.
+
 ## 🆕 Pass 2026-11-25 (cycle 21) — plataformas reales del **plano del espectador**, y el mapa propietario contra el que compiten
 
 La asimetría de esta capa es distinta a la del cycle 20, y conviene decirla antes

@@ -4,6 +4,127 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Tendencias — pass cycle 22 (2026-11-25)
+
+### 1. 🔴 La tendencia de fondo: **la regulación pasó de pedir una etiqueta a pedir una PUERTA**
+
+Secuencia medida por esta KB a lo largo de sus propios passes, que ahora se lee
+como una línea:
+
+| Momento | Qué pedía la norma | Dónde se implementaba |
+|---|---|---|
+| cycles 10-11 | **Etiquetar** contenido generado por AI (Art. 50) | En el pipeline de contenido |
+| cycle 13 | **Clasificar** al usuario por categoría de edad (SB 2420) | En la tienda + el cliente |
+| cycle 19 | **No targetear** por vulnerabilidad (Art. 5, precios) | En el plano de decisión |
+| cycle 20 | **Abrir** el camino del dinero (DMA, MSCA, CADE) | En la tienda y el webshop |
+| **cycle 22** | **Probar la edad y el consentimiento antes de dejar entrar** | 🔴 **En el login** — el punto por el que pasa el 100 % de los jugadores |
+
+> La diferencia operativa: etiquetar es un trabajo de pipeline que se corre una
+> vez por asset. La puerta se ejecuta **en cada sesión de cada jugador**, y si
+> falla, **no se ve mal: nadie entra.** Es la primera capa de esta KB cuyo modo
+> de falla es *denegación de servicio a usuarios legítimos*.
+
+### 2. 🔴 Las cuatro regiones eligieron cuatro arquitecturas incompatibles
+
+No es fragmentación de *requisitos* (las cuatro quieren lo mismo: que el menor no
+entre). Es fragmentación del **punto de integración**:
+
+- **NA → la señal nace en el sistema operativo.** AB 1043 (California) obliga al
+  OS a recolectar edad en el setup del dispositivo y a entregar una **señal** a
+  las apps. El desarrollador **consume**; no verifica.
+- **EMEA → la prueba nace en el wallet del jugador**, y la norma **nombra el
+  algoritmo** (`longfellow-libzk-v1`).
+- **APAC → el veredicto nace en el Estado.** El real-name system del NPPA es
+  requisito de aprobación; no hay implementación propia posible.
+- **LATAM → el deber nace en la plataforma**, con cuenta parental vinculada, y
+  **con una salida por producto**: apagar loot boxes por default.
+
+🔴 **Consecuencia para quien construye:** el "age gate" no es un componente, son
+**cuatro adapters detrás de una interfaz** (Receta 61). Un equipo que diseñe el
+de su región primero y "lo adapte después" va a descubrir que el de NA **no
+verifica nada** y el de APAC **no se puede implementar**.
+
+### 3. 🟢 Tendencia técnica: el ZKP salió del paper y entró en una cláusula de conformidad
+
+Hito concreto y fechado: el **perfil Annex A §A.8** de la UE declara
+`longfellow-libzk-v1` **el único** sistema ZKP conforme. Alrededor de esa decisión
+se formó un ecosistema real en meses:
+
+| Pieza | Quién | Señal de madurez |
+|---|---|---|
+| `google/longfellow-zk` | Google | El prober de referencia; Apache-2.0 |
+| `abetterinternet/zk-cred-longfellow` | **ISRG / Let's Encrypt** | **Segunda** implementación (Rust) ⇒ el esquema deja de depender de un solo proveedor |
+| `privacybydesign/longfellow-go` | Yivi | Bindings Go; **compila desde fuente y pinea commit**, por requisito explícito del issue #724 |
+| `pipe23-org/zk-age-verifier` | Independiente | El lado verificador; se declara **experimental e inestable** |
+| `av-lib-ios-longfellow-zkp` | **Comisión Europea** | Biblioteca oficial iOS |
+| IETF CFRG | — | `libZK`/Longfellow presentado en **IETF 125**; estandarización formal **en curso, no cerrada** |
+
+🟡 **La reserva honesta:** "Anonymous Credentials from ECDSA" está publicado pero
+**su estandarización formal sigue abierta**, y el verificador de referencia se
+autodeclara experimental. ⇒ Es una base para **pilotos y arquitectura**, no para
+prometerle a un cliente un despliegue estable hoy.
+
+### 4. 🔴 Tendencia de mercado: las plataformas **compraron**, no construyeron
+
+Movimientos medidos en 2026, todos en la misma dirección:
+
+- **PlayStation** → Yoti (UK/IE), con tres métodos: número de móvil, escaneo
+  facial o documento. Quien no verifica **pierde chat de voz y mensajes**, no el
+  juego ⇒ la gradación es por **función social**, no por acceso.
+- **Minecraft** → Yoti (ene-2026).
+- **Xbox** → Yoti + VerifyMy, y después **relajó**: ya no exige verificación
+  completa para funciones sociales si la cuenta tiene **actividad de larga data**.
+- **Steam** → en Australia pide **tarjeta de crédito australiana**; eSafety
+  observó que como método único **difícilmente cumpla el requisito de "fairness"**.
+- **Roblox** → verificación obligatoria para chat, global, desde ene-2026 (ya en
+  el cycle 13), y en abr-2026 anunció **cuentas segmentadas por edad**: *Roblox
+  Kids* (5-8) y *Roblox Select* (9-15).
+
+> 🔴 **La tendencia de producto que se desprende, y es la más accionable:** nadie
+> está poniendo la puerta en la **entrada al juego**. La están poniendo en la
+> **función** — chat, voz, mensajes, compra, loot box. ⇒ El diseño correcto no es
+> un gate de login, es un **catálogo de capacidades con edad mínima por
+> capacidad**. Esto también explica el *bypass* por antigüedad de Xbox: si lo que
+> se protege es el chat y la cuenta tiene diez años de historial, el riesgo ya
+> está acotado por otra vía.
+
+### 5. 🟡 Tendencia de adopción: AI en gaming llegó a *mainstream* y a *backlash* al mismo tiempo
+
+Material de este pass, con su procedencia marcada:
+
+- **GDC 2026 State of the Industry** (>2.000 desarrolladores): uso extendido de
+  AI en ideación, prototipado y apoyo a programación.
+- **Omdia** marca el *AI backlash* como tendencia 2026, junto con costos de
+  infraestructura en alza.
+- **KPMG**: las integraciones más profundas van al **back end**, no al contenido
+  de cara al jugador ⇒ **coincide con lo que mide este pass**: la capa que se está
+  construyendo en serio es infraestructura (puerta, decisión, dinero), no NPCs.
+- **BCG** espera una avalancha de juegos nuevos por GenAI. ⚠️ Es **pronóstico**.
+- **AlixPartners**: múltiplos 2-3× para quien integre AI con IP fuerte. ⚠️
+  Pronóstico de consultora con interés en el tema.
+- **Games Workshop** prohibió a sus empleados usar contenido generado por AI
+  (ene-2026) ⇒ el *backlash* ya es **política interna de publisher**, no sólo
+  sentimiento de jugadores.
+- ⚠️ **Cifra que NO se publica:** "más de 7.300 juegos de Steam declaran GenAI,
+  casi el doble que 2024" circula atribuida a BCG **vía un tercero**, sin poder
+  confirmarse contra el informe original.
+
+### 6. ⚠️ El homónimo se revalida por sexta vez, y ahora con número
+
+`AI gaming {región} 2026 adoption regulation players` devolvió, en **las cuatro
+regiones**, el informe **KPMG/UNLV *State of AI in Gaming 2026*** en los primeros
+puestos. Es de **casino**. Sus datos —índice de madurez **45/100**, sólo **1 de
+cada 5** empresas con retorno significativo, **>80 %** usando GenAI para contenido
+e insights, adopción agéntica frenada por *compliance* y seguridad del jugador—
+se registran como **mercado adyacente**, no como videojuegos.
+
+🔴 **Y trae un dato que sí vale como señal cruzada:** el mismo informe mide que
+reguladores y operadores **invierten el ranking de riesgos**. Los reguladores
+ponen arriba el daño al jugador; la industria lo pone **último**. En la capa de
+este pass —donde el regulador escribió la arquitectura— esa brecha explica por
+qué la norma llegó tan abajo en el stack: **no confió en que la industria lo
+hiciera sola.**
+
 ## 🆕 Tendencias — pass cycle 21 (2026-11-25)
 
 ### 1. 🔴 La capa que lleva el juego al espectador **se parte en el encoder**, y es la primera capa de esta KB donde el copyleft es el default

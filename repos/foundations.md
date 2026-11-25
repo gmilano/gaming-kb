@@ -4,6 +4,64 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 22) — fundaciones del **plano de la puerta**: cuenta → identidad → edad probada → consentimiento → sesión
+
+El orden de esta capa es una cadena, y cada eslabón tiene base permisiva **menos
+uno**. Las 7 fundaciones, con licencia leída en bytes del archivo del repo:
+
+| # | Fundación | Repo | Licencia **medida** | Eslabón que cubre |
+|---|---|---|---|---|
+| 1 | **Keycloak** | https://github.com/keycloak/keycloak | **Apache-2.0** (`LICENSE.txt`, 11.358 B) | La cuenta y la federación. OIDC + SAML, extensible por SPI en Java |
+| 2 | **Ory** (Kratos + Hydra + Oathkeeper) | https://github.com/ory/kratos · https://github.com/ory/hydra · https://github.com/ory/oathkeeper | **Apache-2.0** (11.357 B los tres) | Identidad, emisión de tokens y autorización, como tres piezas separables |
+| 3 | **node-oidc-provider** | https://github.com/panva/node-oidc-provider | **MIT** (1.079 B) | El emisor OIDC mínimo embebible en un backend de juego Node |
+| 4 | **longfellow-zk** | https://github.com/google/longfellow-zk | **Apache-2.0** (11.386 B) | La prueba de edad sin entrega de datos. **Lo nombra el perfil de la UE** |
+| 5 | **identity-credential** / **multipaz** | https://github.com/openwallet-foundation-labs/identity-credential · https://github.com/davidz25/multipaz | **Apache-2.0** (11.358 B ambos) | ISO mdoc/mDL: el formato en el que viaja la credencial de edad |
+| 6 | **waltid-identity** | https://github.com/walt-id/waltid-identity | **Apache-2.0** (11.357 B) | Emisor + verificador + wallet en un stack, si el estudio necesita las tres puntas |
+| 7 | **credo-ts** | https://github.com/openwallet-foundation/credo-ts | **Apache-2.0** (11.606 B) | OID4VCI/OID4VP en TypeScript: el camino cuando el backend ya es Node |
+
+### 🔴 El eslabón sin base permisiva: **la app del jugador**
+
+| Pieza | Licencia medida | Consecuencia |
+|---|---|---|
+| `eu-digital-identity-wallet/av-app-android-wallet-ui` | **EUPL-1.2** (13.957 B) | Es la **app de referencia** de la Comisión. EUPL-1.2 es OSI-aprobada pero **recíproca**: un fork distribuido arrastra obligación de liberar |
+| `eu-digital-identity-wallet/av-app-ios-wallet-ui` | **EUPL-1.2** (13.961 B, con BOM) | Idem |
+| `eu-digital-identity-wallet/eudi-app-android-wallet-ui` | **EUPL-1.2** (13.961 B) | Idem |
+| `eu-digital-identity-wallet/eudi-lib-android-wallet-core` | **Apache-2.0** (11.357 B) | 🟢 **La biblioteca sí es permisiva** |
+
+> 🔴 **El corte está exactamente entre la biblioteca y la app, y es deliberado.**
+> La Comisión publica el **núcleo** bajo Apache-2.0 y la **experiencia** bajo
+> EUPL-1.2. Para Globant esto define la línea de integración: **se construye
+> sobre `eudi-lib-*` (permisivo) y NO se forkea `*-app-*-wallet-ui`** salvo que el
+> cliente acepte la reciprocidad. Es el mismo patrón que el cycle 21 midió del
+> lado píxel (copyleft como default), pero acá **con una frontera limpia y
+> declarada**, no difusa.
+
+### 🟡 Las dos fundaciones con carve-out por directorio
+
+| Repo | Archivo | Regímenes declarados **en un solo archivo** |
+|---|---|---|
+| https://github.com/goauthentik/authentik | `LICENSE` (1.870 B) | **4**: `website/` → CC BY-SA 4.0 · `authentik/enterprise/` → su propia `LICENSE` (2.803 B, **propietaria, exige suscripción para producción**) · **todo el JS de cliente** → MIT Expat · el resto → MIT |
+| https://github.com/supertokens/supertokens-core | `LICENSE.md` (10.732 B) | **2**: `ee/` → `ee/LICENSE.md` · el resto → Apache-2.0 |
+
+🔴 **El detalle de redacción que conviene conocer:** los dos dicen **"if that
+directory exists"**. La licencia está escrita para sobrevivir a que el directorio
+restringido **no esté** en el tarball. ⇒ Un build reproducible que excluya
+`enterprise/` o `ee/` queda **enteramente** bajo la licencia permisiva, y eso es
+una decisión de empaquetado, no de abogados. Es la contracara útil del carve-out
+que el cycle 19 midió como riesgo.
+
+### 🔴 Lo que se buscó y NO existe en esta capa
+
+Honestidad de registro: estas son ausencias **medidas**, no supuestas.
+
+| Pieza buscada | Resultado |
+|---|---|
+| Cliente OIDC / presentación de credencial **para Unity o Unreal** bajo licencia permisiva | 🔴 **Cero.** El único repo existente (`Funtaptic/UnityOIDCAuth`) **no tiene grant**; el de AccelByte es propietario |
+| Implementación open source del **real-name system** de China (NPPA) | 🔴 **Cero.** Es una API estatal con integración obligatoria para aprobación; no hay repo público. Buscado como `open source age verification China real-name NPPA API github 2026` |
+| Biblioteca open source contra **Lei 15.211/2025** (ECA Digital, Brasil) | 🔴 **Cero.** El único proyecto que apunta a Brasil (`matefs/adult-age-face-check`) cita el **ECA de 1990 (Lei 8.069/90)**, no la ley digital de 2025, y **no tiene grant** |
+| Control parental / límite de tiempo de juego open source | 🔴 **Cero** con repo real en esta búsqueda. Los sistemas que lo implementan (China, Roblox, consolas) son cerrados o estatales |
+| Gestión de **consentimiento parental** verificable, open source | 🔴 **Cero.** Es la pieza que los proveedores comerciales (k-ID, Yoti) venden como su núcleo |
+
 ## 🆕 Pass 2026-11-25 (cycle 21) — fundaciones del **plano del espectador**: captura → encode → transporte → servidor → espectador → clip → archivo
 
 20 passes no auditaron esta capa (medido: `spectator`, `highlight`, `commentary`,

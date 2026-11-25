@@ -12,6 +12,48 @@ updated: 2026-11-25
 
 ---
 
+## 🆕 2026-11-25 — pass cycle 22
+
+**Capa nueva: el plano de la puerta** (identidad, edad verificada, consentimiento).
+38 direcciones sondeadas, 37 existen, 1 fue conjetura propia y dio 404.
+
+- 🔴 **La UE nombra un repo en una cláusula de conformidad.** El perfil de Age
+  Verification, **Annex A §A.8**, manda `longfellow-libzk-v1` y declara que
+  soportar **cualquier otro** sistema de ZKP **no es conformidad**. El repo es
+  https://github.com/google/longfellow-zk (**Apache-2.0**, 11.386 B). Primera vez
+  en 22 passes que una norma apunta a una implementación open source concreta.
+- 🔴 **Tres regímenes legales dentro de un mismo stack obligatorio:** la **spec**
+  es **CC-BY-4.0** (declarada en 227 B, sin patent grant), las **bibliotecas** son
+  **Apache-2.0 / MPL-2.0**, y las **apps** que la Comisión publica son
+  **EUPL-1.2** (copyleft recíproco). Forkear la app de la UE **no** tiene las
+  mismas consecuencias que usar su biblioteca.
+- 🔴 **Zitadel es AGPL-3.0, no Apache-2.0.** Medido: 34.522 B. Las comparativas
+  de identity de 2026 siguen publicando "Apache 2.0". Misma forma que Unleash en
+  el cycle 19 ⇒ el patrón "relicenciado y la web no se enteró" ya tiene **dos**
+  casos en esta KB, en capas distintas.
+- 🟡 **El carve-out por directorio es la norma en identity, no la excepción:**
+  `authentik` (MIT + `authentik/enterprise/` propietaria, 2.803 B) y
+  `supertokens-core` (Apache-2.0 + `ee/`). Los dos usan la misma redacción
+  —"if that directory exists"— y **el mismo archivo declara los dos regímenes**.
+- 🔴 **El último metro existe y no se puede usar.** `Funtaptic/UnityOIDCAuth` es
+  el único cliente OIDC de engine open source encontrado y **no tiene grant**:
+  cero archivos de licencia, cero ocurrencias de `licen`/`MIT`/`Apache` en
+  11.594 B de README, y `package.json` de UPM sin campo `license`. El de
+  AccelByte es explícitamente propietario.
+- 🔴 **La opción MIT de estimación de edad es la sesgada.** `serengil/deepface`
+  (MIT, 1.077 B) se apoya en VGG-Face, con **sesgo positivo documentado de ±7–15
+  años en rostros jóvenes** — falla hacia arriba, que es la dirección que deja
+  pasar al menor.
+- 📏 **Apache-2.0: 8 pesos distintos en un solo pass** (9.452 → 11.606). GPL-3.0:
+  **35.149 B en tres repos independientes**. ⇒ La confiabilidad del checksum es
+  **por familia de licencia**, no universal.
+- 📏 **Canal 9 nuevo: la licencia-PUNTERO.** `brdoc` (206 B) y la spec de la UE
+  (227 B) tienen `LICENSE` que **redirige** en vez de otorgar. El de `brdoc`
+  además declara que un aviso por archivo **sobrescribe** la raíz.
+- 🟢 **Dos familias de licencia nuevas para esta KB:** **EUPL-1.2** (13.957 B) y
+  **Unlicense** (1.211 B, `DanWaLes/age-verification`). Más una bespoke no OSI:
+  **"No More Data! License v1.0"** (3.120 B, BetterAgeVerify) ⇒ no utilizable.
+
 ## 🆕 2026-11-25 — pass cycle 21
 
 **Tema del pass:** el **plano del espectador** — cómo el juego llega a quien **no**

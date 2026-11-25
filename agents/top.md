@@ -4,6 +4,190 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo más importante del pass 2026-11-25 (cycle 22): **el plano de la PUERTA** —quién puede jugar, con qué identidad, a qué edad verificada y con qué consentimiento— y el **canal 9: la licencia-PUNTERO**
+
+Los 21 passes anteriores de esta KB midieron qué hace el juego (NPC, assets,
+diálogo), cómo se opera (live-ops, decisión, dinero) y cómo se mira (espectador).
+**Ninguno midió el sustrato de la puerta de entrada.** Medición antes de escribir
+una línea, sobre los 9 archivos de esta KB:
+
+| Término | Archivos | Ocurrencias |
+|---|---|---|
+| `identity` | 0 | **0** |
+| `keycloak` | 0 | **0** |
+| `age verification` | 0 | **0** |
+| `account linking` | 0 | **0** |
+| `age assurance` | 2 | 3 |
+| `agones` (capa ya saturada, como contraste) | 8 | 118 |
+| `nakama` (idem) | 8 | 152 |
+
+🔴 **Precisión obligatoria, porque el cycle 13 sí estuvo acá:** el cycle 13 midió
+el **régimen del dato de edad** —SB 2420 palabra por palabra, PA 26-15 de
+Connecticut, y la contradicción conservar-vs-borrar que resolvió en la Receta
+21—. Lo que **no** existía es el **sustrato**: con qué se construye. Este pass no
+descubre la obligación; descubre **con qué se cumple**, y mide la licencia de
+cada pieza en bytes.
+
+### ⚠️ Honestidad de categoría: esta capa no es de agentes, y se dice
+
+De las 38 direcciones sondeadas en este pass, **las piezas agénticas son la
+minoría**. El plano de la puerta está hecho de **bibliotecas, proveedores de
+identidad y verificadores**: software que decide y prueba, no que razona. Se
+buscó explícitamente lo agéntico —`AI agent age verification`, `agentic identity
+gaming`, `open source AI agents gaming 2026 github MIT`— y **no apareció ningún
+agente autónomo de esta capa con repo real**. Las filas de abajo son componentes
+reales y verificados; **no se los va a llamar agentes para llenar una tabla.**
+
+### 🔵 1. Proveedores de identidad y cuenta — el "quién" (12 repos, licencia leída en bytes)
+
+| Componente | Repo | Licencia **medida** | Para qué sirve en un juego |
+|---|---|---|---|
+| **Keycloak** | https://github.com/keycloak/keycloak | **Apache-2.0** (`LICENSE.txt`, 11.358 B) | IdP completo OIDC/SAML; el default para federar cuentas de estudio y partners |
+| **Ory Kratos** | https://github.com/ory/kratos | **Apache-2.0** (11.357 B) | Gestión de identidad sin UI propia: el estudio construye su pantalla de login |
+| **Ory Hydra** | https://github.com/ory/hydra | **Apache-2.0** (11.357 B) | Servidor OAuth2/OIDC certificado; emite los tokens que el cliente del juego presenta |
+| **Ory Oathkeeper** | https://github.com/ory/oathkeeper | **Apache-2.0** (11.357 B) | Proxy de autorización: mete la decisión de acceso delante del servicio de juego |
+| **Casdoor** | https://github.com/casdoor/casdoor | **Apache-2.0** (11.357 B) | IdP con UI incluida y multi-tenant; útil cuando el estudio no quiere construir pantallas |
+| **Authelia** | https://github.com/authelia/authelia | **Apache-2.0** (11.338 B) | Portal de autenticación + 2FA para herramientas internas del estudio |
+| **node-oidc-provider** | https://github.com/panva/node-oidc-provider | **MIT** (`LICENSE.md`, 1.079 B) | Implementación OIDC embebible; la pieza más chica para emitir tokens propios |
+| **SuperTokens** | https://github.com/supertokens/supertokens-core | 🟡 **Apache-2.0 + carve-out** (`LICENSE.md`, 10.732 B) | Login autoalojado. **El archivo declara dos regímenes:** `ee/` va bajo `ee/LICENSE.md`, el resto Apache-2.0 |
+| **authentik** | https://github.com/goauthentik/authentik | 🟡 **MIT + 3 carve-outs** (1.870 B) | IdP con proxy forward. **Un archivo, cuatro regímenes** (ver §3) |
+| **Logto** | https://github.com/logto-io/logto | **MPL-2.0** (16.725 B) | CIAM orientado a producto de consumo; copyleft débil por archivo |
+| **Zitadel** | https://github.com/zitadel/zitadel | 🔴 **AGPL-3.0** (34.522 B) — **no Apache** | IdP API-first multi-tenant. **La web de 2026 sigue publicando Apache-2.0** (ver §4) |
+| **LLDAP** | https://github.com/lldap/lldap | 🔴 **GPL-3.0** (35.149 B) | Directorio liviano; copyleft fuerte, queda fuera de un cliente de juego distribuido |
+
+### 🔵 2. Age assurance: el "qué edad" — y **el caso donde el regulador nombra un repo**
+
+Hallazgo central del pass. El **perfil de Age Verification de la UE (Annex A
+§A.8)** no pide "una prueba de conocimiento cero": nombra **una**,
+`longfellow-libzk-v1`, y declara que **soportar cualquier otro sistema de ZKP no
+constituye conformidad**. El README de `longfellow-go` lo escribe así, y además
+**fija el commit**: `google/longfellow-zk` en `61a8a735964d1b22bccf79bf14ef6767249cdf92`
+(`v0.9-177`), compilado desde fuente, sin binario precompilado en el grafo.
+
+> 🔴 **Es la primera vez en 22 passes que una cláusula de conformidad regulatoria
+> apunta a una implementación open source concreta.** Para un estudio esto cambia
+> la naturaleza de la decisión: no se elige una biblioteca por gusto de
+> arquitectura, se la elige porque **la norma la nombra**.
+
+| Componente | Repo | Licencia **medida** | Rol en la puerta |
+|---|---|---|---|
+| **longfellow-zk** (Google) | https://github.com/google/longfellow-zk | **Apache-2.0** + línea de copyright (11.386 B) | El probador ZK que el perfil de la UE nombra. Prueba "≥18" sin entregar la fecha de nacimiento |
+| **longfellow-go** | https://github.com/privacybydesign/longfellow-go | **Apache-2.0** (10.773 B) | Bindings cgo; implementa las interfaces `zk.System` de irmago. Compila el prober desde fuente |
+| **irmago / Yivi** | https://github.com/privacybydesign/irmago | **Apache-2.0** (10.773 B) | Wallet y stack de credenciales; el lado del jugador que presenta la prueba |
+| **zk-cred-longfellow** (ISRG) | https://github.com/abetterinternet/zk-cred-longfellow | **MPL-2.0** (16.768 B) | Segunda implementación del mismo esquema, en Rust, por los de Let's Encrypt |
+| **zk-age-verifier** | https://github.com/pipe23-org/zk-age-verifier | **Apache-2.0** + copyright (11.391 B) | **El lado del servicio**: verifica pruebas Longfellow sobre mdoc vía W3C Digital Credentials API. Se declara experimental |
+| **av-lib-ios-longfellow-zkp** (UE) | https://github.com/eu-digital-identity-wallet/av-lib-ios-longfellow-zkp | **Apache-2.0 sin apéndice** (`LICENSE.txt`, 9.452 B) | La biblioteca Swift oficial de la Comisión para el lado iOS |
+| **av-app-android-wallet-ui** (UE) | https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui | 🔴 **EUPL-1.2** (13.957 B) | La **app** de verificación de edad de la UE. Copyleft recíproco |
+| **av-app-ios-wallet-ui** (UE) | https://github.com/eu-digital-identity-wallet/av-app-ios-wallet-ui | 🔴 **EUPL-1.2** (13.961 B, con BOM) | Idem, iOS |
+| **eudi-lib-android-wallet-core** (UE) | https://github.com/eu-digital-identity-wallet/eudi-lib-android-wallet-core | **Apache-2.0** (11.357 B) | Núcleo del wallet EUDI: la biblioteca sí es permisiva |
+| **av-doc-technical-specification** (UE) | https://github.com/eu-digital-identity-wallet/av-doc-technical-specification | 🔴 **CC-BY-4.0**, declarada en **227 B** | **La norma misma**: spec + Annex A (perfil) + Annex B (ZKP). No es licencia de software |
+| **identity-credential** | https://github.com/openwallet-foundation-labs/identity-credential | **Apache-2.0** (11.358 B) | Implementación de referencia ISO mdoc/mDL |
+| **multipaz** | https://github.com/davidz25/multipaz | **Apache-2.0** (11.358 B) | Continuación del anterior; mdoc multiplataforma |
+| **waltid-identity** | https://github.com/walt-id/waltid-identity | **Apache-2.0** (11.357 B) | Stack SSI completo: emisor, verificador, wallet |
+| **SSI-SDK** | https://github.com/Sphereon-Opensource/SSI-SDK | **Apache-2.0** (11.361 B) | SDK de credenciales verificables, orientado a OID4VCI/OID4VP |
+| **credo-ts** | https://github.com/openwallet-foundation/credo-ts | **Apache-2.0** (11.606 B) | Framework TypeScript de credenciales; el camino si el backend ya es Node |
+| **trusted-age** | https://github.com/TrustedAccounts/trusted-age | 🔴 **GPL-3.0** (35.149 B) | Verificación de edad autoalojada en Node + React |
+| **age-verification** (OS-level) | https://github.com/DanWaLes/age-verification | **Unlicense** / dominio público (1.211 B) | API de *rango* de edad a nivel sistema operativo; apunta a **AB 1043** y **SB 26-051** |
+
+### 🔵 3. Estimación de edad por rostro — y **la trampa: la opción MIT es la sesgada**
+
+| Componente | Repo | Licencia **medida** | Nota medida |
+|---|---|---|---|
+| **DeepFace** | https://github.com/serengil/deepface | **MIT** (1.077 B) | La opción obvia y más popular. 🔴 **Y la que trae el sesgo** (abajo) |
+| **age-and-gender** | https://github.com/mowshon/age-and-gender | **MIT** (1.064 B) | Estimación con modelos dlib sobre ONNX Runtime; modelos en CC0 |
+| **age-gender-estimation** | https://github.com/yu4u/age-gender-estimation | **MIT** (1.070 B) | Implementación Keras clásica; código de investigación, no producto |
+| **BetterAgeVerify** | https://github.com/BetterAgeVerify/BetterAgeVerify | 🔴 **"No More Data! License v1.0"** (3.120 B) — **no OSI** | Se presenta como age assurance *privacy-first*. **Licencia bespoke ⇒ no es base para Globant** |
+| **adult-age-face-check** | https://github.com/matefs/adult-age-face-check | 🔴 **SIN GRANT** | API FastAPI autoalojada, pensada para Brasil. Ver §6 |
+
+🔴 **El hallazgo que cambia la recomendación.** El README de
+`matefs/adult-age-face-check` documenta por qué abandonó DeepFace: el modelo
+**VGG-Face** que lo respalda tiene un **sesgo positivo medido de ±7–15 años en
+rostros jóvenes**, porque se entrenó predominantemente con adultos. Traducido a
+esta capa: **la biblioteca MIT que cualquiera elegiría primero es la que falla
+sistemáticamente sobre la población exacta que la ley manda proteger**, y falla
+*hacia arriba* —estima de más— que es la dirección que deja pasar al menor. Un
+age gate construido sobre DeepFace sin recalibrar no es un control: es un
+control con un sesgo conocido en su contra.
+
+### 🟡 4. Zitadel repite la forma de Unleash — y AGPL-3.0 ya tiene ≥2 pesos
+
+El cycle 19 midió que **Unleash** salió de Apache-2.0 a **AGPL-3.0 (34.523 B)**
+mientras toda la web seguía diciendo Apache. **Zitadel es el mismo caso en esta
+capa**: medido hoy, **AGPL-3.0 de 34.522 bytes**, y las comparativas de 2026
+siguen imprimiendo "Apache 2.0" al lado de su nombre.
+
+> 📏 **Y el byte-count vuelve a ser sólo una alarma:** 34.522 (Zitadel) vs 34.523
+> (Unleash, cycle 19) ⇒ **AGPL-3.0 tiene al menos dos pesos distintos**. Un
+> byte de diferencia, el mismo grant.
+
+### 📏 5. CANAL 9 — **la licencia-PUNTERO**: el archivo de licencia no es la licencia
+
+Dos casos medidos hoy, en los que abrir `LICENSE` **no devuelve un grant sino una
+dirección**:
+
+| Repo | Bytes | Qué contiene realmente |
+|---|---|---|
+| `eu-digital-identity-wallet/av-doc-technical-specification` | **227** | Una frase: la spec "is licensed under Attribution 4.0 International", con URL a creativecommons.org. **No hay texto de licencia en el repo** |
+| `paemuri/brdoc` | **206** | "All original code … is licensed under MPL-2.0. **See `LICENSES/MPL-2.0.txt`**" + "si un archivo trae su propio aviso, ese aviso aplica a ese archivo" |
+
+🔴 **La regla que agrega al método de esta casa.** Las cinco reglas previas decían
+que el badge no es el grant, el conteo no es el grant, la rama default no es el
+repo, el repo no es la organización y la raíz no es el repo. **La sexta, de hoy:
+el archivo de licencia puede ser un REDIRECT.** Un lector automático que cuente
+bytes ve 206 u 227 y concluye "licencia corta tipo MIT": las dos veces se
+equivoca, y en el caso de `brdoc` se equivoca **dos** veces, porque el propio
+puntero declara que **cualquier archivo puede sobrescribir la raíz**.
+Procedimiento ejecutable: **Receta 63**.
+
+### 📏 6. Apache-2.0 llega a ≥8 pesos en un solo pass — y GPL-3.0 no se mueve
+
+El cycle 19 corrigió su propio T70 contando **≥6** byte-counts para Apache-2.0.
+**Este pass mide 8, en una sola sentada:**
+
+`9.452` (av-lib-ios, sin apéndice) · `10.773` (longfellow-go, irmago) · `11.338`
+(Authelia) · `11.357` (Ory ×3, Casdoor, waltid, eudi-lib) · `11.358` (Keycloak,
+identity-credential, multipaz, Nakama) · `11.361` (SSI-SDK) · `11.386`
+(longfellow-zk) · `11.391` (zk-age-verifier) · `11.606` (credo-ts)
+
+Y una **aritmética que cierra**: `longfellow-zk` (11.386) y `zk-age-verifier`
+(11.391) difieren en **exactamente 5 bytes**, que es lo que mide
+`Nathan Schepers` (15) contra `Google LLC` (10) en la línea de copyright que
+ambos prependen al mismo texto Apache.
+
+> 📏 **Contraste que vuelve útil la alarma:** **GPL-3.0 midió 35.149 B en tres
+> repos independientes** —`lldap`, `TrustedAccounts/trusted-age` y el `main` de
+> Flipt (cycle 19)—. ⇒ **La confiabilidad del checksum es por FAMILIA, no
+> universal**: en GPL-3.0 un peso distinto es señal fuerte; en Apache-2.0 no
+> significa nada. La regla "el conteo FLAGEA, nunca DECIDE" se mantiene, pero
+> ahora se sabe **dónde** flaguea bien.
+
+### 🔴 7. El gap del último metro se repite — y acá no falta: **está sin licencia**
+
+El cycle 19 reencuadró su gap: en el plano de decisión no faltaban plataformas,
+faltaba el **SDK de engine**. **En el plano de la puerta el patrón se repite, y
+peor:**
+
+| Lo que existe del lado del engine | Estado medido |
+|---|---|
+| `Funtaptic/UnityOIDCAuth` (`com.funtaptic.oidc` v0.4.1, Unity 6+) | 🔴 **SIN GRANT, confirmado por tres canales**: cero archivos de licencia en la raíz y en el directorio del paquete; **cero** ocurrencias de `licen`/`MIT`/`Apache`/`copyright` en 11.594 B de README; y el `package.json` de UPM **no tiene campo `license`** |
+| `AccelByte/accelbyte-unity-sdk` | 🔴 **Propietaria** (`LICENSE.md`, 3.204 B): "licensed to you by AccelByte, Inc. for the sole purpose…" |
+| Unity Gaming Services Authentication / AccelByte Unreal | 🔴 Servicio gestionado, no base open source |
+
+> 🔴 **La diferencia con el cycle 19 importa para la decisión.** Allá el último
+> metro **no existía** (cero plugins). Acá **existe y no se puede usar**: un repo
+> sin grant es *all rights reserved* por defecto. Para Globant el efecto
+> práctico es el mismo —hay que construirlo— pero el riesgo es distinto: el
+> código está ahí, a mano, y **copiarlo no es una opción legal**. Es el gap más
+> accionable de este pass: un cliente OIDC + presentación de credencial para
+> Unity/Unreal, bajo Apache-2.0, **no existe hoy**.
+
+### 🔴 8. Conjetura propia que dio 404, y se escribe en vez de borrarse
+
+`AccelByte/AccelByteUnrealSDK` — se asumió que el SDK de Unreal viviría bajo el
+mismo nombre que el de Unity, que sí existe. **404 en `HEAD`, `main` y `master`.**
+Misma clase de error que `open-feature/flagd-ui` (cycle 26 de enterprise) y
+`trade-tariff-backend` (cycle 25): **el nombre predecible no es evidencia.**
+
 ## 🔴 Lo más importante del pass 2026-11-25 (cycle 21): **el plano del ESPECTADOR** —cómo el juego llega a quien NO lo está jugando— y el hallazgo de que esta capa **se parte en el encoder**
 
 Veinte passes auditaron lo que el jugador **ve y juega** (NPC, voz, assets, world

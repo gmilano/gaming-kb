@@ -4,6 +4,154 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Recetas del pass cycle 22 (2026-11-25) — el plano de la puerta
+
+### 🧩 Receta 60: **Puerta 100 % permisiva** — age gate real sin un solo componente restringido
+
+**Problema.** Un título tiene que clasificar al jugador por edad en EE.UU. (SB
+2420), probar edad en la UE y no retener el dato. Los vendors (k-ID, Yoti) lo
+resuelven como servicio; el cliente quiere **control del dato y sin lock-in**.
+
+**Stack, todo Apache-2.0/MIT medido en bytes:**
+
+```
+Cliente del juego (Unity/Unreal)
+   │  ① el ÚNICO componente a construir: no existe con grant (ver §7 de agents/top.md)
+   ▼
+Keycloak  (Apache-2.0, 11.358 B)        ← github.com/keycloak/keycloak
+   │  ② SPI de authenticator en Java: un nodo nuevo en el flujo de login
+   ▼
+zk-age-verifier (Apache-2.0, 11.391 B)  ← github.com/pipe23-org/zk-age-verifier
+   │  ③ verifica la prueba Longfellow sobre mdoc por W3C Digital Credentials API
+   ▼
+longfellow-zk (Apache-2.0, 11.386 B)    ← github.com/google/longfellow-zk
+       el esquema que el Annex A §A.8 de la UE declara ÚNICO conforme
+```
+
+Del lado del jugador, la credencial viaja en **ISO mdoc**, con
+`openwallet-foundation-labs/identity-credential` o `davidz25/multipaz` (ambos
+Apache-2.0, 11.358 B) como implementación de referencia.
+
+**Cómo se cablea, concretamente:**
+
+1. **Keycloak** como IdP del título. Se escribe un `Authenticator` SPI que, para
+   los flujos marcados, inserta un paso `age-proof-required`.
+2. Ese paso **no** pide fecha de nacimiento: emite un *presentation request* de
+   credencial con un predicado `age_over_18` y delega en `zk-age-verifier`
+   como sidecar HTTP.
+3. `zk-age-verifier` valida contra `longfellow-zk`. **Se pinea el commit**, como
+   hace `longfellow-go`: `61a8a735964d1b22bccf79bf14ef6767249cdf92` (`v0.9-177`).
+4. Keycloak recibe **un booleano y una marca de tiempo**, y escribe en el token
+   un claim `age_category` — **no** la edad. Esto satisface de un tiro el deber
+   de **borrado** de SB 2420 y la contradicción conservar-vs-borrar de la
+   **Receta 21** (cycle 13): se conserva la categoría derivada y el reloj.
+5. El juego lee `age_category` del token. **Nunca ve un documento.**
+
+🔴 **Lo que esta receta NO resuelve, y hay que decirlo en la propuesta:** el paso
+① . No existe un cliente OIDC + presentación de credencial con licencia usable
+para Unity o Unreal (medido: `Funtaptic/UnityOIDCAuth` **sin grant**, AccelByte
+propietario). Es trabajo de construcción, y es **el entregable con más valor** de
+un engagement de esta capa.
+
+---
+
+### 🧩 Receta 61: **Un deber, cuatro arquitecturas** — el gate que no se puede unificar
+
+**El hallazgo que la hace necesaria.** Las cuatro regiones piden "verificá la
+edad" y **cada una lo pide en un punto distinto del stack**. Un diseño único
+falla en tres de las cuatro.
+
+| Región | Dónde vive la verificación | Pieza que la implementa | Qué recibe el juego |
+|---|---|---|---|
+| **North America** | En el **sistema operativo / la tienda** | AB 1043 (CA), SB 26-051 (CO), SB 2420 (TX), Utah | Una **señal de categoría** que el OS entrega. El juego **consume**, no verifica |
+| **EMEA** | En el **wallet del jugador** | Perfil AV de la UE + `longfellow-libzk-v1` | Una **prueba criptográfica** de un predicado |
+| **APAC** | En un **registro estatal** | Real-name system del NPPA (China): integración obligatoria para aprobación | Un **veredicto remoto** y, en la práctica, una ventana horaria |
+| **LATAM** | En la **plataforma**, con cuenta parental vinculada | ECA Digital (Lei 15.211/2025), supervisa ANPD | Un **vínculo de cuenta** y, para loot boxes, un interruptor de producto |
+
+**Receta de arquitectura:** una sola **interfaz interna** (`AgeDecision`) con
+cuatro *adapters*, y la regla de que **el juego sólo habla con la interfaz**.
+
+```
+                       ┌── NA  adapter: lee la señal del OS/tienda (consume)
+AgeDecision ───────────┼── EMEA adapter: zk-age-verifier + longfellow-zk (prueba)
+ { category, clock,    ├── APAC adapter: cliente del registro estatal (veredicto + ventana)
+   source, expires }   └── LATAM adapter: vínculo de cuenta parental + switch de producto
+```
+
+🔴 **El campo que casi siempre falta y es el que importa: `source`.** Las cuatro
+rutas producen la misma categoría con **fuerza probatoria distinta**. Un puerto
+seguro de TX se apoya en "estándares de industria ampliamente adoptados"; una
+prueba ZK de la UE es criptográfica; una ventana horaria china es un veredicto de
+tercero. **Si el juego no sabe de dónde vino la decisión, no puede defenderla.**
+
+**Interruptor de producto, no de legal (y ya está medido en esta KB):** el cycle
+19 encontró que en Brasil **bloquear loot boxes por default exime de verificar
+edad**. ⇒ El adapter LATAM debería poder devolver `category=unknown` **y que el
+juego siga siendo compliant**, porque la feature está apagada. Es la ruta más
+barata de las cuatro, y la única que no necesita identidad.
+
+---
+
+### 🧩 Receta 62: **No usar estimación facial como control primario** — y qué hacer si ya se usa
+
+**El dato que la motiva.** `serengil/deepface` (MIT, 1.077 B) es la opción que
+cualquier equipo elige primero. Su base **VGG-Face** tiene un **sesgo positivo
+documentado de ±7–15 años en rostros jóvenes** (fuente: el README de
+`matefs/adult-age-face-check`, que lo cita como la razón de haberla abandonado).
+El sesgo es **hacia arriba**: estima de más ⇒ **deja pasar al menor**. Es la
+dirección exactamente equivocada para un control de protección infantil.
+
+**La receta:**
+
+1. **Estimación facial = señal de *triage*, nunca veredicto.** Sirve para decidir
+   *a quién pedirle* una prueba fuerte, no para conceder acceso.
+2. **Ordenar las señales por costo para el jugador**, de menos a más:
+   | Orden | Señal | Costo para el jugador | Fuerza |
+   |---|---|---|---|
+   | 1 | **Antigüedad/actividad de la cuenta** | Cero | Media — y es el precedente de Xbox |
+   | 2 | **Señal del OS/tienda** (AB 1043, SB 2420) | Cero: ya la dio una vez | Alta en NA, con puerto seguro |
+   | 3 | **Prueba ZK desde wallet** | Baja, una vez | Alta y sin entrega de datos |
+   | 4 | **Estimación facial** | Media (cámara) | 🔴 **Sesgada en menores** |
+   | 5 | **Documento / tarjeta de crédito** | Alta; excluye | Alta, pero ver abajo |
+3. **Y la 5 tiene un veredicto regulatorio reciente, no una opinión:** eSafety
+   (Australia) consideró que pedir **una tarjeta de crédito australiana** como
+   método único **difícilmente cumpla el requisito de "fairness"**. ⇒ Un método
+   único, por fuerte que sea, puede ser no conforme por **excluyente**.
+4. Si ya hay DeepFace en producción: **medir el sesgo sobre la población propia**
+   antes de tocar el umbral, y mover el umbral **hacia arriba** (pedir prueba
+   fuerte a más gente), no hacia abajo.
+
+---
+
+### 🧩 Receta 63: **Resolver una licencia-PUNTERO** (canal 9 del método de esta casa)
+
+**Cuándo se dispara.** El archivo de licencia de la raíz mide **menos de ~500
+bytes**. Eso ya no significa "MIT o similar": puede ser un **redirect**.
+
+**Procedimiento, en orden:**
+
+1. **Leer el archivo completo**, no su tamaño. Si nombra otra ruta o una URL,
+   **no es el grant**: es un puntero.
+   - `paemuri/brdoc` → 206 B → `"See LICENSES/MPL-2.0.txt"`.
+   - `eu-digital-identity-wallet/av-doc-technical-specification` → 227 B → URL a
+     `creativecommons.org/licenses/by/4.0/` (**CC-BY-4.0**, licencia de
+     documento, no de software).
+2. **Buscar la cláusula de precedencia por archivo.** `brdoc` declara: *"If a
+   file contains its own license notice, that notice applies to that file
+   instead."* ⇒ **el aviso por archivo le gana a la raíz**. Sin leer esa frase,
+   un censo de licencias de ese repo es incorrecto por construcción.
+3. **Seguir el puntero y medir el destino** (`LICENSES/MPL-2.0.txt`), y recién
+   entonces registrar la licencia.
+4. **Distinguir grant de software de licencia de documento.** Una spec CC-BY se
+   puede implementar libremente, pero **CC-BY no otorga licencia de patentes**.
+   En este stack la protección de patentes **la da Apache-2.0 §3 de la
+   biblioteca** (`longfellow-zk`), **no la norma**. Para un cliente que pregunta
+   "¿esto me cubre?", esa distinción es la respuesta.
+
+**Resultado del canal 9 en este pass:** 2 punteros detectados de 38 direcciones.
+Las dos veces, un lector que contara bytes habría concluído "licencia permisiva
+corta" y **las dos veces se habría equivocado**.
+
 ## 🆕 Recetas del pass cycle 21 (2026-11-25) — el plano del espectador
 
 Las cuatro recetas usan **sólo repos verificados en este pass**: existencia y

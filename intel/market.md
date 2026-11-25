@@ -4,6 +4,242 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo que cambió — pass cycle 22 (2026-11-25): **las cuatro regiones legislaron la misma puerta en cuatro puntos distintos del stack — y la UE nombró un repositorio en una cláusula de conformidad**
+
+El cycle 13 de esta página midió que el instrumento con más fuerza ejecutoria en
+gaming ya no era el etiquetado de AI sino **la verificación de edad**. Este pass
+mide **el paso siguiente, y es el que decide arquitectura**: cada región eligió un
+**punto de integración diferente** para la misma obligación. No es un detalle
+jurisdiccional: cambia **quién hace el trabajo** y **qué recibe el juego**.
+
+### 🔵 1. Un deber, cuatro arquitecturas — la tabla que organiza todo este pass
+
+| Región | Dónde la norma pone la verificación | Instrumento | Qué recibe el juego | Quién hace el trabajo |
+|---|---|---|---|---|
+| **North America** | En el **sistema operativo y la tienda** | AB 1043 (CA), SB 26-051 (CO), SB 2420 (TX), SB 142/HB 498 (UT) | Una **señal de categoría de edad** | El OS y la tienda. El desarrollador **consume y usa**, no verifica |
+| **EMEA** | En el **wallet del jugador** | Perfil AV de la UE (Annex A), Recomendación 29-abr-2026, Art. 28 DSA | Una **prueba criptográfica** de un predicado (`age_over_18`) | El jugador presenta; el servicio **verifica** |
+| **APAC** | En un **registro estatal** | Real-name system del NPPA (China); ban <16 de Australia (Twitch dentro, juegos fuera) | Un **veredicto remoto** + ventana horaria | El Estado. No hay implementación propia posible |
+| **LATAM** | En la **plataforma**, con cuenta parental | ECA Digital (Lei 15.211/2025), ANPD como autoridad | Un **vínculo de cuenta** + interruptor de producto | La plataforma, con **salida por producto** |
+
+> 🔴 **La consecuencia que hay que llevar a una conversación con cliente:** el
+> "age gate" **no es un componente**. Un equipo que construya el de su región y
+> asuma que lo adapta después se va a encontrar con que en NA **no hay nada que
+> verificar** (sólo una señal que consumir) y en APAC **no hay nada que
+> construir** (hay que integrarse). La receta de arquitectura —una interfaz
+> `AgeDecision` con cuatro adapters y un campo `source` obligatorio— es la
+> **Receta 61**.
+
+### 🔵 2. El hecho inédito del pass: **una norma europea nombra un repositorio**
+
+El perfil de Age Verification de la UE, **Annex A §A.8**, manda
+`longfellow-libzk-v1` y declara que **soportar cualquier otro sistema de prueba de
+conocimiento cero NO constituye conformidad**. Ese esquema es
+**https://github.com/google/longfellow-zk**, Apache-2.0 (11.386 B medidos).
+
+Y el stack que la Comisión publica alrededor tiene **tres regímenes legales**:
+
+| Capa | Artefacto | Licencia **medida** | Qué implica para Globant |
+|---|---|---|---|
+| La **norma** | `av-doc-technical-specification` | **CC-BY-4.0** (declarada en 227 B) | Se implementa libremente, pero **CC-BY no otorga licencia de patentes** |
+| Las **bibliotecas** | `av-lib-ios-longfellow-zkp`, `eudi-lib-android-wallet-core` | **Apache-2.0** (9.452 / 11.357 B) | 🟢 Base utilizable. **La protección de patentes viene de acá (§3), no de la norma** |
+| Las **apps** | `av-app-android-wallet-ui`, `av-app-ios-wallet-ui` | 🔴 **EUPL-1.2** (13.957 / 13.961 B) | Copyleft recíproco: **no forkear** salvo que el cliente acepte liberar |
+
+> 🔴 **El corte está entre la biblioteca y la app, y es deliberado.** La línea de
+> integración de un engagement europeo queda definida por la licencia, no por el
+> gusto técnico: **construir sobre `eudi-lib-*`, no sobre `*-app-*-wallet-ui`.**
+
+### 🔵 3. Lo que el mercado ya decidió: las plataformas **compraron**
+
+| Plataforma | Proveedor | Fecha / estado medido |
+|---|---|---|
+| **PlayStation** (UK/IE) | **Yoti** | Tres métodos: móvil, escaneo facial, documento. Sin verificar se pierden **voz y mensajes**, no el juego. ⚠️ Fuentes en conflicto sobre la fecha (jun-2026 vs "later in 2026") |
+| **Minecraft** | **Yoti** | ene-2026 |
+| **Xbox** | **Yoti + VerifyMy** | Y después **relajó**: sin verificación completa si la cuenta tiene **actividad de larga data** |
+| **Steam** (Australia) | Tarjeta de crédito AU | 🔴 eSafety: método único que **difícilmente cumpla el requisito de "fairness"** |
+| **Roblox** | Propio + terceros | Verificación para chat global desde ene-2026; **cuentas segmentadas** anunciadas en abr-2026: *Kids* (5-8), *Select* (9-15) |
+
+**Y el vendor nativo de gaming:** **k-ID**, >US$ 50 M levantados — ⚠️ **tres
+fuentes, tres cifras**: PitchBook **US$ 55,3 M**, Tracxn **US$ 51 M**, CB Insights
+todavía sólo la Serie A de **US$ 45 M** (2024, Lightspeed + a16z). Vende SDK +
+*Compliance Developer Kit* con reglas por jurisdicción, e impulsa **OpenAge** con
+Persona, Incode y Veratad. ⚠️ Dato de contraste: Yoti, VerifyMy y Privately
+figuran certificados en el registro **ACCS**; **k-ID no figura en ese registro**.
+
+> 🔴 **Lo que esto cierra y lo que deja abierto.** Proponer "construimos la
+> verificación" compite contra una decisión que las tres consolas ya tomaron en
+> contra. Lo que **ninguno** de estos vendors entrega es (a) el **último metro**
+> dentro del engine y (b) **la sesión**: qué hace el juego cuando la categoría de
+> edad cambia el comportamiento, no sólo el acceso. Ahí está el engagement.
+
+### 📏 4. El dato de método: 38 direcciones sondeadas, y dos licencias que eran punteros
+
+37 de 38 existen (la que no, `AccelByte/AccelByteUnrealSDK`, fue **conjetura
+propia** y se escribe en vez de borrarse). Hallazgos de licencia que corrigen
+lectura pública:
+
+- **Zitadel es AGPL-3.0** (34.522 B), **no** Apache-2.0 como siguen publicando
+  las comparativas de identity de 2026. Segundo caso de este patrón en la KB,
+  tras Unleash (cycle 19) ⇒ y **AGPL-3.0 ya tiene dos pesos**: 34.522 vs 34.523.
+- **Apache-2.0 midió 8 pesos distintos en un solo pass** (9.452 → 11.606), contra
+  los ≥6 del cycle 19. **GPL-3.0 midió 35.149 B en tres repos independientes** ⇒
+  la confiabilidad del checksum es **por familia**, no universal.
+- **Canal 9, nuevo: la licencia-PUNTERO.** `brdoc` (206 B) y la spec de la UE
+  (227 B) **redirigen** en vez de otorgar; `brdoc` además declara que un aviso
+  **por archivo sobrescribe la raíz**. Procedimiento: **Receta 63**.
+
+### 🔴 5. El gap más accionable, y se repite del cycle 19
+
+El cycle 19 reencuadró su gap del plano de decisión: no faltaban plataformas,
+faltaba el **SDK de engine**. **Acá se repite con un giro peor:** del lado del
+engine **sí hay** un cliente OIDC —`Funtaptic/UnityOIDCAuth`— y **no tiene
+grant** (cero archivos de licencia, cero menciones de licencia en 11.594 B de
+README, `package.json` de UPM sin campo `license`). El de AccelByte es
+**propietario** (3.204 B). ⇒ **Un cliente OIDC + presentación de credencial para
+Unity/Unreal bajo Apache-2.0 no existe hoy.** Es construcción, y es el entregable
+con más valor de esta capa.
+
+### Datos nuevos por región — este pass
+
+#### North America
+
+- 🔴 **La arquitectura es "señal del OS", y tiene fechas:** **California AB 1043**
+  (Digital Age Assurance Act, Civil Code §§1798.500-1798.505; aprobada
+  **13-oct-2025**, **enmendada por AB 1856**, Chapter 184, Statutes of 2026):
+  vigente **1-ene-2027**; el OS debe ofrecer la interfaz de ingreso de edad para
+  dispositivos ya configurados hasta **1-jul-2027**; para apps actualizadas desde
+  **1-ene-2026** y descargadas antes de **1-ene-2027**, el desarrollador debe
+  **pedir la señal** antes del **1-jul-2027**.
+- **Colorado SB 26-051** (*Age Attestation on Computing Devices*): **firmada
+  3-jun-2026**. ⚠️ **Las fuentes no coinciden en la vigencia**: 1-ene-2028,
+  1-jul-2028, y una menciona sujeción a posible **petición de referéndum**. Se
+  publican las tres y **no se elige** sin el texto promulgado.
+- **Cinco/seis estados** ya legislaron a nivel tienda o dispositivo: **TX, UT,
+  LA, AL, CA** y ahora **CO**. Louisiana: HB 570 (2025) reemplazada por **HB 977
+  (2026)**, con una fuente que la **demora a 2027**. Utah: SB 142 enmendada por
+  **HB 498**; demandas (incl. CCIA) **desestimadas en abr-2026**, núcleo vigente
+  **6-may-2026**, y la enmienda ató las acciones a **6-may-2027**.
+- **Federal: no es ley.** S.1586 / H.R. 3149 (2025) **sin promulgar** al
+  oct-2026.
+- 🟢 **Y la señal de producto más barata del pass nació acá:** el *bypass* por
+  **actividad de larga data** de Xbox = usar el **historial de la cuenta** como
+  señal de edad. Es la única señal que **no le cuesta nada al jugador** y que el
+  estudio **ya tiene en su base de datos**.
+
+#### EMEA
+
+- 🔴 **El blueprint de verificación de edad de la UE está técnicamente listo:**
+  primera versión jul-2025, **feature-ready el 15-abr-2026**, **segunda versión
+  mejorada** publicada. **Recomendación del 29-abr-2026**: cada Estado miembro
+  debería ofrecer **al menos una solución** antes del **31-dic-2026**, como app
+  autónoma o dentro del **EUDI Wallet**.
+- **Las Guías del Art. 28 DSA son formalmente no vinculantes**, y aplican a
+  **cualquier plataforma accesible a menores** con contenido o servicios
+  restringidos por edad — no sólo a las muy grandes.
+- 🟡 **Frontera de alcance, medida:** los **videojuegos autónomos** pueden quedar
+  **fuera del DSA hoy**, y se aplican por **autoridades nacionales** con sanciones
+  fijadas por cada Estado miembro. Las **plataformas de juego en línea** sí caen
+  bajo el régimen del DSA.
+- 🔴 **EU KIDS Act (propuesta, nov-2026): la que mete a los juegos por nombre.**
+  Edad mínima **15**, diseño *safe-by-default*, verificación de edad **al abrir
+  cuenta** y, **para juegos, en el momento de la descarga desde la tienda**; las
+  tiendas deberían **clasificar por edad toda app** bajo una metodología
+  publicada. **Período de feedback hasta el 3-dic-2026** ⇒ **faltan 8 días** al
+  momento de este pass. Antecedente: **propuesta conjunta Países Bajos-España del
+  11-sep-2026** para una edad mínima armonizada que cubriría **juegos y chatbots**.
+- 🟡 **Y un detalle de los textos filtrados que cambia la elección técnica:**
+  **no** listan la estimación facial comercial ni la subida de documento entre los
+  métodos aceptados. ⇒ En EMEA el camino es **wallet + prueba**, no cámara.
+- **AI Act, lo ya vigente:** Art. 50 aplica desde **2-ago-2026**; los sistemas en
+  mercado antes de esa fecha tienen hasta el **2-dic-2026** para el marcado
+  legible por máquina ⇒ **7 días**.
+- **Política industrial:** la **EGDF** fija tres prioridades 2026 para Europa —
+  **AI liderada por humanos**, mercados justos y **soberanía europea**.
+
+#### APAC
+
+- 🔴 **La arquitectura es el registro estatal, y es condición de aprobación:** la
+  versión que se somete a revisión **debe estar integrada al Real-Name
+  Verification System del NPPA**. Es **baseline para cualquier juego** que busque
+  aprobación en 2026 ⇒ **no es un componente que se elija: es un requisito de
+  entrada al mercado.**
+- **Límite de tiempo de menores (regla de 2021, la vigente):** 1 hora diaria,
+  **20:00-21:00**, sólo viernes, sábados, domingos y feriados. ⚠️ Una fuente
+  describe la versión **2019** (1,5 h días de semana / 3 h fines de semana) ⇒ no
+  se mezclan; se publica la de 2021 como vigente, sin haber podido confirmarla
+  contra documento oficial del NPPA.
+- 🔴 **Evasión medida, y es alta:** **>77 %** de los menores encuestados en un
+  estudio eludieron la verificación registrándose con nombres de familiares
+  mayores o amigos. Algunos juegos permiten jugar **como visitante**, sin
+  registro y **sin notificación de límite**. Varias plataformas agregaron
+  **reconocimiento facial** por esto. ⇒ Para un diseño de producto: el registro
+  estatal **no es un control suficiente**, y la industria local ya puso una
+  segunda capa encima.
+- **Australia — la frontera exacta del ban <16** (vigente **10-dic-2025**):
+  **Twitch DENTRO** (eSafety lo incluyó por tener la interacción social como
+  propósito sustancial; sin altas de menores desde el 10-dic y desactivación
+  posterior de cuentas existentes). **Los juegos FUERA**: los servicios de juego
+  están **excluidos de la definición legal** de redes sociales. 🟡 **Roblox
+  exento del ban**, pero bajo presión separada: contacto directo del ministro y
+  de eSafety por contenido, con sanciones de hasta **A$ 49,5 M**, y anuncio de
+  cuentas segmentadas. ⚠️ eSafety sugirió en abr-2026 que Roblox **podría** caer
+  bajo el ban: **no se confirmó**.
+- **Australia, tiendas:** deadline del **9-sep-2026**, y es el gancho del chequeo
+  de Steam en el país. ⚠️ Otra fuente fecha el chequeo automático de cuentas
+  viejas de Steam el **4-5 de nov-2026**: conflicto sin resolver.
+- 🔴 **Freno estructural, no coyuntural:** la regulación en parches entre los
+  mercados grandes de APAC —**aprobaciones de juegos, límites de monetización y
+  reglas de juego juvenil**— se señala como el mayor obstáculo de la región.
+- ⚠️ **Gap medido:** **Corea y Japón no devolvieron nada** sobre verificación de
+  edad en juegos en las consultas de este pass (`China minor mode regulation 2026
+  game playtime real name verification Korea Japan`, y la búsqueda de
+  implementaciones open source). **Cero reglas específicas medidas** para esos
+  dos mercados. Es un hueco de esta KB, no una ausencia de regulación confirmada.
+
+#### LATAM
+
+- 🔴 **La arquitectura es el deber de plataforma + cuenta parental:** **ECA
+  Digital (Lei 15.211/2025)** vigente **17-mar-2026**, **ANPD** como autoridad
+  (Decreto **12.622**), instrumento implementador **Decreto 12.880/2026**. ⚠️ Una
+  fuente sostiene que el **Art. 34** creó un órgano administrativo distinto para
+  derechos de la niñez, separado de la ANPD ⇒ **el cuadro institucional no está
+  cerrado**.
+- 🔴 **Lo específico de juegos, y las fuentes se contradicen en el punto que
+  decide el producto:** Mayer Brown dice que exige **verificación de edad para
+  juegos con loot boxes, o bien ofrecer versiones sin esas features a menores**;
+  Persona dice que las loot boxes están **prohibidas** en juegos dirigidos a
+  menores o probablemente accesibles a ellos. VLK agrega que la
+  **autodeclaración no alcanza** y que los juegos con **interacción por texto,
+  audio o video** también deben resolver la edad. ⇒ **Conflicto a tres bandas que
+  este pass NO resuelve**; se mantiene la lectura del cycle 19 (apagar loot boxes
+  por default es a la vez más barato y conforme) **como la ruta de menor riesgo**,
+  no como interpretación establecida.
+- **Sanciones, con calendario en disputa:** hasta **R$ 50 M** o **10 % de la
+  facturación brasileña**, más posible suspensión. ⚠️ Fechas en conflicto:
+  sanciones administrativas ~**nov-2026** con ejecución plena **ene-2027** (Xident,
+  Hiwave) vs **segunda fase ago-2026** y sanciones activas en **2027**
+  (Fontedata). La ANPD publicó **guías preliminares de evaluación confiable de
+  edad el 20-mar-2026**, que **distinguen "age assessment" de "age
+  verification"** — distinción que importa para el diseño.
+- 🔴 **El gap de sustrato, medido y específico de la región:** **no existe
+  biblioteca open source contra la ECA Digital**. El único proyecto que apunta a
+  Brasil (`matefs/adult-age-face-check`, API FastAPI) cita el **ECA de 1990 (Lei
+  8.069/90)**, **no** la ley digital de 2025, y **no tiene archivo de licencia**.
+  Lo que sí abunda —`klawdyo/validation-br`, `paemuri/brdoc` (MPL-2.0 vía puntero
+  de 206 B), `theuves/cpf`— **valida dígitos verificadores de CPF, no la edad de
+  una persona**. ⇒ El sustrato brasileño es un **validador de formato**, no un
+  sistema de age assurance. Búsquedas: `verificação de idade open source CPF
+  gov.br ECA Digital github biblioteca 2026`.
+- **Tamaño del mercado (contexto, no regulación):** Xsolla/GamesBeat cuentan
+  **>335 M de jugadores** en la región, con acceso **mobile-first**. Un estudio
+  PGB Latam presentado en gamescom latam encontró a los jugadores **abiertos al
+  uso de AI**, con preocupación persistente por despidos y pérdida de
+  creatividad. Bain publicó sobre adolescentes, **compra directa** y
+  personalización con AI (⚠️ bain.com sigue siendo **host policy-dead** para
+  verificación: se cita en prosa, no se linkea).
+- ⚠️ **El carril de iGaming volvió a dominar la consulta regional** y se mantiene
+  separado: "LATAM líder global en adopción de AI para seguridad del jugador" y
+  "fase emergente pero cautelosa" son de **apuestas**, no de videojuegos.
+
 ## 🆕 Lo que cambió — pass cycle 21 (2026-11-25): **la obligación legal de esta capa cae sobre el ENCODER — es decir, sobre el lado copyleft**
 
 Los cycles 10-18 siguieron la regulación del **contenido** generado; el 19, la de
@@ -1584,6 +1820,33 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 cycle 22 (2026-11-25) — la puerta: **en NA el estudio NO verifica, CONSUME una señal — y ahí está el trabajo**
+
+El error de encuadre que paga un engagement en NA es ofrecer "verificación de
+edad". **La ley no se la pide al estudio.** AB 1043 se la pide al **sistema
+operativo**; SB 2420 a la **tienda**. Lo que se le pide al desarrollador es
+**consumir la señal, usarla y borrar el dato** — y eso es integración, no
+identidad.
+
+| Qué vende Globant acá | Gancho regulatorio **con fecha** | Base técnica medida |
+|---|---|---|
+| **Consumo de señal del OS/tienda** con 4 categorías y borrado | SB 2420 **exigible desde 4-jun-2026**; AB 1043 **1-ene-2027** (apps actualizadas desde 1-ene-2026: pedir señal antes del **1-jul-2027**) | `DanWaLes/age-verification` (**Unlicense**, 1.211 B) es el único repo que apunta a AB 1043 y SB 26-051; sirve de referencia de forma, no de producto |
+| **Catálogo de capacidades con edad mínima por capacidad** (chat, voz, compra, loot box) | El precedente de plataforma: PlayStation corta **voz y mensajes**, no el juego | Keycloak (Apache-2.0, 11.358 B) como punto donde vive la política |
+| **Señal de antigüedad de cuenta** como primer filtro | El *bypass* de Xbox por **actividad de larga data** | Datos propios del cliente. **Costo cero para el jugador** |
+| **Puerto seguro documentado** | SB 2420 da puerto seguro por **estándares de industria ampliamente adoptados, de buena fe** | El campo `source` de la Receta 61: sin trazabilidad de origen, no hay defensa |
+
+🔴 **El argumento comercial más fuerte de la región, y es defensivo:** SB 2420
+**obliga a borrar** el dato de edad tras verificar, mientras Connecticut (PA
+26-15, cycle 13) empuja a **conservarlo** para cumplir una cadencia. Un build que
+guarda `user.age` incumple TX. La salida —conservar **categoría derivada + reloj**,
+nunca la edad— es arquitectura, y es exactamente lo que un estudio no resuelve
+solo. **Recetas 21 y 60.**
+
+⚠️ **Y lo que NO se promete:** Colorado SB 26-051 tiene **tres fechas de vigencia
+distintas según la fuente** (1-ene-2028, 1-jul-2028, y sujeción a referéndum). No
+se construye un roadmap sobre ese número; se construye sobre TX, UT y CA, que ya
+tienen fechas firmes.
+
 #### 🆕 cycle 21 (2026-11-25) — el plano del espectador: **la voz del caster es el activo regulado, y lo federal NO es ley**
 
 Estado medido de lo que gobierna un **caster sintético** en EE.UU.:
@@ -2113,6 +2376,36 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 cycle 22 (2026-11-25) — la puerta: **la UE nombró el algoritmo y publicó el código; la oportunidad es la integración, no la criptografía**
+
+EMEA es la única región donde el camino técnico **está escrito en la norma**:
+Annex A §A.8 declara `longfellow-libzk-v1` **el único** ZKP conforme. Eso elimina
+la discusión de diseño y traslada todo el valor a **integrar**.
+
+| Qué vende Globant acá | Gancho regulatorio **con fecha** | Base técnica medida |
+|---|---|---|
+| **Verificador de pruebas de edad** del lado del servicio | Recomendación **29-abr-2026**: una solución por Estado miembro antes del **31-dic-2026** ⇒ **36 días** | `pipe23-org/zk-age-verifier` (Apache-2.0, 11.391 B) + `google/longfellow-zk` (Apache-2.0, 11.386 B) |
+| **Integración con EUDI Wallet** sin forkear la app de la UE | Blueprint **feature-ready 15-abr-2026**, segunda versión publicada | 🟢 `eudi-lib-android-wallet-core` **Apache-2.0** (11.357 B). 🔴 **NO** `*-app-*-wallet-ui`: **EUPL-1.2** (13.957 B) |
+| **Preparación para el KIDS Act** | Propuesta **nov-2026**: edad mínima **15**, verificación al abrir cuenta y **para juegos en la descarga**. Feedback **hasta 3-dic-2026** ⇒ **8 días** | Clasificación por edad de catálogo bajo metodología publicada |
+| **Marcado legible por máquina** (deuda del Art. 50) | Sistemas en mercado antes del 2-ago-2026: plazo **2-dic-2026** ⇒ **7 días** | Ya cubierto por los cycles 11 y 21 de esta KB |
+
+🔴 **El dato que decide la arquitectura europea, y conviene saberlo antes de
+proponer:** los textos filtrados del KIDS Act **no listan la estimación facial
+comercial ni la subida de documento** entre los métodos aceptados. ⇒ En EMEA
+proponer cámara o scan de documento es proponer el método que el regulador
+**no** está aceptando. El camino es **wallet + prueba**.
+
+🟢 **Y el diferencial de licencia, que es un argumento de Globant y no de
+cualquiera:** la frontera Apache/EUPL de la Comisión está **medida en bytes** en
+esta KB. Un integrador que forkea `av-app-android-wallet-ui` para "acelerar" le
+mete **copyleft recíproco** al cliente sin avisarle. Saber **dónde está la línea**
+es el entregable. **Receta 60.**
+
+⚠️ **Reserva que se dice en la propuesta:** el verificador de referencia se
+autodeclara **experimental e inestable**, y la estandarización formal del esquema
+en **IETF CFRG sigue abierta**. Base para **piloto y arquitectura**; no se promete
+producción estable hoy.
 
 #### 🆕 cycle 21 (2026-11-25) — el plano del espectador: el Art. 50(2) vence en **7 días**, y un casteo sintético es su supuesto exacto
 
@@ -2756,6 +3049,32 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 cycle 22 (2026-11-25) — la puerta: **en APAC no se construye, se integra — y la segunda capa es la que se vende**
+
+APAC es la región donde la oferta de esta capa **se invierte**: el componente de
+identidad **no es elegible**. En China, estar integrado al **Real-Name
+Verification System del NPPA** es condición de aprobación del juego. No hay repo,
+no hay alternativa, no hay decisión de arquitectura.
+
+| Qué vende Globant acá | Gancho medido | Por qué hay demanda |
+|---|---|---|
+| **Integración al registro estatal + ventana horaria** como parte del flujo de publicación | Integración al NPPA = **baseline de aprobación 2026**. Límite de menores: 1 h, **20:00-21:00**, vie/sáb/dom/feriados (regla 2021) | Es trabajo obligatorio y recurrente para cualquier título que entre al mercado |
+| 🔴 **La segunda capa de control, que es donde está el valor** | **>77 %** de menores encuestados **eludieron** la verificación usando identidades de familiares; algunos juegos permiten jugar **como visitante**, sin registro ni aviso de límite | **El registro estatal no alcanza, y la industria local ya lo sabe**: varias plataformas agregaron reconocimiento facial por su cuenta |
+| **Mapa de cumplimiento por mercado** (aprobaciones, monetización, reglas juveniles) | La **regulación en parches** entre mercados grandes de APAC se señala como el **mayor obstáculo estructural** de la región | Un publisher multi-país no tiene una vista única y la necesita para planificar lanzamientos |
+| **Frontera del ban australiano, bien trazada** | **Twitch DENTRO** (desde 10-dic-2025, sin altas <16); **juegos FUERA** por definición legal; **Roblox exento del ban** pero con exposición separada de hasta **A$ 49,5 M** | Un cliente con juego + presencia en streaming tiene **dos regímenes distintos en un solo producto** |
+
+🔴 **El encuadre que gana la conversación en APAC:** la pregunta del cliente no es
+"¿cómo verifico la edad?" (eso lo fija el Estado), es **"¿cómo detecto que la
+verificación fue eludida?"**. Eso es detección de comportamiento —sesión,
+dispositivo, patrón de juego— y **cae del lado de analytics y del plano de
+decisión** (cycles 16 y 19 de esta KB), no del lado de identidad. Es la
+oportunidad que la arquitectura estatal **crea** en vez de cerrar.
+
+⚠️ **Gap de esta KB, escrito como gap:** **Corea y Japón no devolvieron nada**
+sobre verificación de edad en juegos en las consultas de este pass. **Cero reglas
+específicas medidas.** Antes de ofrecer en esos dos mercados hay que investigarlos
+de cero: el silencio de este pass **no es evidencia de que no haya regulación**.
+
 #### 🆕 cycle 21 (2026-11-25) — el plano del espectador: **la única región donde la etiqueta es obligatoria, verificable por máquina y ya se está aplicando**
 
 Es el hallazgo regional más duro de este pass. China no pide "avisar": pide
@@ -3367,6 +3686,48 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 cycle 22 (2026-11-25) — la puerta: **la única región con salida por PRODUCTO, y un sustrato open source que no existe**
+
+LATAM es la región donde la obligación se puede **apagar en vez de cumplir**, y la
+única donde el sustrato técnico está **medido como ausente**.
+
+| Qué vende Globant acá | Gancho regulatorio **con fecha** | Base técnica medida |
+|---|---|---|
+| 🟢 **La ruta barata: apagar loot boxes por default** y evitar el régimen de verificación | ECA Digital vigente **17-mar-2026**. El cycle 19 midió que **bloquear loot boxes por default exime de verificar edad** | **Cero identidad, cero cámara, cero dato personal.** Es un cambio de configuración de producto |
+| **Cuenta parental vinculada + evaluación de edad** | Guías preliminares de la **ANPD, 20-mar-2026**, que **distinguen "age assessment" de "age verification"** | Keycloak (Apache-2.0, 11.358 B) para el vínculo de cuentas; la distinción de la ANPD define **cuál de las dos** hay que implementar |
+| **Age gate para interacción social**, no sólo para compra | VLK: los juegos con interacción por **texto, audio o video** también deben resolver la edad; **la autodeclaración no alcanza** | Catálogo de capacidades (misma forma que el precedente de PlayStation) |
+| 🔴 **Construir el sustrato que falta** | Sanciones hasta **R$ 50 M** o **10 % de la facturación brasileña**, más suspensión | **No existe biblioteca open source contra la Lei 15.211/2025** (ver abajo) |
+
+🔴 **El gap de sustrato, medido con nombre y apellido — y es la oportunidad más
+concreta del pass en esta región:**
+
+- El único proyecto open source que apunta a Brasil,
+  `matefs/adult-age-face-check`, cita el **ECA de 1990 (Lei 8.069/90)** y **no la
+  ley digital de 2025**, y **no tiene archivo de licencia** ⇒ *all rights
+  reserved*: no es base para nadie.
+- Lo que sí abunda —`klawdyo/validation-br`, `paemuri/brdoc` (**MPL-2.0 vía un
+  puntero de 206 B**), `theuves/cpf` (**MIT**, 1.085 B), `geekcom/validator-docs`
+  (**MIT**, 1.088 B)— **valida dígitos verificadores de CPF**. Un CPF bien
+  formado **no dice la edad de nadie**: los cuatro repos existen, están bien
+  licenciados y **resuelven otro problema**.
+- ⇒ **El sustrato brasileño es un validador de formato, no un sistema de age
+  assurance.** La distancia entre esas dos cosas es un engagement.
+
+⚠️ **Lo que NO se promete, porque las fuentes no cierran:** (a) el alcance exacto
+de la regla de loot boxes tiene **conflicto a tres bandas** (verificación
+obligatoria vs. ofrecer versión sin la feature vs. prohibición lisa en juegos
+accesibles a menores) y **este pass no lo resuelve**; (b) el **calendario de
+sanciones** tiene dos cronogramas incompatibles (nov-2026 → ene-2027 vs. ago-2026
+→ 2027); (c) **el cuadro institucional no está cerrado**: una fuente sostiene que
+el **Art. 34** creó un órgano separado de la ANPD. Se propone sobre lo firme —la
+ley está **en vigor** y la exposición es alta— y se marca lo incierto como
+incierto.
+
+🟢 **Contexto de escala que sostiene el caso de negocio:** **>335 M de jugadores**
+en la región (Xsolla/GamesBeat), acceso **mobile-first** ⇒ la puerta se cruza en
+el teléfono, y el camino de la señal del OS **no aplica acá como en NA**: en LATAM
+el deber es **de la plataforma**, no del dispositivo.
 
 #### 🆕 cycle 21 (2026-11-25) — el plano del espectador: **hueco informado** en regulación de medios sintéticos, y el único argumento estructural que sí aplica
 

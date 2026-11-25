@@ -11,6 +11,33 @@ updated: 2026-11-25
 
 ---
 
+## 🆕 2026-11-25 — pass cycle 22
+
+GitHub trending de este pass, filtrado por lo que **existe y tiene grant legible**.
+La consulta `github trending gaming AI 2026` devolvió sobre todo listas generalistas
+y agregadores con cifras de estrellas que no se pudieron verificar (api.github.com
+está bloqueada por la política de red de este entorno) ⇒ **esta sección no publica
+conteos de estrellas**, publica direcciones verificadas y licencia medida.
+
+### Lo que subió en el plano de la puerta
+
+| Repo | Licencia medida | Por qué aparece ahora |
+|---|---|---|
+| https://github.com/google/longfellow-zk | Apache-2.0 (11.386 B) | El perfil AV de la UE lo volvió **requisito de conformidad**, no una opción |
+| https://github.com/privacybydesign/longfellow-go | Apache-2.0 (10.773 B) | Bindings Go publicados contra el issue irmago **#724**; fija el commit `61a8a73…` (`v0.9-177`) |
+| https://github.com/abetterinternet/zk-cred-longfellow | MPL-2.0 (16.768 B) | ISRG (Let's Encrypt) entra con una **segunda** implementación en Rust ⇒ el esquema deja de tener un solo proveedor |
+| https://github.com/pipe23-org/zk-age-verifier | Apache-2.0 (11.391 B) | El **lado verificador**, que faltaba; W3C Digital Credentials API. Se declara experimental |
+| https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui | **EUPL-1.2** (13.957 B) | La app de referencia de la Comisión, *feature-ready* desde 15-abr-2026 |
+| https://github.com/davidz25/multipaz | Apache-2.0 (11.358 B) | Continuación de `identity-credential`; mdoc multiplataforma |
+
+### Repos trending generalistas que la consulta devolvió y **no** se compilan como gaming
+
+Se verificaron por honestidad de registro: son **agentes de propósito general**,
+no de esta industria. Se nombran en prosa y **no entran como entidades gaming**:
+`OpenHands`, `browser-use`, `DeerFlow`, `Dify`. Las fuentes se contradicen entre
+sí en licencia (OpenClaw aparece como MIT y como "Other" en dos listas) y en
+estrellas (Dify 110k vs 155,3k) ⇒ **no se publica ninguna de las dos cifras.**
+
 ## 🆕 2026-11-25 — pass cycle 21
 
 **Tema:** el **plano del espectador**. El vocabulario de búsqueda cambió de

@@ -37,7 +37,20 @@ updated: 2026-11-25
 > pipeline**: la etiqueta de contenido sintético que exige China va embebida en el
 > archivo, y el metadato se escribe **al encodear**.
 >
-> **Último pass: 2026-11-25 (cycle 21).**
+> **Desde el cycle 22**, el **plano de la puerta**: quién puede jugar, con qué
+> identidad, a qué **edad verificada** y con qué consentimiento. Es la capa que
+> **las cuatro regiones legislaron en cuatro puntos distintos del stack** —NA en
+> el sistema operativo, EMEA en el wallet del jugador, APAC en un registro
+> estatal, LATAM en la plataforma con cuenta parental—, de modo que el *age gate*
+> **no es un componente sino cuatro adapters detrás de una interfaz** (Receta
+> 61). Y es la primera capa de esta KB donde **una norma nombra un repositorio**:
+> el Annex A §A.8 del perfil europeo manda `longfellow-libzk-v1` y declara que
+> cualquier otro sistema de prueba de conocimiento cero **no es conformidad**.
+> Trae tres regímenes legales en un mismo stack obligatorio —spec **CC-BY-4.0**,
+> bibliotecas **Apache-2.0/MPL-2.0**, apps **EUPL-1.2**— y el modo de falla
+> cambia: si esta capa falla, no se ve mal, **nadie entra**.
+
+> **Último pass: 2026-11-25 (cycle 22).**
 
 ## Estructura
 
@@ -82,6 +95,15 @@ gaming-kb/
   sumadas**) pasan los tres canales de esta casa como MIT limpias y sus tres
   renderers importan paquetes **no comerciales**. El procedimiento es el
   **canal 4** y la **Receta 36**.
+  🔴 **Y la séptima, del cycle 22: el archivo de licencia no es la licencia.**
+  Puede ser un **PUNTERO**: `paemuri/brdoc` (**206 B**) dice "ver
+  `LICENSES/MPL-2.0.txt`" y además que **un aviso por archivo sobrescribe la
+  raíz**; la spec de verificación de edad de la UE (**227 B**) sólo apunta a una
+  URL de Creative Commons. Un lector que cuente bytes concluye "licencia corta
+  tipo MIT" y se equivoca las dos veces. El procedimiento es el **canal 9** y la
+  **Receta 63**. Corolario medido: **la confiabilidad del byte-count es por
+  FAMILIA** — Apache-2.0 midió **8 pesos distintos en un solo pass** (9.452 a
+  11.606), mientras **GPL-3.0 midió 35.149 B en tres repos independientes**.
 - **En la capa de modelos generativos, código y pesos son dos licencias
   distintas, en archivos con nombres distintos** (`LICENSE_weights`,
   `MODEL_LICENSE`, o un addendum dentro del propio `LICENSE`). Medición del
