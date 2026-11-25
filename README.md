@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
 
 # 🎮 Gaming KB
@@ -18,7 +18,16 @@ updated: 2026-11-22
 > experimentos, recomendación y valor del jugador — la capa que decide qué ve y
 > qué paga cada jugador, y la que la regulación de 2026 persigue por su nombre.
 >
-> **Último pass: 2026-11-22 (cycle 19).**
+>
+> **Desde el cycle 20**, el **camino del dinero**: tienda y webshop D2C,
+> validación de recibo, otorgamiento del derecho (*entitlement*), libro mayor de
+> moneda virtual, y la entrega de lo comprado (parcheo diferencial, actualizador,
+> tienda propia). Es la capa que **2026 abrió por ley en las cuatro regiones** —
+> Japón MSCA, DMA, acuerdo CADE de Brasil, *Epic v. Apple*— y la primera capa de
+> esta KB donde el entregable es **transaccional**: si falla, no se ve mal, se
+> pierde dinero.
+>
+> **Último pass: 2026-11-25 (cycle 20).**
 
 ## Estructura
 

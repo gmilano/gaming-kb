@@ -1,13 +1,77 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
 
 # Repos trending — Gaming AI
 
 > **Archivo APPEND-ONLY.** Cada pass agrega una sección fechada arriba y conserva
 > la historia completa debajo.
+
+---
+
+## 🆕 2026-11-25 — pass cycle 20
+
+**Tema:** el **camino del dinero**. El vocabulario de búsqueda cambió de *decisión*
+(flags, experimentos, LTV — cycle 19) a **instrumento de cobro** (`app store`,
+`external purchase`, `receipt`, `entitlement`, `ledger`, `patcher`), y eso devolvió
+**21 slugs que esta KB no tenía**, de los cuales **20 verificados vivos**.
+
+### Repos nuevos verificados este pass, por rol en el camino del dinero
+
+| Repo | Licencia (bytes medidos) | Rama default | Tags | Rol |
+|---|---|---|---|---|
+| [`killbill/killbill`](https://github.com/killbill/killbill) | Apache-2.0 (11.357 B) | `master` | **689** | facturación y suscripción |
+| [`juspay/hyperswitch`](https://github.com/juspay/hyperswitch) | Apache-2.0 (11.358 B) | `main` | **2.311** | orquestación de pagos (Rust) |
+| [`openmeterio/openmeter`](https://github.com/openmeterio/openmeter) | Apache-2.0 (11.358 B) | `main` | 508 | medición de uso → facturación |
+| [`getlago/lago`](https://github.com/getlago/lago) | 🔴 AGPL-3.0 (34.523 B) | `main` | 199 | facturación y medición |
+| [`medusajs/medusa`](https://github.com/medusajs/medusa) | MIT (1.402 B) | **`develop`** | 29.693 | catálogo y carrito |
+| [`saleor/saleor`](https://github.com/saleor/saleor) | BSD-3-Clause (1.562 B) | `main` | 2.891 | comercio GraphQL |
+| [`tigerbeetle/tigerbeetle`](https://github.com/tigerbeetle/tigerbeetle) | Apache-2.0 (**10.174 B**) | `main` | 293 | ledger de alto volumen |
+| [`formancehq/ledger`](https://github.com/formancehq/ledger) | MIT (1.083 B) | `main` | 412 | ledger programable |
+| [`awa/go-iap`](https://github.com/awa/go-iap) | MIT (1.082 B) | `master` | 192 | validación de recibos (Go) |
+| [`imariman/iapstack`](https://github.com/imariman/iapstack) | Apache-2.0 (11.357 B) | `main` | 4 | verificación + entitlement |
+| [`aporat/store-receipt-validator`](https://github.com/aporat/store-receipt-validator) | Apache-2.0 (11.325 B) | `main` | 61 | validación de recibos (PHP) |
+| [`imdhemy/laravel-in-app-purchases`](https://github.com/imdhemy/laravel-in-app-purchases) | MIT (1.067 B) | **`1.x`** | 71 | ciclo de vida de suscripción |
+| [`itchio/butler`](https://github.com/itchio/butler) | MIT (1.104 B) | `master` | 347 | parcheo diferencial |
+| [`itchio/wharf`](https://github.com/itchio/wharf) | MIT (1.104 B) | `master` | **0** | protocolo de diff/patch |
+| [`velopack/velopack`](https://github.com/velopack/velopack) | MIT (1.091 B) | **`develop`** | 72 | auto-updater de escritorio |
+| [`f-droid/fdroidserver`](https://github.com/f-droid/fdroidserver) | 🔴 AGPL-3.0 (**34.520 B**) | `master` | 143 | tienda de apps en una caja |
+| [`ImranR98/Obtainium`](https://github.com/ImranR98/Obtainium) | GPL-3.0 (35.149 B) | `main` | 338 | instalador/actualizador Android |
+| [`SideStore/SideStore`](https://github.com/SideStore/SideStore) | AGPL-3.0 (34.523 B) | **`develop`** | 43 | instalación iOS fuera de tienda |
+| [`Heroic-Games-Launcher/HeroicGamesLauncher`](https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher) | GPL-3.0 (35.149 B) | `main` | 235 | launcher de PC |
+| [`LerianStudio/midaz-sdk-golang`](https://github.com/LerianStudio/midaz-sdk-golang) | 🔴 **Elastic-2.0** (3.824 B) | `main` | 164 | SDK del ledger de Midaz — **no open source** |
+
+### 🔴 Tres trampas de método medidas este pass
+
+1. **La rama default no es `main`.** 4 variantes en 21 repos: `medusa`, `velopack`
+   y `SideStore` son **`develop`**; `laravel-in-app-purchases` es **`1.x`**.
+   Construir la URL de `raw` asumiendo `main` los habría declarado inexistentes a
+   los cuatro. **Leer siempre la rama del `--symref`.**
+2. **El *trap de los 14 bytes* sigue vivo:** `raw.githubusercontent.com` devuelve
+   exactamente **14 bytes** (`404: Not Found`) cuando la ruta no existe. Un umbral
+   de tamaño es obligatorio antes de interpretar el contenido.
+3. **GitHub resuelve org/repo sin distinguir mayúsculas:** `google-agentic-commerce/AP2`
+   y `…/ap2` devuelven **el mismo HEAD** (`e1ea56db`). Por eso la *trampa de
+   mayúsculas* que esta KB ya documentó es **silenciosa**: la URL mal escrita
+   funciona igual, y el error sólo aparece donde el slug se usa como clave.
+
+### 🔴 Repo que dejó de ser legible públicamente
+
+`LerianStudio/midaz` (Brasil) — el *"primer ledger open source de América
+Latina"*. `git ls-remote` **pide credenciales (401, no 404)** y `raw` da 404 en
+`LICENSE`, `README.md` y `go.mod` en `develop` y `main`. Lo mismo
+`LerianStudio/midaz-console` y `LerianStudio/lib-commons`. **Sobrevive público sólo
+el SDK Go, y es Elastic-2.0.** Los índices de terceros siguen publicando
+`Apache-2.0`. Ver `intel/market.md` §LATAM.
+
+### ⚠️ Lo que no se pudo medir
+
+**Sin estrellas ni forks:** `api.github.com` y `github.com` (HTML) dan **403**
+desde esta sesión. Las columnas de este pass son **tags** y **byte-count de
+licencia**, que sí se pueden verificar por protocolo git y por `raw`. Host nuevo en
+la lista de policy-dead: **`beta.pkg.go.dev`** (403 `connect_rejected`).
 
 ---
 

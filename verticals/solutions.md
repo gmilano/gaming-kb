@@ -1,8 +1,80 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
+
+## 🆕 Pass 2026-11-25 (cycle 20) — plataformas reales del **camino del dinero**, y el mapa propietario contra el que compiten
+
+Esta capa tiene una asimetría que conviene decir antes de la tabla: **las
+plataformas open source de cobro existen y son maduras, pero ninguna es de
+juegos**; y **las plataformas de juegos con catálogo y entitlement existen y son
+maduras, pero ninguna es open source**. Las recetas de este pass viven
+exactamente en esa costura.
+
+### Plataformas open source customizables con AI encima (verificadas este pass)
+
+| Plataforma | Repo | Licencia (bytes) | Qué es, en el camino del dinero | Dónde entra AI/Globant |
+|---|---|---|---|---|
+| **Nakama** | [`heroiclabs/nakama`](https://github.com/heroiclabs/nakama) | **Apache-2.0** (11.358 B) | 🥇 El **único** backend de juegos open source con compra y suscripción nativas (Apple JWS + legacy, Google compra y suscripción, Huawei, Facebook Instant, Samsung) **y registro de proveedores enchufables** | Escribir el validador de la tienda nueva como proveedor registrado; el catálogo encima |
+| **Kill Bill** | [`killbill/killbill`](https://github.com/killbill/killbill) | **Apache-2.0** (11.357 B) | Facturación y suscripciones, **689 tags** de madurez | Dunning y previsión de churn de suscripción |
+| **Hyperswitch** | [`juspay/hyperswitch`](https://github.com/juspay/hyperswitch) | **Apache-2.0** (11.358 B) | **Orquestador de pagos** (Rust): enruta entre PSPs, reintenta, hace fallback | Enrutamiento por tasa de aprobación aprendida por región/BIN |
+| **OpenMeter** | [`openmeterio/openmeter`](https://github.com/openmeterio/openmeter) | **Apache-2.0** (11.358 B) | Medición de uso → facturación | Monetizar consumo (créditos de AI generativa in-game) |
+| **Medusa** | [`medusajs/medusa`](https://github.com/medusajs/medusa) | **MIT** (1.402 B) | Backend de comercio headless: catálogo, carrito, promociones | **El escaparate que a Nakama le falta** |
+| **Saleor** | [`saleor/saleor`](https://github.com/saleor/saleor) | **BSD-3-Clause** (1.562 B) | Comercio GraphQL, multi-moneda, multi-canal | Idem, con GraphQL y multi-moneda de fábrica |
+| **TigerBeetle** | [`tigerbeetle/tigerbeetle`](https://github.com/tigerbeetle/tigerbeetle) | **Apache-2.0** (10.174 B) | Base de datos contable de doble entrada de muy alto volumen | El libro mayor de la moneda virtual |
+| **F-Droid server** | [`f-droid/fdroidserver`](https://github.com/f-droid/fdroidserver) | 🔴 **AGPL-3.0** (34.520 B) | 🥇 **Tienda de apps en una caja** para Android (construir, firmar, publicar repo propio) | La pieza que vuelve operable el marketplace propio que DMA/MSCA/CADE legalizaron |
+| **butler + wharf** | [`itchio/butler`](https://github.com/itchio/butler) · [`itchio/wharf`](https://github.com/itchio/wharf) | **MIT** (1.104 B ambos) | Publicación y **parcheo diferencial** probados en producción por itch.io | Entregar lo comprado sin re-bajar el build entero |
+| **Velopack** | [`velopack/velopack`](https://github.com/velopack/velopack) | **MIT** (1.091 B) | Instalador y auto-updater de escritorio | Actualizar el cliente de PC fuera de tienda |
+| **Lago** | [`getlago/lago`](https://github.com/getlago/lago) | 🔴 **AGPL-3.0** (34.523 B) | Facturación y medición | ⚠️ Útil, pero **sólo como servicio separado por red** (ver frontera abajo) |
+
+### 🟥 El mapa propietario — lo que el cliente ya tiene o ya evalúa
+
+Ninguno de estos es open source, y conviene nombrarlos porque son el *status quo*
+contra el que se propone:
+
+| Categoría | Players propietarios medidos en la búsqueda |
+|---|---|
+| **Webshop / D2C para juegos** | Appcharge, Aghanim, Tebex, Xsolla, Coda Payments, Fungies, Neonpay |
+| **Backend de juego con catálogo + entitlement** | AccelByte, PlayFab, Metaplay, Pragma |
+| **Tienda de plataforma** | Epic *Ecom* (atado a una sola tienda) |
+
+🔴 **El gap, dicho con precisión para que no se exagere:** no es que "no hay open
+source de cobro" —hay 11 plataformas verificadas arriba—. Es que **no hay ninguna
+pieza open source que sea a la vez de juegos y de escaparate**: catálogo de
+ofertas, bundles, precios por región, A/B de oferta. Nakama trae la **compra**; no
+trae la **vidriera**. Medusa y Saleor traen la vidriera; no saben nada de un
+jugador. **El entregable de Globant en esta capa es el puente entre esas dos, y es
+chico** — mucho más chico que lo que el gap parecía antes de medirlo.
+
+### 🔴 La frontera de licencia que hay que respetar en esta capa (y es la primera vez que esta KB la enfrenta en el camino del dinero)
+
+Dos de las piezas más útiles son **copyleft de red**:
+
+- **`getlago/lago` — AGPL-3.0 (34.523 B):** mismo byte-count exacto que Unleash
+  después de su relicencia del cycle 19. Se consume **como servicio separado,
+  hablado por HTTP**, nunca linkeado en el proceso del backend del juego.
+- **`f-droid/fdroidserver` — AGPL-3.0 (34.520 B):** es **infraestructura de
+  publicación**, corre del lado del estudio y **no se distribuye a los jugadores
+  ni se linkea en el juego**. El juego publicado por un repo F-Droid **no se
+  vuelve AGPL**; lo que queda bajo AGPL es el **servidor de repositorio** y
+  cualquier modificación que se le haga. Esa distinción es la que decide si la
+  Receta 54 es viable para un cliente, y es la razón por la que se escribe acá y
+  no en una nota al pie.
+- **`Heroic-Games-Launcher` (GPL-3.0) y `ImranR98/Obtainium` (GPL-3.0, 35.149 B
+  ambos), `SideStore/SideStore` (AGPL-3.0):** son **clientes de usuario final**.
+  Sirven como referencia de implementación y como herramienta, **no como base de
+  un entregable cerrado**.
+
+🟢 **Y el dato accionable del canal 8 sobre esta frontera:**
+`Heroic-Games-Launcher` es **el único de los 20 repos auditados que exige CLA**
+(tiene `CONTRIBUTING.md` con lenguaje de CLA **y**
+`.github/workflows/cla.yml`). Contribuir ahí significa firmar una cesión; y un
+proyecto con CLA es, por el canal 8, **un proyecto que puede relicenciar mañana**.
+`devaccuracy/ledgerforge` es el único con **DCO** (cada contribuyente retiene su
+copyright ⇒ no hay relicencia unilateral posible). Los **18 restantes no declaran
+régimen alguno** — ni CLA ni DCO — lo que no es neutral: significa que **no hay
+rastro de firma** de las contribuciones que ya entraron.
 
 # Verticales de partida — Gaming AI
 

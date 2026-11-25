@@ -1,8 +1,151 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
+
+## 🆕 Tendencias — pass cycle 20 (2026-11-25)
+
+### 1. 🔴 2026 fue el año en que se abrió el canal de cobro — y la oferta open source para juegos llegó vacía
+
+Cuatro cambios legales en 12 meses, uno por región, todos en la misma dirección
+(ver `intel/market.md`): **Japón MSCA en vigor 18-dic-2025**, **Apple UE modelo
+único 1-ene-2026** (CTF → CTC 5 %), **Brasil/CADE en vigor con iOS 26.5 jun-2026**,
+**EE.UU. comisión aún indeterminada** (certiorari concedido 30-jun-2026).
+
+La tendencia no es "hay más competencia en pagos". Es más específica y más
+vendible: **el permiso dejó de ser el cuello de botella y pasó a serlo la
+ingeniería**. El indicador que lo prueba: en Japón, con el canal abierto desde
+hace casi un año, **más del 90 % de los desarrolladores no lo adoptó**. Cuando un
+mercado tiene permiso y no lo usa, lo que falta es backend.
+
+### 2. Los protocolos de comercio agéntico se consolidaron en fundaciones, y eso cambió dónde está el repo
+
+2026 movió los tres protocolos de pago para agentes de sus dueños corporativos a
+cuerpos neutrales — y **el repo se mudó con ellos**:
+
+| Protocolo | Capa | Movimiento institucional medido | Repo canónico hoy |
+|---|---|---|---|
+| **ACP** | Checkout | Creado por Stripe + OpenAI | [`agentic-commerce-protocol/…`](https://github.com/agentic-commerce-protocol/agentic-commerce-protocol) (Apache-2.0, 10.947 B, **0 tags**) |
+| **AP2** | Autorización | **Donado por Google a la FIDO Alliance** | [`google-agentic-commerce/AP2`](https://github.com/google-agentic-commerce/AP2) (Apache-2.0, 11.359 B) |
+| **x402** | Movimiento del pago | **Fundación bajo la Linux Foundation** | [`x402-foundation/x402`](https://github.com/x402-foundation/x402) (Apache-2.0, 11.324 B, 1.538 tags) |
+
+🔴 **La consecuencia práctica, que es un hallazgo de método (T75):** cuando un
+protocolo se muda a una fundación, **el repo del vendor no se archiva — se
+degrada a fork**. `coinbase/x402` sigue vivo, con la misma licencia y el mismo
+byte-count, y es el que linkea casi toda la prensa; lo único que lo declara fork
+son **las tres primeras líneas de su README**. El filtro `archived` que el cycle
+19 declaró obligatorio **no atrapa este caso**.
+
+⚠️ **Los tres son especificación, no producto.** ACP se versiona **por carpeta**
+(`2026-04-17`) con **0 tags** ⇒ no se puede pinear como dependencia. Ninguno
+publica SDK de Unity o Unreal.
+
+### 3. 🔴 La deriva *source-available* llegó a LATAM, y se la llevó el único insignia regional
+
+El cycle 19 midió la deriva con el canal 7 sobre Unleash (Apache → AGPL,
+2026-05-26) y Flipt (tres grants en un repo). Este pass la encuentra **un paso más
+lejos**: `LerianStudio/midaz` (Brasil), publicitado como *"el primer ledger open
+source de América Latina"*, **ya no es legible públicamente** (401), y su SDK Go
+sobreviviente es **Elastic License 2.0 (3.824 B)** — source-available, no open
+source. Los índices de terceros siguen publicando `Apache-2.0`.
+
+🟡 **Corrige la regla del cycle 19:** *"el servidor relicencia pero los SDKs se
+quedan permisivos"* tiene contraejemplo. Pasa a: **el SDK suele quedarse
+permisivo, y hay que medirlo repo por repo.** No se hereda del servidor, ni de la
+organización, ni del patrón del pass anterior.
+
+### 4. El byte-count de licencia: el catálogo se amplía y la regla se confirma
+
+Medidos en este pass (todos leídos sobre la rama default real):
+
+| Familia | Byte-counts medidos este pass | Nota |
+|---|---|---|
+| **Apache-2.0** | **10.174** · 10.749 · 10.947 · 11.324 · 11.325 · 11.357 · 11.358 · 11.359 | 8 valores nuevos o reconfirmados |
+| **AGPL-3.0** | **34.520** · 34.523 | la diferencia visible: `http` vs `https` en la URL de la FSF |
+| **GPL-3.0** | 35.149 | igual en `COPYING` y en `LICENSE.txt` |
+| **MIT** | 1.067 · 1.082 · 1.083 · 1.091 · 1.104 · 1.402 | |
+| **BSD-3-Clause** | 1.562 | |
+| **Elastic-2.0** | 3.824 | primera medición de ELv2 en esta KB |
+
+🔴 **Uniendo con los valores que la KB ya tenía (10.760 · 11.316 · 11.344 ·
+11.352 · 11.356 · 11.357), Apache-2.0 acumula al menos 13 byte-counts distintos.**
+Confirma el T70: **el checksum SEÑALA, nunca DECIDE.** Y este pass agrega una
+**causa medida** del desvío, que antes era sospecha: `tigerbeetle` mide 10.174 B
+porque **omite el APPENDIX** (*"How to apply the Apache License to your work"*) —
+verificado leyendo el final del archivo, que termina en `END OF TERMS AND
+CONDITIONS`. La licencia es Apache-2.0 íntegra en sus términos.
+
+### 5. 🔴 Canal 8 (nuevo): el predictor de relicencia, y por qué falla en copyleft
+
+El canal 7 **detecta** que una licencia empeoró. El canal 8 intenta **predecirlo**,
+preguntando quién puede relicenciar: una empresa única titular puede hacerlo
+unilateralmente; un colectivo o una fundación, no.
+
+Resultado sobre 20 repos: **la sonda sólo es válida en MIT/BSD**. En Apache el
+titular **no está en `LICENSE`** (el texto trae el placeholder
+`Copyright [yyyy] [name of copyright owner]`) y sólo 1 de 8 repos Apache publica
+`NOTICE`. En **GPL/AGPL la sonda devuelve la línea de copyright de la FSF sobre el
+texto de la licencia** (`Copyright (C) 2007 Free Software Foundation`) — **no la
+del proyecto** — con lo cual **miente con formato correcto en 5 de 5**. Regla
+**T76**: el canal 8 se corre sobre MIT/BSD; sobre Apache contra `NOTICE`; sobre
+GPL/AGPL **nunca** contra `LICENSE`.
+
+Señales accionables que sí produjo:
+
+- **`velopack/velopack`** — el predictor más limpio del pass: **dos líneas de
+  copyright en el mismo MIT**, `Caelan Sayler (2021)` **y** `Velopack Ltd. (2024)`.
+  La transición individuo → empresa capturada dentro del archivo de licencia.
+- **`killbill/killbill`** — titular en cabecera de `pom.xml`, y es una **cadena de
+  sucesión corporativa**: `Ning → Groupon → Equinix → The Billing Project, LLC`.
+  Un Apache-2.0 de 689 tags cuyo dueño cambió dos veces, invisible desde `LICENSE`.
+- **`heroiclabs/nakama`** — `Copyright 2026 The Nakama Authors`: titular
+  **colectivo**, señal de durabilidad.
+- **CLA vs DCO:** 1 repo con CLA (`Heroic-Games-Launcher`, con
+  `.github/workflows/cla.yml`), 1 con DCO (`devaccuracy/ledgerforge`), **18 sin
+  régimen declarado**.
+
+### 6. ⚠️ Gap de vocabulario medido: las búsquedas regionales prescritas devuelven apuestas, no videojuegos
+
+Las cuatro búsquedas `AI gaming {región} 2026 adoption regulation players`
+devolvieron, en las cuatro regiones, **material de iGaming (apuestas online)**:
+reguladores de casino, *player safety* de apostadores, cartas de AI de autoridades
+de juego. Útil, pero **no es esta industria**.
+
+Esto es un hallazgo de método, no una queja: **en esta capa la palabra "gaming"
+colisiona con la industria del juego de azar**, y la colisión es más fuerte
+precisamente en las búsquedas regionales, porque la regulación de apuestas **es**
+regional. Lo que funcionó fue cambiar el vocabulario al **instrumento**
+(`app store`, `external purchase`, `MSCA`, `CADE`, `DMA`, `anti-steering`) en vez
+del sector. Mismo mecanismo que el cycle 19 usó para encontrar el plano de decisión
+(cambiar de artefactos a decisiones).
+
+**Lo que no se encontró, dicho explícitamente:** ningún estudio de adopción de AI
+entre jugadores de **videojuegos** de LATAM; **cero** actividad regulatoria de AI
+específica de gaming registrada en **APAC** (una fuente de benchmark lo afirma con
+esas palabras); nada sobre reglas de divulgación de AI a jugadores en títulos de
+APAC.
+
+### 7. Contexto de industria del pass (AI en juegos, no camino del dinero)
+
+- Adopción casi universal en desarrollo: **~90 %** de los desarrolladores usa AI
+  en algún punto del pipeline; el GDC 2026 State of the Industry (>2.000
+  desarrolladores) muestra uso extendido en ideación, prototipado y soporte a
+  programación.
+- **El back-end, no el contenido de cara al jugador**, es donde se esperan las
+  integraciones más profundas (KPMG).
+- **Sentimiento del jugador hostil:** ~**85 %** de actitudes negativas hacia la AI
+  generativa en juegos (encuesta Quantic Foundry, ~2 M de jugadores).
+- **30,8 %** de los lanzamientos de Steam de 2026 llevan divulgación de AI; Valve
+  endureció las reglas de divulgación en **ene-2026**.
+- Más de **10.000** despidos globales en el primer semestre.
+- AlixPartners proyecta múltiplos de valuación **2-3x** para quienes integren AI
+  sobre IP fuerte.
+
+⚠️ Las cifras de este bloque **7** vienen de reportes de consultoras, encuestas de
+industria y blogs de vendor, con muestras y definiciones distintas. Se publican
+como indicativas y con su fuente nombrada, **no como dato medido por esta KB** —
+a diferencia de todo lo de los bloques 1-6, que se probó repo por repo.
 
 # Tendencias — Gaming AI
 

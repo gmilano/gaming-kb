@@ -1,8 +1,176 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
+
+## 🆕 Recetas del pass cycle 20 (2026-11-25) — el camino del dinero
+
+Las cuatro recetas de abajo usan **sólo repos verificados en este pass** (existencia
+por `git ls-remote --symref`, licencia y byte-count leídos por
+`raw.githubusercontent.com` sobre la rama default real). Donde una pieza no existe,
+se dice que no existe.
+
+---
+
+### Receta 52 — Webshop D2C para un juego móvil, stack 100 % permisivo
+
+**Cuándo:** el cliente quiere cobrar fuera de la tienda (habilitado en EE.UU., UE,
+Japón y Brasil — ver `intel/market.md`) y hoy evalúa Appcharge / Xsolla / Tebex,
+todos SaaS propietario.
+
+**Piezas, todas permisivas:**
+
+| Rol | Repo | Licencia (bytes) |
+|---|---|---|
+| Escaparate: catálogo, bundles, precios por región, promos | [`medusajs/medusa`](https://github.com/medusajs/medusa) (rama **`develop`**) | MIT (1.402 B) |
+| Enrutado de pago entre PSPs por región | [`juspay/hyperswitch`](https://github.com/juspay/hyperswitch) | Apache-2.0 (11.358 B) |
+| Otorgar el derecho al jugador | [`heroiclabs/nakama`](https://github.com/heroiclabs/nakama) | Apache-2.0 (11.358 B) |
+| Libro mayor de moneda virtual | [`tigerbeetle/tigerbeetle`](https://github.com/tigerbeetle/tigerbeetle) | Apache-2.0 (10.174 B) |
+
+**El cableado, y el punto exacto donde se enchufa:**
+
+```
+jugador → Medusa (catálogo + carrito)
+            │
+            ├─ pago → Hyperswitch → PSP por región (reintento + fallback)
+            │                           │
+            │                      webhook de PSP
+            │                           ▼
+            │   Nakama: proveedor IAP REGISTRADO POR EL RUNTIME
+            │   server/iap_provider_registry.go
+            │     RuntimeIAPProviderNotificationFunction  ← el webhook entra acá
+            │     RuntimeIAPProviderPurchaseFunction      ← valida y otorga
+            │                           ▼
+            └────────────────── TigerBeetle: asiento de doble entrada
+                                (idempotente por transaction id)
+```
+
+🔴 **Por qué esta receta es viable y no era hace un año:** Nakama incorporó en
+2026 el **registro de proveedores IAP enchufables**
+(`server/iap_provider_registry.go`, cabecera `Copyright 2026 The Nakama Authors`),
+con `RuntimeIAPProviderPurchaseFunction`, `…SubscriptionFunction` y
+`…NotificationFunction`. Un webshop propio **no es una tienda conocida**, así que
+antes había que parchear el servidor; ahora **se registra como proveedor** desde el
+runtime. Restricción medida del nombre del proveedor:
+`^[a-zA-Z0-9_-]{1,128}$` (regex `iapProviderNameRegex`) — sin puntos ni espacios.
+
+⚠️ **Dos cosas que hay que construir** (no las trae ninguna pieza): el **mapeo
+SKU de Medusa → ítem de Nakama**, y la **idempotencia de extremo a extremo**. El
+webhook del PSP **se reintenta**: si el asiento en TigerBeetle no está clavado al
+id de transacción del PSP, se entrega dos veces. Es el riesgo nº1 de la receta y
+se prueba con un test que reenvía el mismo webhook 3 veces.
+
+---
+
+### Receta 53 — Validar recibos de las tiendas que la ley acaba de crear
+
+**Cuándo:** el cliente publica en un marketplace alternativo (UE por DMA, Japón por
+MSCA, Brasil por el acuerdo CADE) y necesita validar compras de una tienda para la
+que **no existe SDK oficial**.
+
+**Lo que Nakama ya trae nativo, verificado leyendo `iap/iap.go`:**
+`ValidateAppleJwsSignature`, `ValidateLegacyReceiptApple`,
+`ValidateLegacyReceiptAppleWithUrl`, `ValidateReceiptGoogle`,
+`ValidateSubscriptionReceiptGoogle`, `ValidateReceiptHuawei`,
+`ValidateReceiptFacebookInstant`, más `iap/iap_samsung.go`.
+
+**Lo que hay que escribir, y con qué base:**
+
+| Si el backend es… | Base de validación | Licencia (bytes) |
+|---|---|---|
+| Go (o Nakama como runtime) | [`awa/go-iap`](https://github.com/awa/go-iap) — Apple, Google, Amazon, Huawei | MIT (1.082 B) |
+| Servicio aparte, auto-hospedado | [`imariman/iapstack`](https://github.com/imariman/iapstack) — verificación **+ entitlement**, Go + PostgreSQL, modelo neutral de tienda | Apache-2.0 (11.357 B) |
+| PHP | [`aporat/store-receipt-validator`](https://github.com/aporat/store-receipt-validator) | Apache-2.0 (11.325 B) |
+| Laravel (con ciclo de vida de suscripción) | [`imdhemy/laravel-in-app-purchases`](https://github.com/imdhemy/laravel-in-app-purchases) (rama **`1.x`**) | MIT (1.067 B) |
+
+**Patrón:** un validador por tienda, todos detrás de la **misma interfaz de
+proveedor de Nakama**, de modo que agregar una tienda sea agregar un proveedor
+registrado y no tocar el servidor.
+
+⚠️ **`imariman/iapstack` se declara en desarrollo temprano (4 tags).** Para un
+entregable de cliente va como **referencia de modelo de datos** —su separación
+transacción/entitlement neutral de tienda es buena— no como dependencia de
+producción. `awa/go-iap` tiene **192 tags** y es la base conservadora.
+
+---
+
+### Receta 54 — Autodistribución: operar tienda propia y entregar parches
+
+**Cuándo:** post-DMA / MSCA / CADE, el cliente quiere distribuir fuera de la tienda
+de plataforma (en Brasil, además, con **Notarization** de Apple, y en Android con
+**desarrollador verificado obligatorio desde el 30-sep-2026**).
+
+| Rol | Repo | Licencia (bytes) |
+|---|---|---|
+| Repositorio de apps propio (construir, firmar, publicar) | [`f-droid/fdroidserver`](https://github.com/f-droid/fdroidserver) | 🔴 **AGPL-3.0** (34.520 B) |
+| Parcheo diferencial del build | [`itchio/butler`](https://github.com/itchio/butler) | MIT (1.104 B) |
+| Protocolo de diff/patch subyacente | [`itchio/wharf`](https://github.com/itchio/wharf) | MIT (1.104 B) |
+| Auto-updater del cliente de escritorio | [`velopack/velopack`](https://github.com/velopack/velopack) (rama **`develop`**) | MIT (1.091 B) |
+
+🔴 **La frontera de licencia, que es lo que decide si esta receta se puede
+vender:** `fdroidserver` es AGPL-3.0, pero es **infraestructura de publicación del
+estudio**: corre en los servidores del cliente, **no se distribuye a los jugadores
+y no se linkea en el juego**. El juego publicado a través de un repo F-Droid **no
+se vuelve AGPL**. Lo que queda bajo AGPL es **el servidor de repositorio y las
+modificaciones que se le hagan** — y si el cliente lo expone como servicio, debe
+ofrecer su fuente. **Esa es la conversación con legales, y se tiene antes de
+escribir código, no después.**
+
+⚠️ **`itchio/wharf` tiene 0 tags** (butler tiene 347): el protocolo no se releasea.
+**Pinear por SHA**, no por tag.
+
+⚠️ **Lo que esta receta NO resuelve:** iOS. `SideStore/SideStore` (AGPL-3.0) y
+`ImranR98/Obtainium` (GPL-3.0) son **clientes de usuario final**, no herramientas
+de publicación, y sirven de referencia —no de base— para un entregable. **No existe
+equivalente open source de `fdroidserver` para iOS**, y los *alternative
+marketplaces* de la DMA y de Brasil son justamente de iOS. **Es el gap más caro de
+este pass.**
+
+---
+
+### Receta 55 — Checkout agéntico de bienes in-game (exploratoria, con su riesgo escrito)
+
+**Cuándo:** el cliente pregunta por "comercio agéntico" — que un agente AI compre
+ítems o monedas en nombre del jugador.
+
+| Capa | Spec / repo | Licencia (bytes) |
+|---|---|---|
+| Checkout | [`agentic-commerce-protocol/agentic-commerce-protocol`](https://github.com/agentic-commerce-protocol/agentic-commerce-protocol) (Stripe + OpenAI) | Apache-2.0 (10.947 B) |
+| Autorización del pago | [`google-agentic-commerce/AP2`](https://github.com/google-agentic-commerce/AP2) (donado a FIDO) | Apache-2.0 (11.359 B) |
+| Movimiento del pago | [`x402-foundation/x402`](https://github.com/x402-foundation/x402) ⚠️ **no** `coinbase/x402` | Apache-2.0 (11.324 B) |
+| Límites de gasto y aprobaciones del agente + MCP | [`devaccuracy/ledgerforge`](https://github.com/devaccuracy/ledgerforge) | Apache-2.0 (10.749 B) |
+
+**Composición:** AP2 autoriza → x402 mueve → ACP cierra el checkout → LedgerForge
+impone **límites de gasto del lado del servidor** y expone un **servidor MCP** para
+que el agente consulte saldo y pida aprobación. El derecho comprado se otorga por
+la misma vía de la Receta 52 (proveedor IAP registrado en Nakama).
+
+🔴 **Riesgo declarado, y es grande:** las tres especificaciones son **capa de
+protocolo, no producto**. ACP tiene **0 tags** y se versiona **por carpeta**
+(`2026-04-17`) ⇒ **no se puede pinear como dependencia**; AP2 tiene 2 tags;
+`ledgerforge` tiene 2 tags. **Ninguno publica SDK de Unity ni de Unreal.** Esta
+receta se propone como **prueba de concepto con fecha de revisión**, no como
+arquitectura de producción, y el cliente tiene que oír esa frase.
+
+⚠️ **Trampa de recomendación (T75):** casi toda la prensa linkea `coinbase/x402`,
+que **su propio README declara "development fork"** desde que el protocolo pasó a
+la Linux Foundation. No está archivado, conserva nombre, licencia y byte-count
+idéntico (11.324 B) y tiene 53 tags contra 1.538 del canónico. **Usar
+`x402-foundation/x402`.**
+
+---
+
+### 🔴 Dos reglas de esta capa que valen para todas las recetas de arriba
+
+1. **La comisión es configuración, no constante.** Al 2026-11-25 el porcentaje en
+   EE.UU. está ante la Corte Suprema y en Brasil las fuentes se contradicen
+   (10 %/21 % vs 25 %/10 % + 5 %). Tabla de comisiones **por región y con fecha de
+   vigencia**, y capacidad de **reconciliar hacia atrás**.
+2. **La idempotencia es el requisito, no una optimización.** Todo este camino está
+   hecho de webhooks que se reintentan. El asiento contable se clava al id de
+   transacción del proveedor y se prueba reenviando el mismo evento. Es la
+   diferencia entre un ledger y una pérdida.
 
 # Patrones de composición — Gaming AI
 

@@ -1,8 +1,65 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
+
+## 🆕 Lo que cambió — pass cycle 20 (2026-11-25): **2026 es el año en que el camino del dinero se abrió por ley en las CUATRO regiones — y la oferta open source para juegos es cero**
+
+Los cycles 10-18 siguieron la regulación del **contenido** generado. El cycle 19
+siguió la de la **decisión** (precio, oferta, recomendación). Este pass sigue la
+del **canal de cobro**: quién puede cobrarle al jugador, con qué comisión y desde
+qué tienda. Es una familia distinta —derecho de competencia, no protección del
+consumidor ni AI— con instrumentos distintos, y **ya cambió de estado en las
+cuatro regiones en los últimos 12 meses**:
+
+| Región | Instrumento que abre el canal de cobro | Estado medido al 2026-11-25 |
+|---|---|---|
+| **North America** | *Epic v. Apple* (anti-steering) + programa de *external offers* de Google Play (EE.UU.) | 🔴 **Comisión jurídicamente indeterminada**: el 9º Circuito (11-dic-2025) confirmó el desacato pero **anuló** la prohibición total de comisión y devolvió el caso para fijar una "atada a los costos reales". **Certiorari concedido 30-jun-2026** |
+| **EMEA** | **DMA** — Apple unificó a todos los devs de la UE en **un solo modelo el 1-ene-2026** | ✅ **En vigor**: la *Core Technology Fee* (0,50 €/instalación) fue reemplazada por la **Core Technology Commission del 5 %** |
+| **APAC** | **Japón: Mobile Software Competition Act (MSCA)** | ✅ **En vigor desde el 18-dic-2025**: tiendas de terceros y *billing* alternativo obligatorios |
+| **LATAM** | **Brasil: acuerdo con el CADE** (aprobado dic-2025, plazo de 3 años) | ✅ **En vigor con iOS 26.5 (jun-2026)**: marketplaces alternativos y pagos fuera de IAP |
+
+🔴 **La consecuencia de arquitectura, que es lo que esta KB tiene para vender:**
+las cuatro regiones piden lo mismo en ingeniería aunque lo digan distinto —
+**poder cobrar desde más de un canal, con comisión distinta por región, y entregar
+el mismo derecho al jugador sin importar por dónde pagó**. Eso exige exactamente
+tres cosas que esta KB nunca había inventariado: un **validador de recibo por
+tienda** (enchufable, porque las tiendas nuevas aún no existen), un **ledger** que
+registre el derecho una sola vez (idempotencia contra doble entrega), y un
+**enrutador de pago** por región. Ver las Recetas 52-55.
+
+⚠️ **La comisión NO es un número para hardcodear.** Al 2026-11-25, el porcentaje
+que cobra Apple en EE.UU. está **ante la Corte Suprema**, y en Brasil **las
+fuentes consultadas se contradicen** (10 %/21 % vs 25 %/10 % + 5 %). Cualquier
+modelo financiero que ponga la comisión como constante de código es un modelo que
+hay que recompilar cuando salga el fallo. **Va como configuración por región, con
+fecha de vigencia.**
+
+### 🔴 El gap de oferta, medido: la tienda D2C para juegos **no tiene ninguna opción open source**
+
+Buscado explícitamente: *webshop* / tienda D2C para juegos móviles. **Todos** los
+proveedores que aparecen son **SaaS propietario**: Appcharge, Aghanim, Tebex,
+Xsolla, Coda Payments, Fungies, Neonpay. Y en backend de juego con catálogo +
+entitlement, los pesos pesados también: **AccelByte, PlayFab, Metaplay, Pragma**,
+y el *Ecom* de Epic (atado a una sola tienda).
+
+La oferta open source de esta capa **no es de juegos**: es de fintech y de
+e-commerce genérico (Medusa, Saleor, Kill Bill, Hyperswitch, TigerBeetle), más
+**una sola pieza nativa de juegos** que sí cubre compra y suscripción:
+`heroiclabs/nakama` (Apache-2.0).
+
+> 🟡 **Corrección a una afirmación de búsqueda, verificada contra el código:** las
+> comparativas de proveedores afirman que Nakama *"no tiene store ni catálogo ni
+> entitlement"*. **Falso en la mitad que importa.** Clonado y listado el árbol:
+> `iap/iap.go`, `iap/iap_samsung.go`, `server/api_purchase.go`,
+> `server/core_subscription.go`, `server/console_purchase.go` y migraciones SQL
+> dedicadas desde 2021 (`20210416090601-purchase.sql`,
+> `20220426122825-subscription.sql`). Validadores nativos medidos: **Apple (JWS y
+> recibo legacy), Google (compra y suscripción), Huawei, Facebook Instant**, más
+> Samsung. Lo que Nakama **no** trae es el **catálogo/escaparate** (precios,
+> ofertas, bundles) — y *ese* es el gap real, mucho más chico y mucho más barato
+> que "construir el backend de comercio".
 
 # Mapa de mercado — Gaming AI
 
@@ -1468,6 +1525,36 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 cycle 20 (2026-11-25) — el canal de cobro: **la comisión está indeterminada, y eso es la oportunidad**
+
+Estado medido del litigio que fija cuánto cuesta cobrar fuera de la App Store en
+EE.UU.:
+
+| Hito | Fecha | Qué dejó establecido |
+|---|---|---|
+| Desacato de Apple (N.D. Cal.) | **abr-2025** | Prohibió a Apple cobrar comisión sobre compras por link externo |
+| 9º Circuito | **11-dic-2025** | Confirmó **el desacato** pero **anuló la prohibición total** de comisión; devolvió el caso para fijar una comisión "razonablemente atada a los costos reales de Apple" |
+| Certiorari concedido | **30-jun-2026** | Limitado a si un tribunal puede declarar desacato por violar **el "espíritu"** de una orden judicial |
+| Escrito de Epic a la Corte | **13-nov-2026** | Sostiene que el **27 %** de Apple sobre compras hechas dentro de los 7 días del tap desafía la orden |
+| Posición del Solicitor General | nov-2026 | Hay *"al menos duda razonable"* de que la orden prohibiera el 27 % |
+
+**Lo que Apple pide:** 15 % para apps estándar (vs 30 % de IAP). **Google Play
+(EE.UU.):** su programa de *external offers* tuvo fecha límite de inscripción el
+**28-ene-2026**; si Google efectivamente cobra esas tarifas, el incentivo
+económico del webstore se desvanece.
+
+⚠️ **Límite declarado:** la comisión de remand **no tiene fecha en ningún
+expediente público** y una de las fuentes consultadas la proyecta para 2027. **No
+se publica acá una fecha de resolución.**
+
+🟢 **Oportunidad NA, y es de ingeniería, no de lobby:** el cliente que ya tiene
+webshop necesita **poder cambiar la comisión por región y por fecha de vigencia
+sin recompilar, y poder reconciliar hacia atrás cuando el porcentaje cambie
+retroactivamente**. Eso es tabla de comisiones versionada + ledger idempotente
+(`tigerbeetle` o `formancehq/ledger`) + enrutamiento (`juspay/hyperswitch`). Es un
+engagement de arquitectura financiera, y **el disparador es una sentencia que
+todavía no salió** — se vende antes, no después.
+
 #### 🆕 Oportunidad del pass cycle 19 (2026-11-22): **la primera prohibición de EE.UU. que apunta al precio personalizado ya está en vigor, y es de un estado**
 
 | Jurisdicción | Instrumento | Estado medido | Qué prohíbe / exige |
@@ -1926,6 +2013,50 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 cycle 20 (2026-11-25) — el canal de cobro: la DMA ya cerró su modelo, y **una corrección al cycle 19 sobre el AI Act**
+
+**Apple unificó a todos los desarrolladores de la UE en un solo modelo el
+1-ene-2026.** Lo medido:
+
+- La **Core Technology Fee** (0,50 € por instalación arriba del millón) fue
+  **reemplazada por la Core Technology Commission (CTC) del 5 %** sobre ventas de
+  bienes y servicios digitales.
+- Se suma una **Initial Acquisition Fee del 2 %** para usuarios nuevos en los
+  primeros 6 meses ⇒ la tasa efectiva más baja queda en **~7 %**, no en 5 %.
+- Los *Store Services* quedaron en **dos niveles** (el Tier 1 con menos
+  servicios, p. ej. sin actualizaciones automáticas).
+- 🔴 **Pregunta regulatoria abierta:** la Comisión Europea anunció que revisaría
+  si la estructura nueva cumple la DMA. **No se encontró una decisión final
+  publicada**, y no se afirma acá que la haya.
+
+🔴 **Corrección al cycle 20 de lo que publicó el cycle 19 sobre el AI Act Art. 50(2).**
+El pass anterior escribió *"Art. 50(2): 2-dic-2026 ⇒ faltan 10 días"* sin su
+alcance, y el alcance cambia a quién le aplica:
+
+- Las obligaciones de transparencia del Art. 50 **ya están en vigor desde el
+  2-ago-2026**, no en diciembre.
+- El **2-dic-2026** es una **ventana de transición acotada**: aplica **sólo** a
+  sistemas que generan contenido sintético y que **ya estaban en el mercado antes
+  del 2-ago-2026**, para agregarles el **marcado legible por máquina**.
+- La Comisión publicó guías **no vinculantes** el **20-jul-2026**.
+- Sanciones: hasta **15 M€ o 3 %** de la facturación mundial, el mayor.
+- 🟢 **El carve-out que más le sirve a un juego:** cuando el contenido deepfake
+  forma parte de una obra **evidentemente artística, creativa, satírica o
+  ficcional**, la obligación de divulgación **se reduce a declarar que el
+  contenido existe**. Un juego es el caso de libro de "obra ficcional".
+
+Así que para un juego ya publicado antes de agosto de 2026 con voces o arte
+generados, **la fecha del 2-dic-2026 sí muerde** (marcado legible por máquina),
+pero para un título nuevo la obligación ya venía corriendo desde agosto. **El
+cycle 19 tenía la fecha bien y el alcance incompleto.**
+
+🟢 **Oportunidad EMEA:** la DMA es la única región donde el modelo de cobro ya
+está **cerrado y cuantificado** (5 % CTC + 2 % IAF + Store Services por nivel).
+Es la región donde se puede construir el caso de negocio del D2C **con números
+firmes**, y donde `f-droid/fdroidserver` (AGPL-3.0) es la única pieza open source
+que permite **operar un marketplace propio** — legal desde la DMA, y sin
+equivalente permisivo.
 
 #### 🔴 Oportunidad del pass cycle 19 (2026-11-22): **faltan 10 días para el 2-dic-2026**, y la Comisión ya dijo que apuntar ofertas a jugadores vulnerables puede ser práctica **prohibida**
 
@@ -2486,6 +2617,48 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 cycle 20 (2026-11-25) — el canal de cobro: **Japón ya lo abrió, y el 90 % de los desarrolladores no lo usó**
+
+La **Mobile Software Competition Act (MSCA)** japonesa está **en vigor desde el
+18-dic-2025** (una fuente da 17-dic-2025; la diferencia es zona horaria). Obliga a
+Apple y Google a permitir tiendas de terceros, *billing* alternativo y *link-outs*.
+Tarifas medidas que las plataformas pusieron en respuesta:
+
+| Plataforma | Tarifa específica de Japón | Condición |
+|---|---|---|
+| **Apple** | **21 %** | si el dev usa pago in-app de terceros |
+| **Apple** | **15 %** | sobre transacciones vía web linkeada por el dev |
+| **Apple** | — | el IAP de Apple **debe mostrarse junto** a las alternativas |
+| **Google Play** | **4 %** de *service fee* reducido | si el usuario elige la opción no-Google; se muestran lado a lado |
+
+🔴 **El dato que vale más que las tarifas: más del 90 % de los desarrolladores
+japoneses NO adoptó ni los pagos alternativos ni los marketplaces**, y
+agrupaciones de la industria alegan que los términos tarifarios de Apple y Google
+**podrían violar la propia MSCA**. ⚠️ Esa alegación **no se pudo verificar contra
+fuente primaria** (no se accedió al texto de la JFTC) y se publica como alegación,
+no como hecho.
+
+🟢 **Y ahí está la oportunidad APAC, que es la más clara de las cuatro:** el canal
+está **legalmente abierto y comercialmente vacío**. La barrera no es el permiso —
+ya existe— es que **integrar un segundo canal de cobro, con su validador de recibo
+y su reconciliación, es trabajo de backend que el estudio japonés no hizo**. Es
+exactamente el entregable de las Recetas 52 y 53. Un mercado con permiso
+concedido, 90 % de no-adopción y una razón técnica identificada es el mejor perfil
+de demanda de este pass.
+
+**Regulación AI de la región (contexto, no canal de cobro):** Corea — *AI Basic
+Act* **en vigor 22-ene-2026**; Vietnam — ley de AI **en vigor 1-mar-2026**; Taiwán
+— *AI Basic Act* aprobado **dic-2025**; China — reglas específicas sobre
+recomendación algorítmica, deepfakes y AI generativa (el cycle 19 fechó las
+*Rules for Price Behavior* en vigor 10-abr-2026).
+
+⚠️ **Gap informado de APAC, dicho explícitamente:** las búsquedas de regulación
+de **AI específica de gaming** en APAC devuelven **cero actividad registrada** —
+una de las fuentes de benchmark lo dice con esas palabras ("no recorded activity
+in Asia-Pacific"). Lo que sí hay es regulación de AI **general** (arriba) y de
+**competencia móvil** (MSCA). El silencio es de la regulación sectorial de AI en
+juegos, no de la cobertura de este pass.
+
 #### 🔴 Oportunidad del pass cycle 19 (2026-11-22): **China reguló el PRECIO algorítmico en abril, y el requisito operativo es "poder apagarlo y poder documentarlo"**
 
 **Lo que entró en vigor el 10-abr-2026** (y rige por 5 años): las *Rules for Price
@@ -3003,6 +3176,76 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 cycle 20 (2026-11-25) — el canal de cobro: Brasil lo abrió en junio, y **el ledger insignia de la región dejó de ser open source**
+
+**Brasil, acuerdo con el CADE:** aprobado en **dic-2025**, con plazo de **3 años**,
+y **en vigor con iOS 26.5 en jun-2026**. Lo que habilita:
+
+- Desarrolladores brasileños pueden operar **marketplaces alternativos** y cobrar
+  **fuera de In-App Purchase**.
+- Las apps distribuidas fuera de la App Store pasan por **Notarization**
+  (chequeos básicos de seguridad e integridad).
+- Distribución fuera de la tienda: **Core Technology Commission del 5 %** sobre
+  bienes y servicios digitales.
+- 🔴 **Las comisiones no coinciden entre fuentes:** una reporta **10 %** reducida
+  para la mayoría y **21 %** estándar para bienes digitales; otra reporta **25 %**,
+  o **10 %** para los que califican, **más 5 %** por usar el procesamiento de pago
+  de Apple. **No se resuelve acá** — se marca como número a confirmar contra la
+  documentación de Apple antes de ponerlo en un modelo financiero.
+
+**Brasil / Android, y es una fecha ya pasada que hay que chequear:** desde el
+**30-sep-2026**, una app necesita estar registrada por un **desarrollador
+verificado** para instalarse en dispositivos Android certificados en **Brasil,
+Indonesia, Singapur y Tailandia**. Google afirma que más del 99 % de las apps de
+Play quedaron registradas automáticamente — **el riesgo está en lo que se
+distribuye fuera de Play**, que es justamente el canal que el acuerdo CADE abrió.
+Las dos medidas empujan en direcciones opuestas y **las dos aplican en Brasil al
+mismo tiempo**.
+
+#### 🔴 El hallazgo LATAM del pass: `midaz` (Brasil) ya no es open source, y **todos los índices siguen diciendo Apache-2.0**
+
+`LerianStudio/midaz` se publicita como *"el primer ledger open source de América
+Latina"*, de una empresa brasileña fundada en 2024. Medido hoy, repo por repo:
+
+| Artefacto | Estado medido 2026-11-25 | Licencia medida |
+|---|---|---|
+| `LerianStudio/midaz` (core) | 🔴 **no legible públicamente** — `git ls-remote` **pide credenciales (401, no 404)**; `raw` da 404 en `LICENSE`, `README.md` y `go.mod`, tanto en `develop` como en `main` | — |
+| `LerianStudio/midaz-console` | 🔴 no legible públicamente | — |
+| `LerianStudio/lib-commons` | 🔴 no legible públicamente | — |
+| [`LerianStudio/midaz-sdk-golang`](https://github.com/LerianStudio/midaz-sdk-golang) | ✅ vivo, **164 tags** | 🔴 **Elastic License 2.0** (3.824 B) — **source-available, no open source** |
+
+Mientras tanto, los índices de terceros siguen publicando `Apache-2.0`
+(`pkg.go.dev`, agregadores de ecosistema con "Apache-2.0 / 72 forks / ~364 ★").
+🔴 **La distancia entre el metadato de tercero y el archivo de licencia real es de
+una licencia entera, y en este caso incluso de la existencia del repo.**
+
+⚠️ **Lo que NO se afirma:** no se midió **cuándo** ni **por qué** cambió, ni si
+fue relicencia, repo privado o borrado. `git ls-remote` devolviendo pedido de
+credenciales es consistente con las tres cosas. **Se publica el estado, no la
+causa.**
+
+🟡 **Y corrige una regla del cycle 19:** con Unleash se concluyó que *"el servidor
+relicencia pero los SDKs se quedan permisivos"*. Acá el servidor **salió de
+internet público** y el SDK sobreviviente es **ELv2**. La regla correcta es: *el
+SDK suele quedarse permisivo, y hay que medirlo repo por repo.*
+
+🟢 **Oportunidad LATAM:** Brasil es la **única** región donde el canal de cobro se
+abrió **y** el mercado tiene escala de juegos móviles propia **y** la pieza de
+infraestructura financiera regional acaba de dejar de ser utilizable como base
+open source. El reemplazo permisivo existe y está verificado
+(`tigerbeetle` Apache-2.0, `formancehq/ledger` MIT) — es un engagement de
+migración con disparador fechado, no una propuesta especulativa.
+
+⚠️ **Gap informado de LATAM, dicho explícitamente:** las búsquedas prescritas de
+*"AI gaming LATAM adoption regulation players"* devuelven **casi exclusivamente
+iGaming (apuestas online)**, no videojuegos — y lo mismo pasó en las otras tres
+regiones (ver `intel/trends.md`). **No se encontró ningún estudio de adopción de
+AI entre jugadores de videojuegos de LATAM.** Lo que sí se encontró, y se marca
+como material de apuestas y no de videojuegos: LATAM se describe como líder global
+en adopción de AI para *player safety* porque son mercados abiertos en la última
+década sin marco heredado que defender, y Colombia tiene reglas de juego
+responsable en plena vigencia.
 
 #### 🔴 Oportunidad del pass cycle 19 (2026-11-22): **Brasil es la única jurisdicción de esta KB donde la ley ya trae un INTERRUPTOR escrito — y apagarlo exime de verificar edad**
 

@@ -1,8 +1,119 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
+
+## 🆕 Pass 2026-11-25 (cycle 20) — fundaciones del **camino del dinero**: tienda → recibo → derecho → saldo → entrega
+
+19 passes no auditaron esta capa (medido: `payment`, `wallet`, `receipt`,
+`entitlement`, `patcher` = 0 ocurrencias en las 8 páginas antes de este pass).
+**Las 19 fundaciones de abajo están verificadas una por una** con el método de
+esta KB, y conviene decir qué significa "verificado" acá, porque desde esta sesión
+**`github.com` por HTML y `api.github.com` devuelven 403**:
+
+```
+# existencia + rama default real  (protocolo git, no HTML, no API)
+$ git ls-remote --symref https://github.com/<repo> HEAD
+# licencia + byte-count, SOBRE LA RAMA DEFAULT REAL
+$ curl -s https://raw.githubusercontent.com/<repo>/<rama>/LICENSE
+```
+
+🔴 **Trampa de método confirmada este pass:** `raw` devuelve **exactamente 14
+bytes** (`404: Not Found`) cuando la ruta no existe — es el *trap de los 14 bytes*
+que esta KB ya documentó, y sigue vivo. Y **3 de 21 repos no tienen rama `main` ni
+`master`**: `medusajs/medusa`, `velopack/velopack` y `SideStore/SideStore` son
+`develop`. Construir la URL raw con `main` por defecto habría dado 404 en los tres
+y los habría declarado inexistentes. **Siempre leer la rama del `--symref`.**
+
+### Validación de recibo y derecho (*entitlement*)
+
+| Repo | Licencia (bytes medidos) | Rama | Tags | Qué resuelve | Titular (canal 8) |
+|---|---|---|---|---|---|
+| [`heroiclabs/nakama`](https://github.com/heroiclabs/nakama) | **Apache-2.0** (11.358 B) | `master` | 219 | 🥇 **La base recomendada.** Compra y suscripción nativas (`iap/iap.go`, `server/core_purchase.go`, `core_subscription.go`, migraciones SQL propias desde 2021) **+ registro de proveedores enchufables** | `The Nakama Authors` (colectivo) |
+| [`awa/go-iap`](https://github.com/awa/go-iap) | **MIT** (1.082 B) | `master` | 192 | Librería Go de verificación: App Store, Google Play, Amazon, Huawei | `AWA Developers` |
+| [`imariman/iapstack`](https://github.com/imariman/iapstack) | **Apache-2.0** (11.357 B) | `main` | 4 | Servicio auto-hospedado de verificación **y entitlement** (Go + PostgreSQL), modelo de transacción neutral de tienda | ❌ sin `NOTICE` |
+| [`aporat/store-receipt-validator`](https://github.com/aporat/store-receipt-validator) | **Apache-2.0** (11.325 B) | `main` | 61 | Validación de recibos en PHP (Apple, Amazon) | ❌ sin `NOTICE` |
+| [`imdhemy/laravel-in-app-purchases`](https://github.com/imdhemy/laravel-in-app-purchases) | **MIT** (1.067 B, en `LICENSE.md`) | **`1.x`** | 71 | Validación + **ciclo de vida de suscripción** en Laravel | `Mohamad Eldhemy` (individuo) |
+
+⚠️ `imdhemy/laravel-in-app-purchases` tiene rama default **`1.x`** — ni `main` ni
+`master` ni `develop`. Cuarta variante en 21 repos.
+
+### Facturación, medición y enrutamiento de pago
+
+| Repo | Licencia (bytes medidos) | Rama | Tags | Qué resuelve | Titular (canal 8) |
+|---|---|---|---|---|---|
+| [`killbill/killbill`](https://github.com/killbill/killbill) | **Apache-2.0** (11.357 B) | `master` | **689** | Plataforma de facturación y suscripción madura | 🔴 cadena `Ning → Groupon → Equinix → The Billing Project, LLC` (en `pom.xml`) |
+| [`juspay/hyperswitch`](https://github.com/juspay/hyperswitch) | **Apache-2.0** (11.358 B) | `main` | **2.311** | **Orquestación de pagos** en Rust: enrutar entre PSPs por región, reintentos, fallback | `Juspay Technologies Private Limited` (en `NOTICE`) |
+| [`openmeterio/openmeter`](https://github.com/openmeterio/openmeter) | **Apache-2.0** (11.358 B) | `main` | 508 | Medición de uso → facturación (battle pass por consumo, créditos) | ❌ sin `NOTICE` |
+| [`getlago/lago`](https://github.com/getlago/lago) | 🔴 **AGPL-3.0** (34.523 B) | `main` | 199 | Facturación y medición open source | ⚠️ sonda inválida (devuelve FSF, ver canal 8) |
+
+🔴 **Lago es AGPL-3.0 (34.523 B), el mismo byte-count exacto que Unleash tras su
+relicencia del cycle 19.** Para un entregable de cliente eso es una decisión de
+arquitectura, no un detalle: se consume **como servicio separado por red**, nunca
+linkeado al backend del juego.
+
+### Comercio y catálogo (la tienda D2C)
+
+| Repo | Licencia (bytes medidos) | Rama | Tags | Qué resuelve | Titular (canal 8) |
+|---|---|---|---|---|---|
+| [`medusajs/medusa`](https://github.com/medusajs/medusa) | **MIT** (1.402 B) | **`develop`** | 29.693 | Backend de comercio headless: catálogo, carrito, promociones, órdenes | `Medusajs` (empresa) |
+| [`saleor/saleor`](https://github.com/saleor/saleor) | **BSD-3-Clause** (1.562 B) | `main` | 2.891 | Comercio GraphQL-first, multi-moneda, multi-canal | `Saleor Commerce` (empresa) |
+
+### Saldo y moneda virtual (el ledger)
+
+| Repo | Licencia (bytes medidos) | Rama | Tags | Qué resuelve | Titular (canal 8) |
+|---|---|---|---|---|---|
+| [`tigerbeetle/tigerbeetle`](https://github.com/tigerbeetle/tigerbeetle) | **Apache-2.0** (**10.174 B** ⚠️) | `main` | 293 | Base de datos contable de doble entrada, diseñada para altísimo volumen de transacciones | ❌ sin `NOTICE` |
+| [`formancehq/ledger`](https://github.com/formancehq/ledger) | **MIT** (1.083 B) | `main` | 412 | Ledger programable para movimientos de dinero y saldos | `Formance Solutions` (empresa) |
+| [`devaccuracy/ledgerforge`](https://github.com/devaccuracy/ledgerforge) | **Apache-2.0** (10.749 B, `LICENSE.md`) | `main` | 2 | Doble entrada con dinero entero exacto, cadena de auditoría y **límites de gasto para agentes AI** | ❌ sin `NOTICE`; **único repo con DCO** |
+
+⚠️ **`tigerbeetle` mide 10.174 B, ~1.180 B menos que el Apache-2.0 estándar.**
+Verificado leyendo el final del archivo: termina en `END OF TERMS AND CONDITIONS`
+y **omite el APPENDIX** (*"How to apply the Apache License to your work"*). Es
+Apache-2.0 legítimo y completo en sus términos; **el byte-count sólo señala, nunca
+decide** — y ahora hay una **causa medida** del desvío (apéndice ausente), no una
+sospecha.
+
+### Entrega de lo comprado: parcheo, actualizador y tienda propia
+
+| Repo | Licencia (bytes medidos) | Rama | Tags | Qué resuelve | Titular (canal 8) |
+|---|---|---|---|---|---|
+| [`itchio/butler`](https://github.com/itchio/butler) | **MIT** (1.104 B) | `master` | 347 | CLI de publicación y **parcheo diferencial** de itch.io | `Leaf Corcoran` + `Amos Wenger`, itch.io |
+| [`itchio/wharf`](https://github.com/itchio/wharf) | **MIT** (1.104 B) | `master` | **0** | El **protocolo de diff/patch** sobre el que corre butler | `Amos Wenger` + `Leaf Corcoran` |
+| [`velopack/velopack`](https://github.com/velopack/velopack) | **MIT** (1.091 B) | **`develop`** | 72 | Instalador y **auto-updater** multiplataforma para apps de escritorio | 🔴 `Caelan Sayler` (2021) **+ `Velopack Ltd.` (2024) |
+| [`f-droid/fdroidserver`](https://github.com/f-droid/fdroidserver) | 🔴 **AGPL-3.0** (**34.520 B**) | `master` | 143 | 🥇 **Tienda de apps en una caja**: construir, firmar y publicar un repositorio propio de Android | ⚠️ sonda inválida (FSF) |
+| [`ImranR98/Obtainium`](https://github.com/ImranR98/Obtainium) | **GPL-3.0** (35.149 B, `LICENSE.txt`) | `main` | 338 | Cliente Android que instala y actualiza apps desde releases arbitrarios | ⚠️ sonda inválida (FSF) |
+| [`SideStore/SideStore`](https://github.com/SideStore/SideStore) | **AGPL-3.0** (34.523 B) | **`develop`** | 43 | Instalación de apps iOS sin la App Store | ⚠️ sonda inválida (FSF) |
+| [`Heroic-Games-Launcher/HeroicGamesLauncher`](https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher) | **GPL-3.0** (35.149 B, `COPYING`) | `main` | 235 | Launcher de escritorio para tiendas de PC | ⚠️ sonda inválida; **único con CLA + `.github/workflows/cla.yml`** |
+
+🔴 **`wharf` tiene 0 tags y `butler` 347**, con el **mismo byte-count de licencia
+(1.104 B)** y los mismos dos titulares en orden invertido. El protocolo no se
+releasea; la herramienta sí. Pinear `wharf` requiere un SHA.
+
+🔴 **`f-droid/fdroidserver` mide 34.520 B y `lago`/`SideStore` miden 34.523 B.**
+Tres bytes de diferencia **dentro de la misma AGPL-3.0** (la causa visible: `http`
+vs `https` en la URL de la FSF). Suma de este pass al T70 de la KB: **AGPL-3.0
+tiene al menos 2 byte-counts** y **Apache-2.0 al menos 13** — ver `intel/trends.md`.
+
+### 🔴 La única fundación de esta capa con origen LATAM **ya no es open source**
+
+`LerianStudio/midaz` (Brasil) se publicita en toda la web como *"el primer ledger
+open source de América Latina"*, Apache-2.0. Medido hoy:
+
+| Artefacto | Estado medido 2026-11-25 | Licencia |
+|---|---|---|
+| `LerianStudio/midaz` (ledger core) | 🔴 **no legible públicamente** (`git ls-remote` pide credenciales ⇒ 401, no 404; `raw` da 404 en `LICENSE`, `README.md` y `go.mod`, en `develop` y en `main`) | — |
+| `LerianStudio/midaz-console` | 🔴 no legible públicamente | — |
+| `LerianStudio/lib-commons` | 🔴 no legible públicamente | — |
+| [`LerianStudio/midaz-sdk-golang`](https://github.com/LerianStudio/midaz-sdk-golang) | ✅ vivo, 164 tags | 🔴 **Elastic License 2.0** (3.824 B) — **source-available, NO open source** |
+
+**Esto corrige una regla que el cycle 19 dio por establecida.** Con Unleash, el
+cycle 19 concluyó que *"el servidor relicencia pero los SDKs se quedan permisivos
+(Apache-2.0/MIT)"*. Midaz es el **contraejemplo**: el servidor **salió de internet
+público** y el SDK sobreviviente es **ELv2**. La regla pasa a ser: *el SDK **suele**
+quedarse permisivo, y hay que medirlo repo por repo* — no se hereda ni del
+servidor, ni de la organización, ni del patrón anterior.
 
 # 🏗️ Repos fundacionales — Gaming
 

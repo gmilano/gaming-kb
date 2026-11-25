@@ -1,8 +1,152 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
+
+## 🔴 Lo más importante del pass 2026-11-25 (cycle 20): **el camino del DINERO** —de la tienda al derecho del jugador— y el **canal 8: la sonda de RELICENCIABILIDAD**
+
+Diecinueve passes auditaron lo que el jugador **ve, oye y juega** (NPCs, voz,
+assets, world models), lo que el estudio **construye** (la fábrica) y lo que el
+backend **decide** (flags, experimentos, LTV). Ninguno auditó **cómo entra la
+plata y cómo sale el derecho que compró el jugador**. Medido antes de este pass,
+en las 8 páginas de esta KB había **cero** ocurrencias de `payment`, `wallet`,
+`receipt`, `entitlement`, `patcher`, `butler`, `killbill`, `medusa`, `saleor`,
+`hyperswitch`, `tigerbeetle`, `fdroid` y `iap` como capa propia (`openiap`
+aparecía sólo como nota suelta del cycle 19, y `lago`/`formance` eran **falsos
+positivos de substring** dentro de *"performance"* y *"Santiago"* — verificado con
+`grep -oiE '.{50}lago.{50}'`, que devuelve 0 líneas reales).
+
+No es una capa accesoria: **2026 es el año en que el camino del dinero se abrió
+por ley en las cuatro regiones** (ver `intel/market.md`), y es la primera capa de
+esta KB donde el entregable de Globant es **transaccional** — si falla, no se ve
+mal, se pierde dinero o se entrega dos veces.
+
+> 🔴 **El hallazgo que vale el pass entero:** el seam que falta en todas las demás
+> capas, acá **existe y es Apache-2.0**. `heroiclabs/nakama` incorporó en 2026 un
+> **registro de proveedores IAP enchufables** (`server/iap_provider_registry.go`,
+> cabecera `Copyright 2026 The Nakama Authors`), con
+> `RuntimeIAPProviderPurchaseFunction`, `…SubscriptionFunction` y
+> `…NotificationFunction`. Traducido: **se puede validar una compra hecha en una
+> tienda que no existía cuando el engine se compiló** — que es exactamente lo que
+> son los *alternative marketplaces* que la DMA, la MSCA japonesa y el acuerdo
+> CADE de Brasil acaban de legalizar. El cycle 19 cerró diciendo que lo que
+> faltaba era *"el último metro"*; en esta capa el último metro **ya está
+> cableado**.
+
+### 🔴 Hallazgo nº1: `coinbase/x402` ya no es el repo de x402 — y **no está archivado**, así que el filtro obligatorio del cycle 19 (T74) NO lo atrapa
+
+El cycle 19 estableció como regla que `archived` es un filtro obligatorio, porque
+el predecesor archivado se queda con las estrellas. Este pass encuentra un caso
+**peor y más silencioso**: dos repos **vivos**, con el **mismo byte-count de
+licencia** (11.324 B, Apache-2.0) y **HEAD distinto**:
+
+```
+$ git ls-remote --symref https://github.com/coinbase/x402 HEAD
+ref: refs/heads/main   HEAD
+0e6e8c55...                                  tags=53
+$ git ls-remote --symref https://github.com/x402-foundation/x402 HEAD
+ref: refs/heads/main   HEAD
+222f3541...                                  tags=1538
+```
+
+No es un redirect (SHAs distintos ⇒ son dos repos reales). Lo que los distingue
+**no está en ningún metadato**: está en las tres primeras líneas del README de
+Coinbase, y lo dice el propio repo:
+
+> *"We've moved the x402 repo under the x402 Foundation repo. All issues and PRs
+> were transferred here. Our repo (`coinbase/x402`) is now a **development
+> fork**."*
+
+🔴 **Corrección y extensión de T74:** `archived` es **necesario pero no
+suficiente**. Un repo de vendor puede ser **degradado a fork sin ser archivado**,
+conservando nombre, estrellas, tags y licencia, y **el único canal que lo detecta
+es leer las primeras líneas del README**. Regla nueva (**T75**): antes de
+recomendar un repo de vendor cuyo protocolo pasó a una fundación, leer
+`README.md | head -5`. Los 1.538 tags contra 53 son el segundo indicador, no el
+primero.
+
+### Agentes y especificaciones verificados este pass (capa dinero)
+
+Todos los renglones de abajo fueron probados uno por uno: existencia por
+`git ls-remote --symref` (no por HTML ni por API — ambos dan 403 desde esta
+sesión), y licencia leída por `raw.githubusercontent.com` **sobre la rama default
+real**, con su byte-count.
+
+| Agente / spec | Repo | Licencia (bytes medidos) | Rama default | Tags | Qué hace en el camino del dinero |
+|---|---|---|---|---|---|
+| **ACP** (Agentic Commerce Protocol) | [`agentic-commerce-protocol/agentic-commerce-protocol`](https://github.com/agentic-commerce-protocol/agentic-commerce-protocol) | **Apache-2.0** (10.947 B) | `main` | **0** | El **checkout** del agente: RFCs + OpenAPI + JSON Schema. Creado por Stripe y OpenAI |
+| **AP2** (Agent Payments Protocol) | [`google-agentic-commerce/AP2`](https://github.com/google-agentic-commerce/AP2) | **Apache-2.0** (11.359 B) | `main` | 2 | La **autorización** del pago iniciado por un agente. Donado por Google a la FIDO Alliance |
+| **x402** (canónico) | [`x402-foundation/x402`](https://github.com/x402-foundation/x402) | **Apache-2.0** (11.324 B) | `main` | **1.538** | El **movimiento** del pago (HTTP 402 nativo). Hoy bajo la Linux Foundation |
+| **x402** (fork de desarrollo) | [`coinbase/x402`](https://github.com/coinbase/x402) | **Apache-2.0** (11.324 B) | `main` | 53 | ⚠️ **Degradado a dev fork por su propio README** — es el que linkea casi toda la prensa |
+| **LedgerForge** | [`devaccuracy/ledgerforge`](https://github.com/devaccuracy/ledgerforge) | **Apache-2.0** (10.749 B, en `LICENSE.md`) | `main` | 2 | Ledger doble entrada con **servidor MCP** y **límites de gasto y aprobaciones impuestos del lado del servidor para agentes AI** |
+| **Nakama — registro IAP** | [`heroiclabs/nakama`](https://github.com/heroiclabs/nakama) | **Apache-2.0** (11.358 B) | `master` | 219 | El **seam enchufable**: registrar un validador de compra propio para una tienda arbitraria (último commit 2026-11-24) |
+
+⚠️ **Límite declarado de los tres protocolos (ACP/AP2/x402):** son **capa de
+especificación**, no producto. ACP tiene **0 tags** y se versiona **por carpeta**
+(`2026-04-17`), no por release — así que **una dependencia no se puede pinear**, y
+eso es un riesgo de build, no una opinión. AP2 tiene 2 tags. Ninguno de los tres
+publica paquete Unity ni Unreal: acá sí sigue faltando el último metro.
+
+⚠️ **No se midió** la adopción real de ninguno de los tres (sin API de GitHub
+desde esta sesión no hay estrellas, forks ni dependientes verificables). Las
+cifras que circulan —p. ej. *"165 millones de transacciones de agentes"* para
+x402— vienen de fuentes secundarias y **no se publican acá como dato**.
+
+### 🔴 Hallazgo nº2: el canal 8 —**la sonda de relicenciabilidad**— y sus tres defectos medidos
+
+El canal 7 (cycle 19) mide la **deriva** de un carve-out: detecta que una licencia
+empeoró **después** de que empeoró. Falta el **predictor**. Quién puede
+relicenciar mañana depende de **quién es el titular del copyright**: una sola
+empresa titular puede relicenciar unilateralmente (el patrón Unleash / Flipt /
+Midaz); un colectivo de contribuyentes o una fundación, no.
+
+Sonda aplicada a 20 repos de esta capa: `CONTRIBUTING.md` (+5 rutas alternativas),
+`.github/workflows/{cla,dco}.yml`, y la **línea de copyright** de
+`LICENSE`/`NOTICE`. Resultado honesto — **la sonda falla en 14 de 20**, y las
+causas son el hallazgo:
+
+| Familia de licencia | Dónde vive el titular | Qué devuelve la sonda |
+|---|---|---|
+| **MIT / BSD** | En la cabecera de la propia licencia | ✅ Funciona: 7 de 7 leídos |
+| **Apache-2.0** | **No está en `LICENSE`** (el texto trae el placeholder `Copyright [yyyy] [name of copyright owner]`) ⇒ vive en `NOTICE` o en ningún lado | ⚠️ Sólo `hyperswitch` tiene `NOTICE` (*Juspay Technologies Private Limited*). 7 repos Apache **no declaran titular en ninguna ruta canónica** |
+| **GPL / AGPL** | **La línea de copyright de `LICENSE` es la de la FSF sobre el texto de la licencia** (`Copyright (C) 2007 Free Software Foundation`) — **no la del proyecto** | 🔴 **Falso positivo en 5 de 5**: lago, fdroidserver, SideStore, Heroic y Obtainium "devuelven" FSF. El titular real está en las cabeceras **por archivo** |
+
+🔴 **El defecto nº3 es el más caro y es propio de esta sonda:** en la familia
+copyleft la sonda no sólo falla, **miente con formato correcto**. Un pipeline que
+compile "titular = Free Software Foundation" para 5 repos produce exactamente el
+tipo de dato inventado que esta KB existe para no producir. **Regla (T76): el
+canal 8 sólo se corre sobre MIT/BSD; sobre Apache se corre contra `NOTICE`; sobre
+GPL/AGPL NO se corre contra `LICENSE` nunca.**
+
+Dónde sí vive el titular en copyleft y Apache, verificado a mano:
+
+- `killbill/killbill` → en la cabecera de `pom.xml`, y es una **cadena de sucesión
+  corporativa de 16 años**: `Ning, Inc. (2010-2014)` → `Groupon, Inc (2014-2020)`
+  → `Equinix, Inc (2020)` → `The Billing Project, LLC (2014-2020)`. Un proyecto
+  Apache-2.0 de **689 tags** cuyo titular cambió de dueño dos veces, y nada de eso
+  se ve desde `LICENSE`.
+- `heroiclabs/nakama` → cabecera por archivo: `Copyright 2026 The Nakama Authors`.
+  Titular **colectivo**, no la empresa (Heroic Labs) ⇒ señal de durabilidad, con
+  el límite obvio de que la empresa controla el repo.
+- `velopack/velopack` → 🔴 **dos líneas de copyright en el mismo MIT**:
+  `Copyright © 2021 Caelan Sayler` **y** `Copyright © 2024 Velopack Ltd.` Es la
+  transición **individuo → empresa** capturada dentro del archivo de licencia. Por
+  el canal 8 es **el predictor más limpio de toda la tabla**: a partir de 2024 hay
+  una sociedad co-titular, y una sociedad co-titular es la que firma un cambio de
+  licencia.
+
+### ⚫ Conjetura propia que 404'eó y se escribe en vez de borrarse
+
+`LerianStudio/midaz` — asumí que el ledger open source insignia de LATAM seguía
+público porque toda la web lo cita así. **No es legible públicamente**:
+`git ls-remote` pide credenciales (401, no 404) y `raw` da 404 en `LICENSE`,
+`README.md` y `go.mod` en `develop` y en `main`. Ver `intel/market.md` §LATAM: es
+el hallazgo regional del pass, y **corrige una regla del cycle 19**.
+
+Host que se agrega a la lista de policy-dead desde esta sesión:
+`beta.pkg.go.dev` (403 `connect_rejected` por el proxy de egress) ⇒ se cita en
+prosa, no se linkea.
 
 # 🎮 Agentes AI — Gaming
 

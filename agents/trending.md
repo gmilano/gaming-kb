@@ -1,7 +1,7 @@
 ---
 industry: gaming
 region: Global
-updated: 2026-11-22
+updated: 2026-11-25
 ---
 
 # Agentes trending — Gaming AI
@@ -9,6 +9,50 @@ updated: 2026-11-22
 > **Archivo APPEND-ONLY.** Cada pass agrega una sección fechada arriba y conserva
 > la historia completa debajo. La historia es el dato: sin ella no hay tendencia,
 > sólo una foto.
+
+---
+
+## 🆕 2026-11-25 — pass cycle 20
+
+**Tema del pass:** el **camino del dinero** — de la tienda al derecho del jugador.
+Antes de este pass, en las 8 páginas de esta KB había **cero** ocurrencias de
+`payment`, `wallet`, `receipt`, `entitlement` y `patcher` como capa propia.
+
+### Lo nuevo de esta semana en agentes de comercio
+
+| Novedad medida | Qué cambió | Fecha / estado |
+|---|---|---|
+| 🔴 **`coinbase/x402` se declaró "development fork"** en su propio README; el canónico es [`x402-foundation/x402`](https://github.com/x402-foundation/x402) | El protocolo pasó a la Linux Foundation y **el repo se mudó con él** — sin archivar el viejo | 53 tags (fork) vs **1.538** (canónico); misma licencia, mismo byte-count (11.324 B) |
+| **AP2 donado por Google a la FIDO Alliance** | La autorización de pagos iniciados por agentes dejó de ser de un vendor | [`google-agentic-commerce/AP2`](https://github.com/google-agentic-commerce/AP2), Apache-2.0 (11.359 B), 2 tags |
+| **ACP (Stripe + OpenAI) publica spec versionada por carpeta** | RFCs + OpenAPI + JSON Schema bajo carpeta `2026-04-17`; **0 tags** ⇒ no se puede pinear | [`agentic-commerce-protocol/…`](https://github.com/agentic-commerce-protocol/agentic-commerce-protocol), Apache-2.0 (10.947 B) |
+| **Nakama trae registro de proveedores IAP enchufables** | `server/iap_provider_registry.go`, cabecera `Copyright 2026 The Nakama Authors`: se puede validar una compra de una tienda que no existía al compilar | Último commit **2026-11-24**; Apache-2.0 (11.358 B) |
+| **LedgerForge: límites de gasto de agentes + servidor MCP** | Ledger de doble entrada con aprobaciones impuestas del lado del servidor para agentes AI | [`devaccuracy/ledgerforge`](https://github.com/devaccuracy/ledgerforge), Apache-2.0 (10.749 B), 2 tags, **único repo del pass con DCO** |
+
+### 🔴 Regla nueva que sale de este pass (T75)
+
+`archived` —filtro declarado obligatorio por el cycle 19— **no alcanza**. Un repo
+de vendor puede ser **degradado a fork sin archivarse**, conservando nombre,
+estrellas, tags y licencia. **El único canal que lo detecta es
+`README.md | head -5`.** Antes de recomendar un repo de vendor cuyo protocolo pasó
+a una fundación: leer el README.
+
+### ⚫ Conjetura propia que 404'eó, escrita en vez de borrada
+
+`openai/agentic-commerce-protocol`, `stripe/agentic-commerce-protocol` y
+`agentic-commerce/acp` — asumí que ACP viviría bajo la org de uno de sus dos
+creadores. **Los tres 404.** Vive en su **propia** org
+(`agentic-commerce-protocol/agentic-commerce-protocol`). Misma clase de falla que
+`LerianStudio/midaz` de este pass y que `open-feature/flagd-ui` del cycle 19:
+**inferir el slug desde el dueño institucional.**
+
+### ⚠️ Lo que no se pudo medir este pass
+
+**Estrellas, forks y dependientes: ninguno.** `api.github.com` y `github.com` por
+HTML devuelven **403** desde esta sesión (proxy de egress). Todo lo de arriba se
+verificó por **protocolo git** (`git ls-remote --symref`) y por
+**`raw.githubusercontent.com`**. Por eso **no hay una sola cifra de estrellas** en
+las tablas de este pass: las que circulan en prensa no se pudieron confirmar y no
+se publican como dato.
 
 ---
 
