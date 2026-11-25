@@ -4,6 +4,315 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo más importante del pass 2026-11-25 (cycle 25): **el plano del CUERPO** —la simulación que el cable del cycle 24 da por supuesta: punto fijo, física, navegación, animación y el simulador donde se entrena el agente— y el **canal 12: el censo fuera de GitHub por API del host**
+
+El cycle 24 cerró con una conclusión de inversión: *"en transporte se elige; en
+rollback se construye"*. Este pass mide **qué hay que construir**, porque el
+rollback no es un problema de red: es un problema de **determinismo**. Si dos
+máquinas no calculan el mismo estado a partir de los mismos inputs, el rollback
+no corrige nada — amplifica la divergencia.
+
+Medición sobre las 9 páginas de esta KB **antes** de escribir una línea:
+
+| Término | Ocurrencias previas | Lectura |
+|---|---|---|
+| `punto fijo` / `fixed-point` / `fixed point` | **0 · 0 · 0** | La condición previa del rollback no estaba nombrada |
+| `lockstep` | **0** | El modelo de red del que depende el género de estrategia, ausente |
+| `Box2D` · `Bullet` · `PhysX` · `Rapier` | **0 · 0 · 0 · 0** | Cuatro de los cinco motores de física del mundo, ausentes |
+| `Jolt` · `physics` | 9 · 9 | Y **ninguna de las 9 como capa propia**: todas eran `third_party/` de otro repo |
+| `Newton` · `warp` · `taichi` | **0 · 0 · 0** | La generación GPU/diferenciable de 2026, ausente |
+| `Brax` · `Genesis` · `Isaac` · `ManiSkill` · `Habitat` | **0 ×5** | Los simuladores donde hoy se entrena un agente, ausentes |
+| `ozz` · `motion matching` | **0 · 0** | La capa de animación, ausente |
+| `determinis*` | 17 | Presente **como adjetivo**, nunca como capa con repos propios |
+
+Lo que sí estaba: `Gymnasium` (41), `ml-agents` (33), `PettingZoo` (18),
+`ViZDoom` (17). Esos **no se presentan como hallazgos nuevos**: se corroboran, y
+en dos casos se avanza sobre una pregunta que la KB había dejado abierta.
+
+### 🟢 Los agentes y entornos de entrenamiento de la capa, con licencia leída en bytes
+
+Todos medidos hoy por `gh api search/repositories` (★, licencia, `pushed_at`,
+`archived`, `fork`) + `raw.githubusercontent.com` (bytes del archivo de grant).
+
+| Pieza | Repo | ★ | Licencia **medida** | Último push | Qué aporta a un agente |
+|---|---|---|---|---|---|
+| **Genesis** | [Genesis-Embodied-AI/genesis-world](https://github.com/Genesis-Embodied-AI/genesis-world) | **30.310** | 🟢 **Apache-2.0** (`LICENSE`, 11.356 B) | 2026-11-24 | Simulador generativo + física unificada. **El mayor de la capa**. 🔴 El slug `Genesis-Embodied-AI/Genesis` que publica media web **ya no es buscable**: fue renombrado (ver T95) |
+| **MuJoCo** | [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) | **18.474** | 🟢 **Apache-2.0** (11.358 B) | 2026-11-25 | Control y locomoción; el estándar de los benchmarks. Ya estaba en esta KB; ★ actualizadas (18.369 → 18.474) |
+| **Unity ML-Agents** | [Unity-Technologies/ml-agents](https://github.com/Unity-Technologies/ml-agents) | **19.892** | 🟢 **Apache-2.0**, partido por rama: `LICENSE.md` = **572 B** en `develop` (rama default) y **11.324 B** en `main` ⇒ API `NOASSERTION` | 2026-11-21 | El puente agente↔engine. 🔵 **Re-medido hoy: la regla de método nº16 de esta KB se sostiene** (grant completo en `main`, aviso corto en la default). Y **corrige una cifra que circula**: un sitio de resúmenes generados publica 19.200 ★; medido hoy, **19.892** |
+| **Isaac Lab** | [isaac-sim/IsaacLab](https://github.com/isaac-sim/IsaacLab) | **8.720** | 🟠 **BSD-3** (`LICENSE`, 1.690 B, con cabecera-puntero) **+ Apache-2.0** (`LICENSE-mimic`, 10.142 B) **+ EULA NVIDIA no OSI** (`docs/licenses/dependencies/cuRobo-license.txt`, **17.482 B**) | 2026-11-25 | Entrenamiento RL/IL a escala GPU. **Tres regímenes en un repo** (ver hallazgo nº4) |
+| **Gymnasium** | [Farama-Foundation/Gymnasium](https://github.com/Farama-Foundation/Gymnasium) | **12.856** | 🟢 **MIT** (`LICENSE`, 1.104 B — doble copyright OpenAI 2016 + Farama 2022) | 2026-11-25 | La API de entorno. Ya en la KB; licencia ahora **en bytes** |
+| **mjlab** | [mujocolab/mjlab](https://github.com/mujocolab/mjlab) | **3.461** | 🟢 **Apache-2.0** (11.352 B) | 2026-11-25 | Isaac-Lab-like **sobre MuJoCo Warp**, sin dependencia de Isaac Sim ⇒ la vía permisiva al mismo workflow |
+| **ManiSkill** | [mani-skill/ManiSkill](https://github.com/mani-skill/ManiSkill) | **3.545** | 🟠 **Apache-2.0** (11.357 B) **para el código** · **CC BY-NC 4.0 para los assets** (declarado en README, no en `LICENSE`) | 2026-08-04 | Manipulación. 🔴 Repite el eje del cycle 14: **el código y lo que el código mueve son dos objetos de licencia** |
+| **Brax** | [google/brax](https://github.com/google/brax) | **3.267** | 🟢 **Apache-2.0** (11.356 B) | 2026-10-20 | Física diferenciable en JAX: entrenamiento masivamente paralelo en un acelerador |
+| **PettingZoo** | [Farama-Foundation/PettingZoo](https://github.com/Farama-Foundation/PettingZoo) | **3.560** | 🟢 **MIT** (1.073 B) | 2026-11-23 | Multi-agente. El eslabón que convierte un juego en banco de pruebas de varios agentes |
+| **habitat-sim** | [facebookresearch/habitat-sim](https://github.com/facebookresearch/habitat-sim) | **3.845** | 🟢 **MIT** (1.092 B, Meta Platforms) | 2026-07-21 | Navegación embodied en interiores. ⚠️ El buscador lo devuelve con `fork: true` |
+| **ViZDoom** | [Farama-Foundation/ViZDoom](https://github.com/Farama-Foundation/ViZDoom) | **2.113** | 🔴 **CERO archivos de licencia** (8 nombres más sondeados hoy, 8 × 404) · el grant es **una frase del README** | 2026-11-23 | Ver hallazgo nº2: el pass **avanza** sobre la pregunta que la KB dejó abierta |
+
+**11 filas, 11 repos reales, 11 licencias leídas sobre archivo o declaradas
+ausentes.** Ninguna fila es de ejemplo.
+
+### 🔴 Hallazgo nº1: **Klotho** — lo que el cycle 24 declaró inexistente, existe, es Apache-2.0 y tiene adaptadores de DOS engines
+
+El cycle 19 y el 24 dejaron escrito el mismo gap con dos redacciones: *"lo que no
+existe es el ENGINE SDK (cero Unity, cero Unreal)"* y *"en rollback se
+construye"*. Medido hoy:
+
+| | |
+|---|---|
+| **Repo** | [xpTURN/Klotho](https://github.com/xpTURN/Klotho) |
+| **★ / push / archivado** | **88** · 2026-10-31 · no |
+| **Licencia medida** | 🟢 **Apache-2.0**, `LICENSE`, **11.336 B** — un peso **nuevo** para esta familia en esta KB |
+| **Qué es** | Framework de **simulación determinista** para Unity **y** Godot (.NET). Núcleo C# puro agnóstico de engine, con adaptadores por encima |
+| **Determinismo** | `FP64` **punto fijo 32.32** (sin coma flotante en la simulación), `FPVector2/3/4`, `FPQuaternion`, `FPMatrix`, trigonometría por LUT/CORDIC, RNG **Xorshift128+** |
+| **Modelos de red** | P2P lockstep · rollback + predicción de cliente · server-driven autoritativo · servidor dedicado · espectador · late join · reconexión |
+| **Lo que no esperaba encontrar** | Un **`DeterminismAnalyzer` en tiempo de build** que marca el uso de `float` y de APIs no deterministas dentro del código de simulación, y un `SyncTestRunner` "estilo GGPO" de verificación de determinismo |
+| **Incluye además** | `FPPhysicsWorld` (broadphase/narrowphase/CCD/solver/joints), `FPNavMesh` + A\* + funnel SSFA + evitación ORCA, ECS de sparse-set, **HFSM determinista** para IA de entidades, replay con seek y velocidad variable |
+
+🔵 **Por qué es el hallazgo del pass y no una fila más.** Las seis piezas de
+rollback que el cycle 24 catalogó resuelven *el transporte del input y el
+snapshot*. Ninguna resuelve **la simulación**, que es la parte que el estudio
+tenía que escribir. Klotho trae las dos mitades y, encima, **el analizador que
+impide romper el determinismo sin darse cuenta** — el único instrumento
+preventivo que esta KB ha medido en 25 passes.
+
+⚠️ **Advertencia de madurez, explícita.** **88 ★**, un mantenedor
+(`xpTURN`), README en 4 idiomas, último push hace 25 días. Se cataloga como
+**base candidata con riesgo de bus factor = 1**, no como fundación consolidada.
+La contraparte permisiva y *viva hoy* para la misma necesidad en .NET es el stack
+de `mrdav30` (hallazgo nº5), con otro riesgo: las mismas ★ bajas y el mismo mantenedor
+único.
+
+### 🔵 Hallazgo nº2: **ViZDoom** — la pregunta que el cycle 11 dejó abierta tiene ahora respuesta parcial, y la cadena termina fuera de alcance
+
+El cycle 11 midió 27 sondas en 404 y escribió, con razón, *"lo que NO se puede
+concluir es que ViZDoom sea propietario"*. Este pass sondea **8 nombres más**
+(los 8 en 404, API `license: null`, **2.113 ★**, push 2026-11-23) y encuentra el
+grant **donde la sonda de archivos no mira**: una frase del `README.md`.
+
+> *"The code original to ViZDoom is under MIT license. ZDoom uses code from
+> several sources with varying licensing schemes."*
+
+🔴 **Tres consecuencias, todas accionables:**
+1. **El grant existe y es MIT** — pero su **alcance** es *"the code original to
+   ViZDoom"*, un conjunto que **ningún instrumento mecánico puede delimitar**:
+   no hay lista de archivos, ni cabeceras por archivo que lo declaren.
+2. **El resto remite a un esquema de licencias mixto de ZDoom**, cuyo índice
+   vive en `zdoom.org/wiki/license` — host que esta sesión **no puede leer**
+   (`curl` **000**, proxy `connect_rejected`) ⇒ **la cadena del grant termina en
+   un host inalcanzable**, igual que la Unity Companion License del hallazgo nº6.
+3. **Para un engagement:** ViZDoom es un **banco de pruebas**, no una base de
+   producto. Usarlo para medir un agente es de bajo riesgo; **embeberlo en un
+   entregable no es defendible** mientras el alcance del MIT no esté enumerado.
+
+### 🔴 Hallazgo nº3 (y el que corrige el método de esta casa): **el silencio del buscador tiene DOS modos, y ninguno significa ausencia**
+
+El cycle 23 ascendió `gh api search/repositories` a canal principal de ★ ("46/46
+repos"). Este pass mide **cómo falla**, y falla de dos maneras distintas que
+hasta hoy la KB leía como una sola:
+
+| Slug sondeado | `gh api search/repositories` | `git ls-remote` | Qué era en realidad |
+|---|---|---|---|
+| `erincatto/JoltPhysics` | **0 ítems** | ✅ **existe** | Un **fork de 2 ★** de Erin Catto (autor de Box2D). El buscador **excluye forks por defecto**; con `fork:true` aparece |
+| `unitycoder/MotionMatchingUnity` | **0 ítems** | ✅ existe | Fork de **1 ★**; el upstream real es [JLPM22/MotionMatching](https://github.com/JLPM22/MotionMatching) (**613 ★**, MIT 1.081 B) |
+| `Genesis-Embodied-AI/Genesis` | **HTTP 422** | ✅ existe | **Renombrado** a `genesis-world` (30.310 ★) |
+| `haosulab/ManiSkill` | **HTTP 422** | ✅ existe | **Renombrado** a `mani-skill/ManiSkill` |
+| `nekuzaky/kinema` | **HTTP 422** | ✅ existe | **Renombrado** a `Nekuzaky/kinema-motion-matching` |
+
+> 🔴 **T95 — el silencio del buscador se descompone en dos diagnósticos, y los
+> dos son falsos negativos.** `0 ítems` ⇒ **el repo es un fork** (invisible sin
+> el calificador `fork:true`). `HTTP 422` ⇒ **el slug fue renombrado** (3 de 3
+> medidos hoy; el cycle 17 ya había visto este 422 en DVC y lo había leído como
+> "igual que un repo inexistente" — **no lo es**). El árbitro de existencia es
+> `git ls-remote`, que **sigue la redirección de GitHub**; el nombre nuevo se lee
+> con `WebFetch` sobre `github.com`. Corolario operativo: **un cero publicado a
+> partir del buscador no mide ausencia**, exactamente como el cycle 16 dijo de un
+> slug adivinado.
+
+⚫ **Conjetura propia que 404'eó y se escribe en vez de borrarse.** Busqué el
+paquete de *soft floats* en `nicolausYes/soft-float-starter-pack` —el nombre
+aparecía en mis notas de la capa— y **no existe por ningún canal** (`git
+ls-remote` rc=128). El real es
+[Kimbatt/soft-float-starter-pack](https://github.com/Kimbatt/soft-float-starter-pack)
+(**224 ★**, MIT 1.064 B, **sin push desde 2022-10-24**). Misma clase de falla que
+`open-feature/flagd-ui` (cycle 19) y los tres slugs de ACP (cycle 20):
+**inferir el dueño**.
+
+### 🔴 Hallazgo nº4: `isaac-sim/IsaacLab` es BSD-3 y **contiene una EULA NVIDIA que prohíbe lo que el repo parece permitir**
+
+8.720 ★, badge BSD-3, push de hoy. Leído archivo por archivo:
+
+| Archivo medido | Bytes | Régimen | Qué dice |
+|---|---|---|---|
+| `LICENSE` | **1.690** | **BSD-3** | Empieza con **"Please see README.md for additional licensing information"** ⇒ puntero **y** grant en el mismo archivo |
+| `LICENSE-mimic` | **10.142** | **Apache-2.0** | Sólo para la extensión `isaaclab_mimic` y sus scripts |
+| `docs/licenses/dependencies/isaacsim-license.txt` | **10.770** | **Apache-2.0 + remisión a PDF** | "Building or using the software requires additional components licenced under other terms" — Omniverse Kit SDK, modelos 3D y texturas, **cuyos términos viven en un PDF fuera de GitHub** |
+| `docs/licenses/dependencies/cuRobo-license.txt` | **17.482** | ⛔ **"NVIDIA ISAAC LAB ADDITIONAL SOFTWARE AND MATERIALS LICENSE"** | Licencia **revocable**, **no transferible**, **sin derivados** (§2.4), **sin reverse engineering** (§2.3), uso **sólo junto a Isaac Lab y sobre GPUs NVIDIA** (§1 + §2.1), **obligación de cooperar con una auditoría de cumplimiento por escrito** (§2) y —lo más llamativo— **§2.7: prohibido usar el software de forma que quede sujeto a una licencia open source** |
+
+🔵 **La lectura para un engagement.** El framework **sí** es BSD-3 y **sí** se
+puede usar. Lo que no se puede es tratar el repo como un bloque: `isaaclab_mimic`
+arrastra cuRobo, y cuRobo **no es open source en ningún sentido**. El propio
+README deja la salida escrita: *"Kit-less Newton workflows do not require Isaac
+Sim"* ⇒ **el camino permisivo es Newton** ([newton-physics/newton](https://github.com/newton-physics/newton),
+Apache-2.0 `LICENSE.md` 10.173 B, **5.987 ★**, push de hoy, bajo Linux
+Foundation) **o mjlab sobre MuJoCo Warp**, y el camino con EULA es el de
+Isaac Sim + cuRobo.
+
+> 🔴 **T99 — un repo con badge permisivo puede contener la EULA no OSI de un
+> tercero *obligatorio*.** Ni el SPDX del buscador (`NOASSERTION`) ni el badge
+> del README lo dicen: aparece sólo al enumerar `docs/licenses/`. Sonda:
+> `curl -s https://raw.githubusercontent.com/<slug>/HEAD/README.md | grep -i -A12 '^## License'`
+> y **seguir cada ruta relativa que nombre**.
+
+### 🟡 Hallazgo nº5: el stack determinista permisivo de .NET existe, está vivo, y **nadie lo ha estrellado**
+
+Cinco repos de **un solo autor** (`mrdav30` / David Oravsky), todos **MIT con el
+mismo archivo de 1.089 B**, todos con push **en las últimas 48 h**:
+
+| Pieza | Repo | ★ | Licencia **medida** | Push | Rol |
+|---|---|---|---|---|---|
+| **FixedMathSharp** | [mrdav30/FixedMathSharp](https://github.com/mrdav30/FixedMathSharp) | **97** | 🟢 MIT (1.089 B) + `NOTICE` (460 B) | 2026-11-23 | La base de punto fijo |
+| **Gravitas** | [mrdav30/Gravitas](https://github.com/mrdav30/Gravitas) | **4** | 🟢 MIT (1.089 B) + `NOTICE` (521 B) | 2026-11-25 | Física determinista 2D/3D/mixta, hashes de replay, CCD |
+| **Trailblazer** | [mrdav30/Trailblazer](https://github.com/mrdav30/Trailblazer) | **6** | 🟢 MIT (1.089 B) + `NOTICE` (510 B) | 2026-11-24 | **Navegación determinista** + control de personaje |
+| **GridForge** | [mrdav30/GridForge](https://github.com/mrdav30/GridForge) | **23** | 🟢 MIT (1.089 B) | 2026-11-25 | Grillas espaciales / particionado |
+| **SwiftCollections** | [mrdav30/SwiftCollections](https://github.com/mrdav30/SwiftCollections) | **14** | 🟢 MIT (1.089 B) | 2026-11-24 | Colecciones sin GC para el bucle de simulación |
+
+🔵 **El `NOTICE` es el dato.** No restringe el código: restringe **el nombre**.
+*"Forks and derived works may not use these project names to promote or imply
+endorsement without prior written permission"* + obligación de retener
+`LICENSE`, `NOTICE` y `COPYRIGHT` en las redistribuciones. Es la **primera
+restricción de marca junto a MIT** que esta KB mide: no afecta a lo que el
+estudio puede construir, **sí** a cómo puede llamarlo y a qué archivos debe
+arrastrar.
+
+📌 Contraste con el mercado: **Gravitas tiene 4 ★ y está publicado en NuGet**
+([nuget.org/packages/Gravitas](https://www.nuget.org/packages/Gravitas/), **v2.0.1**,
+publicado **2026-11-14**, 488 descargas) — una búsqueda web devolvía la v1.0.0.
+La capa no se descubre por popularidad: **se descubre por paquete**.
+
+### 🔴 Hallazgo nº6: el repo de física determinista para Unity **más estrellado no tiene grant propio, y lo que hereda no es permisivo**
+
+| | |
+|---|---|
+| **Repo** | [Kimbatt/unity-deterministic-physics](https://github.com/Kimbatt/unity-deterministic-physics) · **557 ★** |
+| **Licencia por API** | `null` |
+| **Sonda de archivos** | **14 nombres de archivo sondeados · 0 encontrados** |
+| **Qué dice el README (1.804 B)** | Es *"a modified version of Unity DOTS Physics version 0.6.0-preview.3"*. Y en su sección *License*: `Unity.Physics`, `Unity.Mathematics` y `Unity.Transforms` están bajo **Unity Companion License**; los *soft floats* están bajo MIT, en **otro repo** |
+| **Conclusión medible** | ⛔ **No hay grant para las modificaciones propias**, y la base que modifica está bajo una licencia **no OSI y atada a Unity**. Sin push desde **2024-02-14** (21 meses) |
+
+⚠️ **El límite de este entorno, dicho:** la cadena del grant **termina en un host
+que esta sesión no puede leer**. `unity.com` responde **000** por `curl` y
+`ENOTFOUND` por `WebFetch` ⇒ el texto de la Unity Companion License **no se pudo
+verificar aquí**; se cita por lo que el propio README declara, no por lectura.
+
+### 📏 Hallazgo nº7 (método): **canal 12 — el censo fuera de GitHub por la API del host**
+
+La referencia histórica de física determinista en Godot **no está en GitHub**:
+vive en GitLab, y hasta hoy esta KB no tenía forma de medirla. Medido con
+`gitlab.com/api/v4/projects/<ns>%2F<repo>`:
+
+| | |
+|---|---|
+| **Proyecto** | [gitlab.com/snopek-games/sg-physics-2d](https://gitlab.com/snopek-games/sg-physics-2d) |
+| **★ / forks** | **53 ★ · 159 forks** |
+| **Última actividad** | **2026-07-26** |
+| **`license` según GitLab** | **`None`** — y sin embargo `LICENSE.txt` existe en las ramas `main` y `godot-4` con **1.062 B de texto MIT** ("Copyright (c) 2021-2022 David Snopek", **sin título**) |
+
+🔵 **Dos lecturas, las dos nuevas.** (1) **GitLab es ciego al MIT sin título
+exactamente como GitHub**: el mismo defecto de clasificación, en dos hosts
+independientes ⇒ no es un bug de GitHub, es una propiedad del **archivo**.
+(2) **159 forks contra 53 ★**: la razón fork/★ ≈ **3,0** es la firma de una pieza
+que **se copia, no se adopta** — coherente con lo que la propia documentación de
+la capa admite (hay que escribir mucho código propio encima).
+
+> 🔵 **T96 — el grant puede vivir en el subdirectorio del paquete, no en la
+> raíz.** [Nekuzaky/kinema-motion-matching](https://github.com/Nekuzaky/kinema-motion-matching)
+> (3 ★): 5 nombres sondeados en la raíz, **5 × 404**, API `license: null` ⇒ la
+> sonda de esta casa publicaría "sin grant". El archivo está en
+> **`Packages/com.nekuzaky.kinema/LICENSE.md` (1.065 B, MIT)**, porque **eso es
+> lo que Unity empaqueta**. Generalización: en UPM/NuGet, sondear
+> `Packages/*/LICENSE*` antes de declarar un cero.
+
+> 🔵 **T97 — el archivo de licencia copiado con la plantilla de README nombra al
+> autor de la plantilla.** [mcsantiago/Unity_MotionMatching](https://github.com/mcsantiago/Unity_MotionMatching)
+> (8 ★) tiene `LICENSE.txt` de 1.069 B que dice **"Copyright (c) 2021 Othneil
+> Drew"** — el autor del *Best-README-Template*, no del código. El grant existe,
+> es MIT, y **está firmado por quien no es titular**. Un due diligence que lea
+> sólo el SPDX no lo ve.
+
+> 🔵 **T98 — el engine que vendoriza re-nombra la licencia y cambia los bytes.**
+> `godotengine/godot` (**120.752 ★**, MIT) trae Jolt en
+> `thirdparty/jolt_physics/LICENSE` (**1.052 B, idéntico al upstream**) y Recast
+> en `thirdparty/recastnavigation/License.txt` (**859 B** — el upstream mide
+> **877** y DotRecast **904**: *tres* pesos para el mismo zlib). Y en
+> `COPYRIGHT.txt`, formato DEP-5, la licencia de Jolt se declara **`License:
+> Expat`**, no "MIT" ⇒ **un filtro por la cadena "MIT" no encuentra el grant**.
+
+### 📏 Hallazgo nº8 (método): **canal 13 — el registro de paquetes como canal de PROCEDENCIA**, y dos reglas que salen de él
+
+Buscando la capa de animación, todas las búsquedas atribuían `Prowl.Motion` al
+engine [ProwlEngine/Prowl](https://github.com/ProwlEngine/Prowl) (**1.322 ★**).
+Medido en el registro, no en el buscador:
+
+| Dato leído en NuGet | Valor |
+|---|---|
+| Paquete | `Prowl.Motion` **v3.9.3**, MIT, publicado **2026-10-23**, ~2,9k descargas |
+| **Dependencias** | **una sola**: `Prowl.Vector >= 3.9.3` ⇒ **no arrastra el engine** |
+| **Repositorio declarado** | 🔴 [ProwlEngine/Anthology](https://github.com/ProwlEngine/Anthology) — **otro repo**, **39 ★**, MIT (1.065 B), push de hoy |
+
+Su README confirma el modelo: monorepo de bibliotecas `Prowl.*` que *"can be
+used independently"*. **La biblioteca que un estudio tomaría vive en el repo de
+39 ★, no en el de 1.322.** Es la misma forma que el cycle 4 llamó *runner-up
+promotion*, por una causa nueva: **no un rename, sino la separación
+engine/biblioteca**.
+
+> 🔵 **Canal 13 — el registro (NuGet, npm, crates, UPM) da tres cosas que GitHub
+> no da:** la **versión realmente publicada** (Gravitas: la web decía v1.0.0, el
+> registro dice **v2.0.1 del 2026-11-14**), el **grafo de dependencias reales**
+> (y por tanto si una biblioteca se puede usar suelta) y el **repositorio de
+> procedencia declarado por el publicador**. `nuget.org` está **vivo** en este
+> entorno; `crates.io/api` responde **403** y `docs.rs`/`lib.rs` **000**.
+
+> 🔴 **T100 — `pushed_at` reciente no significa mantenido, y el repo lo dice en
+> prosa.** [PetteriAimonen/libfixmath](https://github.com/PetteriAimonen/libfixmath)
+> (**888 ★**) tiene push del **2026-11-19** y su `README.md` declara: *"This is a
+> mirror of the libfixmath's original SVN repository on Google Code. **Not
+> actively maintained**, pull requests welcome."* Los dos filtros obligatorios de
+> esta KB —`archived` (T74) y `pushed_at`— **dan verde los dos**. El único canal
+> que lo detecta es leer las primeras líneas del README, el mismo que el cycle 20
+> impuso para los forks degradados (T75).
+
+### 📏 Pesos de licencia medidos en este pass (aportes al checksum de la casa)
+
+| Familia | Pesos medidos hoy | Nota |
+|---|---|---|
+| **MIT** | 1.052 (Jolt, **sin título**) · 1.062 (SG Physics, sin título) · 1.064 · 1.065 · 1.067 · 1.069 · 1.073 ×2 · 1.074 · 1.081 · 1.085 · 1.089 ×5 · 1.092 · 1.102 · 1.104 · 1.106 · 1.159 (libfixmath, **sin título**) · 1.183 (ozz, **con prefacio**) | La banda MIT de esta KB se ensancha a **1.052–1.183**; los tres `NOASSERTION` del pass son **MIT sin título o con prefacio** |
+| **Apache-2.0** | 10.142 · 10.173 · 10.770 · 11.336 · 11.347 · 11.352 · 11.356 ×2 · 11.357 ×2 · 11.358 · 11.431 | **12 pesos en un pass.** Confirma por tercera vez: para Apache el byte-count **marca, no decide** |
+| **zlib** | 859 (vendorizado en Godot) · 877 (upstream Recast) · 889 (reactphysics3d) · 904 (DotRecast) · 1.022 (**bullet3, con carve-out**) | Cinco pesos; el de 1.022 **no es sólo zlib** (ver abajo) |
+| **BSD-3** | 1.485 (chrono) · 1.517 (PhysX) · 1.690 (IsaacLab, **con puntero**) | Tres pesos, tres redacciones |
+| ⛔ **No OSI** | **17.482** (NVIDIA ASM License, dentro de un repo BSD-3) · **2.898** (`asik/FixedMath.Net`: Apache **por referencia** en 2.898 B, y el repo es un **fork muerto desde 2018-04-10**) | |
+
+🔴 **El carve-out de Bullet, medido.** `bulletphysics/bullet3` (**14.894 ★**, el
+mayor motor de física open source del mundo) declara en `LICENSE.txt` (1.022 B):
+*"The files in this repository are licensed under the zlib license, **except for
+the files under 'Extras' and examples/ThirdPartyLibs**"*. De ahí el
+`NOASSERTION` de la API. Es el mismo patrón —**carve-out por directorio**— que la
+KB midió en identity (cycle 22), en analítica (cycle 16) y en flags (cycle 19):
+**en esta capa también es la norma, no la excepción.**
+
+### ⛔ Rechazos y gaps **medidos** de este pass — se publican porque el silencio se lee como cobertura
+
+| Pieza / necesidad | Qué se midió | Veredicto |
+|---|---|---|
+| `alice-physics` (física 128-bit punto fijo, Rust) | `docs.rs` **000** por `curl` **y** `ENOTFOUND` por `WebFetch`; `lib.rs` **000**; `crates.io/api` **403** | ⚠️ **No verificable en este entorno.** Se nombra, no se recomienda ni se tabula: sin licencia leída no entra |
+| `asik/FixedMath.Net` (649 ★, la cita habitual de punto fijo en C#) | `fork: true`, último push **2018-04-10**, grant **por puntero** (2.898 B) | ⛔ **Rechazado**: fork muerto hace 7 años y 7 meses |
+| `Kimbatt/soft-float-starter-pack` (224 ★) | MIT 1.064 B, sin push desde **2022-10-24** | 🟡 **Usable pero congelado** (4 años). Es la dependencia de la que depende el repo de 557 ★ |
+| `appsinacup/godot-box2d` (353 ★) | `fork: true`, último push **2024-06-29** | ⛔ **Rechazado** frente a [appsinacup/godot-rapier-physics](https://github.com/appsinacup/godot-rapier-physics) (1.054 ★, MIT 1.102 B, push 2026-11-20) de la **misma organización** |
+| `godot-jolt/godot-jolt` (2.605 ★, MIT 1.085 B) | Último push **2026-03-16** | 🟡 **Superado por el engine**: Godot vendoriza Jolt en `modules/jolt_physics/` + `thirdparty/jolt_physics/`. El plugin externo ya no es el camino |
+| `DanielChappuis/reactphysics3d` (1.776 ★, zlib 889 B) | Último push **2025-03-28** | 🟡 **20 meses quieto** — biblioteca terminada, no proyecto vivo |
+| `Dream222222/2DFPhysics` (3 ★, MIT) | Último push **2019-11-05** | ⛔ **Muerto.** Lo devolvió una búsqueda web **dos veces, con dos dueños distintos** (el segundo, `sgnyyy/2dfphysics`, es un fork invisible al buscador) |
+| **Agente que verifique determinismo cross-platform como servicio** | Buscado; lo único medido es **interno a Klotho** (`SyncTestRunner`, `DeterminismVerificationRunner`) | 🔴 **Gap**: no hay herramienta independiente de verificación de determinismo. Quien la quiera, la construye o usa la de Klotho |
+| **Punto fijo para Unreal / C++ de juego** | Buscado en este pass | 🔴 **Gap medido**: cero. Klotho y el stack `mrdav30` son **C#**; Jolt/Bullet/PhysX son float. El carril de Unreal **sigue sin capa determinista permisiva**, igual que seguía sin CI permisiva en el cycle 17 |
+
 ## 🔴 Lo más importante del pass 2026-11-25 (cycle 24): **el plano del CABLE** —cómo dos jugadores comparten un mismo estado: transporte, replicación, rollback, relay— y el **canal 11: el censo de RAMAS, porque la rama es la versión y la versión es la licencia**
 
 Los 23 passes anteriores midieron qué hace el juego, cómo se produce, cómo se

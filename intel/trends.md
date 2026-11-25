@@ -4,6 +4,108 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Tendencias — pass cycle 25 (2026-11-25)
+
+### 1. 🔴 La tendencia de fondo: **la capa de simulación se consolidó en fundaciones, no en estudios**
+
+Secuencia medible en los repos, no en la prensa:
+
+| Pieza | Quién la gobierna hoy | Licencia **medida** |
+|---|---|---|
+| **Newton** (5.987 ★, 1.0 GA en GTC 2026) | **Linux Foundation**; contribuida por Disney Research + Google DeepMind + NVIDIA | Apache-2.0 (10.173 B) |
+| **MuJoCo** (18.474 ★) | Google DeepMind | Apache-2.0 (11.358 B) |
+| **Gymnasium / PettingZoo / ViZDoom** | **Farama Foundation** | MIT (1.104 / 1.073) · **ninguna** |
+| **Genesis** (30.310 ★) | Consorcio académico (renombrado a `genesis-world`) | Apache-2.0 (11.356 B) |
+
+🔵 **Lo que significa para Globant:** la capa que simula el mundo **ya no es un
+activo competitivo de un vendor**: es infraestructura compartida con grant
+permisivo. Es el patrón contrario al del cycle 19 (el líder de flags **se fue**
+de Apache) y al del cycle 16 (la categoría se fue del open source en bloque).
+**Cuando una capa se mueve hacia una fundación, el riesgo de relicenciamiento
+baja y el de bus factor se reparte.**
+
+### 2. 🔴 La tendencia que esta KB puede afirmar por medición propia: **el determinismo es el cuello de botella de 2026, no el ancho de banda**
+
+El cycle 24 midió el cable y encontró transporte resuelto (kcp 17k, GNS 10,1k) y
+rollback diminuto (máximo vivo 707 ★). Este pass explica **por qué**: el rollback
+exige que **la simulación sea una función pura de los inputs**, y eso obliga a
+abandonar la coma flotante. Medido hoy, la oferta de punto fijo entera suma
+**menos de 1.400 ★** (`libfixmath` 888 + `soft-float` 224 + `FixedMathSharp` 97 +
+`Klotho` 88 + `GridForge` 23 + `SwiftCollections` 14 + `Trailblazer` 6 +
+`Gravitas` 4 + SG Physics 53 en GitLab) frente a **más de 50.000 ★** sumadas por
+los motores de física que **no** lo garantizan.
+
+📌 **Tendencia accionable:** el valor por hora de ingeniería en esta capa está en
+**el analizador, no en el solver**. La única pieza preventiva medida en 25 passes
+es el `DeterminismAnalyzer` de Klotho (marca `float` y APIs no deterministas en
+tiempo de build). Replicar eso para C++/Unreal es un **producto que hoy no
+existe**.
+
+### 3. 🟡 La tendencia de licencia: **el carve-out ya no es noticia, el PUNTERO sí**
+
+Esta KB midió carve-out por directorio en identity (22), analítica (16), flags
+(19) y ahora en física: **`bulletphysics/bullet3`, 14.894 ★, zlib excepto
+`Extras/` y `examples/ThirdPartyLibs`**. Lo nuevo de 2026 es la otra forma: el
+archivo de licencia que **no otorga, redirige**.
+
+| Forma | Caso de este pass | Bytes |
+|---|---|---|
+| Puntero a otro archivo del repo | `isaac-sim/IsaacLab` → *"Please see README.md"* (y el README nombra 4 rutas más) | 1.690 |
+| Puntero a un host externo | `Farama-Foundation/ViZDoom` → una frase del README → `zdoom.org/wiki/license` (**host inalcanzable**) | 0 |
+| Puntero a un PDF fuera de GitHub | `isaacsim-license.txt` → *"additional components licenced under other terms"* en un PDF de NVIDIA | 10.770 |
+| Puntero por referencia legítimo | `Unity-Technologies/ml-agents`: 572 B en `develop`, 11.324 B en `main` | 572 / 11.324 |
+
+> 🔵 **La regla que esta KB puede llevar a todas las industrias:** *el número de
+> saltos* entre el badge del repo y el texto que efectivamente otorga derechos es
+> una **métrica de riesgo**. Cero saltos = MIT en la raíz. **Tres saltos =
+> ViZDoom** (badge → README → wiki externo → esquemas mixtos de terceros), y el
+> tercero no se puede abrir.
+
+### 4. 🟢 La tendencia de producto: **el simulador de robótica es el nuevo tooling de gameplay**
+
+Cinco piezas pensadas para robots, medidas hoy con push de las últimas 48 h
+(Newton, Warp, mujoco_warp, mjlab, Genesis), **todas Apache-2.0**. Lo que un
+estudio saca de ahí no es un robot: es **animación procedural con física
+aprendida, ragdolls que se recuperan, y controladores de locomoción entrenados en
+vez de animados**. Es la continuación natural de lo que esta KB ya tenía con
+`MuJoCo` en `repos/foundations.md`, pero con un carril de entrenamiento completo
+y permisivo que **antes de este pass no estaba inventariado**.
+
+⚠️ **El límite, medido:** `mani-skill/ManiSkill` publica **código Apache-2.0 y
+assets CC BY-NC 4.0**, y `Nekuzaky/kinema-motion-matching` incluye un personaje
+**Mixamo** explícitamente no cubierto por su MIT. **En esta capa el dato de
+entrenamiento y la demo son objetos de licencia distintos del código**, igual que
+en la capa de generación de assets del cycle 14.
+
+### 5. 🔴 La tendencia de mercado que contradice el optimismo de la prensa
+
+Lo que las fuentes de 2026 dicen de la industria (y esta KB no puede verificar
+por repos, así que se cita como lo que es — **encuestas y análisis**, con los
+hosts inalcanzables desde esta sesión y por tanto citados en prosa):
+
+- **KPMG + UNLV International Gaming Institute, *The State of AI in Gaming
+  2026***: encuesta de **83 compañías**; **más del 80 %** usa IA generativa para
+  contenido e insights, pero **sólo 1 de cada 5** declara retorno significativo,
+  y el índice de madurez de IA del sector **no pasa de 45 sobre 100**. La
+  adopción de **agentes** va muy por detrás de la de generativa.
+- **Omdia (*Trends to Watch 2026, Games Tech*)**: cuatro ejes — visibilidad
+  creciente de la IA en los juegos, **reacción adversa del público**, cambio de
+  dinámica en el mercado de engines y **subida de costes de servidor e
+  infraestructura**.
+- **GamesBeat / AlixPartners**: ~**90 %** de los desarrolladores usa IA en alguna
+  parte del pipeline; KPMG espera que las integraciones profundas queden
+  **detrás de la escena**, no en contenido de cara al jugador; AlixPartners
+  proyecta múltiplos de valoración **2–3×** para quien integre IA sobre IP
+  fuerte.
+
+🔵 **Por qué esto encaja con el plano del cuerpo mejor que con cualquier capa
+anterior:** es exactamente **"detrás de la escena"**. Un controlador de
+locomoción entrenado, un navmesh determinista o un solver de física no generan
+contenido sintético, **no se anuncian al jugador y no disparan la reacción
+adversa** que la propia industria mide. Es la capa donde la IA se puede usar sin
+el coste reputacional que el cycle 4 midió (≈85 % de rechazo global, 48,8 % de
+aceptación en LATAM).
+
 ## 🆕 Tendencias — pass cycle 24 (2026-11-25)
 
 ### 1. 🔴 La tendencia de fondo: **la regulación llegó a esta capa y decidió NO legislar**

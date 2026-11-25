@@ -4,6 +4,99 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 2026-11-25 — pass cycle 25
+
+Canal de ★: **`gh api search/repositories`**; licencias en **bytes de archivo**
+por `raw.githubusercontent.com`; canal nuevo **`gitlab.com/api/v4`** para lo que
+no vive en GitHub. Tema: **el plano del cuerpo** (punto fijo → física →
+navegación → animación → simulador).
+
+### El cluster que define la semana: **la física, ordenada por estrellas**
+
+Lo que distingue a esta capa de las 24 anteriores: **la cima está en los
+simuladores de IA, no en los motores de juego**, y el eslabón crítico para el
+rollback —el punto fijo— es el más pequeño de todos.
+
+| Repo | ★ | Licencia **medida** | Eslabón |
+|---|---|---|---|
+| [godotengine/godot](https://github.com/godotengine/godot) | **120.752** | 🟢 **MIT** (vendoriza Jolt 1.052 B y Recast 859 B; en `COPYRIGHT.txt` los declara como **`Expat`**) | Engine (contexto) |
+| [Genesis-Embodied-AI/genesis-world](https://github.com/Genesis-Embodied-AI/genesis-world) | **30.310** | 🟢 **Apache-2.0** (11.356 B) | Simulador — **el mayor de la capa** |
+| [taichi-dev/taichi](https://github.com/taichi-dev/taichi) | **28.476** | 🟢 **Apache-2.0** (11.357 B) | Computación paralela / simulación |
+| [Unity-Technologies/ml-agents](https://github.com/Unity-Technologies/ml-agents) | **19.892** | 🟢 **Apache-2.0** (572 B en `develop`, **11.324 B en `main`**) | Puente agente↔engine |
+| [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) | **18.474** | 🟢 **Apache-2.0** (11.358 B) | Simulador de control |
+| [bulletphysics/bullet3](https://github.com/bulletphysics/bullet3) | **14.894** | 🟠 **zlib** (1.022 B) **excepto `Extras/` y `examples/ThirdPartyLibs`** | Física — el incumbente |
+| [Farama-Foundation/Gymnasium](https://github.com/Farama-Foundation/Gymnasium) | **12.856** | 🟢 **MIT** (1.104 B) | API de entorno |
+| [jrouwe/JoltPhysics](https://github.com/jrouwe/JoltPhysics) | **12.438** | 🟢 **MIT** (1.052 B, **sin título**) | Física — el de AAA |
+| [erincatto/box2d](https://github.com/erincatto/box2d) | **10.519** | 🟢 **MIT** (1.067 B) | Física 2D |
+| [isaac-sim/IsaacLab](https://github.com/isaac-sim/IsaacLab) | **8.720** | 🟠 **BSD-3** 1.690 B + Apache 10.142 B ⚠️ **+ EULA NVIDIA 17.482 B** | Entrenamiento RL/IL |
+| [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | **8.219** | 🟢 **zlib** (877 B) | Navegación |
+| [NVIDIA/warp](https://github.com/NVIDIA/warp) | **7.350** | 🟢 **Apache-2.0** (11.431 B) | Runtime GPU |
+| [dimforge/rapier](https://github.com/dimforge/rapier) | **6.116** | 🟢 **Apache-2.0** (11.347 B) | Física (Rust) |
+| [newton-physics/newton](https://github.com/newton-physics/newton) | **5.987** | 🟢 **Apache-2.0** (10.173 B) | Física GPU — **Linux Foundation, 1.0 GA en GTC 2026** |
+| [NVIDIA-Omniverse/PhysX](https://github.com/NVIDIA-Omniverse/PhysX) | **4.867** | 🟢 **BSD-3** (1.517 B) | Física (el de Unity) |
+| [facebookresearch/habitat-sim](https://github.com/facebookresearch/habitat-sim) | **3.845** | 🟢 **MIT** (1.092 B) | Simulador embodied |
+| [Farama-Foundation/PettingZoo](https://github.com/Farama-Foundation/PettingZoo) | **3.560** | 🟢 **MIT** (1.073 B) | Multi-agente |
+| [mani-skill/ManiSkill](https://github.com/mani-skill/ManiSkill) | **3.545** | 🟠 **Apache-2.0** código / **CC BY-NC 4.0 assets** | Simulador de manipulación |
+| [mujocolab/mjlab](https://github.com/mujocolab/mjlab) | **3.461** | 🟢 **Apache-2.0** (11.352 B) | Entrenamiento sin Isaac Sim |
+| [google/brax](https://github.com/google/brax) | **3.267** | 🟢 **Apache-2.0** (11.356 B) | Física diferenciable (JAX) |
+| [projectchrono/chrono](https://github.com/projectchrono/chrono) | **3.171** | 🟢 **BSD-3** (1.485 B) | Multifísica |
+| [guillaumeblanc/ozz-animation](https://github.com/guillaumeblanc/ozz-animation) | **3.166** | 🟢 **MIT** (1.183 B, con prefacio) | Animación |
+| [godot-jolt/godot-jolt](https://github.com/godot-jolt/godot-jolt) | **2.605** | 🟢 **MIT** (1.085 B) | Puente — ⚠️ superado por el engine |
+| [Farama-Foundation/ViZDoom](https://github.com/Farama-Foundation/ViZDoom) | **2.113** | 🔴 **sin archivo de licencia**; MIT **en una frase del README** | Entorno de benchmark |
+| [DanielChappuis/reactphysics3d](https://github.com/DanielChappuis/reactphysics3d) | **1.776** | 🟢 **zlib** (889 B) | Física — ⚠️ 20 meses quieto |
+| [google-deepmind/mujoco_warp](https://github.com/google-deepmind/mujoco_warp) | **1.657** | 🟢 **Apache-2.0** (11.357 B) | MuJoCo sobre GPU |
+| [ProwlEngine/Prowl](https://github.com/ProwlEngine/Prowl) | **1.322** | 🟢 **MIT** (1.073 B) | Engine .NET |
+| [appsinacup/godot-rapier-physics](https://github.com/appsinacup/godot-rapier-physics) | **1.054** | 🟢 **MIT** (1.102 B) | Puente Rapier→Godot |
+| [ikpil/DotRecast](https://github.com/ikpil/DotRecast) | **968** | 🟢 **Zlib** (904 B) | Navegación (.NET) |
+| [dimforge/parry](https://github.com/dimforge/parry) | **891** | 🟢 **Apache-2.0** | Colisión (Rust) |
+| [PetteriAimonen/libfixmath](https://github.com/PetteriAimonen/libfixmath) | **888** | 🟢 **MIT** (1.159 B, sin título) | **Punto fijo (C)** — ⚠️ README: *"not actively maintained"* |
+| [JLPM22/MotionMatching](https://github.com/JLPM22/MotionMatching) | **613** | 🟢 **MIT** (1.081 B) | Animación — **el upstream real** |
+| [jrouwe/JoltPhysics.js](https://github.com/jrouwe/JoltPhysics.js) | **591** | 🟢 **MIT** (1.074 B) | Física en navegador |
+| [Kimbatt/unity-deterministic-physics](https://github.com/Kimbatt/unity-deterministic-physics) | **557** | 🔴 **sin grant propio**; base bajo **Unity Companion License** | **Determinismo (Unity)** — ⛔ no utilizable |
+| [appsinacup/godot-box2d](https://github.com/appsinacup/godot-box2d) | **353** | 🟢 MIT (1.106 B) — ⚠️ **fork, sin push desde 2024-06-29** | Puente Box2D→Godot |
+| [Kimbatt/soft-float-starter-pack](https://github.com/Kimbatt/soft-float-starter-pack) | **224** | 🟢 **MIT** (1.064 B) — ⚠️ congelado 2022 | **Soft floats (C#)** |
+| [mrdav30/FixedMathSharp](https://github.com/mrdav30/FixedMathSharp) | **97** | 🟢 **MIT** (1.089 B) + `NOTICE` | **Punto fijo Q32.32 (.NET)** |
+| [xpTURN/Klotho](https://github.com/xpTURN/Klotho) | **88** | 🟢 **Apache-2.0** (11.336 B) | 🔴 **Simulación determinista + rollback + Unity/Godot** |
+| [ProwlEngine/Anthology](https://github.com/ProwlEngine/Anthology) | **39** | 🟢 **MIT** (1.065 B) | Animación reutilizable (`Prowl.Motion`) |
+| [mrdav30/GridForge](https://github.com/mrdav30/GridForge) | **23** | 🟢 **MIT** (1.089 B) | Particionado espacial |
+| [mrdav30/SwiftCollections](https://github.com/mrdav30/SwiftCollections) | **14** | 🟢 **MIT** (1.089 B) | Colecciones sin GC |
+| [mcsantiago/Unity_MotionMatching](https://github.com/mcsantiago/Unity_MotionMatching) | **8** | 🟢 MIT (1.069 B) — ⚠️ **firmado por el autor de la plantilla de README** | Animación (temprano) |
+| [mrdav30/Trailblazer](https://github.com/mrdav30/Trailblazer) | **6** | 🟢 **MIT** (1.089 B) + `NOTICE` | **Navegación determinista** |
+| [mrdav30/Gravitas](https://github.com/mrdav30/Gravitas) | **4** | 🟢 **MIT** (1.089 B) + `NOTICE` | **Física determinista (.NET)** |
+| [Nekuzaky/kinema-motion-matching](https://github.com/Nekuzaky/kinema-motion-matching) | **3** | 🟢 **MIT** (1.065 B) — **en `Packages/com.nekuzaky.kinema/`**, no en la raíz | Animación (UPM) |
+
+🔵 **La forma de la tabla es el dato, otra vez.** De 120.752 ★ a 3 ★ en un solo
+eslabonado. La **simulación para IA** se lleva la cima (Genesis 30k, Taichi 28k,
+ml-agents 19,9k, MuJoCo 18,5k) y está **toda en Apache-2.0**. La **física de
+juego** ocupa la banda media (14,9k–1,7k) con **MIT/BSD/zlib**. Y el **punto
+fijo** —sin el cual el rollback del cycle 24 no funciona— vive entre **888 y 4
+★**, con su pieza más completa (Klotho) en **88**. Conclusión de inversión,
+simétrica a la del cycle 24: **en simulación de IA se elige, en física de juego
+se elige, en determinismo se adopta un proyecto pequeño o se construye.**
+
+### Fuera de GitHub (canal 12, nuevo)
+
+| Proyecto | Host | ★ / forks | Licencia **medida** | Actividad |
+|---|---|---|---|---|
+| [snopek-games/sg-physics-2d](https://gitlab.com/snopek-games/sg-physics-2d) | **GitLab** | **53 ★ / 159 forks** | **MIT** (`LICENSE.txt`, 1.062 B) — GitLab lo reporta como `None` | 2026-07-26 |
+
+🔵 **forks ÷ ★ = 3,0.** Es la primera vez que esta KB mide esa razón, y es la
+firma de una pieza **que se copia en vez de adoptarse**: coherente con una capa
+donde cada juego necesita su propia variante de física determinista.
+
+### ⚫ Lo que este pass NO pudo medir, dicho explícitamente
+
+- **`alice-physics`** (física 128-bit de punto fijo, Rust, con módulo de netcode
+  y rollback declarado): `docs.rs` **000** por `curl` **y** `ENOTFOUND` por
+  `WebFetch`, `lib.rs` **000**, `crates.io/api` **403**. **Sin licencia leída no
+  entra en ninguna tabla.** Es la candidata más prometedora que este pass deja
+  sin verificar, y queda anotada para el próximo.
+- **El texto de la Unity Companion License** (`unity.com`, **000**) y **el
+  índice de licencias de ZDoom** (`zdoom.org`, **000**): las dos cadenas de
+  grant que terminan fuera de alcance.
+
+---
+
 # Repos trending — Gaming AI
 
 > **Archivo APPEND-ONLY.** Cada pass agrega una sección fechada arriba y conserva

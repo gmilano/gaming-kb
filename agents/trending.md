@@ -4,6 +4,120 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 2026-11-25 — pass cycle 25
+
+**Tema del pass:** el **plano del cuerpo** — punto fijo, física, navegación,
+animación y el simulador donde se entrena el agente. Antes de este pass, en las
+9 páginas de esta KB había **cero** ocurrencias de `punto fijo`, `fixed-point`,
+`lockstep`, `Box2D`, `Bullet`, `PhysX`, `Rapier`, `Newton`, `warp`, `taichi`,
+`Brax`, `Genesis`, `Isaac`, `ManiSkill`, `Habitat`, `ozz` y `motion matching`.
+
+**Canal de ★ de este pass: `gh api search/repositories`** (responde: ★,
+licencia SPDX, `pushed_at`, `archived`, `fork`). **Licencias en bytes por
+`raw.githubusercontent.com`.** Canal nuevo: **`gitlab.com/api/v4`** (ver abajo).
+
+### El evento del pass: **el motor de física de 2026 no lo publica un estudio de juegos, lo publica una fundación**
+
+| Pieza | ★ | Licencia **medida** | Movimiento |
+|---|---|---|---|
+| [newton-physics/newton](https://github.com/newton-physics/newton) | **5.987** | 🟢 **Apache-2.0** (`LICENSE.md`, **10.173 B** — la variante *sin apéndice*) | **1.0 GA anunciada en GTC 2026.** Contribuido por Disney Research + Google DeepMind + NVIDIA y **gobernado por la Linux Foundation**. Push **de hoy** |
+| [NVIDIA/warp](https://github.com/NVIDIA/warp) | **7.350** | 🟢 **Apache-2.0** (`LICENSE.md`, **11.431 B** — peso **nuevo** para esta KB) | El runtime GPU sobre el que corre. Push **de hoy** |
+| [google-deepmind/mujoco_warp](https://github.com/google-deepmind/mujoco_warp) | **1.657** | 🟢 **Apache-2.0** (11.357 B) | MuJoCo reescrito sobre Warp. Push 2026-11-24 |
+| [mujocolab/mjlab](https://github.com/mujocolab/mjlab) | **3.461** | 🟢 **Apache-2.0** (11.352 B) | El *Isaac-Lab-like* **sin Isaac Sim**. Push **de hoy** |
+| [Genesis-Embodied-AI/genesis-world](https://github.com/Genesis-Embodied-AI/genesis-world) | **30.310** | 🟢 **Apache-2.0** (11.356 B) | **El mayor de la capa.** Y el slug que publica media web (`.../Genesis`) **ya no es buscable** |
+
+🔵 **La lectura de tendencia:** cinco piezas, cinco **Apache-2.0**, cuatro con
+push de las últimas 48 h. La capa de simulación de 2026 es **permisiva por
+defecto** — lo contrario del plano del espectador (cycle 21, donde cero de 12
+repos del lado píxel eran permisivos) y lo contrario de la capa de decisión
+(cycle 19, donde el líder se fue de Apache). **Es la capa más limpia que esta KB
+ha medido.**
+
+### Lo nuevo de la semana en la capa que el cycle 24 declaró vacía
+
+El cycle 24 cerró: *"en rollback se construye"*. Medido esta semana:
+
+| Pieza | ★ | Licencia **medida** | Push | Nota del pass |
+|---|---|---|---|---|
+| [xpTURN/Klotho](https://github.com/xpTURN/Klotho) | **88** | 🟢 **Apache-2.0** (11.336 B, **peso nuevo**) | 2026-10-31 | 🔴 **El hallazgo.** Simulación determinista `FP64` 32.32 + rollback + lockstep + server-driven, con **adaptadores Unity y Godot (.NET)** y un **`DeterminismAnalyzer` de tiempo de build**. Es el "último metro" que faltaba |
+| [mrdav30/FixedMathSharp](https://github.com/mrdav30/FixedMathSharp) | **97** | 🟢 **MIT** (1.089 B) + `NOTICE` (460 B) | 2026-11-23 | La base de punto fijo del stack .NET |
+| [mrdav30/Gravitas](https://github.com/mrdav30/Gravitas) | **4** | 🟢 **MIT** (1.089 B) + `NOTICE` (521 B) | 2026-11-25 | Física determinista 2D/3D/mixta con **hashes de replay**. NuGet **v2.0.1**, publicada 2026-11-14, 488 descargas |
+| [mrdav30/Trailblazer](https://github.com/mrdav30/Trailblazer) | **6** | 🟢 **MIT** (1.089 B) + `NOTICE` (510 B) | 2026-11-24 | **Navegación determinista** — el eslabón que ni Recast ni DotRecast cubren |
+| [mrdav30/GridForge](https://github.com/mrdav30/GridForge) | **23** | 🟢 **MIT** (1.089 B) | 2026-11-25 | Particionado espacial |
+| [mrdav30/SwiftCollections](https://github.com/mrdav30/SwiftCollections) | **14** | 🟢 **MIT** (1.089 B) | 2026-11-24 | Colecciones sin GC para el bucle |
+
+🔵 **El `NOTICE` junto a MIT es nuevo en esta KB:** no restringe el código,
+restringe **el nombre del proyecto** ("Forks and derived works may not use these
+project names to promote or imply endorsement without prior written
+permission") y obliga a retener `LICENSE`, `NOTICE` y `COPYRIGHT` al
+redistribuir. **Primera restricción de marca medida junto a un grant
+permisivo.**
+
+### 🔴 Bajas, rechazos y correcciones medidos este pass
+
+| Pieza | ★ | Qué se midió | Veredicto |
+|---|---|---|---|
+| [Kimbatt/unity-deterministic-physics](https://github.com/Kimbatt/unity-deterministic-physics) | **557** | **14 nombres de archivo de licencia sondeados, 0 encontrados**; API `license: null`; el README declara que la base (`Unity.Physics`/`Mathematics`/`Transforms`) es **Unity Companion License** (no OSI) | ⛔ **Sin grant propio.** El repo más estrellado de física determinista en Unity **no es utilizable fuera de Unity**. Sin push desde 2024-02-14 |
+| [asik/FixedMath.Net](https://github.com/asik/FixedMath.Net) | **649** | `fork: true`, push **2018-04-10**, licencia **por puntero** (`LICENSE.txt`, 2.898 B, Apache por referencia) | ⛔ **Fork muerto hace 7 años y 7 meses**, y sigue siendo la cita habitual de punto fijo en C# |
+| [appsinacup/godot-box2d](https://github.com/appsinacup/godot-box2d) | **353** | `fork: true`, push **2024-06-29** | ⛔ Rechazado frente a [appsinacup/godot-rapier-physics](https://github.com/appsinacup/godot-rapier-physics) (**1.054 ★**, MIT 1.102 B, push 2026-11-20), de la **misma organización** |
+| [godot-jolt/godot-jolt](https://github.com/godot-jolt/godot-jolt) | **2.605** | MIT 1.085 B, push **2026-03-16** | 🟡 **Superado por el engine**: Godot vendoriza Jolt en `modules/jolt_physics/` |
+| [DanielChappuis/reactphysics3d](https://github.com/DanielChappuis/reactphysics3d) | **1.776** | zlib **889 B**, push **2025-03-28** | 🟡 Biblioteca terminada, 20 meses sin commits |
+| `alice-physics` (crate Rust, 128-bit punto fijo) | — | `docs.rs` **000** por `curl` **y** `ENOTFOUND` por `WebFetch`; `lib.rs` **000**; `crates.io/api` **403** | ⚠️ **No verificable en este entorno** ⇒ se nombra, no se tabula |
+
+### 📏 Correcciones de método que salen de este pass
+
+- 🔴 **T95 — el silencio de `gh api search/repositories` tiene dos modos y
+  ninguno es ausencia.** `0 ítems` ⇒ **es un fork** (el buscador los excluye por
+  defecto; con `fork:true` aparecen: `erincatto/JoltPhysics` = **2 ★**,
+  `unitycoder/MotionMatchingUnity` = **1 ★**). `HTTP 422` ⇒ **el slug fue
+  renombrado** (3 de 3: `Genesis-Embodied-AI/Genesis` → `genesis-world`,
+  `haosulab/ManiSkill` → `mani-skill/ManiSkill`, `nekuzaky/kinema` →
+  `Nekuzaky/kinema-motion-matching`). **El árbitro de existencia es
+  `git ls-remote`**, que sigue la redirección.
+- 🔵 **Una búsqueda web atribuyó Jolt Physics a `erincatto/JoltPhysics`** —el
+  autor de Box2D— y ese slug **existe**: es su fork de 2 ★. Un pipeline que
+  verificara "¿existe el repo?" habría dado verde y escrito el dueño
+  equivocado. **Existir no es ser el proyecto** (misma clase que
+  `coinbase/x402` en el cycle 20, por otra causa).
+- 🔵 **T96 — el grant puede vivir en el subdirectorio del paquete.**
+  `Nekuzaky/kinema-motion-matching`: 5 sondas en la raíz, 5 × 404, y el MIT real
+  (1.065 B) está en `Packages/com.nekuzaky.kinema/LICENSE.md`, **porque eso es lo
+  que Unity empaqueta**.
+- 🔵 **T97 — la licencia copiada con la plantilla de README nombra al autor de la
+  plantilla.** `mcsantiago/Unity_MotionMatching`: `LICENSE.txt` 1.069 B,
+  "Copyright (c) 2021 **Othneil Drew**" (autor del *Best-README-Template*).
+- 🔵 **T98 — el engine que vendoriza re-nombra la licencia.** `godotengine/godot`
+  (**120.752 ★**) declara Jolt como **`License: Expat`** en `COPYRIGHT.txt`
+  (DEP-5) ⇒ un filtro por la cadena "MIT" no lo encuentra; y su copia de Recast
+  pesa **859 B** contra **877** del upstream y **904** de DotRecast.
+- 🟢 **Canal 12 — el censo fuera de GitHub por API del host.**
+  `gitlab.com/api/v4/projects/<ns>%2F<repo>` devuelve ★, forks, `last_activity`,
+  rama default y licencia. Primera medición:
+  [gitlab.com/snopek-games/sg-physics-2d](https://gitlab.com/snopek-games/sg-physics-2d)
+  = **53 ★ / 159 forks**, actividad 2026-07-26, `license: None` **a pesar de**
+  tener `LICENSE.txt` con 1.062 B de texto MIT ⇒ **GitLab es ciego al MIT sin
+  título igual que GitHub**: el defecto está en el archivo, no en el host.
+- ⚫ **Conjetura propia que 404'eó:** `nicolausYes/soft-float-starter-pack`
+  (inferí el dueño). El real es `Kimbatt/soft-float-starter-pack` (224 ★, MIT
+  1.064 B, congelado desde 2022).
+
+### 🛑 Hosts política-muertos confirmados este pass (ambos canales)
+
+Medidos por `curl` (**000**, o **403** del proxy): `docs.rs`, `lib.rs`,
+`crates.io/api` (403), `zdoom.org`, `unity.com`, `godotengine.org`,
+`linuxfoundation.org`, `developer.nvidia.com`, `ropesgray.com`, `xsolla.com`,
+`kpmg.com`. De esos, **tres se re-probaron por el segundo canal** —la corrección
+del cycle 24, `curl` ≠ `WebFetch`— y los tres fallan también ahí
+(`ENOTFOUND`): `docs.rs`, `godotengine.org`, `linuxfoundation.org`. Los
+restantes **sólo están medidos por `curl`**: podrían estar vivos por `WebFetch`
+y conviene re-probarlos antes de darlos por muertos. Todo lo que venga de estos
+hosts se **cita en prosa, no se enlaza**.
+
+🟢 **Vivos y enlazables este pass:** `github.com` (vía buscador `gh` y
+`raw.githubusercontent.com`), **`gitlab.com` + su API v4** y `nuget.org`.
+
+---
+
 # Agentes trending — Gaming AI
 
 > **Archivo APPEND-ONLY.** Cada pass agrega una sección fechada arriba y conserva

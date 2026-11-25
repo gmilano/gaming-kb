@@ -4,6 +4,46 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 25) — plataformas reales del **plano del cuerpo**, y el mapa propietario contra el que compiten
+
+### Plataformas open source customizables (el equivalente a Odoo en esta capa)
+
+El "Odoo" de esta capa **no es un motor de física**: es el **framework de
+simulación**, porque es lo que se despliega completo y se customiza con reglas
+de juego en vez de reescribirse.
+
+| Plataforma | Licencia **medida** | Qué se despliega tal cual | Qué customiza el estudio | ★ |
+|---|---|---|---|---|
+| [xpTURN/Klotho](https://github.com/xpTURN/Klotho) | **Apache-2.0** (11.336 B) | Simulación determinista completa: ECS + punto fijo `FP64` 32.32 + física (`FPPhysicsWorld`) + navegación (`FPNavMesh`, A\*, ORCA) + HFSM de IA + replay + los **tres** modelos de red (lockstep P2P, rollback con predicción, server-driven) + servidor dedicado multi-sala | Los componentes de juego, las acciones del HFSM, los *data assets* (JSON) y la capa de vista en Unity o Godot | **88** |
+| [isaac-sim/IsaacLab](https://github.com/isaac-sim/IsaacLab) | **BSD-3** (1.690 B) + Apache (10.142 B) ⚠️ **+ EULA NVIDIA** (17.482 B) | Un entorno de entrenamiento RL/IL completo: tareas, *wrappers* de librerías de RL y sensores | Las tareas, las recompensas y los *assets* | **8.720** |
+| [mujocolab/mjlab](https://github.com/mujocolab/mjlab) | **Apache-2.0** (11.352 B) | El mismo patrón de entorno, **sobre MuJoCo Warp y sin la cadena de Isaac Sim** | Idem, sin dependencia propietaria | **3.461** |
+| [Genesis-Embodied-AI/genesis-world](https://github.com/Genesis-Embodied-AI/genesis-world) | **Apache-2.0** (11.356 B) | Plataforma de simulación unificada (rígidos, blandos, fluidos) con generación de escenas | Escenas, materiales y políticas | **30.310** |
+| [gitlab.com/snopek-games/sg-physics-2d](https://gitlab.com/snopek-games/sg-physics-2d) | **MIT** (1.062 B) | Un módulo de física 2D de punto fijo para Godot, desplegable como GDExtension | Toda la lógica de juego (la propia doc. de la capa avisa de que hay que escribir mucho código encima) | **53** (159 forks) |
+
+🔵 **Diferencia con los passes 19–24:** aquí **no hay un líder gestionado que
+haya vaciado la capa open source** (como pasó en analítica en el cycle 16 o en
+flags en el 19). La capa está **completa y permisiva**; lo que escasea es
+**tamaño de comunidad en el eslabón determinista**.
+
+### El mapa propietario contra el que compite
+
+| Producto | Modelo | Por qué se elige igual | Qué lo sustituye en open source |
+|---|---|---|---|
+| **Photon Quantum** (Exit Games) | Licencia comercial (no OSI) | Es **el** producto de simulación determinista para Unity: punto fijo, rollback y predicción listos, con soporte | **Klotho** cubre el mismo contrato técnico en Apache-2.0 — con 88 ★ y un mantenedor |
+| **Unity DOTS Physics / Unity Physics** | **Unity Companion License** (no OSI, atada a Unity) — así lo declara el README del fork de 557 ★; el texto de la licencia **no se pudo leer desde esta sesión** (`unity.com` 000) | Viene con el engine y está integrada | No hay equivalente: el fork más estrellado (`Kimbatt`, 557 ★) **hereda la misma licencia y no añade grant propio** |
+| **Unreal Chaos Physics** | Unreal EULA | Integrada, AAA, con soporte | ⛔ **Nada permisivo y determinista para el carril C++/Unreal**: el gap del pass |
+| **Havok Physics** | Licencia comercial | Décadas de madurez | Jolt (MIT) y PhysX (BSD-3) son la vía permisiva; ninguno garantiza determinismo cross-platform |
+| **NVIDIA Isaac Sim + cuRobo** | Apache **+ EULA no OSI**, sólo con GPUs NVIDIA | Es el camino más corto a entrenamiento a escala | **Newton** (Apache-2.0, Linux Foundation) + **mjlab** (Apache-2.0) — el propio README de Isaac Lab reconoce la ruta "kit-less" |
+
+### 🔴 La decisión que esta capa le plantea a un estudio, en una línea
+
+**Si el juego necesita rollback, la elección de física deja de ser técnica y pasa
+a ser de licencia:** los motores maduros (Jolt MIT, Bullet zlib con carve-out,
+PhysX BSD-3, Chaos EULA) son **coma flotante** y por tanto **no deterministas
+entre plataformas**; los deterministas son **pequeños** (Klotho 88 ★, Gravitas
+4 ★, SG Physics 53 ★) o **no permisivos** (Photon Quantum, Unity Physics). No hay
+una tercera opción madura, y conviene decirlo antes de prometer cross-play.
+
 ## 🆕 Pass 2026-11-25 (cycle 24) — plataformas reales del **plano del cable**, y la capa gestionada que se vació en 2026
 
 ### Plataformas open source customizables (el equivalente a Odoo en esta capa)

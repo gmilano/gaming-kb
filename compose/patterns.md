@@ -4,6 +4,155 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Recetas del pass cycle 25 (2026-11-25) — el plano del cuerpo
+
+### 🧩 Receta 72: **Cross-play competitivo 100 % permisivo** — determinismo primero, red después
+
+**Problema.** El cycle 24 dejó el cable resuelto y el rollback sin líder. Un
+título competitivo con jugadores a 150–250 ms (el caso LATAM y el caso
+intra-APAC) necesita rollback, y el rollback necesita que **las dos máquinas
+calculen el mismo estado**. Si se elige la física antes que el determinismo, el
+proyecto se entera tarde.
+
+**Stack, todo con licencia leída en bytes:**
+
+| Eslabón | Pieza | Licencia **medida** | Por qué esta |
+|---|---|---|---|
+| Simulación + rollback | [xpTURN/Klotho](https://github.com/xpTURN/Klotho) | **Apache-2.0** (11.336 B) | Trae `FP64` 32.32, `FPPhysicsWorld`, `FPNavMesh`, HFSM, replay **y** los tres modelos de red, con adaptadores Unity y Godot (.NET) |
+| Transporte | [RevenantX/LiteNetLib](https://github.com/RevenantX/LiteNetLib) (C#) o [skywind3000/kcp](https://github.com/skywind3000/kcp) | **MIT** (1.090 B · 1.091 B) — medidas en el cycle 24 | Klotho transporta **sólo inputs**: no hace falta replicación de estado |
+| Matchmaking | [googleforgames/open-match](https://github.com/googleforgames/open-match) | **Apache-2.0** (11.345 B) — cycle 24 | Ya inventariado; encaja sin cambios |
+| Servidores elásticos | [agones-dev/agones](https://github.com/agones-dev/agones) | **Apache-2.0** — cycle 4 | El modo *server-driven* de Klotho necesita un servidor por sala |
+| Verificación | `SyncTestRunner` + `DeterminismVerificationRunner` (dentro de Klotho) | — | **El único instrumento de verificación de determinismo medido en 25 passes** |
+
+**Cómo se cablea, en orden (y el orden es la receta):**
+1. **Primero el analizador, no el gameplay.** Activar el `DeterminismAnalyzer` de
+   Klotho en el build **antes** de escribir la primera regla: marca `float` y
+   APIs no deterministas en el código de simulación. Un proyecto que lo activa en
+   el mes 6 ya tiene coma flotante repartida por todo el dominio.
+2. Modelar el estado como componentes del ECS de Klotho (`[KlothoComponent]`),
+   con **toda** la aritmética en `FP64` / `FPVector3`.
+3. Elegir modelo de red **por género**: lucha/acción → rollback con predicción;
+   estrategia → lockstep P2P; shooter/MMO → server-driven autoritativo.
+4. Conectar el transporte: LiteNetLib si el cliente es .NET puro; kcp si hay un
+   dedicado en C/C++.
+5. Correr `SyncTestRunner` en CI **en cada plataforma de destino** (es ahí donde
+   el determinismo se rompe: distinto chip, distinto compilador).
+
+⚠️ **Riesgo que hay que escribir en la propuesta:** Klotho tiene **88 ★ y un
+mantenedor** (último push 2026-10-31). Mitigación medida: el grant es Apache-2.0
+(forkable sin fricción) y el núcleo es **C# puro agnóstico de engine**, de modo que
+un fork interno es viable. Alternativa comercial si el cliente no acepta bus
+factor 1: **Photon Quantum** (no OSI).
+
+---
+
+### 🧩 Receta 73: **Locomoción y animación aprendidas, sin disparar el Art. 50 del AI Act**
+
+**Problema.** El cliente EMEA quiere resultados de IA **este trimestre** y el
+plazo del **Art. 50(2)** vence el **2026-12-02**. Todo lo que genere audio,
+imagen, vídeo o texto entra en el marcado legible por máquina. Un personaje que
+**se mueve mejor** no genera contenido sintético.
+
+**Stack, todo Apache-2.0 o MIT, medido hoy:**
+
+| Paso | Pieza | Licencia **medida** | Rol |
+|---|---|---|---|
+| 1. Entrenar | [newton-physics/newton](https://github.com/newton-physics/newton) | **Apache-2.0** (10.173 B) | Física GPU diferenciable, **Linux Foundation**, 1.0 GA en GTC 2026 |
+| 1b. Alternativa de entrenamiento | [mujocolab/mjlab](https://github.com/mujocolab/mjlab) sobre [google-deepmind/mujoco_warp](https://github.com/google-deepmind/mujoco_warp) | **Apache-2.0** (11.352 · 11.357) | El patrón Isaac-Lab **sin** Isaac Sim ⇒ sin EULA |
+| 2. Entorno / API | [Farama-Foundation/Gymnasium](https://github.com/Farama-Foundation/Gymnasium) | **MIT** (1.104 B) | La API de entorno; multi-agente con [PettingZoo](https://github.com/Farama-Foundation/PettingZoo) (MIT 1.073 B) |
+| 3. Exportar movimiento | [guillaumeblanc/ozz-animation](https://github.com/guillaumeblanc/ozz-animation) | **MIT** (1.183 B) | Runtime esqueletal agnóstico de engine + toolchain desde glTF/FBX/Collada |
+| 4. Mezclar en runtime | `Prowl.Motion` vía [ProwlEngine/Anthology](https://github.com/ProwlEngine/Anthology) | **MIT** (1.065 B) | Grafos de estado, capas, IK, retargeting humanoide. NuGet v3.9.3, **única dependencia `Prowl.Vector`** |
+| 5. Si hace falta *motion matching* | [JLPM22/MotionMatching](https://github.com/JLPM22/MotionMatching) | **MIT** (1.081 B) | **El upstream real** — no el fork de 1 ★ que devuelven los buscadores |
+
+**Por qué cumple sin expediente:** ninguno de los 6 componentes produce audio,
+imagen, vídeo ni texto sintético de cara al jugador. Lo que produce es **una
+política de control** y **clips de animación**. 🔵 Esto convierte a la capa en el
+**único destino de inversión en IA que esta KB puede recomendar a 7 días del
+plazo** sin añadir carga de conformidad.
+
+⛔ **Las dos trampas de licencia de esta receta, medidas:**
+- **No usar `isaaclab_mimic`.** Arrastra **cuRobo**, cuya licencia (17.482 B)
+  es revocable, prohíbe derivados, exige GPU NVIDIA + Isaac Lab y obliga a
+  cooperar con una auditoría.
+- **No empaquetar los assets de `mani-skill/ManiSkill`**: el código es
+  Apache-2.0, **los assets son CC BY-NC 4.0**. Y el personaje de demo de
+  `kinema-motion-matching` es **Mixamo**, fuera de su MIT.
+
+---
+
+### 🧩 Receta 74: **Canal 12 + canal 13 — el censo de una capa que no vive sólo en GitHub**
+
+**Problema.** Esta KB mide con instrumentos de GitHub. En esta capa eso produjo
+**dos ceros falsos** y **una atribución equivocada**: la física determinista de
+referencia para Godot está en GitLab, la biblioteca de animación reutilizable
+está en un repo distinto al del engine que la publica, y un grant estaba en el
+subdirectorio del paquete.
+
+**Procedimiento, cuatro comandos:**
+
+```bash
+# 1. ¿El repo existe de verdad? (el árbitro, no el buscador)
+git ls-remote --exit-code "https://github.com/$SLUG" HEAD >/dev/null && echo EXISTE
+
+# 2. Si el buscador devuelve 0 ítems -> es un FORK; si devuelve 422 -> fue RENOMBRADO
+gh api -X GET search/repositories -f q="repo:$SLUG"              # 0 ítems
+gh api -X GET search/repositories -f q="repo:$SLUG fork:true"    # aparece => fork
+
+# 3. Fuera de GitHub: la API del host (canal 12)
+curl -s "https://gitlab.com/api/v4/projects/${NS}%2F${REPO}" |
+  python3 -c "import json,sys;d=json.load(sys.stdin);print(d['star_count'],d['forks_count'],d['last_activity_at'],d['default_branch'],d.get('license'))"
+
+# 4. Procedencia real: el registro de paquetes (canal 13)
+#    nuget.org / npm / crates.io declaran version, licencia, dependencias
+#    y el REPOSITORIO del publicador, que puede no ser el que todos citan.
+```
+
+**Resultados medidos con esto en este pass:**
+
+| Sonda | Lo que decía el instrumento viejo | Lo que midió el canal nuevo |
+|---|---|---|
+| `Genesis-Embodied-AI/Genesis` | buscador **422** ⇒ "no existe" | **Renombrado** a `genesis-world` (**30.310 ★**) |
+| `erincatto/JoltPhysics` (lo citaba una búsqueda web) | buscador **0 ítems** ⇒ "no existe" | **Existe**: fork de **2 ★** del autor de Box2D. **El proyecto es `jrouwe/JoltPhysics`** |
+| física determinista para Godot | **nada en GitHub** | **GitLab**: 53 ★ / **159 forks**, MIT 1.062 B |
+| `Prowl.Motion` | atribuido al engine (**1.322 ★**) | NuGet declara [ProwlEngine/Anthology](https://github.com/ProwlEngine/Anthology) (**39 ★**) |
+| `Nekuzaky/kinema-motion-matching` | 5 sondas en la raíz ⇒ "sin grant" | MIT en **`Packages/com.nekuzaky.kinema/LICENSE.md`** |
+
+📌 **Copiar esta receta a todas las KBs de la familia.** Los dos canales nuevos no
+son específicos de gaming: cualquier capa con bibliotecas publicadas en un
+registro (npm, PyPI, NuGet, Maven, crates) tiene el mismo punto ciego.
+
+---
+
+### 🧩 Receta 75: **Auditoría de un stack de simulación antes de firmar** — el checklist de 7 sondas que este pass ejecutó
+
+**Problema.** Un stack de simulación se ve permisivo desde el badge y puede
+contener una EULA revocable, un carve-out por directorio, assets no comerciales,
+un repo sin mantenimiento con push de ayer y un grant que apunta a un host
+inalcanzable. Las cinco cosas aparecieron **en este pass**.
+
+| # | Sonda | Comando / canal | Lo que atrapó hoy |
+|---|---|---|---|
+| 1 | **Carve-out en el propio grant** | `curl -s .../HEAD/LICENSE.txt \| head -3` | `bullet3`: zlib **excepto `Extras/` y `examples/ThirdPartyLibs`** (1.022 B) |
+| 2 | **Licencias por dependencia dentro del repo** | leer la sección `## License` del README y **seguir cada ruta** | `IsaacLab` → `LICENSE-mimic` (Apache) + **cuRobo EULA 17.482 B** + Isaac Sim con términos en un PDF externo |
+| 3 | **Assets vs código** | buscar `CC BY`, `NC`, `Mixamo`, `assets` en README y `LICENSE*` | `ManiSkill` (assets **CC BY-NC 4.0**) · `kinema` (**Mixamo**) |
+| 4 | **Mantenimiento real ≠ `pushed_at`** | `curl .../README.md \| head -8` | `libfixmath`: **888 ★**, push 2026-11-19, README: *"Not actively maintained"* (**T100**) |
+| 5 | **Grant propio vs heredado** | sondear 14 nombres de archivo **y** leer la sección de licencia | `Kimbatt/unity-deterministic-physics`: **557 ★, cero archivos**, base bajo **Unity Companion License** |
+| 6 | **Fork disfrazado de upstream** | `search/repositories` sin y con `fork:true` (**T95**) | `appsinacup/godot-box2d` (fork muerto 2024) · `asik/FixedMath.Net` (fork muerto 2018) |
+| 7 | **El último salto del grant** | `curl -sI` al host que la licencia nombra | `ViZDoom` → `zdoom.org` **000** · Unity Companion License → `unity.com` **000** ⇒ **cadena no verificable** |
+
+**Criterio de decisión que sale de las 7 sondas:**
+
+- 🟢 **Firmable tal cual:** Jolt, Box2D, PhysX, Chrono, Newton, Warp, Brax,
+  Gymnasium, PettingZoo, ozz, Anthology, recastnavigation, DotRecast, Klotho y el
+  stack `mrdav30` (con el `NOTICE` de marca cumplido).
+- 🟡 **Firmable con condición escrita:** `bullet3` (excluir `Extras/` y
+  `examples/ThirdPartyLibs` del paquete) · `IsaacLab` (sin `isaaclab_mimic`,
+  ruta Newton/mjlab) · `ManiSkill` (código sí, assets no) · `ml-agents` (tomar el
+  texto de `main`, no el aviso corto de `develop`).
+- 🔴 **No firmable para producto:** `ViZDoom` (alcance del MIT indeterminable) ·
+  `Kimbatt/unity-deterministic-physics` (sin grant propio) · `cuRobo` (EULA) ·
+  `alice-physics` (**no verificable en este entorno**).
+
 ## 🆕 Recetas del pass cycle 24 (2026-11-25) — el plano del cable
 
 ### 🧩 Receta 68: **Canal 11 — el censo de RAMAS, para detectar una relicenciación por versión mayor**

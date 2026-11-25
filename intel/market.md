@@ -4,6 +4,175 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo que cambió — pass cycle 25 (2026-11-25): **el plano del cuerpo es la primera capa de esta KB que NO dispara ninguna obligación de transparencia de IA — y eso es su argumento comercial**
+
+Las capas de los passes 19–24 chocaban con una norma: el precio (19), el pago
+(20), el encoder (21), la edad (22), el dispositivo (23), el apagado del servidor
+(24). Esta capa **no genera contenido sintético**: un solver de física, un navmesh
+determinista o un controlador de locomoción entrenado **no producen audio, imagen,
+vídeo ni texto** que haya que marcar. Medido contra el texto de la obligación
+europea, es la **única** capa inventariada donde la respuesta es *no aplica*.
+
+🔵 **Por eso es relevante ahora y no en marzo:** el plazo del **Art. 50(2)** del
+AI Act para los sistemas que ya estaban en el mercado antes del **2026-08-02**
+vence el **2026-12-02 — dentro de 7 días**. Un estudio que necesite mostrar
+avance en IA con **riesgo regulatorio cero** tiene aquí la única capa que
+califica.
+
+### Mapa de la capa: quién manda en cada eslabón
+
+| Eslabón | Quién lo domina | Modelo | Lo permisivo medido |
+|---|---|---|---|
+| Punto fijo / determinismo | **Photon Quantum** (comercial) y **Unity Physics** (Unity Companion License) | Propietario | Klotho (Apache-2.0, 88 ★) · FixedMathSharp (MIT, 97 ★) · Gravitas (MIT, 4 ★) · SG Physics 2D (MIT, 53 ★, GitLab) |
+| Física de runtime | **Havok**, **Chaos** (Unreal EULA), **PhysX** | Mixto | Jolt (MIT, 12.438) · Bullet (zlib **con carve-out**, 14.894) · Box2D (MIT, 10.519) · PhysX (**BSD-3**, 4.867) · Rapier (Apache, 6.116) |
+| Física GPU / diferenciable | **NVIDIA** | Apache **+ EULA por dependencia** | Newton (Apache, 5.987, **Linux Foundation**) · Warp (Apache, 7.350) · Brax (Apache, 3.267) · Taichi (Apache, 28.476) |
+| Navegación | Recast de facto | Permisivo | recastnavigation (zlib, 8.219) · DotRecast (zlib, 968) · Trailblazer (MIT **determinista**, 6) |
+| Animación | **Unreal Motion Matching** (EULA) | Mixto | ozz-animation (MIT, 3.166) · Prowl.Motion vía Anthology (MIT, 39) · JLPM22/MotionMatching (MIT, 613) |
+| Simulador de entrenamiento | **NVIDIA Isaac Sim** | Apache + EULA | Genesis (30.310) · MuJoCo (18.474) · mjlab (3.461) · Gymnasium (12.856) — **todos permisivos** |
+
+### Opportunities by region
+
+> ⚠️ **Nota de método regional, honesta.** Esta capa es **infraestructura
+> técnica**: no tiene regulación específica por región, y las búsquedas
+> regionales de este pass (`AI gaming {región} 2026 adoption regulation players`,
+> una por región) devolvieron **mayoritariamente material de *gambling*, no de
+> videojuegos**. Lo que sigue separa lo medido de lo inferido, y **nombra los
+> vacíos** en vez de rellenarlos.
+
+#### North America
+
+- **Lo que hay:** la **gobernanza** de la capa está aquí. **Newton** (Apache-2.0)
+  es un proyecto de la **Linux Foundation** con Disney Research, Google DeepMind y
+  NVIDIA, con **1.0 GA anunciada en GTC 2026**; **MuJoCo** es de Google DeepMind;
+  **Gymnasium/PettingZoo** son de la Farama Foundation; **PhysX** (BSD-3) y
+  **Warp** (Apache) son de NVIDIA. ⇒ **La gobernanza institucional de la capa
+  está concentrada en organizaciones de EE. UU. y Reino Unido** (Linux
+  Foundation, NVIDIA, Google DeepMind, Farama Foundation, Unity); los proyectos
+  de autor individual, en cambio, son europeos (Jolt, ozz, dimforge) y asiáticos
+  (Klotho, kinema).
+- **El riesgo comercial concreto, medido en archivo:** la ruta NVIDIA mezcla
+  Apache con una **EULA no OSI** (`cuRobo-license.txt`, 17.482 B) que es
+  **revocable**, prohíbe derivados, **limita el uso a GPUs NVIDIA junto a Isaac
+  Lab** y obliga a **cooperar con una auditoría de cumplimiento**. Para un
+  cliente norteamericano con *procurement* formal, esa cláusula de auditoría es
+  la que bloquea un contrato, no el precio de la GPU.
+- **Oportunidad:** *due diligence* de licencia de stacks de simulación —exactamente
+  el trabajo que este pass hizo a mano— vendido como entregable. Y **migración de
+  Isaac Sim a la ruta "kit-less" Newton/mjlab**, que el propio README de Isaac Lab
+  documenta como soportada.
+- **Contexto de adopción (citado, no verificado por repos):** KPMG + UNLV
+  (*State of AI in Gaming 2026*, 83 compañías) sitúa el índice de madurez del
+  sector en **45/100** y la adopción de **agentes** muy por detrás de la
+  generativa; la actividad regulatoria se concentra en Norteamérica y Europa
+  occidental y **apunta a protección del jugador**, no a infraestructura.
+
+#### EMEA
+
+- **Lo medido y lo accionable:** el **Art. 50(2)** del AI Act exige marcado
+  legible por máquina del contenido sintético; los sistemas ya en mercado antes
+  del **2026-08-02** tienen hasta el **2026-12-02** (**7 días**), sin prórroga
+  para los posteriores. 🔵 **El plano del cuerpo queda fuera de ese alcance**: no
+  genera audio, imagen, vídeo ni texto. Es la **única** de las 7 capas que esta KB
+  ha inventariado desde el cycle 19 en la que la respuesta es *no aplica*.
+- **Oportunidad:** para un cliente EMEA con el plazo encima, esta capa es el
+  **único lugar donde invertir en IA esta semana sin abrir un expediente de
+  conformidad**. Recomendación concreta: mover el gasto de IA de este trimestre a
+  locomoción/animación aprendida y a determinismo, y dejar el contenido
+  generativo para después del **2026-12-02**.
+- **El dato europeo de la capa:** la mayor pieza de animación permisiva,
+  [ozz-animation](https://github.com/guillaumeblanc/ozz-animation) (MIT, 3.166 ★),
+  la mantiene un autor individual europeo; y `dimforge` (Rapier, Parry) es un
+  equipo europeo con **7.007 ★ sumadas** en Apache-2.0. **La física en Rust de
+  Europa es permisiva por defecto.**
+- **Contexto (citado):** la patronal europea de desarrollo pide en su agenda 2026
+  *"IA liderada por personas"*, mercados justos y soberanía europea; en enero de
+  2026 Games Workshop prohibió internamente el contenido generado por IA en sus
+  juegos. ⇒ **Una capa que no produce contenido es políticamente compatible con
+  esa postura.**
+
+#### APAC
+
+- **Lo medido:** el hallazgo del pass es **coreano**.
+  [xpTURN/Klotho](https://github.com/xpTURN/Klotho) publica README en **inglés,
+  coreano, japonés y chino simplificado** — el único repo de la capa con esa
+  cobertura — y resuelve el problema que más importa en la región: **lockstep y
+  rollback para estrategia y lucha**, los géneros donde Corea y Japón competían en
+  los eventos de 2026 (Esports Championships Asia, Jinju, 24–26 de abril;
+  final de lucha Japón–Corea en los Juegos Asiáticos de Aichi-Nagoya). 
+- **Lo que NO se encontró, dicho:** **cero** regulación específica de netcode,
+  servidores o determinismo en China, Japón o Corea. La búsqueda regional devolvió
+  eventos de esports y un conflicto comunitario sobre un port no oficial de
+  *Tekken 6* con rollback — **no un marco regulatorio**. Lo único estructural que
+  aparece es lo que la KB ya tenía: aprobaciones de título, límites de
+  monetización y reglas de menores.
+- **Oportunidad:** la capa determinista es **el prerequisito técnico del
+  cross-play regional**, donde el RTT entre Seúl, Tokio, Shanghái y Yakarta hace
+  inviable el modelo autoritativo puro. Un estudio APAC que quiera cross-play
+  necesita **exactamente** Klotho o equivalente propietario (Photon Quantum).
+  Es un argumento técnico, no de coste.
+- **Contexto (citado):** análisis regionales describen la **regulación en mosaico**
+  como el principal freno estructural de APAC, y adopción amplia —a veces
+  encubierta— de IA generativa en la industria china como medida de reducción de
+  coste.
+
+#### LATAM
+
+- **Lo medido, y es un cero *con una excepción que cambia el argumento*:** de los
+  **46 repos de GitHub + 1 de GitLab** inventariados en este pass, **ninguno de
+  los 45 que componen la capa** tiene origen o mantenimiento latinoamericano
+  declarado (medido por autoría en el archivo de licencia y por idioma del
+  README): Países Bajos (Jolt), EE. UU. (Box2D, Bullet, PhysX, Warp, Newton,
+  MuJoCo, Brax, Gymnasium, Anthology), Francia (dimforge), Corea (**Klotho**),
+  Japón (kinema), China/EE. UU. (Genesis, ManiSkill) y una cadena de autores
+  individuales europeos y norteamericanos.
+- 🔵 **La excepción es el contenedor, y está medida en archivo.** El repo
+  **anfitrión** de dos de las piezas centrales de esta capa —Jolt y Recast,
+  vendorizados en `thirdparty/`— es
+  [godotengine/godot](https://github.com/godotengine/godot) (**120.752 ★**, MIT),
+  y en su `COPYRIGHT.txt` —formato DEP-5, legible por máquina— cada *stanza* del
+  código del engine acredita **`2014-present, Godot Engine contributors`** y
+  **`2007-2014, Juan Linietsky, Ariel Manzur`**: **los dos fundadores
+  argentinos**. Es decir: **LATAM no está en la capa, pero
+  sí en el engine que la distribuye**, y eso es un activo de posicionamiento
+  verificable con un `curl`, no una narrativa.
+- **Por qué esta capa importa más en LATAM que en ninguna otra región:** es la
+  región con **más de 335 millones de jugadores** (*State of the LATAM Games
+  Industry 2026*, GamesBeat/Xsolla, publicado 2026-04-29; Newzoo reporta
+  **372,3 M** con otra metodología — **las dos cifras no son comparables y esta KB
+  no elige**) y con la peor combinación de distancia a los datacenters y
+  variabilidad de red. **El rollback no es un lujo: es lo que hace jugable un
+  título competitivo con 150–250 ms de RTT.** Y el rollback exige el determinismo
+  que esta capa provee.
+- ⚠️ **Lo que no se pudo medir:** **latencia, calidad de banda ancha o
+  infraestructura de servidores LATAM 2026**. Se buscó explícitamente; las
+  fuentes del mercado regional cubren pagos, monetización y esports, **no red**.
+  El argumento de arriba es por tanto **estructural y razonado, no medido** — y se
+  marca como tal.
+- **Oportunidad:** (1) ser **el primer mantenedor LATAM de la capa** —un *fork*
+  vivo de `libfixmath` (cuyo propio README dice *"not actively maintained"*) o un
+  port a C++/Unreal del punto fijo, que **no existe**— es un activo de marca
+  técnica barato, defendible y **con linaje regional ya establecido** por el
+  párrafo anterior; (2) vender **cross-play
+  determinista** a publishers que lanzan en la región, apoyado en el dato del
+  cycle 4: **48,8 % de aceptación de IA entre jugadores LATAM frente a ~85 % de
+  rechazo global**, lo que hace de LATAM el primer mercado racional para
+  tecnología de jugador.
+- **Contexto (citado):** análisis de 2026 describen a la región como *"emerging
+  but cautious"* en adopción de IA y **más avanzada en regulación que en
+  adopción**; un estudio presentado en gamescom latam 2026 reporta disposición
+  mayoritaria de los jugadores latinoamericanos a consumir juegos desarrollados
+  con herramientas de IA, con reservas sobre empleo y creatividad.
+
+### 🔴 El hueco de mercado de esta capa, en una frase
+
+**Nadie vende determinismo como servicio.** Hay motores de física (permisivos y
+maduros), simuladores de IA (permisivos y enormes) y frameworks deterministas
+(permisivos y diminutos). Lo que **no existe en ningún régimen de licencia** es
+la herramienta que *verifica* que un build es determinista en todas las
+plataformas de destino: el único instrumento medido en 25 passes es interno a un
+repo de 88 ★. Para una práctica de ingeniería, **eso es un producto, no un
+hallazgo**.
+
 ## 🔴 Lo que cambió — pass cycle 24 (2026-11-25): **el plano del cable es la primera capa donde la gran pregunta regulatoria de 2026 se respondió NO**
 
 El cycle 20 midió una capa que **2026 abrió por ley en cuatro regiones** (el

@@ -4,6 +4,84 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 25) — fundaciones del **plano del cuerpo**: punto fijo → física → navegación → animación → simulador
+
+La cadena de esta capa tiene cinco eslabones y, a diferencia del plano del
+espectador (cycle 21), **la permisividad es la norma**: de **23 fundaciones
+medidas, 22 son MIT / BSD-3 / zlib / Apache-2.0**. El único régimen restrictivo
+que aparece no está en un repo de la capa: está **dentro** de uno permisivo
+(la EULA de cuRobo en Isaac Lab, 17.482 B).
+
+🔴 **Lo que esta página no tenía antes de hoy:** ni un motor de física como
+entrada propia (Jolt y Recast aparecían sólo como `third_party/` de
+`Matrix-Game-4`), ni **nada** de punto fijo, ni la capa de animación, ni los
+simuladores de entrenamiento de agentes. Son **4 eslabones de 5**.
+
+### Eslabón 1 · Punto fijo y determinismo — **la condición previa del rollback**
+
+| Repo | Licencia **medida** | Por qué es fundación | ★ | Push |
+|---|---|---|---|---|
+| [xpTURN/Klotho](https://github.com/xpTURN/Klotho) | **Apache-2.0** (`LICENSE`, 11.336 B) | **La única fundación medida que trae simulación determinista + rollback + adaptadores de engine (Unity y Godot .NET) en un solo grant permisivo.** `FP64` 32.32, RNG Xorshift128+, `DeterminismAnalyzer` en build | **88** | 2026-10-31 |
+| [mrdav30/FixedMathSharp](https://github.com/mrdav30/FixedMathSharp) | **MIT** (1.089 B) + `NOTICE` (460 B) | La aritmética de punto fijo del carril .NET: `Fixed64` en **Q32.32**, `Vector3d`, quaterniones, curvas, rayos y *random streams* deterministas. 🔵 **Misma representación 32.32 que Klotho**, de autores distintos ⇒ el formato de facto de la capa en .NET | **97** | 2026-11-23 |
+| [PetteriAimonen/libfixmath](https://github.com/PetteriAimonen/libfixmath) | **MIT** (1.159 B, **sin título** ⇒ API `NOASSERTION`) | Punto fijo **Q16.16 en C**: la única entrada de esta capa para un runtime C/C++ o un plugin nativo. 🔴 Su propio README dice **"Not actively maintained"** y que el repo es **un espejo del SVN de Google Code** — con push de hace 6 días (ver T100) | **888** | 2026-11-19 |
+| [Kimbatt/soft-float-starter-pack](https://github.com/Kimbatt/soft-float-starter-pack) | **MIT** (1.064 B) | *Soft floats* en C#: reproduce IEEE-754 en software para que el resultado no dependa del chip. ⚠️ **Congelado desde 2022-10-24** | **224** | 2022-10-24 |
+| [gitlab.com/snopek-games/sg-physics-2d](https://gitlab.com/snopek-games/sg-physics-2d) | **MIT** (`LICENSE.txt`, 1.062 B — GitLab lo reporta como `None`) | La referencia histórica de física determinista 2D para Godot. **Fuera de GitHub** ⇒ sólo visible por el canal 12 | **53** (159 forks) | 2026-07-26 |
+
+### Eslabón 2 · Física de runtime (coma flotante, pero con mandato distinto)
+
+| Repo | Licencia **medida** | Por qué es fundación | ★ | Push |
+|---|---|---|---|---|
+| [bulletphysics/bullet3](https://github.com/bulletphysics/bullet3) | **zlib** (`LICENSE.txt`, 1.022 B) ⚠️ **excepto `Extras/` y `examples/ThirdPartyLibs`** ⇒ API `NOASSERTION` | El motor open source más usado de los últimos 15 años; base de media robótica. **El carve-out por directorio hay que respetarlo al empaquetar** | **14.894** | 2026-10-09 |
+| [jrouwe/JoltPhysics](https://github.com/jrouwe/JoltPhysics) | **MIT** (`LICENSE`, 1.052 B, **sin título**) | El motor de *Horizon Forbidden West* y **el que Godot vendoriza** (`thirdparty/jolt_physics/`, mismo byte-count) | **12.438** | 2026-11-24 |
+| [erincatto/box2d](https://github.com/erincatto/box2d) | **MIT** (1.067 B) | El estándar 2D. Push **de hoy** | **10.519** | 2026-11-25 |
+| [dimforge/rapier](https://github.com/dimforge/rapier) | **Apache-2.0** (11.347 B) | Física en Rust; base de [appsinacup/godot-rapier-physics](https://github.com/appsinacup/godot-rapier-physics) (MIT 1.102 B, 1.054 ★, push 2026-11-20). ⚠️ **Nota de verificación:** circula que Rapier garantiza determinismo cross-platform; su `README.md` **no contiene la palabra `determin`** (0 ocurrencias medidas hoy) ⇒ **no se publica como característica** | **6.116** | 2026-11-01 |
+| [NVIDIA-Omniverse/PhysX](https://github.com/NVIDIA-Omniverse/PhysX) | **BSD-3** (`LICENSE.md`, 1.517 B) | El motor de Unity y de media industria AAA, **abierto y BSD-3** | **4.867** | 2026-11-18 |
+| [projectchrono/chrono](https://github.com/projectchrono/chrono) | **BSD-3** (1.485 B) | Multifísica de alta fidelidad (vehículos, granular, FEA): la entrada para *serious games* y simulación industrial | **3.171** | 2026-11-23 |
+| [DanielChappuis/reactphysics3d](https://github.com/DanielChappuis/reactphysics3d) | **zlib** (889 B) | 3D mínima y legible, sin dependencias. ⚠️ 20 meses sin commits | **1.776** | 2025-03-28 |
+| [mrdav30/Gravitas](https://github.com/mrdav30/Gravitas) | **MIT** (1.089 B) + `NOTICE` (521 B) | Física **determinista** 2D/3D/mixta en .NET, con hashes de replay. NuGet v2.0.1 | **4** | 2026-11-25 |
+
+### Eslabón 3 · Física GPU / diferenciable — la generación de 2026
+
+| Repo | Licencia **medida** | Por qué es fundación | ★ | Push |
+|---|---|---|---|---|
+| [taichi-dev/taichi](https://github.com/taichi-dev/taichi) | **Apache-2.0** (11.357 B) | DSL de computación paralela para simulación; el mayor de este eslabón | **28.476** | 2026-10-05 |
+| [NVIDIA/warp](https://github.com/NVIDIA/warp) | **Apache-2.0** (`LICENSE.md`, 11.431 B) | Kernels GPU desde Python, diferenciables. **El runtime sobre el que corre Newton** | **7.350** | 2026-11-25 |
+| [newton-physics/newton](https://github.com/newton-physics/newton) | **Apache-2.0** (`LICENSE.md`, 10.173 B) | **1.0 GA en GTC 2026**, contribuido por Disney Research + Google DeepMind + NVIDIA, **gobernado por la Linux Foundation**. Es, además, **la salida permisiva de Isaac Lab** ("Kit-less Newton workflows do not require Isaac Sim") | **5.987** | 2026-11-25 |
+| [google/brax](https://github.com/google/brax) | **Apache-2.0** (11.356 B) | Física diferenciable en JAX: miles de entornos en paralelo en un acelerador | **3.267** | 2026-10-20 |
+
+### Eslabón 4 · Navegación y animación
+
+| Repo | Licencia **medida** | Por qué es fundación | ★ | Push |
+|---|---|---|---|---|
+| [recastnavigation/recastnavigation](https://github.com/recastnavigation/recastnavigation) | **zlib** (`License.txt`, 877 B upstream · **859 B** en la copia de Godot) | El navmesh de la industria. Ya estaba en esta página; hoy se añade **el byte-count de la copia vendorizada** | **8.219** | 2026-02-27 |
+| [ikpil/DotRecast](https://github.com/ikpil/DotRecast) | **Zlib** (`LICENSE.txt`, 904 B) | La vía .NET al mismo navmesh. Ya estaba en esta página | **968** | 2026-10-03 |
+| [mrdav30/Trailblazer](https://github.com/mrdav30/Trailblazer) | **MIT** (1.089 B) + `NOTICE` (510 B) | **Navegación determinista** para lockstep — lo que Recast/DotRecast **no** garantizan | **6** | 2026-11-24 |
+| [guillaumeblanc/ozz-animation](https://github.com/guillaumeblanc/ozz-animation) | **MIT** (`LICENSE.md`, 1.183 B, **con prefacio** ⇒ API `NOASSERTION`) | Runtime de animación esqueletal C++ **agnóstico de renderer y de engine** (carga, sampleo, blending, diseño orientado a datos) **+ toolchain** de conversión desde glTF, FBX, Collada, Obj, 3ds y dxf — según su propio README | **3.166** | 2026-08-01 |
+| [JLPM22/MotionMatching](https://github.com/JLPM22/MotionMatching) | **MIT** (1.081 B) | *Motion matching* en Unity con base académica. **Es el upstream** del fork de 1 ★ que devuelven los buscadores | **613** | 2026-04-24 |
+| [ProwlEngine/Anthology](https://github.com/ProwlEngine/Anthology) | **MIT** (1.065 B) | 🔵 **El repo que hay que tomar, y no es el que tiene las estrellas.** Monorepo de bibliotecas `Prowl.*` que —dice su README— *"can be used independently"*; de ahí sale **`Prowl.Motion`** (NuGet **v3.9.3**, MIT, 2026-10-23, ~2,9k descargas, **única dependencia `Prowl.Vector`**): clips, grafos de estado, capas, IK y retargeting humanoide. El engine [ProwlEngine/Prowl](https://github.com/ProwlEngine/Prowl) tiene **1.322 ★** y Anthology **39** | **39** | 2026-11-25 |
+
+### Eslabón 5 · El simulador donde se entrena el agente
+
+| Repo | Licencia **medida** | Por qué es fundación | ★ | Push |
+|---|---|---|---|---|
+| [Genesis-Embodied-AI/genesis-world](https://github.com/Genesis-Embodied-AI/genesis-world) | **Apache-2.0** (11.356 B) | Simulación unificada + generativa. **30.310 ★**: el mayor de toda la capa | **30.310** | 2026-11-24 |
+| [google-deepmind/mujoco](https://github.com/google-deepmind/mujoco) | **Apache-2.0** (11.358 B) | Ya estaba en esta página; ★ actualizadas y **ahora en contexto de capa** | **18.474** | 2026-11-25 |
+| [Farama-Foundation/Gymnasium](https://github.com/Farama-Foundation/Gymnasium) | **MIT** (1.104 B) | La API de entorno de facto. Licencia ahora **en bytes** | **12.856** | 2026-11-25 |
+| [isaac-sim/IsaacLab](https://github.com/isaac-sim/IsaacLab) | **BSD-3** (1.690 B) + Apache-2.0 (`LICENSE-mimic`, 10.142 B) ⚠️ + **EULA NVIDIA** (17.482 B) | Entrenamiento RL/IL a escala GPU. **Fundación con condiciones**: ver el hallazgo nº4 de `agents/top.md` antes de empaquetar | **8.720** | 2026-11-25 |
+| [mujocolab/mjlab](https://github.com/mujocolab/mjlab) | **Apache-2.0** (11.352 B) | El mismo workflow **sin la cadena de Isaac Sim** | **3.461** | 2026-11-25 |
+| [Farama-Foundation/PettingZoo](https://github.com/Farama-Foundation/PettingZoo) | **MIT** (1.073 B) | Multi-agente: varios agentes sobre un mismo mundo | **3.560** | 2026-11-23 |
+
+### 🔴 El gap de fundación de esta capa, medido y nombrado
+
+**No hay punto fijo para el carril C++ de juego ni para Unreal.** Klotho y el
+stack `mrdav30` son **C#**; `libfixmath` es C pero es **aritmética, no
+simulación**; Jolt, Bullet, PhysX y Chrono son **coma flotante**. Rapier declara
+determinismo cross-platform pero es **Rust**. Para un estudio que trabaja en
+Unreal y quiere rollback, la fundación **no existe**: hay que portar o escribir.
+Es la misma forma del gap que el cycle 17 midió en CI ("el carril de Unreal no
+tiene CI permisiva") y el cycle 19 en live-ops ("falta el último metro, no la
+plataforma").
+
 ## 🆕 Pass 2026-11-25 (cycle 24) — fundaciones del **plano del cable**: transporte → replicación → rollback → relay → sesión
 
 La capa es una cadena de cinco eslabones y, a diferencia del plano del espectador
