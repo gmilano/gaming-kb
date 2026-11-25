@@ -12,6 +12,105 @@ updated: 2026-11-25
 
 ---
 
+## 🆕 2026-11-25 — pass cycle 23
+
+**Este pass sí publica estrellas.** El cycle 22 escribió que `api.github.com`
+estaba bloqueada; medido endpoint por endpoint, lo que está restringido es
+`gh api repos/{owner}/{repo}` (**403**), mientras `gh api search/repositories`
+**responde** (46/46 repos con ★, licencia y `pushed_at`). Corrección registrada en
+`agents/top.md` §4.3.
+
+### 🔴 Lo que subió esta semana: **el ecosistema del Valve Steam Frame, que nació en noviembre**
+
+El Steam Frame —headset standalone de Valve sobre SteamOS/Arch, Snapdragon 8
+Gen 3, 16 GB— salió en **septiembre de 2026** (⚠️ las fuentes se contradicen
+entre el **14** y el **18 de septiembre**; esta KB no elige). Valve publicó **los
+CAD y el documento eléctrico del puerto de expansión frontal el 12 de octubre de
+2026**. Ese acto es la causa medible de lo que sigue: **todo el cluster tiene push
+de los últimos 7 días.**
+
+| Repo | ★ | Licencia **medida** | Push | Qué es |
+|---|---|---|---|---|
+| https://github.com/Frametop/frametop | 420 | **MIT** (1.065 B) | 2026-11-24 | Escritorio KDE Plasma multi-pantalla + ratón 3D universal para el Frame |
+| https://github.com/saphid/frame-control | 171 | **MIT** (1.063 B) | 2026-11-24 | App de gestión del headset para macOS/Windows/Linux |
+| https://github.com/remotesojourner/frameplayerx | 112 | **Apache-2.0** (9.723 B + `NOTICE` 518 B) | 2026-11-25 | Reproductor de vídeo VR: plano, 180°, 360°, fisheye |
+| https://github.com/konsti219/frame-monado | 20 | **BSL-1.0** (1.280 B) | 2026-11-20 | **Port de Monado al Steam Frame** |
+| https://github.com/konsti219/frame-shell | 42 | **GPL-3.0** (35.149 B) | 2026-11-18 | Shell del entorno |
+| https://github.com/lostpanda85/frame-docs | 0 | **MIT** | 2026-11-21 | Notas no oficiales del OS: servicios, APIs, kernel, boot |
+
+> 🔵 **La lectura para un engagement:** un dispositivo cuyo fabricante publica CAD
+> y esquema eléctrico produce, en **seis semanas**, un ecosistema de herramientas
+> permisivas que el estudio puede usar como base. **Frametop (420 ★, MIT) tiene
+> más estrellas que el repo de Khronos que publica la suite de conformance
+> (OpenXR-CTS, 81 ★).** La atención de la comunidad está en el dispositivo
+> concreto, no en el estándar.
+>
+> ⚠️ **Advertencia de madurez:** `lostpanda85/frame-docs` tiene **0 ★** y se
+> declara "unofficial". El cluster es **joven, no consolidado**: ninguno de estos
+> seis repos existía hace tres meses. Se catalogan como señal de tendencia, **no
+> como fundación** — las fundaciones de la capa están en `repos/foundations.md`.
+
+### Lo que subió en el resto del plano del dispositivo
+
+| Repo | ★ | Licencia **medida** | Push | Por qué aparece ahora |
+|---|---|---|---|---|
+| https://github.com/libsdl-org/SDL | 17.063 | **Zlib** (884 B) | 2026-11-25 | Push **hoy**. El repo más estrellado de la capa, y su familia de licencia era **inédita** en esta KB |
+| https://github.com/wayvr-org/wayvr | 1.506 | **GPL-3.0** (35.149 B) | 2026-11-25 | Push **hoy**. Escritorio Wayland dentro de XR |
+| https://github.com/alvr-org/ALVR | 8.129 | **MIT** (1.093 B) | 2026-11-23 | Líder del transporte XR. Su `LICENSE` arrastra **dos titulares**: `polygraphene 2018-2019` + `alvr-org 2020-2024` |
+| https://github.com/WiVRn/WiVRn | 1.881 | **GPL-3.0** (35.149 B) | 2026-11-24 | El rival copyleft de ALVR, igual de vivo |
+| https://github.com/icosa-foundation/open-brush | 1.147 | **Apache-2.0** (11.357 B) | 2026-11-25 | Push **hoy** |
+| https://github.com/sboys3/CustomHeadsetOpenVR | 204 | **GPL-2.0** | 2026-11-24 | Driver de headset arbitrario sobre OpenVR |
+| https://github.com/lbgos/rift-s-linux | 51 | **BSL-1.0** | 2026-11-24 | Rift S en Linux. Tercera confirmación de BSL-1.0 fuera de Monado |
+| https://github.com/nix-community/nixpkgs-xr | 110 | 🔵 **MIT** (`LICENSES/MIT.txt`, 1.078 B) **+ CC0-1.0** (layout REUSE) | 2026-11-24 | Empaqueta el stack XR entero. Badge de API `NONE` y **raíz sin licencia**, pero el grant existe en `LICENSES/` (ver corrección abajo) |
+
+### 🔧 Corrección hecha dentro de este mismo pass, antes de publicar
+
+Este pass escribió primero, sobre `nix-community/nixpkgs-xr`: *"SIN archivo de
+licencia — no hay `LICENSE`, `COPYING` ni `NOTICE` en la raíz"*. **La afirmación
+era falsa y se corrigió antes del commit.** Lo que había pasado: el badge de la
+API dice `NONE`, y **7 rutas de raíz probadas dieron 404** — pero la octava ruta
+probada, `LICENSES/MIT.txt`, dio **HTTP 200 y 1.078 B de MIT**. Hay además un
+segundo grant, `LICENSES/CC0-1.0.txt`: es el **layout REUSE** (código MIT,
+metadatos CC0), no una ausencia.
+
+⇒ Es, literalmente, el error contra el que esta KB ya se había advertido dos
+veces: **"la raíz no es el repo"** (cycle 13) y **"`enumeración = 0` es ambiguo,
+no negativo"** (cycle 22, Receta 30). Queda escrito **con el error visible** y no
+sólo con el resultado, porque el valor está en el recordatorio: 7 rutas en 404
+**no** son un negativo; el negativo requiere agotar también `LICENSES/`,
+`.reuse/` y el `README`.
+
+### 🔴 La herencia del repo archivado, medida en su propio aviso de copyright
+
+`alvr-org/ALVR` (8.129 ★, MIT, 1.093 B) **no es el ALVR original**. El predecesor
+`polygraphene/ALVR` (1.840 ★) está **archivado desde 2021-11-08**. Lo verificable
+es que **el traspaso está escrito en el grant**: el `LICENSE` del repo vivo
+declara los dos titulares en dos líneas consecutivas.
+
+⇒ Es el **T74 del cycle 19 con el signo invertido**: allí el predecesor archivado
+se quedaba con las estrellas (`react-native-iap` 3.219 ★ archivado vs `openiap`
+171 ★ vivo). Aquí **el sucesor se llevó las estrellas (8.129 vs 1.840) y además el
+copyright**. 🔵 **Regla que sobrevive a los dos casos: `archived` es filtro
+obligatorio, y el `LICENSE` del repo vivo es donde se lee si hubo traspaso o
+ruptura.**
+
+### Consultas que se corrieron y **no** dieron nada de esta industria
+
+Registro explícito, porque un silencio parece cobertura:
+
+- `github trending gaming AI 2026` → listas generalistas y agregadores
+  (`trendshift.io`, Analytics Vidhya, OSS Insight). Devolvió agentes de propósito
+  general y una página (`nexairi-mentis.pages.dev`) con pinta de resumen
+  autogenerado, **descartada sin citar cifras**.
+- `top open source AI agents gaming 2026 github MIT` → devolvió `SerpentAI`
+  (**archivado**, último push 2022) y `godot_rl_agents` (push abril 2025) como si
+  fueran vigentes. **Ninguno es nuevo para esta KB**: los dos ya están catalogados
+  desde el cycle 1.
+- `basalt slam tracking vr` → **0 resultados.** El tracking inside-out SLAM de
+  código abierto **no apareció por este nombre**; queda como gap declarado.
+
+---
+
 ## 🆕 2026-11-25 — pass cycle 22
 
 **Capa nueva: el plano de la puerta** (identidad, edad verificada, consentimiento).

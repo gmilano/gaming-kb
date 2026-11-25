@@ -4,6 +4,188 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Recetas del pass cycle 23 (2026-11-25) — el plano del dispositivo
+
+### 🧩 Receta 64: **Canal 10 — medir el grant de un repo cuyo host es inalcanzable, por censo de forks**
+
+**Problema.** La pieza fundacional de una capa vive en un host que el entorno no
+alcanza (aquí: `gitlab.freedesktop.org`, **curl 000 / `connect_rejected`**). Sin
+licencia leída, la pieza no puede entrar al catálogo — y es **el runtime de
+referencia de la capa**, así que omitirla vacía el pass.
+
+**Procedimiento ejecutable.**
+
+```bash
+# 1. Confirmar que el host está muerto y NO el recurso. Tres hosts de la familia:
+for u in https://gitlab.freedesktop.org/ https://monado.freedesktop.org/ \
+         https://monado.pages.freedesktop.org/monado/; do
+  printf "%-50s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" --max-time 20 "$u"
+done
+# 000 en los tres => host policy-dead, no 404 de recurso.
+
+# 2. Censar forks en el host que SÍ responde.
+gh api -X GET search/repositories -f q="monado in:name" -f sort=stars -f order=desc \
+  --jq '.items[] | "\(.stargazers_count)\t\(.full_name)\t\(.license.spdx_id)\t\(.pushed_at[0:10])"'
+
+# 3. Leer el LICENSE de CADA fork en bytes y exigir convergencia.
+for r in mateosss/monado shinyquagsire23/monado SimulaVR/monado \
+         konsti219/frame-monado alvr-org/Monado-ALVR; do
+  printf "%-32s " "$r"
+  curl -s "https://raw.githubusercontent.com/$r/main/LICENSE" | wc -c
+done
+```
+
+**Resultado medido:** `1280` cinco veces, Boost Software License 1.0 las cinco.
+
+**Criterio de aceptación.** **n ≥ 3 forks no coordinados con byte-count idéntico**
+⇒ el grant se publica, citando el método. **n = 1** ⇒ no se publica (ese fork pudo
+relicenciar). Divergencia entre forks ⇒ **no se publica nada**, se escribe la
+divergencia como hallazgo.
+
+**Límite que hay que declarar.** El canal mide **el grant que el fork
+distribuye** —que es exactamente lo que importa para integrar— y **no** prueba qué
+dice el `HEAD` del upstream hoy. Se escribe así en la ficha.
+
+⇒ 🔵 **Copiar a toda KB cuya capa tenga upstream fuera de GitHub** (freedesktop,
+Savannah, Gitea propio, SourceHut).
+
+---
+
+### 🧩 Receta 65: **Distinguir un canal muerto de un recurso muerto, antes de borrar un catálogo**
+
+**Problema.** El procedimiento de ingesta manda `curl -sI` sobre cada URL. En este
+entorno eso devuelve **403 para las 46 direcciones del pass**, incluidas las que
+acababan de entregar su `LICENSE` byte a byte. Un pass que lea ese 403 como un 404
+**descarta el catálogo completo** y escribe "no se encontraron repos".
+
+**Procedimiento: la prueba de los dos canales.**
+
+```bash
+r="libsdl-org/SDL"
+# Canal mandado (HTML de github.com) -- aquí muerto:
+curl -sI -o /dev/null -w "HTML: %{http_code}\n" "https://github.com/$r"
+# Canal A: raw => prueba repo + rama + archivo + CONTENIDO
+curl -s -o /tmp/l -w "RAW:  %{http_code} " "https://raw.githubusercontent.com/$r/main/LICENSE.txt"; wc -c </tmp/l
+# Canal B: índice de GitHub resuelve el slug exacto
+gh api -X GET search/repositories -f q="repo:$r" --jq '.total_count'
+```
+
+**Salida medida:** `HTML: 403` · `RAW: 200 884` · `1`.
+
+**Regla de decisión.**
+
+| Patrón | Diagnóstico | Acción |
+|---|---|---|
+| **Todas** las URLs fallan con el **mismo** código | **Canal muerto** | Sustituir el canal. **No tocar el catálogo** |
+| Unas pasan y otras dan 404 | **Recurso muerto** | Investigar cada 404: rename, borrado o conjetura propia |
+| 403 en un canal + 200 en otro para el mismo repo | **Canal muerto, probado** | Documentar los dos canales en la auditoría |
+
+> 🔴 **Un 403 uniforme es un diagnóstico del canal; un 404 es un diagnóstico del
+> recurso. Confundirlos borra catálogos.** La prueba fue poder leer 884 B de
+> `SDL/LICENSE.txt` **en el mismo minuto** en que `curl -sI` daba 403 sobre el
+> mismo repo. ⇒ **Copiar a todas las KBs.**
+
+---
+
+### 🧩 Receta 66: **Experiencia XR 100 % permisiva, multi-headset, sin lock-in de engine**
+
+**Problema.** Un cliente quiere una experiencia XR que corra en Galaxy XR, Quest y
+PC, sin atarse al runtime de un fabricante ni a un engine propietario, y con el
+expediente de licencias listo para auditoría.
+
+**Stack, todo con licencia leída en bytes:**
+
+| Rol | Pieza | Licencia **medida** |
+|---|---|---|
+| Estándar / loader | https://github.com/KhronosGroup/OpenXR-SDK | **Apache-2.0** (11.358 B) |
+| Engine | **Godot 4** + https://github.com/GodotVR/godot_openxr_vendors | **MIT** (1.108 B) |
+| Entrada / mando / háptica | https://github.com/libsdl-org/SDL | **Zlib** (884 B) |
+| Runtime propio (si hay hardware raro) | fork de Monado, vía Receta 64 | **BSL-1.0** (1.280 B) |
+| Transporte a standalone | https://github.com/alvr-org/ALVR | **MIT** (1.093 B) |
+| **Prueba de conformidad** | https://github.com/KhronosGroup/OpenXR-CTS | **Apache-2.0** (11.358 B) |
+
+**Cableado.**
+
+1. El juego enlaza **sólo el loader de OpenXR**. Ningún `#include` de un SDK de
+   fabricante. Esa es la línea que compra la portabilidad.
+2. **Godot, no Unity**, por una razón medible y no estética: en Unity la capa de
+   entrada (`InputSystem`, **491 B, Unity Companion License**) **no es open
+   source** y su grant está condicionado a *"Unity-dependent projects"*. En Godot
+   la cadena entera es MIT.
+3. **SDL** para mando y háptica en el modo escritorio; dentro de XR, las acciones
+   van por los *action sets* de OpenXR.
+4. **Correr el CTS como paso de CI**, no como auditoría final. Es Apache-2.0 y
+   ejecutable: pasa a ser un *gate* de pipeline.
+5. Si el cliente embarca hardware propio ⇒ fork de Monado y driver `xrt_device`.
+   **BSL-1.0 exime al código objeto del aviso de atribución** ⇒ menos carga de
+   cumplimiento en el binario que MIT o BSD-3.
+
+**Trampas, todas medidas en este pass.**
+
+- 🔴 **No usar WiVRn** si el entregable es cerrado: **GPL-3.0, 35.149 B**.
+- 🔴 **No partir de `godot_openxr_for_godot_3.x`**: dice *"(Maintenance mode)"* y
+  no tiene push **desde 2022-12-18**. El repo vivo es `godot_openxr_vendors`.
+- 🔴 **No proponer `PadForge`** para nada de mandos: **CC-BY-NC-SA-4.0**,
+  NonCommercial, por mucho que tenga push de ayer.
+- ⚠️ **`spatial containers`**: Khronos publicó dos extensiones el **19-oct-2026**
+  (Android XR, Spatial API Level 4+), pero **Unity y Godot ponen la escena entera
+  en un único contenedor primario**. Si el diseño necesita varios contenedores
+  simultáneos, hoy eso es **OpenXR nativo**, no engine.
+
+---
+
+### 🧩 Receta 67: **Expediente CRA + RED para un producto XR vendido en la UE — con el reloj ya vencido**
+
+**Problema.** El estudio embarca un producto XR en la UE. Dos relojes ya corren y
+uno de ellos venció hace meses; el cliente cree que el CRA es "para 2027".
+
+**El reparto de sujetos, que es el núcleo de la receta.**
+
+| Sujeto | Quién es aquí | Obligación | Desde |
+|---|---|---|---|
+| **Fabricante** | **El estudio** que publica el producto | Reportar vulnerabilidades **activamente explotadas** e incidentes graves vía *Single Reporting Platform* de ENISA | 🔴 **11-sep-2026 — vencido** |
+| **Open-source steward** | Khronos, el proyecto Monado, SDL | Art. 24(3) vía Art. 71(2), **sin sanciones** | 11-dic-2027 |
+
+> 🔴 **La obligación no sube por la cadena: aterriza en quien empaqueta.** Que
+> Monado y SDL sean *stewards* con fecha 2027 y sin multa **no protege al estudio**:
+> el estudio es fabricante desde el día que vende.
+
+**Pasos.**
+
+1. **SBOM del stack XR** con la licencia **leída en bytes**, no tomada del badge:
+   loader OpenXR (11.358 B Apache), runtime (1.280 B BSL-1.0), entrada (884 B
+   Zlib), transporte (1.093 B MIT ALVR **o** 35.149 B GPL-3.0 WiVRn).
+2. **Decidir ALVR vs WiVRn por escrito**, con el byte-count como evidencia. Es la
+   única decisión de esta capa que puede obligar a liberar el producto.
+3. **Proceso de reporte** contra la plataforma de ENISA, con responsable nombrado.
+   Ya es exigible.
+4. **Si hay radio en el objeto** (mando o headset inalámbrico): RED +
+   **ciberseguridad del Reg. Delegado 2022/30, aplicable desde 1-ago-2025**, con
+   las normas **EN 18031** (DOUE 30-ene-2025, **publicadas con restricciones** ⇒
+   leer la guía de la Comisión sobre condiciones de uso). Tres partes: red, datos
+   personales/privacidad, fraude.
+5. **Cargador:** USB-C obligatorio desde **28-dic-2024** y **los headsets/
+   auriculares están en alcance**. 🔵 **Los mandos de videojuego NO lo están
+   todavía** — la Comisión encargó un estudio sobre mandos y periféricos ⇒ **es un
+   alcance que puede cambiar; se audita, no se asume.**
+6. **Si el producto se vende también fuera de la UE**, abrir **expediente por
+   región**: FCC (NA), **Giteki + PSE** (Japón; y leer la **ordenanza en vigor
+   24-jul-2026** sobre autoconfirmación, **cuyo alcance para mandos y headsets las
+   fuentes no establecen**), **ANATEL** (Brasil, **Ato 14.448/2017**, validez ~2
+   años). **Ninguna acepta el certificado de otra**: KC no vale en Japón, y CE/FCC
+   no tienen efecto legal allí.
+
+**Lo que esta receta NO resuelve, y hay que decirlo al cliente.** ⚠️ El reparto
+fabricante/steward **tiene un conflicto de fuentes sin resolver**: Red Hat y
+Greenbone sostienen que los *stewards* reportan desde sep-2026; OpenSSF y la
+Comisión, que no. **La página primaria de la Comisión no resuelve DNS en este
+entorno**, así que no se pudo verificar contra el original. La receta adopta la
+lectura Comisión/OpenSSF **porque es la más cercana al texto citado del
+Art. 71(2)**, y marca el punto como abierto. **Esto afecta sólo a la fecha del
+upstream — la del estudio como fabricante no está en disputa.**
+
+---
+
 ## 🆕 Recetas del pass cycle 22 (2026-11-25) — el plano de la puerta
 
 ### 🧩 Receta 60: **Puerta 100 % permisiva** — age gate real sin un solo componente restringido

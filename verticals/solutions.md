@@ -4,6 +4,76 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 23) — plataformas reales del **plano del dispositivo**, y el mapa propietario contra el que compiten
+
+### Plataformas open source customizables (el equivalente a Odoo en esta capa)
+
+El "Odoo" de esta capa es **el runtime**: un sistema completo, desplegable, que el
+estudio customiza con drivers y capas de API en vez de reescribir.
+
+| Plataforma | Repo | Licencia **medida** | Qué se customiza encima |
+|---|---|---|---|
+| **Monado** (runtime OpenXR de referencia) | https://github.com/mateosss/monado · https://github.com/alvr-org/Monado-ALVR | 🔵 **BSL-1.0** (1.280 B, convergente en 5 forks) | **Drivers de dispositivo** (`xrt_device`) y capas de API. Es el punto donde se enchufa un headset o un tracker que ningún runtime comercial soporta. ⚠️ Upstream en `gitlab.freedesktop.org`, **inalcanzable en este entorno** |
+| **ALVR** | https://github.com/alvr-org/ALVR | **MIT** (1.093 B) | El transporte PC→headset: códec, latencia, descubrimiento. 8.129 ★. **La opción cuando el entregable es binario cerrado** |
+| **WiVRn** | https://github.com/WiVRn/WiVRn | 🟠 **GPL-3.0** (35.149 B) | Mismo trabajo que ALVR. **Sólo si liberar el derivado es aceptable** |
+| **SDL** | https://github.com/libsdl-org/SDL | 🔵 **Zlib** (884 B) | La capa de entrada y ventana: mando, háptica, teclado, ratón. **17.063 ★.** Zlib no exige aviso en binario |
+| **OpenHMD** | https://github.com/OpenHMD/OpenHMD | 🔵 **BSL-1.0** (1.338 B) | Drivers de HMD sin pasar por OpenXR: la vía para hardware viejo o propio |
+| **StereoKit** | https://github.com/StereoKit/StereoKit | **MIT** (1.074 B) | Engine XR en C#: la app entera, no sólo el runtime. OpenXR nativo |
+| **LÖVR** | https://github.com/bjornbytes/lovr | **MIT** (1.086 B) | Engine XR en Lua. Prototipado rápido con OpenXR nativo |
+| **Open Brush** | https://github.com/icosa-foundation/open-brush | **Apache-2.0** (11.357 B) | **Aplicación XR completa y viva** (push 2026-11-25), fork de Tilt Brush. Se customiza como producto, no como biblioteca |
+
+### 🔵 Lo que esta capa tiene y las 22 anteriores no: **la plataforma de pruebas también es open source**
+
+| Pieza | Licencia **medida** | Por qué es inusual |
+|---|---|---|
+| https://github.com/KhronosGroup/OpenXR-CTS | **Apache-2.0** (11.358 B) | **El organismo de estándar publica la suite que decide la conformidad.** El estudio puede correrla sobre su propio runtime o driver sin pedir permiso ni pagar |
+
+⚠️ **Pero marca y conformidad no son lo mismo:** las fuentes indican que **usar la
+marca OpenXR requiere ser Adopter de Khronos y pagar cuota**, mientras la suite es
+abierta. No confirmado en páginas de Khronos ⇒ dato marcado como no verificado.
+**Operativamente: "pasa el CTS" es demostrable por cualquiera; "OpenXR™
+conformante" es una afirmación de marca.**
+
+### 🔴 Las dos plataformas de esta capa que **NO** se pueden usar en trabajo de cliente
+
+Se catalogan precisamente para que nadie las proponga:
+
+| Pieza | ★ | Licencia **medida** | Por qué está vetada |
+|---|---|---|---|
+| https://github.com/Unity-Technologies/InputSystem | 1.527 | 🔴 **Unity Companion License** (**491 B**) | No es open source. El grant está **condicionado a proyectos dependientes de Unity** ⇒ la pieza no se puede llevar a otro engine. **Es el archivo de licencia más corto de todo el catálogo de esta KB y el más restrictivo** |
+| https://github.com/hifihedgehog/PadForge | 367 | 🔴 **CC-BY-NC-SA-4.0** (**251.044 B**) | **NonCommercial.** Vivo (push 2026-11-24) y perfectamente inusable para un engagement. Su `LICENSE` de 4.731 líneas es licencia + epígrafe + el manifiesto completo de atribución de terceros |
+
+> ⚠️ **InputSystem es un veto cualificado, no absoluto.** No hay sustituto
+> permisivo con paridad de funciones. La recomendación real: **si el proyecto ya
+> es Unity, se usa y se documenta el lock-in como decisión tomada**; si el engine
+> está por elegir, **esto es un argumento medible a favor de Godot** (donde
+> `godot_openxr_vendors` es MIT, 1.108 B).
+
+### El mapa propietario contra el que compite
+
+| Capa | Propietario | Alternativa abierta medida | Veredicto |
+|---|---|---|---|
+| Runtime XR | SteamVR, Oculus/Meta runtime, Android XR, visionOS | **Monado** (BSL-1.0) | 🟢 **Sustituible.** Es la pieza donde el open source está más maduro |
+| Estándar de API | — (no hay propietario: OpenXR ganó) | **OpenXR-SDK** (Apache-2.0) | 🟢 **Ya es el estándar.** Android XR figura como conformante |
+| Transporte a standalone | Air Link (Meta), Steam Link | **ALVR** (MIT, 8.129 ★) / **WiVRn** (GPL-3.0) | 🟢 Sustituible, con la licencia como criterio de elección |
+| Entrada / mando | Steam Input, Unity InputSystem | **SDL** (Zlib) a bajo nivel | 🟡 **Parcial.** Falta el modelo de acciones/bindings |
+| Háptica de engine | Interhaptics y similares | **cero** | 🔴 **Gap.** `lucidgloves` (MIT) es DIY y lleva 13 meses dormido |
+| Tracking inside-out (SLAM) | Propietario en todos los headsets | **no encontrado** | 🔴 **Gap declarado.** La consulta `basalt slam tracking vr` devolvió **0 resultados** |
+| Suite de conformance | — | **OpenXR-CTS** (Apache-2.0) | 🟢 Abierta, y es lo más atípico de la capa |
+
+### Dónde pisar, según lo que el cliente pide
+
+| Pedido del cliente | Plataforma base | Nota de licencia |
+|---|---|---|
+| App XR que corra en varios headsets | **OpenXR-SDK** + engine (Godot/Unity/StereoKit) | Apache-2.0: sin fricción |
+| Soportar un headset o tracker que nadie soporta | **Monado** (fork) + **OpenXR-CTS** para probarlo | BSL-1.0 **exime al código objeto del aviso** ⇒ menos cumplimiento que MIT en binario |
+| Streaming propio a headset standalone, producto cerrado | **ALVR** | MIT. 🔴 **No WiVRn** |
+| Entrada portable multiplataforma fuera de Unity | **SDL** | Zlib, 884 B |
+| Experiencia XR dentro de Unity, ya decidido | Unity + **InputSystem** | ⚠️ Lock-in documentado por escrito |
+| Experiencia XR con engine por decidir | **Godot** + `godot_openxr_vendors` | MIT en toda la cadena |
+
+---
+
 ## 🆕 Pass 2026-11-25 (cycle 22) — plataformas reales del **plano de la puerta**, y el mapa propietario contra el que compiten
 
 ### Plataformas open source customizables (el equivalente a Odoo en esta capa)

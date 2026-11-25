@@ -11,6 +11,80 @@ updated: 2026-11-25
 
 ---
 
+## 🆕 2026-11-25 — pass cycle 23
+
+Canal de estrellas **recuperado** (ver `agents/top.md` §4.3): `search/repositories`
+responde, `repos/{owner}/{repo}` no. Esta sección vuelve a publicar ★.
+
+### El cluster que define la semana: **Valve Steam Frame**
+
+Seis repos, **todos con push en los últimos 7 días**, ninguno existía hace tres
+meses. Causa medible: Valve publicó CAD + documento eléctrico del puerto de
+expansión frontal el **12-oct-2026**. Tabla completa y advertencia de madurez en
+`agents/trending.md` de este pass.
+
+| Repo | ★ | Licencia **medida** | Push |
+|---|---|---|---|
+| https://github.com/Frametop/frametop | 420 | **MIT** (1.065 B) | 2026-11-24 |
+| https://github.com/saphid/frame-control | 171 | **MIT** (1.063 B) | 2026-11-24 |
+| https://github.com/remotesojourner/frameplayerx | 112 | **Apache-2.0** (9.723 B) | 2026-11-25 |
+| https://github.com/konsti219/frame-shell | 42 | **GPL-3.0** (35.149 B) | 2026-11-18 |
+| https://github.com/konsti219/frame-monado | 20 | **BSL-1.0** (1.280 B) | 2026-11-20 |
+| https://github.com/lostpanda85/frame-docs | 0 | **MIT** | 2026-11-21 |
+
+### Repos de la capa con push dentro de la semana
+
+| Repo | ★ | Licencia **medida** | Push |
+|---|---|---|---|
+| https://github.com/libsdl-org/SDL | 17.063 | **Zlib** (884 B) | 2026-11-25 |
+| https://github.com/wayvr-org/wayvr | 1.506 | **GPL-3.0** (35.149 B) | 2026-11-25 |
+| https://github.com/icosa-foundation/open-brush | 1.147 | **Apache-2.0** (11.357 B) | 2026-11-25 |
+| https://github.com/alvr-org/ALVR | 8.129 | **MIT** (1.093 B) | 2026-11-23 |
+| https://github.com/WiVRn/WiVRn | 1.881 | **GPL-3.0** (35.149 B) | 2026-11-24 |
+| https://github.com/dotnet/Silk.NET | 5.263 | **MIT** (1.131 B) | 2026-11-24 |
+| https://github.com/bjornbytes/lovr | 2.632 | **MIT** (1.086 B) | 2026-11-24 |
+| https://github.com/Unity-Technologies/InputSystem | 1.527 | 🔴 **Unity Companion License** (491 B) | 2026-11-24 |
+| https://github.com/hifihedgehog/PadForge | 367 | 🔴 **CC-BY-NC-SA-4.0** (251.044 B) | 2026-11-24 |
+| https://github.com/sboys3/CustomHeadsetOpenVR | 204 | **GPL-2.0** | 2026-11-24 |
+| https://github.com/libsdl-org/SDL_mixer | 767 | **Zlib** | 2026-11-22 |
+| https://github.com/KhronosGroup/OpenXR-CTS | 81 | **Apache-2.0** (11.358 B) | 2026-11-18 |
+| https://github.com/KhronosGroup/OpenXR-SDK-Source | 851 | **Apache-2.0** (11.358 B) | 2026-11-18 |
+
+### 📉 Lo que está muerto o dormido en esta capa, medido y no inferido
+
+Un catálogo de tendencia sin esta tabla recomienda cadáveres:
+
+| Repo | ★ | Estado medido |
+|---|---|---|
+| https://github.com/Alia5/GlosSI | 1.880 | 🔴 **`archived = true`** (último push 2025-11-23). Era el puente Steam Input ↔ juegos no-Steam |
+| https://github.com/polygraphene/ALVR | 1.840 | 🔴 **`archived = true`** desde 2021-11-08. Sucedido por `alvr-org/ALVR` |
+| https://github.com/GodotVR/godot_openxr_for_godot_3.x | 286 | 🔴 **"(Maintenance mode)"**, sin push desde **2022-12-18** (4 años) |
+| https://github.com/ValveSoftware/openvr | 6.705 | 🟡 8 meses sin push (2026-03-27). API predecesora; vive, no avanza |
+| https://github.com/LucidVR/lucidgloves | 2.416 | 🟡 13 meses sin push (2025-10-29) |
+| https://github.com/microsoft/MixedRealityToolkit-Unity | 6.077 | 🟡 4 meses (2026-07-24) |
+| https://github.com/cyber-sushi/makima | 252 | 🟡 10 meses (2026-01-31) |
+| https://github.com/HadesVR/HadesVR | 494 | 🟡 14 meses (2025-09-07) |
+
+> 🔴 **El patrón de esta tabla:** las piezas dormidas son **las de la era
+> pre-OpenXR** (OpenVR 8 meses, el plugin Godot 3.x 4 años, GlosSI archivado) y
+> las vivas son **las que hablan OpenXR**. La migración de estándar se puede leer
+> en las fechas de push, sin leer una sola nota de release.
+
+### Gaps declarados de este pass
+
+- **Tracking SLAM inside-out open source**: la consulta `basalt slam tracking vr`
+  devolvió **0 resultados**. Si existe, no se encuentra por ese vocabulario.
+- **Mediación/abstracción de háptica**: lo único encontrado es
+  `LucidVR/lucidgloves` (DIY, 13 meses dormido) y piezas web
+  (`lochie/web-haptics`, MIT, 2.856 ★) **que no son de gaming**. No hay capa
+  háptica permisiva de engine.
+- **Alternativa permisiva a `Unity InputSystem` con paridad**: **no existe**. SDL
+  (Zlib) cubre la entrada a bajo nivel, pero no el modelo de acciones/bindings de
+  Unity. Es el *último metro* de esta capa, igual que el cycle 19 lo encontró en
+  el plano de decisión (allí: cero SDK de engine).
+
+---
+
 ## 🆕 2026-11-25 — pass cycle 22
 
 GitHub trending de este pass, filtrado por lo que **existe y tiene grant legible**.

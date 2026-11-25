@@ -4,6 +4,74 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 23) — fundaciones del **plano del dispositivo**: estándar → runtime → transporte → entrada → manos
+
+La capa es una cadena de cinco eslabones y, a diferencia del plano de la puerta
+(cycle 22), **el eslabón del estándar es permisivo y el eslabón del transporte
+está partido en dos licencias rivales**. Las 8 fundaciones, licencia leída en
+bytes del archivo del repo:
+
+| # | Fundación | Repo | Licencia **medida** | Eslabón que cubre |
+|---|---|---|---|---|
+| 1 | **OpenXR-SDK** | https://github.com/KhronosGroup/OpenXR-SDK | **Apache-2.0** (`LICENSE`, 11.358 B) | **El estándar.** El loader que el juego enlaza; aísla al juego del headset |
+| 2 | **OpenXR-SDK-Source** | https://github.com/KhronosGroup/OpenXR-SDK-Source | **Apache-2.0** (11.358 B) | Fuente del loader + capas de API, para cuando hay que instrumentar el runtime |
+| 3 | **SDL** | https://github.com/libsdl-org/SDL | 🔵 **Zlib** (`LICENSE.txt`, **884 B**) | **La entrada.** Teclado, ratón, mando, háptica, en 1 API. 17.063 ★ |
+| 4 | **Monado** (vía forks, canal 10) | https://github.com/mateosss/monado · https://github.com/alvr-org/Monado-ALVR | 🔵 **BSL-1.0** (1.280 B, convergente en 5 forks) | **El runtime.** Implementación de referencia de OpenXR. Upstream en `freedesktop.org`, **inalcanzable aquí** |
+| 5 | **ALVR** | https://github.com/alvr-org/ALVR | **MIT** (1.093 B) | **El transporte permisivo.** PC → headset standalone. 8.129 ★ |
+| 6 | **WiVRn** | https://github.com/WiVRn/WiVRn | 🟠 **GPL-3.0** (`COPYING`, 35.149 B) | **El transporte copyleft.** Mismo trabajo que ALVR, grant incompatible con binario cerrado |
+| 7 | **OpenHMD** | https://github.com/OpenHMD/OpenHMD | 🔵 **BSL-1.0** (1.338 B) | **El driver de hardware** previo a OpenXR. Sigue siendo la vía para HMD sin runtime propio |
+| 8 | **OpenXR-CTS** | https://github.com/KhronosGroup/OpenXR-CTS | **Apache-2.0** (11.358 B) | **La prueba.** Suite de conformance ejecutable: el estudio puede verificar su propio runtime |
+
+### 🔵 Lo que hace a esta capa distinta de las 22 anteriores: **el estándar es permisivo y el estándar es REAL**
+
+En el plano de la puerta (cycle 22) la norma europea **nombraba** un repositorio
+(`longfellow-libzk-v1`) y lo volvía requisito de conformidad. Aquí la relación es
+la inversa y más cómoda: **la industria convergió en un estándar Apache-2.0 por su
+cuenta, sin que ninguna norma lo obligue.** Khronos publica el loader (11.358 B
+Apache), la fuente del loader y **la suite que prueba la conformidad** — las tres
+permisivas.
+
+⇒ El riesgo de esta capa **no está en el estándar.** Está:
+
+1. **En el transporte**, donde las dos implementaciones líderes tienen grants
+   incompatibles entre sí (ALVR MIT 8.129 ★ vs WiVRn GPL-3.0 1.881 ★).
+2. **En el último metro propietario**, donde la pieza que el estudio toca todos
+   los días —`Unity-Technologies/InputSystem`— **no es open source** (491 B,
+   Unity Companion License, grant condicionado a *"Unity-dependent projects"*).
+3. **En el upstream inalcanzable**: el runtime de referencia vive en
+   `gitlab.freedesktop.org`, que en este entorno **no responde** (curl 000,
+   `connect_rejected`).
+
+### Elección de base, según lo que el estudio entrega
+
+| Si el entregable es… | Base | Por qué |
+|---|---|---|
+| Un juego/app XR multi-headset | **OpenXR-SDK** (Apache) + engine propio | El loader es la única pieza que hace falta para no atarse a un vendor |
+| Un runtime o un driver de headset nuevo | **Monado** vía fork (BSL-1.0) + **OpenXR-CTS** para probarlo | BSL-1.0 es permisiva y **no exige atribución en binarios** (§ *"unless… solely in the form of machine-executable object code"*) |
+| Streaming a headset standalone, producto cerrado | **ALVR** (MIT) | 🔴 **No WiVRn**: GPL-3.0 obliga a liberar el derivado |
+| Streaming donde liberar el código es aceptable | **WiVRn** (GPL-3.0) | Vivo (push 2026-11-24) y con menos deuda de plataforma |
+| Entrada/mando/háptica portable | **SDL** (Zlib) | Zlib es permisiva, **884 B**, sin cláusula de atribución en binario |
+| Entrada dentro de Unity | ⚠️ **InputSystem, asumiendo el lock-in** | No hay sustituto permisivo con paridad. Se documenta como decisión, no como default |
+
+> 🔵 **BSL-1.0 tiene una propiedad que ninguna otra familia permisiva de esta KB
+> tiene** y que importa precisamente en esta capa: su cláusula de aviso **exime
+> explícitamente al código objeto**. Para un juego que se distribuye como binario,
+> BSL-1.0 es **menos trabajo de cumplimiento que MIT o BSD-3**, que exigen incluir
+> el aviso en las redistribuciones. Medido en el texto, no inferido del nombre.
+
+### Fundaciones de segundo orden (frameworks donde se escribe el código)
+
+| Repo | ★ | Licencia **medida** | Nota |
+|---|---|---|---|
+| https://github.com/dotnet/Silk.NET | 5.263 | **MIT** (1.131 B) | OpenXR + Vulkan en .NET; push 2026-11-24 |
+| https://github.com/LWJGL/lwjgl3 | 5.497 | **BSD-3-Clause** (1.518 B) | OpenXR en Java |
+| https://github.com/bjornbytes/lovr | 2.632 | **MIT** (1.086 B) | Engine XR Lua, OpenXR nativo |
+| https://github.com/StereoKit/StereoKit | 1.093 | **MIT** (1.074 B) | Engine XR C#, OpenXR nativo |
+| https://github.com/GodotVR/godot_openxr_vendors | 200 | **MIT** (1.108 B) | La vía Godot 4. ⚠️ No confundir con `godot_openxr_for_godot_3.x`, **en maintenance mode y sin push desde 2022-12-18** |
+| https://github.com/icosa-foundation/open-brush | 1.147 | **Apache-2.0** (11.357 B) | App XR completa y viva (push 2026-11-25): referencia de arquitectura, no biblioteca |
+
+---
+
 ## 🆕 Pass 2026-11-25 (cycle 22) — fundaciones del **plano de la puerta**: cuenta → identidad → edad probada → consentimiento → sesión
 
 El orden de esta capa es una cadena, y cada eslabón tiene base permisiva **menos

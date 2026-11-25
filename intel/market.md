@@ -4,6 +4,67 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo que cambió — pass cycle 23 (2026-11-25): **el plano del dispositivo tiene UN estándar de software y CUATRO homologaciones de hardware que no se sustituyen entre sí**
+
+El cycle 22 midió que las cuatro regiones legislaron **la misma puerta en cuatro
+puntos distintos del stack**. Este pass mide la capa de abajo y encuentra una
+asimetría que decide arquitectura y presupuesto:
+
+| Eje | Situación medida |
+|---|---|
+| **El software de la capa** | **Convergió solo.** OpenXR (Apache-2.0) es el estándar de facto, sin que ninguna norma lo obligue. Android XR es runtime conformante; Khronos publica hasta la suite de pruebas |
+| **El hardware de la capa** | **Divergió por regulación.** Un mando inalámbrico necesita **cuatro homologaciones separadas**, y ninguna región acepta el certificado de otra |
+
+### 🔵 1. La tabla que organiza el pass: cuatro homologaciones para un mando
+
+| Región | Régimen | Desde / estado | Acepta certificados ajenos |
+|---|---|---|---|
+| **North America** | FCC, autorización de equipo radio | Vigente | — |
+| **EMEA** | RED 2014/53/EU + **ciberseguridad** (Reg. Delegado 2022/30) | **Aplicable 1-ago-2025**; normas **EN 18031** publicadas en el DOUE **30-ene-2025** *con restricciones* | No |
+| **APAC / Japón** | **Giteki** (MIC, Ley de Radio) **+ PSE** si lleva batería | Vigente. **Revisión de ordenanza en vigor 24-jul-2026** | **No.** Las fuentes son explícitas: el marcado **KC coreano no vale en Japón**, y **CE o FCC ID no tienen efecto legal** |
+| **LATAM / Brasil** | **Homologación ANATEL** | Vigente; **Ato nº 14.448/2017** para auriculares BT/TWS. Validez ~2 años, renovable | **No.** Informes FCC o CE *apoyan* el análisis pero **no sustituyen** la homologación brasileña |
+
+> 🔴 **T93 — en el plano del dispositivo el "cuatro adapters detrás de una
+> interfaz" del cycle 22 no se puede aplicar.** En la puerta, las cuatro
+> arquitecturas regionales se podían esconder detrás de una interfaz de software
+> (Receta 61). **Aquí no:** la homologación es un acto administrativo sobre un
+> objeto físico. No hay patrón de diseño que la abstraiga; hay **cuatro
+> expedientes, cuatro laboratorios y cuatro calendarios.** Si el engagement
+> incluye hardware, eso es *scope*, no *riesgo*.
+
+### 🔵 2. El estándar: lo que sí está consolidado y es permisivo
+
+| Pieza | Licencia **medida** | Lectura |
+|---|---|---|
+| OpenXR loader (`KhronosGroup/OpenXR-SDK`) | **Apache-2.0** (11.358 B) | La abstracción del headset es permisiva y la publica el organismo de estándar |
+| Suite de conformance (`KhronosGroup/OpenXR-CTS`) | **Apache-2.0** (11.358 B) | **El estudio puede probar su propia conformidad sin pedir permiso** |
+| Runtime de referencia (Monado) | **BSL-1.0** (1.280 B, vía 5 forks) | Permisiva, y **exime al código objeto del aviso** ⇒ menos carga que MIT/BSD en un binario |
+
+⚠️ **Pero la palabra no es libre aunque la spec lo sea.** Las fuentes indican que
+el **uso de la marca OpenXR está condicionado al Adopter Programme de Khronos**
+(con cuota), mientras la suite de pruebas es de código abierto. No se pudo
+verificar el detalle de la cuota contra páginas de Khronos ⇒ **se registra como
+dato no confirmado.** 🔵 **Distinción operativa: "pasa el CTS" es verificable por
+cualquiera; "es OpenXR™ conformante" es una afirmación de marca.**
+
+### 🔵 3. Lo nuevo de 2026 en el estándar: *spatial containers*
+
+Khronos anunció **dos extensiones de contenedores espaciales el 19-oct-2026**, y
+la documentación de Google las lista en dispositivos Android XR con **Spatial API
+Level 4** o superior (Samsung Galaxy XR y las gafas XREAL AURA, con la
+actualización requerida). **La primera implementación es más estrecha que la
+spec**: en OpenXR nativo una app puede sostener varios contenedores a la vez,
+mientras **Unity y Godot ponen la escena entera en un único contenedor
+primario**.
+
+⇒ 🔵 **Patrón recurrente en esta KB, ahora en la capa de dispositivo: la spec
+llega antes que el engine.** Es el mismo "último metro" que el cycle 19 midió en
+el plano de decisión (ocho plataformas permisivas, **cero SDK de engine**).
+
+---
+
+---
+
 ## 🔴 Lo que cambió — pass cycle 22 (2026-11-25): **las cuatro regiones legislaron la misma puerta en cuatro puntos distintos del stack — y la UE nombró un repositorio en una cláusula de conformidad**
 
 El cycle 13 de esta página midió que el instrumento con más fuerza ejecutoria en
@@ -1820,6 +1881,34 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 2026-11-25 (cycle 23) — plano del dispositivo
+
+**Lo medido.** No se encontró ninguna norma federal específica de dispositivo XR.
+La FDA **no ha establecido** una clasificación de producto sanitario para
+*head-mounted displays*, y una lista de adquisición del DHS referencia **UL 8200**
+para headsets. El vector regulatorio real **no es el dispositivo: es el dato
+biométrico que el dispositivo produce.**
+
+| Caso | Fecha | Qué alega |
+|---|---|---|
+| Demanda colectiva propuesta vs Apple (Face ID) | **jul-2026** | Que el sistema captura **iris y escaneo retinal** sin consentimiento escrito separado; la teoría es que el infrarrojo de *attention tracking* puede construir un mapa de iris. **$1.000-$5.000 por infracción** (BIPA, Illinois) |
+| 7º Circuito revive demanda BIPA por *virtual try-on* | **jul-2026** | El tribunal consideró prematura la desestimación; queda abierta la excepción sanitaria |
+| Demanda BIPA vs Anthropic | **nov-2026** | Escaneos faciales sin aviso escrito del plazo de retención. **No es XR**, pero ensancha el vector |
+
+⚠️ **Honestidad de registro:** **no se encontró una demanda BIPA contra eye
+tracking dentro de un headset de VR.** El caso Apple es el más próximo y es **una
+demanda, no una sentencia**. Un artículo de *Penn State Law Review* de 2019 decía
+que BIPA no se había usado para eye tracking; **con el caso Apple esa afirmación
+queda obsoleta**, pero el precedente todavía no existe.
+
+**Oportunidad.** *Biometric-minimization audit* para XR: demostrar, con el stack
+abierto de esta capa, **qué datos salen del headset y cuáles nunca se persisten**.
+El argumento vendible en Illinois/Texas/Washington no es "cumplimos": es **"la
+mirada no se guarda, y el código lo prueba"**. Base: OpenXR-SDK (Apache) + el CTS
+para demostrar que la app no pide extensiones de gaze que no usa.
+
+<!-- cycle 23 end -->
+
 #### 🆕 cycle 22 (2026-11-25) — la puerta: **en NA el estudio NO verifica, CONSUME una señal — y ahí está el trabajo**
 
 El error de encuadre que paga un engagement en NA es ofrecer "verificación de
@@ -2376,6 +2465,45 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 2026-11-25 (cycle 23) — plano del dispositivo
+
+**Es la región con el calendario más denso y es la que manda el diseño.**
+
+| Norma | Fecha operativa | Qué alcanza |
+|---|---|---|
+| **RED — requisitos de ciberseguridad** (Reg. Delegado 2022/30) | **Aplicable 1-ago-2025** | Todo equipo radio ⇒ **mando inalámbrico y headset entran**. Fecha movida a 2025 por un reglamento de 2023 porque las normas armonizadas necesitaban más tiempo |
+| **Serie EN 18031** | Publicada en el DOUE **30-ene-2025**, *con restricciones* | Tres partes: **protección de red, datos personales y privacidad, protección contra el fraude**. La Comisión emitió guía sobre las condiciones de uso |
+| **Cargador común (USB-C)** | **Aplicable 28-dic-2024** | **Headsets y auriculares SÍ están en alcance.** 🔴 **Los mandos de videojuego NO** — la Comisión **estudió** extender el alcance y encargó un estudio específico sobre mandos y periféricos |
+| **Cyber Resilience Act** (Reg. UE 2024/2847) | En vigor **10-dic-2024** | "Productos con elementos digitales" ⇒ **el runtime XR también**, no sólo el plástico |
+
+#### 🔴 El hallazgo que cambia quién paga: CRA, fabricante vs *steward*
+
+| Sujeto | Obligación de reporte | Desde |
+|---|---|---|
+| **Fabricante** (= el estudio que publica el producto) | Vulnerabilidades **activamente explotadas** e incidentes graves, por la *Single Reporting Platform* de ENISA (abierta **11-sep-2026**) | **11-sep-2026 — ya vigente** |
+| ***Open-source steward*** (= Khronos, el proyecto Monado, SDL) | Art. 24(3), vía Art. 71(2) | **11-dic-2027**, y **sin sanciones** |
+
+⇒ 🔴 **La obligación no sube por la cadena: aterriza en el estudio.** Un estudio
+que embarca Monado + SDL en un producto vendido en la UE es **fabricante**, y su
+reloj de reporte **ya corre**. El upstream es *steward*: más tarde y sin multa.
+**Esto es presupuesto de ingeniería en 2026, no planificación para 2027.**
+
+⚠️ **Conflicto de fuentes que este pass NO pudo resolver y deja escrito.** La
+guía de *stewardship* de **Red Hat** y el blog de **Greenbone** afirman que los
+stewards reportan **desde septiembre de 2026** (Greenbone detalla 24 h / 72 h /
+14 días). **OpenSSF** publica lo contrario y dice explícitamente que el 11-sep-2026
+*no* introduce obligación para stewards. **La página primaria de la Comisión
+(`digital-strategy.ec.europa.eu`) no resuelve DNS en este entorno** ⇒ no se pudo
+verificar contra la fuente original. **Se adopta la lectura Comisión/OpenSSF por
+ser la más cercana al texto citado (Art. 71(2)), y el conflicto queda abierto.**
+
+**Oportunidad.** *CRA readiness* para el runtime XR: SBOM del stack
+(OpenXR + Monado + SDL + transporte), proceso de reporte contra la plataforma de
+ENISA, y la decisión ALVR-MIT vs WiVRn-GPL tomada por escrito. Es trabajo
+facturable con **fecha ya pasada**, que es el mejor argumento comercial que hay.
+
+<!-- cycle 23 end -->
 
 #### 🆕 cycle 22 (2026-11-25) — la puerta: **la UE nombró el algoritmo y publicó el código; la oportunidad es la integración, no la criptografía**
 
@@ -3049,6 +3177,37 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 2026-11-25 (cycle 23) — plano del dispositivo
+
+**Es la región donde el dispositivo se homologa país por país y donde el
+contenido XR tiene una puerta aparte.**
+
+| País | Lo medido |
+|---|---|
+| **Japón** | **Giteki** (MIC, Ley de Radio) obligatorio para inalámbricos; **PSE** adicional si lleva batería. **Revisión de ordenanza en vigor 24-jul-2026** que lleva cierto *specified special radio equipment* al régimen de **autoconfirmación** de conformidad técnica. ⚠️ **Las fuentes NO establecen si un mando o un headset entran en esa categoría** ⇒ gap declarado: hay que leer el texto de la ordenanza. Plazo típico Wi-Fi/BT: **4-8 semanas**; el certificado no caduca si el producto no cambia |
+| **China** | Contenido VR sujeto a regulación de contenido: lo que toca **historia, política o símbolos religiosos** requiere aprobación previa de la **NRTA**, y el contenido VR de juego necesita **un permiso tipo ISBN aparte** ⇒ **+3-6 meses** para contenido extranjero. Plan de Pekín de gafas inteligentes con objetivo de **>40.000 M RMB para 2030**. ⚠️ El dato de **CCC + GB 4943.1** proviene de un blog comercial y **no se pudo confirmar en fuente oficial** |
+| **Corea** | **KC** es marcado coreano de seguridad y **no sustituye a Giteki**. **AI Basic Act en vigor 22-ene-2026** (norma general de AI, no de dispositivo) |
+| **Vietnam / Taiwán** | Ley de AI vietnamita en vigor **1-mar-2026**; **AI Basic Act** taiwanés aprobado **dic-2025**. Generales, no de dispositivo |
+| **India** | Guía de clasificación **BIS CRS, ref. `Reg/2026/G-01`, de 13-ago-2026**, para *Audio / Smart / AR / MR Glasses* |
+
+🔵 **Y es la región donde está el runtime conformante de mayor despliegue:**
+Android XR aparece listado por Khronos como conformante OpenXR, con Galaxy XR
+(Snapdragon XR2 Gen 2) y **XREAL AURA (conformance 2026-09-12)**.
+⚠️ La ficha de Galaxy XR lleva fecha de conformance **2024-12-08**, anterior al
+lanzamiento del headset ⇒ **probablemente refleja el envío original y no el estado
+actual**; se registra la inconsistencia en vez de citar la fecha como si fuera
+limpia. **No se encontró ninguna cifra de adopción ni de número de
+desarrolladores para Galaxy XR.**
+
+**Oportunidad.** Dos carriles distintos, y conviene no mezclarlos:
+(a) **Port a Android XR** sobre OpenXR 1.1 + extensiones de vendor — es el camino
+de volumen y el estándar hace el trabajo pesado;
+(b) **Dossier de homologación multi-país** para quien embarca hardware, donde el
+entregable es el calendario (4-8 semanas Japón) y la lectura de la ordenanza de
+julio de 2026.
+
+<!-- cycle 23 end -->
+
 #### 🆕 cycle 22 (2026-11-25) — la puerta: **en APAC no se construye, se integra — y la segunda capa es la que se vende**
 
 APAC es la región donde la oferta de esta capa **se invierte**: el componente de
@@ -3686,6 +3845,56 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 2026-11-25 (cycle 23) — plano del dispositivo
+
+**Lo medido, y es menos de lo que esta KB querría.**
+
+- **Brasil, ANATEL:** la homologación es obligatoria para producto con
+  radiofrecuencia. Alcanza **mandos con Bluetooth o radio 2,4 GHz**, **headsets
+  gamer inalámbricos** y **consolas con Wi-Fi/BT** (tratadas como aparatos de
+  telecomunicaciones). **Ato nº 14.448/2017** sigue citado como vigente en 2026
+  para auriculares BT y TWS. Validez **~2 años**, renovable.
+- **Lo que queda fuera:** un mando **sólo por cable** tiene análisis distinto, y
+  un mando **sólo infrarrojo** normalmente queda fuera **si la ficha técnica
+  confirma la ausencia de RF**.
+- **Lo que no sustituye:** informes **FCC o CE pueden apoyar** el análisis y **no
+  reemplazan** la homologación brasileña.
+- **Un mando vendido en kit con consola o con dongle puede exigir análisis
+  propio** ⇒ el *bundle* no hereda la homologación de sus partes.
+
+🔴 **Gaps declarados de LATAM en este pass, escritos porque el silencio parece
+cobertura:**
+
+1. **No se encontró ninguna fuente oficial de ANATEL** para estas categorías. Todo
+   lo anterior proviene de **consultoras de certificación**, no de la agencia.
+2. **No se encontró ningún cambio normativo de 2026** específico para mandos o
+   headsets en Brasil.
+3. Las fuentes de consultoría **mezclan normas y fechas** (citan Resolução
+   715/2019 y 780/2025 de forma inconsistente) ⇒ **la regla vigente debe
+   confirmarse en la Lista de Referência y en los atos de la propia ANATEL.**
+4. **No se midió** en este pass el tratamiento LGPD del dato biométrico de
+   *eye/hand tracking* en Brasil. Es el hueco más relevante que deja el pass: en
+   NA ese vector ya tiene litigio y aquí no se sabe.
+5. **México, Argentina, Chile, Colombia: cero resultados de dispositivo.** No se
+   encontró régimen de homologación comparable documentado para esta capa.
+
+⚠️ **Y un sesgo de instrumento que esta KB ya tenía anotado y que este pass
+confirma cuantitativamente:** las **cuatro** consultas regionales mandadas por el
+procedimiento (`AI gaming {region} 2026 adoption regulation players`) devolvieron
+**material de iGaming/apuestas en las cuatro regiones**, no de videojuego. En
+LATAM el resultado fue íntegramente iGaming brasileño y colombiano. **El aviso del
+README se confirma: para investigar esta industria el instrumento correcto dice
+"video game", no "gaming".**
+
+**Oportunidad.** La honesta, dado lo medido: LATAM es el **mercado de
+implementación**, no el de norma. El argumento es el del cycle 4 —**48,8 % de
+aceptación de AI player-facing frente a ~85 % de rechazo global**— aplicado a esta
+capa: **primer lanzamiento de una experiencia XR con AI**, con homologación ANATEL
+como única barrera dura y sin el calendario CRA/RED encima. Es una ventaja de
+*time-to-market*, y conviene venderla como tal y no como ahorro.
+
+<!-- cycle 23 end -->
 
 #### 🆕 cycle 22 (2026-11-25) — la puerta: **la única región con salida por PRODUCTO, y un sustrato open source que no existe**
 

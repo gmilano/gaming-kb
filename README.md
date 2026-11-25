@@ -50,7 +50,22 @@ updated: 2026-11-25
 > bibliotecas **Apache-2.0/MPL-2.0**, apps **EUPL-1.2**— y el modo de falla
 > cambia: si esta capa falla, no se ve mal, **nadie entra**.
 
-> **Último pass: 2026-11-25 (cycle 22).**
+>
+> **Desde el cycle 23**, el **plano del dispositivo**: cómo el jugador **toca** el
+> juego — entrada, mando, háptica, runtime XR, manos y ojos. Es la **primera capa
+> de esta KB donde el estándar convergió SOLO**: OpenXR es Apache-2.0 y Khronos
+> publica hasta la **suite de conformance** (`OpenXR-CTS`, 11.358 B), sin que
+> ninguna norma lo obligue — al revés del cycle 22, donde la UE *nombraba* un
+> repositorio. La fricción se movió al **objeto físico**: un mando inalámbrico
+> necesita **cuatro homologaciones** (FCC · RED+EN 18031 · Giteki+PSE · ANATEL) y
+> **ninguna región acepta el certificado de otra**, así que —a diferencia del age
+> gate— **esto no se puede esconder detrás de una interfaz**: son cuatro
+> expedientes. Y trae el primer reloj **ya vencido** de esta KB: el estudio que
+> empaqueta Monado + SDL es **fabricante** bajo el CRA y reporta desde el
+> **11-sep-2026**, mientras el upstream es *steward* y no entra hasta el
+> **11-dic-2027, sin sanciones**.
+
+> **Último pass: 2026-11-25 (cycle 23).**
 
 ## Estructura
 
@@ -104,6 +119,22 @@ gaming-kb/
   **Receta 63**. Corolario medido: **la confiabilidad del byte-count es por
   FAMILIA** — Apache-2.0 midió **8 pesos distintos en un solo pass** (9.452 a
   11.606), mientras **GPL-3.0 midió 35.149 B en tres repos independientes**.
+  🔴 **Y la octava, del cycle 23: el archivo más CORTO puede ser el más
+  RESTRICTIVO.** `Unity-Technologies/InputSystem` (**1.527 ★**, vivo) tiene el
+  `LICENSE.md` **más corto de todo el catálogo —491 B—** y **no es open source**:
+  es un **puntero a un destino propietario** (Unity Companion License) cuyo grant
+  está condicionado a *"Unity-dependent projects"*. Orden medido en un solo pass:
+  **491 B (propietario) < 884 B (Zlib, permisiva) < 1.064-1.131 B (MIT) <
+  1.280/1.338 B (BSL-1.0) < 1.488/1.518 B (BSD-3)**. Y el otro extremo existe
+  también: `hifihedgehog/PadForge` tiene **251.044 B** de `LICENSE` que son
+  CC-BY-NC-SA-4.0 + un epígrafe + **4.700 líneas de manifiesto de atribución de
+  terceros** — *NonCommercial*, es decir inusable, con push de ayer.
+  🔵 **Y el corolario del método: BSL-1.0 midió 1.280 B y 1.338 B para un grant
+  cuyo texto operativo es palabra por palabra idéntico** — los 58 B de diferencia
+  son la línea de título y **el ancho de plegado de línea**. La varianza del
+  byte-count puede ser **tipográfica**, no jurídica. El procedimiento del upstream
+  inalcanzable es el **canal 10** y la **Receta 64**; el de no confundir un canal
+  muerto con un recurso muerto, la **Receta 65**.
 - **En la capa de modelos generativos, código y pesos son dos licencias
   distintas, en archivos con nombres distintos** (`LICENSE_weights`,
   `MODEL_LICENSE`, o un addendum dentro del propio `LICENSE`). Medición del

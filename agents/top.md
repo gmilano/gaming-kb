@@ -4,6 +4,317 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo más importante del pass 2026-11-25 (cycle 23): **el plano del DISPOSITIVO** —cómo el jugador toca el juego: entrada, mando, háptica, runtime XR, manos y ojos— y el **canal 10: el censo de forks como instrumento de licencia cuando el upstream es inalcanzable**
+
+Los 22 passes anteriores midieron qué hace el juego (NPC, assets, diálogo), cómo
+se produce (la fábrica), cómo se opera (live-ops, decisión, dinero), cómo se mira
+(espectador) y quién entra (la puerta). **Ninguno midió el sustrato físico por el
+que el jugador toca el juego.** Medición sobre los 9 archivos de esta KB, *antes*
+de escribir una línea:
+
+| Término | Archivos | Ocurrencias | Nota |
+|---|---|---|---|
+| `OpenXR` | 0 | **0** | El estándar de la capa |
+| `Monado` | 0 | **0** | El runtime de referencia |
+| `SteamVR` | 0 | **0** | — |
+| `headset` | 0 | **0** | — |
+| `gamepad` | 0 | **0** | — |
+| `controller` | 0 | **0** | — |
+| `SDL2` / `libsdl` | 0 | **0** | La biblioteca de entrada más usada del mundo |
+| `joystick` | 0 | **0** | — |
+| `BSL-1.0` / `Boost Software` | 0 | **0** | Familia de licencia nunca pesada por esta KB |
+| `freedesktop` | 0 | **0** | El host del upstream de la capa |
+
+### ⚠️ Y un falso positivo que importa más que los ceros
+
+`Quest` devolvió **8 archivos** en el conteo inicial. Ninguno es Meta Quest:
+**los 8 son `GDQuest`**, una organización de tutoriales de Godot
+(`GDQuest_GDScript_formatter`, `GDQuest/godot-steering-ai-framework`). `VR`
+devolvió 7 archivos y **ninguno es la capa**: son prosa regulatoria sobre
+exenciones ("AR/VR citados explícitamente… queda exento sólo si").
+
+> 🔴 **T88 — el conteo de términos sin desambiguar el sentido fabrica cobertura.**
+> Un pass que hubiera leído "Quest: 8 archivos" habría concluido que la capa de
+> dispositivo ya estaba cubierta y habría buscado otra. El procedimiento correcto
+> es el que se usó aquí: **leer los aciertos, no contarlos.** Mismo género de
+> error que la `nombre`-como-entidad de otras KBs, pero al revés: aquí el ruido no
+> entra como dato, **impide que entre el dato.**
+
+---
+
+## 1. El catálogo medido del plano del dispositivo
+
+**Licencia leída en bytes del archivo del repo** sobre
+`raw.githubusercontent.com` en la rama default (canales 1 y 9 de esta casa).
+Estrellas y `pushed_at` leídos por `gh api search/repositories`. **46 direcciones
+verificadas en dos canales independientes, 46 vivas.**
+
+### 1.1 Runtimes y estándar XR
+
+| Repo | ★ | Licencia **medida** | Último push | Estado |
+|---|---|---|---|---|
+| https://github.com/KhronosGroup/OpenXR-SDK | 1.173 | **Apache-2.0** (`LICENSE`, 11.358 B) | 2026-10-16 | 🟢 El loader. Es la pieza que el juego enlaza |
+| https://github.com/KhronosGroup/OpenXR-SDK-Source | 851 | **Apache-2.0** (11.358 B) | 2026-11-18 | 🟢 Fuente del loader + capas de API |
+| https://github.com/KhronosGroup/OpenXR-CTS | 81 | **Apache-2.0** (11.358 B) | 2026-11-18 | 🟢 **La suite de conformance es open source** (ver §3.4) |
+| https://github.com/alvr-org/ALVR | 8.129 | **MIT** (1.093 B) | 2026-11-23 | 🟢 Streaming a headset standalone. Líder de la capa por estrellas |
+| https://github.com/WiVRn/WiVRn | 1.881 | **GPL-3.0** (`COPYING`, 35.149 B) | 2026-11-24 | 🟢 Alternativa a ALVR; **copyleft** |
+| https://github.com/OpenHMD/OpenHMD | 1.291 | **BSL-1.0** (1.338 B) | 2026-11-05 | 🟢 Drivers de HMD previos a OpenXR. Familia nueva para esta KB |
+| https://github.com/wayvr-org/wayvr | 1.506 | **GPL-3.0** (35.149 B) | 2026-11-25 | 🟢 Escritorio Wayland dentro de XR |
+| https://github.com/ValveSoftware/openvr | 6.705 | **BSD-3-Clause** (1.488 B) | 2026-03-27 | 🟡 Vivo pero lento (8 meses). API predecesora de OpenXR |
+
+### 1.2 Entrada, mando y háptica
+
+| Repo | ★ | Licencia **medida** | Último push | Estado |
+|---|---|---|---|---|
+| https://github.com/libsdl-org/SDL | 17.063 | 🔵 **Zlib** (`LICENSE.txt`, **884 B**) | 2026-11-25 | 🟢 **El repo más estrellado de todo este plano.** Familia nueva (§3.1) |
+| https://github.com/sezanzeb/input-remapper | 6.069 | **GPL-3.0** (35.149 B) | 2026-11-20 | 🟢 Remapeo de entrada en Linux |
+| https://github.com/univrsal/input-overlay | 4.314 | **GPL-2.0** (18.042 B) | 2026-11-10 | 🟢 Visualización de entrada (streaming/esports) |
+| https://github.com/LucidVR/lucidgloves | 2.416 | **MIT** (1.064 B) | 2025-10-29 | 🟡 Guantes hápticos DIY. 13 meses sin push |
+| https://github.com/Unity-Technologies/InputSystem | 1.527 | 🔴 **Unity Companion License** (491 B) — **NO permisiva** | 2026-11-24 | 🟢 Vivo. **Ver §3.2: el hallazgo nº1 del pass** |
+| https://github.com/hifihedgehog/PadForge | 367 | 🔴 **CC-BY-NC-SA-4.0** (**251.044 B**) — **NonCommercial** | 2026-11-24 | 🟢 Vivo e inusable para trabajo de cliente (§3.3) |
+| https://github.com/cyber-sushi/makima | 252 | **GPL-3.0** (35.149 B) | 2026-01-31 | 🟡 10 meses sin push |
+| https://github.com/xan105/InputFusion | 109 | ⚠️ **LGPL-3.0** (7.652 B) — **grant incompleto** (§3.5) | 2026-11-01 | 🟢 Vivo |
+| https://github.com/Alia5/GlosSI | 1.880 | **Apache-2.0** (11.357 B) | 2025-11-23 | 🔴 **ARCHIVADO.** Puente Steam Input ↔ juegos no-Steam |
+
+### 1.3 Frameworks que ya hablan OpenXR (donde el estudio escribe código)
+
+| Repo | ★ | Licencia **medida** | Último push | Estado |
+|---|---|---|---|---|
+| https://github.com/dotnet/Silk.NET | 5.263 | **MIT** (`LICENSE.md`, 1.131 B) | 2026-11-24 | 🟢 Bindings .NET de OpenXR/Vulkan |
+| https://github.com/LWJGL/lwjgl3 | 5.497 | **BSD-3-Clause** (`LICENSE.md`, 1.518 B) | 2026-09-10 | 🟢 Bindings Java |
+| https://github.com/microsoft/MixedRealityToolkit-Unity | 6.077 | **MIT** | 2026-07-24 | 🟡 4 meses sin push |
+| https://github.com/bjornbytes/lovr | 2.632 | **MIT** (1.086 B) | 2026-11-24 | 🟢 Engine XR en Lua, OpenXR nativo |
+| https://github.com/StereoKit/StereoKit | 1.093 | **MIT** (1.074 B) | 2026-11-04 | 🟢 Engine XR C#, OpenXR nativo |
+| https://github.com/GodotVR/godot_openxr_vendors | 200 | **MIT** (1.108 B) | 2026-11-10 | 🟢 Loaders de vendor para Godot 4 |
+| https://github.com/GodotVR/godot_openxr_for_godot_3.x | 286 | **MIT** | 2022-12-18 | 🔴 **"(Maintenance mode)"** y 4 años sin push |
+| https://github.com/icosa-foundation/open-brush | 1.147 | **Apache-2.0** (11.357 B) | 2026-11-25 | 🟢 App XR completa de referencia (fork de Tilt Brush) |
+
+### 1.4 Manos, ojos y teleoperación
+
+| Repo | ★ | Licencia **medida** | Último push | Estado |
+|---|---|---|---|---|
+| https://github.com/jaredrhod/barehands | 1.129 | 🟠 **AGPL-3.0** (34.523 B) | 2026-08-30 | 🟡 Tracking de manos. **AGPL ⇒ revisar antes de integrar** |
+| https://github.com/Improbable-AI/VisionProTeleop | 838 | **MIT** | 2025-12-28 | 🟡 Manos/cabeza del Vision Pro como fuente de datos |
+| https://github.com/oculus-samples/Unity-NorthStar | 476 | **MIT** | 2026-11-10 | 🟢 Muestra oficial de Meta, grant permisivo |
+| https://github.com/HadesVR/HadesVR | 494 | **MIT** (1.063 B) | 2025-09-07 | 🟡 HMD DIY completo (hardware + driver). 14 meses |
+
+---
+
+## 2. 🔵 El upstream de esta capa **no está en GitHub, y en este entorno no está en ninguna parte**
+
+**Monado** es el runtime OpenXR de referencia —el que, según la prensa técnica de
+2026, está debajo de Android XR, NVIDIA CloudXR, Pico y Snapdragon Spaces—. Su
+casa canónica es `gitlab.freedesktop.org/monado/monado`. Medición de este pass:
+
+| Host | Resultado |
+|---|---|
+| `gitlab.freedesktop.org` | **curl 000** — `connect_rejected`, HTTP 403 del proxy de egreso |
+| `monado.freedesktop.org` | **curl 000** — `connect_rejected` |
+| `monado.pages.freedesktop.org` | **curl 000** — `connect_rejected` |
+
+⇒ **Toda la familia `freedesktop.org` es host policy-dead en este entorno.** No es
+un 404 y no dice nada sobre el proyecto: dice que **el canal no existe aquí**.
+
+### 2.1 🔴 Canal 10 — el censo de forks como instrumento de licencia
+
+El grant de Monado **sí es medible**, indirectamente, porque sus forks viven en
+GitHub y el archivo de licencia viaja con el fork:
+
+| Fork en GitHub | ★ | `LICENSE` medido | Push |
+|---|---|---|---|
+| https://github.com/mateosss/monado | 32 | **1.280 B** | 2026-09-03 |
+| https://github.com/shinyquagsire23/monado | 28 | **1.280 B** | 2023-10-17 |
+| https://github.com/SimulaVR/monado | 28 | **1.280 B** | 2023-04-02 |
+| https://github.com/konsti219/frame-monado | 20 | **1.280 B** | 2026-11-20 |
+| https://github.com/alvr-org/Monado-ALVR | 19 | **1.280 B** | 2026-10-28 |
+
+**5 forks independientes, 5 veces el mismo byte-count, 5 veces Boost Software
+License 1.0.** La convergencia es la evidencia: un grant leído en cinco copias
+que no se coordinan entre sí.
+
+> 🔵 **Canal 10 (procedimiento).** Cuando el host canónico de un repo es
+> inalcanzable, **censar sus forks en el host que sí responde y exigir
+> convergencia de byte-count.** Un solo fork no prueba nada (puede haber
+> relicenciado); **n forks no coordinados con el mismo conteo, sí.** Receta 64.
+> Límite declarado: el canal mide **el grant que el fork distribuye**, que es lo
+> que importa para integrar — no prueba qué dice el `HEAD` del upstream hoy.
+
+---
+
+## 3. Los cinco hallazgos de licencia del pass
+
+### 3.1 🔵 **Zlib, 884 B: la familia permisiva más usada de la capa es la más corta que esta KB ha medido**
+
+`libsdl-org/SDL` —**17.063 ★, el repo más estrellado de todo este plano**— no es
+MIT. Es **Zlib**, y su `LICENSE.txt` mide **884 B**: por debajo de la banda MIT
+(~1.050-1.130 B) de esta KB. Toda la familia `SDL_*` la hereda
+(`libsdl-org/SDL_mixer`, 767 ★, Zlib, push 2026-11-22).
+
+### 3.2 🔴 **Hallazgo nº1: el archivo de licencia más CORTO del catálogo es el más RESTRICTIVO**
+
+`Unity-Technologies/InputSystem` (**1.527 ★**, push **2026-11-24**, muy vivo) es
+la abstracción de entrada que usa la mayoría de los juegos Unity. Su badge de API
+dice `NOASSERTION`. Su `LICENSE.md` mide **491 B** y dice, íntegro:
+
+> *"Input System © 2023 Unity Technologies. Licensed under the **Unity Companion
+> License for Unity-dependent projects** (see
+> https://unity3d.com/legal/licenses/unity_companion_license)."*
+
+Tres cosas a la vez:
+
+1. **Es un PUNTERO** —el canal 9 del cycle 22— pero esta vez **apunta a un
+   destino propietario**, no a Creative Commons ni a una subcarpeta.
+2. **El grant está condicionado al sustrato**: vale *"for Unity-dependent
+   projects"*. La licencia no te deja llevarte la pieza a otro engine. Es una
+   restricción de **alcance** escrita dentro del grant.
+3. **491 B es el archivo de licencia más corto de todo el catálogo de esta KB.**
+   Un lector que aplique "archivo corto ⇒ permisivo tipo MIT" se equivoca en el
+   caso **más consecuente** de la capa.
+
+> 🔴 **T89 — la correlación "corto ⇒ permisivo" no es débil, es inversa en su
+> extremo.** Orden medido en este pass: **491 B (propietario) < 884 B (Zlib,
+> permisivo) < 1.064-1.131 B (MIT) < 1.280/1.338 B (BSL-1.0) < 1.488/1.518 B
+> (BSD-3)**. El archivo más corto es el único no-open-source del tramo.
+
+### 3.3 🔴 **251.044 B: un archivo de licencia que es licencia + epígrafe + el cierre entero de dependencias**
+
+`hifihedgehog/PadForge` (367 ★, push 2026-11-24) tiene un `LICENSE` de
+**251.044 B / 4.731 líneas**. Su composición, leída:
+
+| Tramo | Contenido |
+|---|---|
+| Línea 1 | `Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International` |
+| Líneas 3-5 | Un **epígrafe de las escrituras** (2 Nefi 25:26) |
+| El resto (~4.700 líneas) | **Manifiesto de atribución de terceros**, entrada por entrada (p. ej. `Concentus` → Opus, Xiph.Org, Skype, CSIRO, Microsoft…, con la nota *"Ships unmodified inside the executable as Concentus.dll"*) |
+
+Dos lecturas, y las dos cuentan:
+
+- **Operativa: el grant raíz es NonCommercial** ⇒ **PadForge no es utilizable en
+  trabajo de cliente**, con 367 ★ y push de ayer. Se cataloga para que nadie lo
+  proponga, no para usarlo.
+- **Metodológica: es el primer repo de esta KB donde el cierre de dependencias
+  está AUTO-DOCUMENTADO.** El cycle 14 estableció el canal 4 —*el repo no es su
+  clausura*, la restricción puede vivir en una dependencia nombrada sólo en la
+  prosa—. PadForge es **el caso inverso**: declara su clausura completa, en el
+  mismo archivo, con el rol de cada pieza en el binario. 🔵 **El canal 4 tiene un
+  atajo cuando el proyecto hizo el trabajo: leer el manifiesto antes de
+  reconstruirlo.**
+
+### 3.4 🔵 **BSL-1.0 cae DENTRO de la banda MIT, y tiene dos pesos que difieren sólo en el ancho de línea**
+
+Dos byte-counts medidos para un mismo grant:
+
+| Byte-count | Dónde | Diferencia |
+|---|---|---|
+| **1.338 B** | `OpenHMD/OpenHMD` | Lleva la línea de título `Boost Software License - Version 1.0 - August 17th, 2003` + línea en blanco; texto plegado a ~72 columnas |
+| **1.280 B** | Los 5 forks de Monado | **Sin** línea de título; mismo texto plegado a ~80 columnas |
+
+`diff` corrido entre ambos: **el texto operativo es palabra por palabra
+idéntico.** Los 58 B de diferencia son la línea de título más el replegado.
+
+> 🔵 **T90 — dos pesos, un grant, y la causa no es jurídica sino tipográfica.**
+> Es la demostración más limpia que esta KB tiene de por qué el byte-count
+> **alarma y nunca decide**: aquí la varianza no viene de un carve-out ni de una
+> versión distinta, sino de **dónde el autor cortó las líneas**. Y 1.280-1.338 B
+> cae **dentro** de la banda donde esta KB espera MIT ⇒ en el plano del
+> dispositivo el checksum tiene **su peor poder discriminante de toda la KB**.
+
+### 3.5 ⚠️ **LGPL-3.0 en 7.652 B: un addendum cuya base no está en el repo**
+
+`xan105/InputFusion` tiene un único `LICENSE` de **7.652 B**: el texto de la
+**LGPL-3.0**. Pero la LGPL-3.0 declara en su §0 que *incorpora los términos de la
+versión 3 de la GPL, suplementados por los permisos adicionales listados abajo*.
+Los 7.652 B **son sólo el suplemento**. Se probaron **8 rutas** para la base GPL-3.0
+(`COPYING`, `COPYING.LESSER`, `COPYING.txt`, `GPL-3.0.txt`, `LICENSE.GPL`,
+`gpl-3.0.txt`, `LICENSES/GPL-3.0.txt`, `licence.txt`): **8 de 8 dieron 404**.
+
+> ⚠️ **T91 — la tercera forma de "el archivo de licencia no es la licencia".** El
+> cycle 22 encontró el **puntero** (apunta afuera). Aquí aparece el **addendum
+> huérfano**: el archivo es *parte* de un grant cuya otra mitad no se distribuye.
+> No es un defecto fatal —la LGPL-3.0 se identifica sin ambigüedad— pero **7.652 B
+> es un peso que no corresponde a ningún grant completo**, y entra al catálogo
+> marcado como tal.
+
+---
+
+## 4. Corroboraciones y correcciones de método
+
+### 4.1 ✅ GPL-3.0 sigue siendo la única familia donde el checksum decide
+
+**35.149 B, 5 repos independientes en este pass**: `WiVRn` (`COPYING`),
+`wayvr-org/wayvr`, `sezanzeb/input-remapper`, `konsti219/frame-shell`,
+`cyber-sushi/makima`. Sumado a los 3 del cycle 22 ⇒ **8 repos, 8 veces 35.149 B,
+cero varianza.**
+
+### 4.2 ✅ Apache-2.0 vuelve a dispersarse: **3 pesos en un solo pass**
+
+| Peso | Repos |
+|---|---|
+| **9.723 B** | `remotesojourner/frameplayerx` |
+| **11.357 B** | `icosa-foundation/open-brush`, `Alia5/GlosSI` |
+| **11.358 B** | `KhronosGroup/OpenXR-SDK`, `OpenXR-SDK-Source`, `OpenXR-CTS` |
+
+El peso **9.723 B** es exactamente el que el cycle 16 midió en
+`AccessKit/accesskit` y registró como anomalía. **Deja de ser anomalía: es un
+peso recurrente de la familia.** Confirma el T70 corregido del cycle 19 (Apache
+tiene ≥6 pesos; esta KB lleva ya ≥8).
+
+### 4.3 🔧 **Corrección a una afirmación del cycle 22 (hace horas, no meses)**
+
+`repos/trending.md` del cycle 22 escribió: *"api.github.com está bloqueada por la
+política de red de este entorno ⇒ esta sección no publica conteos de estrellas"*.
+**Medido este pass, la frase es demasiado amplia y por eso cuesta datos:**
+
+| Endpoint | Resultado medido |
+|---|---|
+| `gh api search/repositories` | ✅ **Funciona.** 46/46 repos devueltos con ★, licencia, `pushed_at`, `archived` |
+| `gh api repos/{owner}/{repo}` | ❌ **HTTP 403** — *"GitHub access to this repository is not enabled for this session"* |
+
+⇒ No es "api.github.com bloqueada": es **el endpoint por-repo restringido al scope
+de la sesión, mientras el endpoint de búsqueda está abierto**. Por eso este pass
+**sí publica estrellas**. Es la segunda vez que esta KB se recupera de declarar
+muerto este canal (el cycle 4 ya corrigió a octubre). 🔵 **Regla: antes de
+declarar un canal muerto, probar sus endpoints uno por uno — "la API" no es una
+unidad.**
+
+### 4.4 🔴 El canal de verificación que el procedimiento manda **está muerto en este entorno**
+
+El procedimiento de ingesta manda `curl -sI` sobre cada URL antes de escribirla.
+Corrido sobre las 46 direcciones de este pass:
+
+> **46 de 46 devolvieron HTTP 403.** Incluidas aquellas cuyo `LICENSE` ya había
+> sido descargado byte a byte minutos antes.
+
+Es el proxy de egreso rechazando HTML de `github.com` para repos no adjuntos a la
+sesión — **un fallo uniforme de canal, no evidencia sobre los repos.** Un pass que
+tratara ese 403 como un 404 habría descartado **el catálogo completo**.
+Sustitución aplicada, y es más fuerte que el canal original:
+
+| Canal | Qué prueba | Resultado |
+|---|---|---|
+| **A** — `raw.githubusercontent.com/{repo}/{branch}/{file}` | Que el repo, la rama y el archivo existen **y su contenido** | 46/46 |
+| **B** — `gh api search/repositories -f q="repo:{owner}/{name}"` | Que el índice de GitHub resuelve el slug exacto | 46/46 |
+
+> 🔴 **T92 — un 403 uniforme es un diagnóstico del canal; un 404 es un
+> diagnóstico del recurso. Confundirlos borra catálogos.** La prueba de que son
+> distintos: `curl -sI` dio 403 para `libsdl-org/SDL` **en el mismo minuto** en
+> que su `LICENSE.txt` de 884 B se leía completo por `raw`.
+
+### 4.5 Auditoría de este pass
+
+| Control | Resultado |
+|---|---|
+| Direcciones escritas / verificadas en 2 canales | **46 / 46** |
+| Licencias leídas en bytes del archivo del repo | **38** (las 8 restantes se citan por badge y se marcan como tal) |
+| Familias de licencia **nuevas** para esta KB | **2** — Zlib, BSL-1.0 |
+| Rutas probadas una por una y 404 escritas, no omitidas | **8** (base GPL-3.0 de InputFusion) |
+| Hosts policy-dead nuevos | **4** — `gitlab.freedesktop.org`, `monado.freedesktop.org`, `monado.pages.freedesktop.org`, `digital-strategy.ec.europa.eu` |
+| Repos archivados / dormidos marcados como tales | **2 archivados o en maintenance mode, 6 con >6 meses sin push** |
+| Encabezados o filas de ejemplo dejados como dato | **0** |
+| Frontmatter correcto | 9/9 |
+
+---
+
 ## 🔴 Lo más importante del pass 2026-11-25 (cycle 22): **el plano de la PUERTA** —quién puede jugar, con qué identidad, a qué edad verificada y con qué consentimiento— y el **canal 9: la licencia-PUNTERO**
 
 Los 21 passes anteriores de esta KB midieron qué hace el juego (NPC, assets,

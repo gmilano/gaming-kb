@@ -4,6 +4,146 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Tendencias — pass cycle 23 (2026-11-25)
+
+### 1. 🔴 La tendencia de fondo: **el estándar de software ganó; la frontera se movió al objeto físico**
+
+Secuencia que esta KB puede leer en sus propios passes, ahora completa hasta el
+sustrato:
+
+| Momento | Dónde estaba la fricción | Cómo se resolvió |
+|---|---|---|
+| cycles 10-11 | Etiquetar contenido AI (Art. 50) | En el pipeline de contenido |
+| cycle 19 | Qué ve y qué paga cada jugador | En el plano de decisión |
+| cycle 20 | Cobrar fuera de la tienda del fabricante | Por ley, en cuatro regiones |
+| cycle 22 | Quién entra y con qué edad | Cuatro arquitecturas de software |
+| **cycle 23** | **Cómo el jugador toca el juego** | 🔵 **El software convergió solo (OpenXR, Apache-2.0). El hardware divergió por regulación: cuatro homologaciones** |
+
+**La novedad no es que haya estándar. Es que esta vez el estándar llegó sin que
+una norma lo mandara** —al contrario del cycle 22, donde el Annex A §A.8 europeo
+*nombraba un repositorio* y lo volvía requisito de conformidad—. Aquí la industria
+convergió por su cuenta y publicó hasta la suite de pruebas en Apache-2.0.
+
+⇒ **Consecuencia práctica:** en esta capa el riesgo legal **no está en elegir mal
+la biblioteca.** Está en (a) el objeto físico, si el engagement embarca hardware,
+y (b) **el último metro propietario del engine**.
+
+### 2. 🔴 El último metro, otra vez: **la pieza que el estudio toca a diario es la única que no es open source**
+
+`Unity-Technologies/InputSystem`: **1.527 ★**, push **2026-11-24**, `LICENSE.md`
+de **491 B** que remite a la **Unity Companion License** *"for Unity-dependent
+projects"*.
+
+| Capa | Grant |
+|---|---|
+| Estándar (OpenXR) | ✅ Apache-2.0 |
+| Runtime (Monado) | ✅ BSL-1.0 |
+| Entrada de bajo nivel (SDL) | ✅ Zlib |
+| **Modelo de acciones/bindings dentro de Unity** | 🔴 **Propietario, y sin sustituto permisivo con paridad** |
+
+Es **exactamente la forma** que el cycle 19 encontró en el plano de decisión:
+*ocho plataformas permisivas existen; lo que no existe es el SDK de engine*. Dos
+capas distintas, mismo hueco, mismo sitio: **el último metro.**
+
+> 🔵 **T94 — el hueco del open source en gaming no está en las plataformas, está
+> en la integración con el engine.** Medido ya dos veces en dos capas
+> independientes (decisión, dispositivo). Es una tendencia estructural de la
+> industria, no una casualidad de catálogo — y es **donde un estudio de servicios
+> tiene ventaja**, porque es trabajo de integración, no de producto.
+
+### 3. 🔵 El hardware abierto genera ecosistema en semanas, cuando el fabricante publica los planos
+
+Caso medido, y es el más limpio que esta KB tiene:
+
+| Hecho | Fecha |
+|---|---|
+| Valve lanza el **Steam Frame** (SteamOS/Arch, Snapdragon 8 Gen 3, 16 GB) | **sep-2026** (⚠️ fuentes discrepan: 14 vs 18) |
+| Valve publica **CAD + documento eléctrico del puerto de expansión frontal** | **12-oct-2026** |
+| **Seis repos** de terceros, cinco de ellos permisivos, **todos con push en los últimos 7 días** | **nov-2026** |
+
+**Frametop (420 ★, MIT) tiene más estrellas que `KhronosGroup/OpenXR-CTS`
+(81 ★).** La atención de la comunidad va al **dispositivo concreto**, no al
+estándar que lo hace portable.
+
+⚠️ **Contrapeso obligatorio:** el cluster es de **seis semanas de edad**; uno de
+los seis tiene **0 ★** y se declara no oficial. **Señal de tendencia, no
+fundación.**
+
+### 4. 🔴 El vector regulatorio de 2026 en esta capa no es el dispositivo: es **la biometría que produce**
+
+Lo que apareció, medido, es litigio civil en EE.UU. sobre **iris y retina**
+(demanda vs Apple, jul-2026, $1.000-$5.000 por infracción bajo BIPA) y la
+reactivación por el 7º Circuito de un caso de *virtual try-on* (jul-2026).
+
+**Pero la honestidad del registro importa más que la narrativa:** ⚠️ **no se
+encontró ninguna demanda BIPA contra eye tracking dentro de un headset de VR.** El
+caso Apple es **una demanda, no una sentencia**, y su teoría —que el infrarrojo de
+*attention tracking* puede construir un mapa de iris— **todavía no ha sido
+validada por un tribunal.** La tendencia es **la plausibilidad del vector**, no un
+precedente.
+
+🔵 Lo que sí es sólido y es académico: existe trabajo revisado que establece
+**autenticación por mirada en VR sobre conjuntos de datos muy grandes** ⇒ **el
+dato de gaze identifica a la persona.** Eso es lo que hace al vector creíble,
+independientemente de cómo acabe el caso Apple.
+
+### 5. 🔵 CRA: la primera tendencia de esta KB con **el reloj ya vencido**
+
+El 11-sep-2026 abrió la *Single Reporting Platform* de ENISA y, con ella, la
+obligación de **los fabricantes** de reportar vulnerabilidades activamente
+explotadas. **Los *open-source stewards* no entran hasta el 11-dic-2027, y sin
+sanciones.**
+
+⇒ Un estudio que embarca Monado + SDL en un producto vendido en la UE **es
+fabricante**. La tendencia que importa: **durante 2026-2027 la responsabilidad de
+ciberseguridad del stack abierto está, legalmente, en quien lo empaqueta — no en
+quien lo escribe.**
+
+⚠️ Conflicto de fuentes **sin resolver** (Red Hat y Greenbone dicen que los
+stewards reportan desde sep-2026; OpenSSF y la Comisión dicen que no; la página
+primaria no resuelve DNS en este entorno). Detalle en `intel/market.md` → EMEA.
+
+### 6. 🔵 La migración de estándar se puede leer en las fechas de push
+
+Sin abrir una sola nota de release:
+
+| Era | Repos | Último push |
+|---|---|---|
+| **Pre-OpenXR** | `ValveSoftware/openvr` | 8 meses |
+| | `GodotVR/godot_openxr_for_godot_3.x` | **4 años** + "maintenance mode" |
+| | `Alia5/GlosSI` | **archivado** |
+| **OpenXR nativo** | `libsdl-org/SDL`, `wayvr`, `open-brush` | **hoy** |
+| | `ALVR`, `WiVRn`, `Silk.NET`, `lovr` | 1-2 días |
+
+> 🔵 **Método reutilizable: `pushed_at` es un indicador de adopción de estándar.**
+> Cuando una capa migra, las piezas del estándar viejo no se archivan de golpe —
+> **se enfrían.** Un corte en "sin push desde hace >6 meses" separó aquí las dos
+> eras con **cero falsos positivos** sobre 46 repos.
+
+### 7. ⚠️ Tendencia de la industria AI que las consultas devolvieron, y su sesgo
+
+Las consultas globales mandadas por el procedimiento devolvieron material de 2026
+que **no es de esta capa** pero sí es contexto de engagement:
+
+- **La integración profunda de AI está en el back-end, no en el contenido
+  player-facing** (KPMG, vía GamesBeat). Coincide con lo que esta KB mide pass a
+  pass.
+- **~90 % de los desarrolladores usa AI en algún punto del pipeline** (Google
+  Cloud, vía GamesBeat) — **cifra de encuesta, de segunda mano.**
+- **Omdia** señala el *AI backlash* como tendencia de 2026 junto al coste de
+  servidores. **AlixPartners** predice múltiplos de valoración 2-3× para quien
+  integre AI en IP fuerte — **es un pronóstico, no una medición.**
+
+🔴 **Y el sesgo, cuantificado:** las **4 de 4** consultas regionales mandadas
+(`AI gaming {region} 2026 adoption regulation players`) devolvieron **iGaming /
+apuestas**, no videojuego, **en las cuatro regiones**. Los informes que
+devolvieron (KPMG *State of AI in Gaming 2026*, benchmark de 83 empresas de
+*gambling* y 113 reguladores) son de **la industria del juego de azar**. El aviso
+del README queda **confirmado con medición, no por recuerdo**: el instrumento
+correcto para esta industria dice **"video game"**.
+
+---
+
 ## 🆕 Tendencias — pass cycle 22 (2026-11-25)
 
 ### 1. 🔴 La tendencia de fondo: **la regulación pasó de pedir una etiqueta a pedir una PUERTA**
