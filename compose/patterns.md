@@ -4,6 +4,250 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Recetas del pass cycle 21 (2026-11-25) — el plano del espectador
+
+Las cuatro recetas usan **sólo repos verificados en este pass**: existencia y
+**rama default real** por `git ls-remote --symref`, licencia y byte-count leídos
+con `curl` sobre `raw.githubusercontent.com` **en esa rama**. Donde una pieza no
+existe, se dice que no existe.
+
+🔴 **Las cuatro comparten una premisa que esta KB no había tenido antes:** en esta
+capa **no hay stack permisivo de captura**. El lado píxel es copyleft sin
+excepción (12 repos medidos, 0 permisivos). Por eso la Receta 56 es el
+prerrequisito de las otras tres: define **cómo se toca el copyleft** sin que
+alcance al producto del cliente.
+
+---
+
+### Receta 56 — Separación por proceso: usar OBS/FFmpeg/Sunshine sin heredar su copyleft
+
+**Cuándo:** siempre, en cuanto el proyecto capture o encodee video. Es el paso 0
+de las Recetas 57-59 y del plano del espectador entero.
+
+**El problema concreto:** el cliente quiere un producto cerrado y la única capa de
+captura que existe es GPL. Si se enlaza `moonlight-common-c` (GPL-3.0) o se
+escribe un plugin de OBS (GPL-2.0, como `obs-backgroundremoval`), **el producto
+hereda**. Si se invoca el binario, no.
+
+**La línea que decide, y no es opinión:** la obligación viaja por **enlace y obra
+derivada**, no por **ejecución**. Entonces:
+
+| ❌ Lo que contagia | ✅ Lo que no |
+|---|---|
+| Enlazar `moonlight-common-c` (GPL-3.0) en el cliente | Hablar el **protocolo** contra `Sunshine` desde un binario propio |
+| Escribir un plugin dentro de OBS (hereda GPL-2.0) | Manejar OBS desde afuera por [`obsproject/obs-websocket`](https://github.com/obsproject/obs-websocket) (GPL-2.0, 4.400 ★) |
+| Enlazar `libav*` en el ejecutable propietario | Invocar el **ejecutable** `ffmpeg` y leer su salida |
+
+**Piezas y licencias medidas:**
+
+```
+PRODUCTO DEL CLIENTE (cerrado)
+   │  (socket / CLI / cola — NUNCA enlace)
+   ├─► obs-websocket (GPL-2.0) ──► OBS Studio (GPL-2.0, 80.061★, 2026-11-23)
+   ├─► ejecutable `ffmpeg`  (LGPL-2.1+ por default — ver Receta 57)
+   └─► protocolo Moonlight ──► Sunshine (GPL-3.0, 35.149 B) | Wolf (MIT, 2.322★)
+TRANSPORTE Y SERVIDOR — todo permisivo, acá sí se enlaza libremente
+   ├─ pion/webrtc (MIT, 1.093 B, 16.922★)
+   ├─ livekit/livekit (Apache-2.0, 11.358 B, 22.381★)
+   ├─ ossrs/srs (MIT, 1.086 B, 29.454★)   [rama default `develop`]
+   └─ coturn/coturn (BSD-3, 1.622 B, 14.590★)   ← obligatorio para NAT
+```
+
+**Pasos:**
+
+1. Dibujar la frontera: todo lo que toca píxeles corre **en su propio proceso o
+   contenedor**, con su licencia declarada en el aviso del producto.
+2. El producto del cliente habla con esos procesos por **socket, CLI o cola**.
+3. Si hay que tocar píxeles **desde código propio**, usar
+   [`selkies-project/selkies`](https://github.com/selkies-project/selkies)
+   (**MPL-2.0**, 16.725 B, 2.637 ★): copyleft **por archivo**, así que los
+   archivos nuevos quedan propietarios. Es **la única puerta permisiva-compatible
+   del lado píxel** medida en este pass.
+4. Si hay que **modificar** el host de streaming, la base correcta es
+   [`games-on-whales/wolf`](https://github.com/games-on-whales/wolf) (**MIT**,
+   1.113 B, rama **`beta`**), **no** Sunshine (GPL-3.0).
+5. Dejar fuera
+   [`AirenSoft/OvenMediaEngine`](https://github.com/AirenSoft/OvenMediaEngine)
+   (**AGPL-3.0**, 34.453 B): es servidor y el AGPL se dispara **por uso en red**.
+   Sustitutos con más ★: `srs` (MIT), `mediamtx` (MIT), `livekit` (Apache-2.0).
+
+**Entregable:** diagrama de procesos con la licencia de cada uno + el aviso de
+terceros del producto + la justificación escrita de por qué cada frontera es
+ejecución y no enlace.
+
+---
+
+### Receta 57 — Gate de licencia **por flag de compilación**: el control que ningún gate anterior de esta KB tiene
+
+**Cuándo:** el proyecto embarca FFmpeg (propio, de la distro, o dentro de una
+imagen de Docker). Es decir: casi siempre.
+
+**El problema:** las Recetas 10, 14, 17, 20, 21 y 46 auditan **repos y árboles**.
+Para FFmpeg eso **da la respuesta equivocada**, porque la licencia la decide
+`./configure`:
+
+| Flag | Licencia efectiva del binario |
+|---|---|
+| *(ninguno)* | **LGPL-2.1-or-later** |
+| `--enable-gpl` | **GPL-2.0-or-later** |
+| `--enable-version3` | **(L)GPL-3.0** |
+| `--enable-nonfree` | 🔴 **NO REDISTRIBUIBLE** |
+
+**Pasos:**
+
+1. **No auditar el repo: auditar el binario.** Sobre el que realmente se embarca:
+   ```
+   ffmpeg -hide_banner -buildconf | tr ' ' '\n' | grep -E 'enable-(gpl|version3|nonfree)'
+   ```
+2. **Regla de corte, dura:** si aparece `--enable-nonfree`, **el build se
+   detiene**. No es una advertencia de licencia: ese binario **no se puede
+   entregar** (texto literal del `LICENSE.md` de FFmpeg). El caso que lo pisa en
+   esta capa es encodear audio **AAC con FDK**.
+3. Si aparece `--enable-gpl` y el producto es cerrado, hay dos salidas:
+   recompilar sin el flag (se pierden filtros GPL — la lista exacta está en el
+   `LICENSE.md`), o consumir el binario **por proceso** (Receta 56).
+4. **Auditar también el filtro invocado, no sólo el flag:**
+   `libavfilter/vf_lensfun.c` está documentado como **GPL-3 o posterior** dentro
+   de una lista que por lo demás es GPL-2+. Un solo filtro mueve la versión.
+5. Pinchar el resultado en CI: el `buildconf` del binario se compara contra una
+   lista blanca y el pipeline falla si cambia. **Porque quien cambia los flags no
+   es el cliente: es el empaquetador de la imagen base.**
+6. Extender el mismo gate a `GStreamer`: su grant se parte **por conjunto de
+   plugins** (`good`/`bad`/`ugly`) y `ugly` trae elementos GPL — el núcleo es
+   **LGPL-2.1** (`LICENSE`, 26.431 B).
+
+**Entregable:** el `buildconf` de cada binario de medios embarcado, con su
+licencia efectiva derivada, y el gate de CI que lo congela.
+
+---
+
+### Receta 58 — Procedencia embebida al encodear: **un solo paso que cumple China y el Art. 50(2) de la UE**
+
+**Cuándo:** el producto publica al público **cualquier** contenido generado por AI
+—casteo sintético, overlay, clip automático, escena generada— y opera en EMEA o
+APAC. Las dos obligaciones caen en el mismo punto del pipeline, así que es **una
+receta, no dos**.
+
+**Por qué funciona una sola vez:** China exige etiqueta **visible + metadato
+embebido** (norma obligatoria **GB 45438-2025**, en vigor desde el 1-sep-2025,
+**con enforcement activo**); la UE exige marcado legible por máquina del contenido
+generado (**Art. 50, en vigor 2-ago-2026; marcado del 50(2) vence el
+2-dic-2026**). **El metadato se escribe donde se escribe el contenedor: en el
+encoder.**
+
+**Piezas (todas ya verificadas en esta KB):**
+
+```
+GENERACIÓN            → marca de origen por activo (voz AI / overlay AI / clip AI)
+   │
+ENCODE  (el punto de control, y es el lado copyleft — ver Receta 56)
+   ├─ ejecutable `ffmpeg`  → escribe metadato de procedencia en el contenedor
+   └─ C2PA (MIT *o* Apache-2.0, ya en esta KB) → firma la procedencia
+   │
+OVERLAY VISIBLE  → obs-browser (GPL-2.0) o composición propia = la etiqueta visible
+   │
+TRANSPORTE (permisivo) → srs (MIT) | livekit (Apache-2.0) | owncast (MIT)
+   │
+ARCHIVO → el VOD conserva el metadato ⇒ auditable después del directo
+```
+
+**Pasos:**
+
+1. **Inventario primero** (es lo único que se cierra en 7 días, y el Art. 50(2)
+   vence en 7): qué superficies del catálogo emiten contenido generado al público.
+2. Marcar **por activo** en el momento de generarlo, no al final: la voz
+   sintética, el overlay y el clip llevan cada uno su marca.
+3. En el encode, escribir el metadato **y** firmarlo con C2PA. El visible va por
+   overlay.
+4. **Separar el segmento patrocinado del de comentario** con marca distinta: en
+   NA la excepción de comentario **no cubre** lo patrocinado (ver
+   `intel/market.md`, NA).
+5. Donde no se llega a tiempo, **apagar por defecto** la superficie generativa
+   (patrón del "interruptor de oferta", Receta 50). Un flag apagado es cumplimiento
+   y es más barato que un sprint.
+6. Para publicar en tienda en China: verificar la **capacidad de etiquetado antes
+   de listar** — es un **bloqueante de lanzamiento**, no un riesgo de multa.
+
+⚠️ **Límite declarado:** no encontré provisión específica de videojuegos o
+live-streaming dentro de las Medidas chinas más allá de la verificación de escenas
+virtuales generadas; las fuentes son compliance comercial con fechas inconsistentes.
+**El texto del CAC y GB 45438-2025 se leen en original** antes de comprometer
+cumplimiento contractual.
+
+**Entregable:** inventario fechado + pipeline de procedencia + plan con fechas
+para lo que no entra. **No** un certificado de cumplimiento.
+
+---
+
+### Receta 59 — Clipper y co-caster AI: la tier que **hay que construir** porque no existe para comprar
+
+**Cuándo:** cliente de esports, publisher con programa de creadores, o UA basada
+en clips. Hoy evalúa Medal.tv / Allstar / Overwolf / Opus Clip, **todos SaaS
+propietario**.
+
+**Por qué se construye:** medido en este pass, la tier open source de highlights y
+casteo **no tiene nada adoptable**: 6 repos, **4 con 0 ★**, **3 sin archivo de
+licencia** (4 nombres probados cada uno), el líder
+([`showlab/livecc`](https://github.com/showlab/livecc), 485 ★) **sin licencia y 13
+meses dormido**, y el único MIT
+([`zicojiao/worldcupvoice`](https://github.com/zicojiao/worldcupvoice), 111 ★) atado
+al SDK **propietario** de Agora. Pero **las piezas con que se construye sí son
+permisivas**.
+
+**La decisión de arquitectura que define la receta:** no detectar el momento
+mirando **píxeles**. Un clipper que mira píxeles adivina; uno que lee el **replay**
+sabe. Esa es la ventaja que los SaaS propietarios **no** tienen en títulos con
+replay abierto.
+
+```
+ENTRADA
+ ├─ replay / demo del título  ──► evento ESTRUCTURADO  (la señal buena)
+ │    ├─ LaihoE/demoparser (MIT, 746★, CS2, bindings Python)
+ │    ├─ markus-wa/demoinfocs-golang (MIT, 1.077★, CS)
+ │    ├─ skadistats/clarity (BSD-3, 775★, Dota 2)
+ │    ├─ pnxenopoulos/awpy (MIT, 640★, métricas ya calculadas)
+ │    └─ odota/core (MIT, 1.640★, la plataforma de dato completa)
+ ├─ audio del casteo ──► ggml-org/whisper.cpp (MIT, 55.496★) → timestamp + texto
+ └─ video ──► streamlink (BSD-2, 11.998★) | yt-dlp (Unlicense, 210.483★)
+FUSIÓN  → ranking de momentos: evento estructurado + pico de audio + palabra clave
+CORTE   → ejecutable `ffmpeg` (Receta 57: auditar los flags) ⇒ corte sin recodificar
+CO-CASTER (opcional) → LLM sobre el evento estructurado → TTS
+          → livekit (Apache-2.0, 22.381★): el agente es PARTICIPANTE de la sala
+SALIDA  → Receta 58 (procedencia firmada) → owncast (MIT) | srs (MIT)
+```
+
+**Pasos:**
+
+1. Parser de replay del título → stream de eventos con timestamp. **Si el título
+   no tiene replay abierto, esta receta pierde su ventaja** y conviene decirlo
+   antes de venderla.
+2. `whisper.cpp` sobre el audio del caster: el pico de emoción y la palabra clave
+   son la segunda señal, independiente de la primera.
+3. Ranking por fusión de las dos señales. Recién acá entra un modelo, y entra
+   sobre **features**, no sobre píxeles: es barato y es explicable ante el cliente.
+4. **La voz, con su registro de consentimiento.** Voz sintética genérica para
+   comentario; para clonar una voz real hace falta consentimiento documentado, y
+   el **segmento patrocinado va con marca distinta** porque queda afuera de la
+   excepción de comentario en NA (ver `intel/market.md`).
+5. Corte con `ffmpeg` por proceso (Receta 56) y **sin recodificar** donde el corte
+   caiga en keyframe: es lo que hace viable el costo por clip.
+6. Salida por Receta 58, **siempre**: la procedencia no se puede retrofitear a un
+   catálogo de clips ya publicado.
+
+**Dónde estrenarlo:** LATAM (pt-BR / es). Es el único lugar con **48,8 % de
+aceptación de AI por el jugador contra ~85 % de rechazo global** y, hoy, **sin
+obligación de etiquetado que condicione el diseño** — con la procedencia firmada
+igual desde el día uno.
+
+🔴 **Lo que NO se debe usar en esta receta, y por qué:**
+[`Aseiel/VideoHighlighter`](https://github.com/Aseiel/VideoHighlighter) (507 ★) es
+**AGPL-3.0**: ofrecerlo como servicio obliga a liberar el servicio entero. Sirve
+como **referencia de diseño** de scoring multi-señal, **no** como dependencia.
+Y los 3 repos de casteo **sin archivo de licencia** no son "de licencia
+desconocida": sin grant son **todos los derechos reservados**, es decir código
+mirable y no usable.
+
+
 ## 🆕 Recetas del pass cycle 20 (2026-11-25) — el camino del dinero
 
 Las cuatro recetas de abajo usan **sólo repos verificados en este pass** (existencia

@@ -4,6 +4,131 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Tendencias — pass cycle 21 (2026-11-25)
+
+### 1. 🔴 La capa que lleva el juego al espectador **se parte en el encoder**, y es la primera capa de esta KB donde el copyleft es el default
+
+33 repos medidos hoy, uno por uno. La frontera cae exactamente donde el software
+deja de **tocar píxeles** y empieza a **mover bytes**: 12 repos del lado píxel,
+**cero permisivos** (GPL-2.0, GPL-3.0, LGPL-2.0, LGPL-2.1, MPL-2.0); 21 del lado
+byte, **permisivos salvo uno** (MIT, Apache-2.0, ISC, BSD-2, BSD-3, Unlicense).
+
+La tendencia no es "hay copyleft en multimedia" —eso es viejo—. Es que **la regla
+de esta KB ("sólo MIT/Apache") deja de ser aplicable por primera vez en 21 passes**,
+y la respuesta correcta no es relajar la regla ni abandonar la capa: es **cambiar
+la forma de consumir** (separación por proceso, Receta 56). Lo vendible es que la
+decisión ya está tomada y medida, no que se descubra en medio de un proyecto.
+
+### 2. 🔴 La licencia dejó de estar en el repositorio: ahora está en el **Dockerfile**
+
+FFmpeg es el caso límite y es la pieza más usada de la capa. Su grant es una
+**función del comando de compilación**: sin flags **LGPL-2.1+**; con
+`--enable-gpl` **GPL-2+**; con `--enable-version3` **v3**; con `--enable-nonfree`
+el binario queda **no redistribuible** (texto literal del `LICENSE.md`).
+
+Es el **9º eje de partición de grant** que documenta esta KB (los otros 8: por
+organización, repo, directorio, rama, comando, tipo de entregable, región y
+versión) y el primero donde **auditar el repositorio da la respuesta equivocada**.
+En un cliente que consume FFmpeg desde una imagen de Docker Hub o desde el paquete
+de la distro, **la licencia efectiva la eligió el empaquetador, no el cliente** —
+y nadie la auditó nunca. Receta 57.
+
+### 3. 🔴 La obligación regulatoria de 2026 aterriza **en el mismo punto** que el problema de licencia
+
+China exige la etiqueta **embebida en el archivo** (metadato), con norma técnica
+obligatoria (**GB 45438-2025**) y **enforcement activo** (baja de un mini-programa
+en casos publicados el 15-sep-2026; tres productos de ByteDance nombrados el
+28-abr-2026). El metadato se escribe **al encodear** ⇒ la pieza que cumple la ley
+es FFmpeg/OBS, **la pieza copyleft**.
+
+Esto es nuevo para esta KB: en todas las capas anteriores el gate de licencia y el
+gate regulatorio eran controles **separados**, en momentos distintos del pipeline.
+Acá son **la misma línea**. Una sola receta cubre los dos (58), y el mismo paso
+sirve para el **Art. 50(2) de la UE** (vence el 2-dic-2026, a 7 días) — **se
+construye una vez y se cobra en dos regiones**.
+
+### 4. 🔴 La tier de **AI caster** está vacía de oferta: hay que construirla, no adoptarla
+
+Medido, no supuesto: 6 candidatos, **4 con 0 ★**, **3 sin ningún archivo de
+licencia** (4 nombres probados cada uno), y el líder por ★
+([`showlab/livecc`](https://github.com/showlab/livecc), 485 ★) **sin licencia y 13
+meses sin push**. El único con grant usable
+([`zicojiao/worldcupvoice`](https://github.com/zicojiao/worldcupvoice), MIT, 111 ★)
+está atado al SDK **propietario** de Agora.
+
+La contracara es la buena noticia: **las piezas para construirlo sí existen y son
+MIT** (`whisper.cpp` 55.496 ★ para el audio, los parsers de replay para el evento,
+un LLM para el texto). Receta 59. Y el mapa propietario de la tier
+(Medal.tv, Allstar, Overwolf, Opus Clip) confirma que **hay demanda pagando** por
+algo que no tiene sustituto abierto.
+
+### 5. 🟢 Epic reparte MIT en la mitad de Pixel Streaming que se modifica
+
+`EpicGamesExt/PixelStreamingInfrastructure` sirve un `LICENSE.md` de **1.051 B**
+con **texto MIT verbatim** firmado por Epic Games. El engine sigue bajo EULA. Es
+el patrón de **grant partido por componente** que esta KB documentó muchas veces
+en contra y acá aparece **a favor**: la pieza que un integrador realmente forkea
+—señalización, matchmaker, player web— es permisiva.
+
+### 6. 🔴 El canal de verificación de esta KB se degradó, y el que queda **miente por omisión**
+
+En esta sesión: `curl -sI github.com` → **403 para todo** (incluidos repos que
+existen con certeza), `WebFetch` sobre `github.com` → **503**, `gh api repos/…` →
+**403**. Quedan dos canales vivos: `git ls-remote --symref` (existencia **+ rama
+default real**) y `raw.githubusercontent.com` (licencia **+ byte-count**).
+
+Y el canal de metadatos (`search/repositories` con `repo:`) tiene un defecto nuevo
+y grave para censos: **descarta repos en silencio cuando van en lote** (pedí 10,
+volvieron 8, sin aviso) y sólo tira `422` cuando el repo problemático va **solo**.
+Cuatro repos **vivos** son invisibles para él (`Sunshine`, `OvenMediaEngine`,
+`PixelStreamingInfrastructure`, `selkies-gstreamer`).
+
+🔴 **Corrige la firma de rename del cycle 4**: *`repo:` NOT_FOUND + raw 200* ya no
+significa "renombrado"; puede significar **"vivo y el canal es ciego"**. Regla
+nueva (**T76**): diffear *pedidos vs devueltos* en cada lote, y que **sólo
+`ls-remote` fallando** cuente como prueba de ausencia.
+
+### 7. El byte-count: GPL-3.0 entra al club de los que **flagean y no deciden**
+
+Medidos hoy **tres** valores distintos de GPL-3.0: **35.141**, **35.149** y
+**35.695**. La regla del cycle 19 para Apache-2.0 (*el checksum flagea, nunca
+decide; el incipit dicta*) **se extiende a GPL-3**. Nuevos valores al catálogo:
+**LGPL-2.0 = 23.330** (primero de la KB), **Apache-2.0 = 11.466**, **MPL-2.0 =
+16.725/16.726**, **LGPL-2.1 = 26.431/26.517**, **AGPL-3.0 = 34.453**.
+
+Y una trampa nueva de clasificador: **un `LICENSE` envuelto en sintaxis de
+comentario** (`coturn` sirve BSD-3 verbatim dentro de `/* … */` de C) reporta
+`NOASSERTION`. Además `NOASSERTION` **se invirtió respecto del cycle 19**: allá
+corrió 4 de 5 permisivo, acá **3 de 5 copyleft débil**. La heurística depende de
+la capa y no se hereda entre capas.
+
+### 8. ⚠️ Gap de vocabulario, confirmado por segundo pass consecutivo
+
+Las búsquedas regionales prescritas (`AI {industria} {región} 2026 adoption
+regulation players`) devuelven **apuestas online, no videojuegos**, en **las
+cuatro regiones**. Dos passes seguidos midiéndolo lo convierten en dato: ese
+vocabulario está **capturado por el sector del gambling**. Lo que funciona es
+buscar por **instrumento** (`labeling synthetic content`, `NO FAKES Act`) o por
+**pieza técnica**. Y ojo con mezclar perímetros: en gambling se mide *"cero
+actividad regulatoria de AI en Asia-Pacífico"*, mientras que en **videojuegos y
+medios sintéticos APAC es la región más dura del mundo**. Dos perímetros,
+conclusiones opuestas.
+
+### 9. Contexto de industria del pass (AI en juegos, no plano del espectador)
+
+Para no mezclarlo con lo medido arriba: el consenso de prensa sectorial de 2026 es
+**adopción casi universal en producción** (se cita ~90 % de desarrolladores usando
+AI en algún punto del pipeline, dato de encuesta de proveedor) junto con un
+**backlash en curso** y la expectativa de que las integraciones más profundas
+queden **detrás de escena** y no en contenido generado de cara al jugador. Esto
+**coincide** con lo que esta KB mide del lado del jugador (~85 % de actitud
+negativa, Quantic Foundry) y es, precisamente, el argumento para que el plano del
+espectador se construya con **procedencia firmada y disclosure explícito** desde
+el día uno.
+
+---
+
+
 ## 🆕 Tendencias — pass cycle 20 (2026-11-25)
 
 ### 1. 🔴 2026 fue el año en que se abrió el canal de cobro — y la oferta open source para juegos llegó vacía

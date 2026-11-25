@@ -4,6 +4,138 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 21) — fundaciones del **plano del espectador**: captura → encode → transporte → servidor → espectador → clip → archivo
+
+20 passes no auditaron esta capa (medido: `spectator`, `highlight`, `commentary`,
+`Sunshine`, `Moonlight`, `selkies`, `pixel streaming`, `cloud-gaming`, `OBS`,
+`FFmpeg`, `GStreamer`, `srt`, `whip` = **0 ocurrencias** en las 9 páginas antes de
+este pass). Son **33 repos verificados uno por uno hoy**, y el resultado es una
+frontera de licencia tan limpia que organiza la página entera.
+
+**Qué significa "verificado" en este pass** (y conviene repetirlo porque los
+canales cambiaron): `github.com` por HTML **403**, `api.github.com` **403**,
+`WebFetch` sobre `github.com` **503**. Lo que funciona:
+
+```
+# existencia + rama default REAL (protocolo git: no HTML, no API)
+$ git ls-remote --symref https://github.com/<repo> HEAD
+# licencia + byte-count, SOBRE LA RAMA DEFAULT REAL
+$ curl -s https://raw.githubusercontent.com/<repo>/<rama>/LICENSE
+# ★ / archived / pushed_at  (⚠️ descarta repos en silencio: diffear pedidos vs devueltos)
+$ gh api -X GET search/repositories -f q='repo:<o>/<r> repo:...'
+```
+
+🔴 **La rama default importa y no es adivinable.** Medidas hoy, contra el reflejo
+de probar `main` o `master`: `ossrs/srs` → **`develop`**, `owncast/owncast` →
+**`develop`**, `versatica/mediasoup` → **`v3`**, `games-on-whales/wolf` →
+**`beta`**, `GStreamer/gstreamer` → `main`, `livekit/livekit` → `master`. Leer el
+`LICENSE` de la rama equivocada devuelve **14 bytes** (`404: Not Found`) y un pass
+apurado lo anota como "sin licencia".
+
+---
+
+### 🔴 La partición de esta capa: el encoder es la frontera
+
+#### Lado PÍXEL — captura, encode, decode, filtro. **Copyleft sin excepción permisiva**
+
+| Repo | ★ | Licencia (bytes) | Último push | Rol en la capa |
+|---|---|---|---|---|
+| [`obsproject/obs-studio`](https://github.com/obsproject/obs-studio) | **80.061** | ⚠️ **GPL-2.0** (`COPYING`, 18.092 B) | 2026-11-23 | 🥇 El estándar de facto de captura y composición. **Todo plugin de OBS hereda la GPL** |
+| [`FFmpeg/FFmpeg`](https://github.com/FFmpeg/FFmpeg) | **68.102** | ⚠️ **LGPL-2.1+ por default** (`COPYING.LGPLv2.1`, 26.517 B) — **cambia con el flag de build** | 2026-11-25 | El encoder de todo. Ver el 9º eje en `agents/top.md`: `--enable-gpl` → GPL-2+, `--enable-nonfree` → **no redistribuible** |
+| [`moonlight-stream/moonlight-qt`](https://github.com/moonlight-stream/moonlight-qt) | **19.758** | ⚠️ **GPL-3.0** (35.141 B) | 2026-11-24 | Cliente de streaming de juego (escritorio). El par de Sunshine |
+| [`meetecho/janus-gateway`](https://github.com/meetecho/janus-gateway) | **9.208** | ⚠️ **GPL-3.0** (`COPYING`, **35.695 B**) | 2026-11-24 | Gateway WebRTC de propósito general. GPL-3 **pese a ser servidor** ⇒ hay sustitutos permisivos, ver abajo |
+| [`royshil/obs-backgroundremoval`](https://github.com/royshil/obs-backgroundremoval) | **4.720** | ⚠️ **GPL-3.0** (35.141 B) | 2026-11-24 | Segmentación AI de fondo dentro de OBS. **El plugin hereda del host** |
+| [`obsproject/obs-websocket`](https://github.com/obsproject/obs-websocket) | **4.400** | ⚠️ **GPL-2.0** | 2026-11-24 | 🥇 **La pieza clave de la Receta 56**: control remoto de OBS por WebSocket ⇒ permite manejar OBS **desde otro proceso** sin enlazar código |
+| [`GStreamer/gstreamer`](https://github.com/GStreamer/gstreamer) | 3.375 | ⚠️ **LGPL-2.1** (`LICENSE`, 26.431 B) | 2026-11-25 | Pipeline de medios alternativo. ⚠️ El grant se parte **por conjunto de plugins** (`good`/`bad`/`ugly`): `ugly` trae elementos GPL |
+| [`kcat/openal-soft`](https://github.com/kcat/openal-soft) | 2.783 | ⚠️ **LGPL-2.0** (`COPYING`, **23.330 B**) | 2026-11-25 | Audio 3D. **Primer LGPL-2.0 (no 2.1) del catálogo** de esta KB |
+| [`selkies-project/selkies`](https://github.com/selkies-project/selkies) | 2.637 | 🟡 **MPL-2.0** (16.725 B) | 2026-11-24 | 🥇 **La única excepción del lado píxel**: escritorio/juego remoto WebRTC con copyleft **por archivo**, no viral ⇒ se puede integrar sin abrir el producto |
+| [`LizardByte/Sunshine`](https://github.com/LizardByte/Sunshine) | *no medible* ⚠️ | ⚠️ **GPL-3.0** (35.149 B) | *no medible* ⚠️ | Host de streaming de juego self-hosted (el par servidor de Moonlight). **★ y push invisibles al canal `search`** — ver hallazgo nº6 |
+| [`moonlight-stream/moonlight-common-c`](https://github.com/moonlight-stream/moonlight-common-c) | 588 | ⚠️ **GPL-3.0** | 2026-11-22 | La biblioteca del protocolo. **GPL-3 enlazable ⇒ contagia**: no es la vía de integración |
+| [`obsproject/obs-browser`](https://github.com/obsproject/obs-browser) | 916 | ⚠️ **GPL-2.0** | 2026-11-17 | Fuente de navegador en OBS (overlays web) |
+
+#### Lado BYTE — señalización, transporte, servidor, empaquetado. **Permisivo**
+
+| Repo | ★ | Licencia (bytes) | Último push | Rol en la capa |
+|---|---|---|---|---|
+| [`ossrs/srs`](https://github.com/ossrs/srs) | **29.454** | 🟢 **MIT** (1.086 B) | 2026-11-23 | 🥇 Servidor de medios (RTMP/SRT/WebRTC/HLS). **El sustituto permisivo de OvenMediaEngine**. Rama default `develop` |
+| [`m1k1o/neko`](https://github.com/m1k1o/neko) | **22.714** | 🟢 **Apache-2.0** (**11.466 B**) | 2026-11-18 | Navegador/escritorio en contenedor por WebRTC, **multi-espectador con control compartido**. Base de co-watching y de QA remoto |
+| [`livekit/livekit`](https://github.com/livekit/livekit) | **22.381** | 🟢 **Apache-2.0** (11.358 B) | 2026-11-25 | 🥇 SFU WebRTC con agentes, egress y grabación. **La pieza más completa del lado byte** |
+| [`bluenviron/mediamtx`](https://github.com/bluenviron/mediamtx) | **20.766** | 🟢 **MIT** (1.062 B) | 2026-11-24 | Servidor/proxy multiprotocolo de un solo binario. El camino más corto a "ingest y reparte" |
+| [`pion/webrtc`](https://github.com/pion/webrtc) | **16.922** | 🟢 **MIT** (1.093 B) | 2026-11-24 | 🥇 WebRTC en Go puro. **La base para escribir transporte propio sin heredar nada** |
+| [`coturn/coturn`](https://github.com/coturn/coturn) | **14.590** | 🟢 **BSD-3-Clause** (1.622 B) | 2026-11-23 | STUN/TURN: el relay sin el cual el WebRTC no atraviesa NAT. **Obligatorio en producción**. ⚠️ Metadatos dicen `NOASSERTION` porque **el texto BSD está envuelto en un comentario `/* */` de C** y el clasificador no lo reconoce |
+| [`owncast/owncast`](https://github.com/owncast/owncast) | **11.697** | 🟢 **MIT** (1.073 B) | 2026-11-25 | 🥇 **Twitch self-hosted**: servidor de streaming propio con chat. La única plataforma de transmisión completa y permisiva. Rama default `develop` |
+| [`versatica/mediasoup`](https://github.com/versatica/mediasoup) | 7.426 | 🟢 **ISC** (806 B) | 2026-11-24 | SFU como biblioteca (Node/Rust). Para topología de espectadores a medida. Rama default `v3` |
+| [`aiortc/aiortc`](https://github.com/aiortc/aiortc) | 5.132 | 🟢 **BSD-3-Clause** | 2026-11-24 | WebRTC en Python: el puente entre el transporte y un modelo AI que ya vive en Python |
+| [`datarhei/restreamer`](https://github.com/datarhei/restreamer) | 5.250 | 🟢 **Apache-2.0** | ⚠️ **2026-05-22** (6 meses) | UI completa de restreaming. ⚠️ Semiparado; el núcleo [`datarhei/core`](https://github.com/datarhei/core) (283 ★, Apache-2.0) **sí** se movió el 2026-11-24 |
+| [`Haivision/srt`](https://github.com/Haivision/srt) | 3.640 | 🟡 **MPL-2.0** (16.726 B) | 2026-11-19 | Transporte de contribución confiable sobre redes malas. El estándar de ingest de esports. Copyleft **por archivo** |
+| [`Glimesh/broadcast-box`](https://github.com/Glimesh/broadcast-box) | 2.338 | 🟢 **MIT** (1.064 B) | 2026-11-24 | WHIP/WHEP sub-segundo listo para usar. **El camino más corto a latencia de esports** |
+| [`games-on-whales/wolf`](https://github.com/games-on-whales/wolf) | 2.322 | 🟢 **MIT** (1.113 B) | 2026-11-19 | 🥇 **El cloud gaming permisivo**: servidor multi-sesión con GPU en contenedor, protocolo Moonlight. Rama default **`beta`** |
+| [`games-on-whales/gow`](https://github.com/games-on-whales/gow) | 746 | 🟢 **MIT** | 2026-11-07 | Las imágenes de contenedor que Wolf ejecuta |
+| [`EpicGamesExt/PixelStreamingInfrastructure`](https://github.com/EpicGamesExt/PixelStreamingInfrastructure) | *no medible* ⚠️ | 🟢 **MIT** (`LICENSE.md`, 1.051 B, texto MIT verbatim de Epic Games) | *no medible* ⚠️ | 🥇 Señalización + frontend de Pixel Streaming de Unreal. **MIT mientras el engine es EULA** |
+| [`pion/mediadevices`](https://github.com/pion/mediadevices) | 649 | 🟢 **MIT** | 2026-11-23 | Captura de cámara/pantalla para Pion. **El trozo de captura que NO es copyleft** |
+| [`datarhei/gosrt`](https://github.com/datarhei/gosrt) | 208 | 🟢 **MIT** | 2026-11-20 | SRT en Go puro ⇒ **evita enlazar el MPL de Haivision** |
+| [`Eyevinn/whip`](https://github.com/Eyevinn/whip) | 150 | 🟢 **Apache-2.0** | ⚠️ 2026-06-09 | Cliente/servidor WHIP de referencia |
+| [`streamlink/streamlink`](https://github.com/streamlink/streamlink) | **11.998** | 🟢 **BSD-2-Clause** | 2026-11-24 | Extrae el stream de las plataformas ⇒ la entrada del pipeline de clipping |
+| [`yt-dlp/yt-dlp`](https://github.com/yt-dlp/yt-dlp) | **210.483** | 🟢 **Unlicense** | 2026-11-24 | Ingesta de VOD. ⚠️ El grant es libre; **el riesgo acá es de ToS de la plataforma, no de licencia** |
+
+🔴 **El repo que hay que dejar afuera de esta capa:**
+[`AirenSoft/OvenMediaEngine`](https://github.com/AirenSoft/OvenMediaEngine) —
+**AGPL-3.0** (`LICENSE`, **34.453 B**, leída hoy). Es el único no permisivo del
+lado byte, y es un **servidor**: el AGPL se dispara por **uso en red**, sin
+distribuir nada. Sustitutos medidos y equivalentes: `ossrs/srs` (MIT, 29.454 ★),
+`mediamtx` (MIT, 20.766 ★), `livekit` (Apache-2.0, 22.381 ★).
+
+---
+
+### Capa de **replay y dato de partida** — el evento que dispara el clip
+
+Esta sub-capa resuelve el problema que el video no resuelve: **saber qué pasó**.
+Un clipper que mira píxeles adivina; un clipper que lee el replay **sabe**. Todos
+permisivos, y es la pieza que hace viable la Receta 59.
+
+| Repo | ★ | Licencia | Último push | Qué parsea |
+|---|---|---|---|---|
+| [`odota/core`](https://github.com/odota/core) | 1.640 | 🟢 **MIT** | 2026-11-24 | 🥇 **OpenDota**: la plataforma de dato de esports open source completa (ingesta de replays, API, web) |
+| [`markus-wa/demoinfocs-golang`](https://github.com/markus-wa/demoinfocs-golang) | 1.077 | 🟢 **MIT** | 2026-11-23 | Demos de Counter-Strike (Go). El parser más mantenido de la familia |
+| [`skadistats/clarity`](https://github.com/skadistats/clarity) | 775 | 🟢 **BSD-3-Clause** | 2026-10-29 | Replays de Dota 2 (Java) |
+| [`LaihoE/demoparser`](https://github.com/LaihoE/demoparser) | 746 | 🟢 **MIT** | 2026-11-24 | Demos de CS2 (Rust, bindings Python) ⇒ el que entra directo a un notebook |
+| [`pnxenopoulos/awpy`](https://github.com/pnxenopoulos/awpy) | 640 | 🟢 **MIT** | 2026-11-22 | Analítica sobre demos de CS2 (Python): métricas ya calculadas |
+
+---
+
+### 🔴 Dos trampas de método medidas en esta página este pass
+
+1. **El byte-count de GPL-3.0 tiene ≥3 valores**, no uno: **35.141**
+   (`moonlight-qt`, `obs-backgroundremoval`), **35.149** (`Sunshine`) y **35.695**
+   (`janus-gateway`). Esto **extiende a GPL-3 la regla del cycle 19** que ya valía
+   para Apache-2.0: *el checksum de bytes **flagea**, nunca **decide***. El
+   incipit (`head -c 90`) es lo que dicta.
+   Nuevos valores incorporados al catálogo este pass: **LGPL-2.0 = 23.330**
+   (primero de la KB), **Apache-2.0 = 11.466** (`neko`, nuevo), **MPL-2.0 =
+   16.725 / 16.726**, **LGPL-2.1 = 26.431 / 26.517**, **AGPL-3.0 = 34.453**.
+2. **Un `LICENSE` envuelto en sintaxis de comentario derrota al clasificador.**
+   `coturn` sirve BSD-3-Clause verbatim dentro de `/* ... */` y el canal de
+   metadatos reporta `NOASSERTION`. Es BSD-3. **`NOASSERTION` sigue corriendo
+   mayoritariamente permisivo** (medido este pass: 5 casos → BSD-3 `coturn`,
+   LGPL-2.1 `GStreamer`, LGPL-2.1+ `FFmpeg`, elección-de-licencias `miniaudio`,
+   LGPL-2.0 `openal-soft` ⇒ **3 de 5 copyleft débil, 2 permisivos**: en esta capa
+   la proporción se **invierte** respecto del cycle 19, donde fue 4 de 5 permisivo).
+
+### ⚠️ Lo que no se pudo medir en esta página
+
+- **★, `archived` y `pushed_at` de 4 repos vivos** (`Sunshine`,
+  `OvenMediaEngine`, `PixelStreamingInfrastructure`, `selkies-gstreamer`): el
+  canal `search` es ciego a ellos y **no se rellenan con cifras de la web**.
+  Su existencia, rama default y licencia **sí** están medidas.
+- **`locaal-ai/obs-backgroundremoval`**: vive (rama `main`) y su `LICENSE` es
+  **byte-idéntico** al de `royshil/obs-backgroundremoval` (35.141 B, mismo
+  encabezado *"Copyright (C) 2025 Roy S..."*) ⇒ es **la migración de organización
+  del mismo repo**, con **los dos slugs vivos a la vez**. No es un rename
+  consumado y no se puede decir cuál es el canónico sin ★, que el canal no da.
+- **Mediación de publicidad y MMP para esta capa**: sigue en cero desde el cycle
+  19. No se buscó de nuevo en este pass.
+
+
 ## 🆕 Pass 2026-11-25 (cycle 20) — fundaciones del **camino del dinero**: tienda → recibo → derecho → saldo → entrega
 
 19 passes no auditaron esta capa (medido: `payment`, `wallet`, `receipt`,

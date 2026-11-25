@@ -4,6 +4,197 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🔴 Lo más importante del pass 2026-11-25 (cycle 21): **el plano del ESPECTADOR** —cómo el juego llega a quien NO lo está jugando— y el hallazgo de que esta capa **se parte en el encoder**
+
+Veinte passes auditaron lo que el jugador **ve y juega** (NPC, voz, assets, world
+models), lo que el estudio **construye** (la fábrica), lo que el backend **decide**
+(flags, experimentos, LTV) y **cómo entra la plata** (el camino del dinero, cycle
+20). Ninguno auditó la capa que lleva **la imagen del juego a un tercero**:
+captura → encode → transporte → servidor → espectador → clip → relato → archivo.
+
+Medido antes de este pass con `grep -ric` sobre las 9 páginas: `spectator`,
+`tournament`, `bracket`, `highlight`, `commentary`, `Sunshine`, `Moonlight`,
+`selkies`, `pixel streaming`, `cloud-gaming`, `retroarch`, `miniaudio`, `OpenAL`
+= **0 ocurrencias**. (`elo` da 380 y es **falso positivo de substring** dentro de
+*"modelo"* y *"desarrollo"*; `matchmaking` da 24 y **sí** está cubierto desde el
+cycle 6 — Open Match y openskill — así que el torneo y el rating **no** son el
+hueco: el hueco es la **transmisión**.)
+
+Importa porque es la capa que monetiza el juego **sin vender el juego**: UA por
+clip, esports, cloud gaming y co-streaming. Y porque es la primera capa de esta KB
+donde **la respuesta a "¿puede Globant construir sobre esto?" cambia según de qué
+lado del encoder esté la pieza**.
+
+### 🔴 Hallazgo nº1: la frontera de licencia cae **exactamente** donde el software deja de tocar píxeles y empieza a mover bytes
+
+Es la primera capa de esta KB donde **el copyleft es el default, no la excepción**.
+No es una impresión: son 33 repos medidos uno por uno hoy, y la partición es limpia.
+
+| Lado | Qué hace la pieza | Licencias **medidas** (sin una sola excepción permisiva del lado píxel) | Veredicto |
+|---|---|---|---|
+| **Píxel** | capturar la pantalla, encodear, decodear, filtrar, reproducir | GPL-2.0 · GPL-3.0 · LGPL-2.0 · LGPL-2.1 · MPL-2.0 | ⚠️ **No existe el stack MIT/Apache de captura.** Hay que elegir *cómo* se toca el copyleft, no *si* se toca |
+| **Byte** | señalizar, transportar, servir, empaquetar, repartir | MIT · Apache-2.0 · ISC · BSD · MPL-2.0 (+ **1 AGPL-3.0**, ver nº5) | ✅ Construible y relicenciable |
+
+La consecuencia operativa, que es lo vendible: **la regla "sólo MIT/Apache" de
+esta KB no se puede cumplir en esta capa**, y el pass no la fuerza a mentir. Lo
+que se hace en su lugar está en la Receta 56: **separación por proceso**. OBS,
+FFmpeg y Sunshine se consumen como **ejecutable invocado**, no como biblioteca
+enlazada, y el código propietario del cliente vive del otro lado de un socket o
+de una CLI. El copyleft viaja con el binario que ya es copyleft y no alcanza al
+producto de Globant.
+
+### 🔴 Hallazgo nº2: la licencia de FFmpeg **la decide un flag de compilación**, no el repositorio — 9º eje de partición de grant de esta KB
+
+`FFmpeg/FFmpeg` (68.102 ★, push 2026-11-25) declara `NOASSERTION` en el canal de
+metadatos. Leído el archivo (`LICENSE.md`, 4.352 B) y verificado el texto, el
+grant **no es uno**: es una función del comando `./configure`.
+
+| Flag pasado a `configure` | Licencia resultante del binario | Verificado en |
+|---|---|---|
+| *(ninguno)* | **LGPL-2.1-or-later** (`COPYING.LGPLv2.1`, 26.517 B) | `LICENSE.md`: *"In combination the LGPL v2.1+ applies to FFmpeg"* |
+| `--enable-gpl` | **GPL-2.0-or-later** | *"In this case, FFmpeg's license changes to GPL v2+"* |
+| `--enable-version3` | **(L)GPL-3.0** | *"the configure parameter `--enable-version3` will activate this licensing option"* |
+| `--enable-nonfree` | 🔴 **NO REDISTRIBUIBLE** | *"This will cause the resulting binary to be unredistributable"* |
+
+Tres consecuencias que ningún gate anterior de esta KB detecta:
+
+1. **Auditar el repo de FFmpeg da la respuesta equivocada.** La pregunta correcta
+   no es "¿qué licencia tiene FFmpeg?" sino **"¿con qué flags se compiló el binario
+   que estamos embarcando?"**. En un cliente que usa un FFmpeg de distribución o
+   de Docker Hub, eso **no lo decidió el cliente**: lo decidió el empaquetador.
+2. **`--enable-nonfree` es un punto de no retorno**, no una advertencia de
+   licencia: habilita Fraunhofer FDK AAC y OpenSSL y el binario resultante **no se
+   puede entregar**. Un pipeline que encodea audio AAC es exactamente el caso que
+   lo pisa.
+3. **Un solo archivo arrastra GPL-3**: `libavfilter/vf_lensfun.c` está documentado
+   como *"GPL version 3 or later"* dentro de una lista que por lo demás es GPL-2+.
+   El eje no es sólo el flag: es el **filtro** que se invoca.
+
+Los 8 ejes previos de esta KB eran por organización, repo, directorio, rama,
+comando, tipo de entregable, región y versión. Este es el 9º: **por configuración
+de build**. Y es el primero donde la licencia **no está en ningún archivo del
+repo** — está en la línea de compilación, que vive en el Dockerfile del cliente.
+
+### 🟢 Hallazgo nº3: Epic regala **MIT** en la mitad de pixel streaming que importa, mientras el engine sigue bajo EULA
+
+`EpicGamesExt/PixelStreamingInfrastructure` — servidor de señalización + frontend
+web de Pixel Streaming de Unreal. Licencia leída (`LICENSE.md`, **1.051 B**):
+texto **MIT verbatim**, firmado *"Copyright Epic Games, Inc."*, sin cláusula
+añadida. Lo verifiqué palabra por palabra porque el canal de metadatos no lo
+clasifica (no dice "MIT" en el encabezado, sólo el grant).
+
+Es el mismo patrón de **grant partido por componente** que esta KB ya documentó,
+pero por una vez **a favor**: el engine es EULA de Epic, y la pieza que uno
+realmente necesita forkear —señalización, matchmaker web, player— es MIT. Para un
+cliente con un título en Unreal que quiere demo jugable en browser, **la capa que
+Globant modifica es la permisiva**.
+
+### 🔴 Hallazgo nº4: la capa de **relato automático (AI caster) no tiene open source adoptable** — medido, no supuesto
+
+Era la apuesta obvia del pass: AI que narra la partida. Busqué y **medí los 6
+candidatos** que devuelve el canal. El resultado es que esta tier **no existe
+todavía como oferta**:
+
+| Repo | ★ | Licencia **probada** | Último push | Por qué no se adopta |
+|---|---|---|---|---|
+| [`showlab/livecc`](https://github.com/showlab/livecc) | 485 | 🔴 **SIN LICENCIA** (probados `LICENSE`, `LICENSE.md`, `LICENSE.txt`, `COPYING` → 404 los cuatro) | ⚠️ **2025-10-29** (13 meses) | El líder de la tier es **todos los derechos reservados** + dormido |
+| [`zicojiao/worldcupvoice`](https://github.com/zicojiao/worldcupvoice) | 111 | **MIT** | 2026-06-25 | El **único** con licencia usable, pero atado al SDK **propietario** de Agora RTC |
+| [`gibinb/CASTER-Football-Commentary`](https://github.com/gibinb/CASTER-Football-Commentary) | **0** | 🔴 SIN LICENCIA (4 nombres probados) | 2026-11-21 | Proyecto de tesis, 0 ★ |
+| [`aarshroongta1/live-soccer-commentary`](https://github.com/aarshroongta1/live-soccer-commentary) | **0** | 🔴 SIN LICENCIA (4 nombres probados) | 2026-11-24 | 0 ★ |
+| [`Arsa-1109/sports-play-by-play-generator`](https://github.com/Arsa-1109/sports-play-by-play-generator) | **0** | 🔴 Sin licencia declarada | 2026-11-19 | GPT desde cero, no LLM |
+| [`ChintanTrivedi/football_ai_commentary`](https://github.com/ChintanTrivedi/football_ai_commentary) | 79 | 🔴 Sin licencia declarada | ⚠️ **2019-06-24** | 7 años muerto |
+
+**4 de 6 tienen 0 ★ y 3 no tienen ningún archivo de licencia** (y la ausencia está
+*probada* con cuatro nombres de archivo cada uno, no inferida — regla T87 de esta
+KB). Sin archivo de licencia **no hay grant**: es código mirable, no usable.
+
+El dato vendible no es "falta un repo". Es: **el relato automático es la pieza
+que un cliente de esports va a pedir en 2027 y hay que construirla**, no
+adoptarla. Las piezas con las que se construye **sí** existen y son MIT — están
+en la tabla de abajo (`whisper.cpp` para el audio del casteo, el parser de replay
+para el evento, un LLM para el texto). Receta 59.
+
+### 🔴 Hallazgo nº5: una sola pieza AGPL-3.0 en el lado permisivo, y está justo donde más duele
+
+`AirenSoft/OvenMediaEngine` es el servidor de medios sub-segundo de referencia
+para WebRTC a escala. Licencia leída: **AGPL-3.0** (`LICENSE`, **34.453 B** —
+concuerda con el byte-count AGPL ~34.500 del catálogo de esta KB). Es el **único**
+repo del lado byte que no es permisivo, y por ser **servidor** el AGPL es
+precisamente el peor caso: la obligación se dispara **por uso en red**, sin
+distribuir nada.
+
+Sustitutos permisivos medidos y verificados para el mismo trabajo: `ossrs/srs`
+(**MIT**, 29.454 ★), `bluenviron/mediamtx` (**MIT**, 20.766 ★),
+`livekit/livekit` (**Apache-2.0**, 22.381 ★). **No hay motivo para tocar el AGPL
+en esta capa**, y conviene decirlo antes de que un arquitecto lo elija por
+benchmark de latencia.
+
+### Agentes y piezas AI verificados este pass (plano del espectador)
+
+Verificación: existencia y rama default real por `git ls-remote --symref`;
+estrellas, `archived` y `pushed_at` por el canal `search/repositories`; licencia y
+byte-count leídos con `curl` sobre `raw.githubusercontent.com` **en la rama
+default real** (ver nº6: en esta sesión `github.com` por HTML da 403 y
+`api.github.com` da 403, así que éstos son los únicos canales vivos).
+
+| Agente / pieza | ★ | Licencia (bytes) | Último push | Qué hace en el plano del espectador |
+|---|---|---|---|---|
+| [`ggml-org/whisper.cpp`](https://github.com/ggml-org/whisper.cpp) | **55.496** | **MIT** | 2026-11-24 | 🥇 ASR on-device del **audio del casteo**: convierte lo que dice el comentarista en el *timestamp* del evento. Base de todo clipper que no quiera API paga |
+| [`openai/whisper`](https://github.com/openai/whisper) | **113.439** | **MIT** | ⚠️ 2026-08-31 (3 meses) | El modelo de referencia. **Usar `whisper.cpp` para runtime**: mismo grant, mantenimiento vivo y sin Python en el servidor de encode |
+| [`royshil/obs-backgroundremoval`](https://github.com/royshil/obs-backgroundremoval) | **4.720** | ⚠️ **GPL-3.0** (35.141 B) | 2026-11-24 | Segmentación de fondo **en vivo dentro de OBS** (ONNX). El caso canónico de AI del lado píxel: **el plugin hereda la GPL del host** |
+| [`Aseiel/VideoHighlighter`](https://github.com/Aseiel/VideoHighlighter) | 507 | ⚠️ **AGPL-3.0** | 2026-11-24 | Detección de highlights local (escena + movimiento + audio + objeto + transcripción) sobre Ollama. **AGPL ⇒ no se ofrece como servicio** sin liberar |
+| [`zicojiao/worldcupvoice`](https://github.com/zicojiao/worldcupvoice) | 111 | **MIT** | 2026-06-25 | Comentarista AI en vivo sobre un feed RTC. Único AI caster con grant usable; **el transporte es propietario (Agora)** y hay que reemplazarlo por `pion/webrtc` |
+| [`bendawg2010/Auto-clipper`](https://github.com/bendawg2010/Auto-clipper) | 14 | **MIT** | ⚠️ 2026-04-19 | Clipper de VOD de Twitch/YouTube con YOLO + análisis de píxel. **14 ★**: se cita como referencia de diseño, no como dependencia |
+| [`mackron/miniaudio`](https://github.com/mackron/miniaudio) | **7.700** | **Elección de licencias** (2.597 B) | 2026-11-24 | Captura y mezcla de audio en un solo header. El archivo **ofrece dos grants a elección** (`NOASSERTION` en metadatos): hay que **declarar cuál se eligió** en el aviso del producto |
+
+### 📐 Hallazgo nº6 (método): los dos canales que esta KB usa para verificar **están caídos para GitHub en esta sesión**, y el canal que queda **miente por omisión**
+
+El prompt de este trabajo pide verificar cada URL con `curl -sI`. **En esta sesión
+eso no verifica nada de GitHub** y hay que escribirlo para que el próximo pass no
+lo descubra de nuevo:
+
+| Canal | Resultado medido hoy | Veredicto |
+|---|---|---|
+| `curl -sI https://github.com/<repo>` | **403** para **todos** los repos, incluidos los que existen con certeza | 🔴 Inservible: el 403 es del proxy, **no del repo**. Un `curl` a `github.com` **nunca** distingue vivo de muerto acá |
+| `WebFetch` sobre `github.com/<repo>` | **503** en 4 de 4 | 🔴 Inservible |
+| `gh api repos/<repo>` | **403** salvo repos atados a la sesión | 🔴 Inservible para censo |
+| `gh api search/repositories` con `repo:` | ✅ Da ★, `archived`, `pushed_at`, SPDX | ⚠️ **Miente por omisión**, ver abajo |
+| `git ls-remote --symref` | ✅ 20 de 20 correctos, **+ la rama default real** | 🥇 Canal de existencia |
+| `curl raw.githubusercontent.com/<repo>/<rama>/LICENSE` | ✅ Devuelve el texto y el byte-count | 🥇 Canal de licencia |
+
+**El defecto nuevo, y es grave para cualquier censo:** el canal `search` con
+`repo:` **descarta en silencio** los repos que no puede ver cuando van en lote, y
+sólo tira `422` cuando el repo problemático va **solo**. Medido: pedí 10 repos y
+volvieron 8, sin ningún aviso de cuáles faltaban. Cuatro repos **vivos** son
+invisibles para ese canal:
+
+- `LizardByte/Sunshine` — vivo (`ls-remote` OK, rama `master`), GPL-3.0 leída
+- `AirenSoft/OvenMediaEngine` — vivo (rama `master`), AGPL-3.0 leída
+- `EpicGamesExt/PixelStreamingInfrastructure` — vivo (rama `master`), MIT leída
+- `selkies-project/selkies-gstreamer` — vivo (rama `main`)
+
+🔴 **Esto corrige la firma de rename heredada del cycle 4.** Esa regla decía:
+*`repo:` NOT_FOUND + raw del slug viejo 200 ⇒ rename*. Falso. Acá hay cuatro casos
+de **`repo:` NOT_FOUND + raw del slug ACTUAL 200**, que significa algo distinto:
+**el repo está vivo y el canal es ciego**. La regla nueva:
+
+> Una ausencia en `search/repositories` **no es evidencia de nada**. Hay que
+> diffear *pedidos vs devueltos* en cada lote, y re-probar el hueco con
+> `git ls-remote`. Sólo `ls-remote` fallando es evidencia de que el repo no está.
+
+Y el costo medido de no hacerlo: **las ★ de esos cuatro repos no se pueden medir
+en este pass** y quedan declaradas como huecos, no rellenadas con números de la
+web (una fuente decía "41K ★" para Sunshine; no se escribe porque no se midió).
+
+### ⚫ Conjetura propia que se probó y **falló**, escrita en vez de borrada
+
+Hipótesis: *el canal `search` es ciego a esos repos porque GitHub excluye los
+**forks** del índice de búsqueda* (Sunshine viene de un fork). Era verificable:
+agregar `fork:true` a la query debería traerlos. **Resultado: `422` igual, los tres
+repos.** La hipótesis es **falsa** y la causa real sigue sin medir. Se escribe
+porque el próximo pass no debe gastar el intento de nuevo.
+
+
 ## 🔴 Lo más importante del pass 2026-11-25 (cycle 20): **el camino del DINERO** —de la tienda al derecho del jugador— y el **canal 8: la sonda de RELICENCIABILIDAD**
 
 Diecinueve passes auditaron lo que el jugador **ve, oye y juega** (NPCs, voz,

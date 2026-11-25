@@ -4,6 +4,64 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Pass 2026-11-25 (cycle 21) — plataformas reales del **plano del espectador**, y el mapa propietario contra el que compiten
+
+La asimetría de esta capa es distinta a la del cycle 20, y conviene decirla antes
+de la tabla: **acá sí existen plataformas open source completas y maduras**
+(Owncast es literalmente un Twitch self-hosted; Wolf es cloud gaming
+self-hosted). Lo que **no** existe es la capa AI encima: **ningún** clipper,
+caster o detector de highlights adoptable (ver `agents/top.md`, hallazgo nº4).
+Las recetas de este pass viven exactamente en esa costura: **plataforma madura
+permisiva + capa AI construida a medida**.
+
+### Plataformas open source customizables con AI encima (verificadas este pass)
+
+| Plataforma | Repo | Licencia (bytes) | ★ | Último push | Qué es, en el plano del espectador | Dónde entra AI/Globant |
+|---|---|---|---|---|---|---|
+| **Owncast** | [`owncast/owncast`](https://github.com/owncast/owncast) | 🟢 **MIT** (1.073 B) | **11.697** | 2026-11-25 | 🥇 **Twitch self-hosted**: ingest RTMP, transcode, HLS, chat, web player, federación ActivityPub. La única plataforma de transmisión *completa* y permisiva. Rama default `develop` | Clipping automático sobre el VOD propio; moderación de chat (cycle 15); highlights sin pedirle permiso a ninguna plataforma |
+| **SRS** | [`ossrs/srs`](https://github.com/ossrs/srs) | 🟢 **MIT** (1.086 B) | **29.454** | 2026-11-23 | Servidor de medios multiprotocolo (RTMP/SRT/WebRTC/HLS/DASH) de grado operador. Rama default `develop` | El punto donde se bifurca el stream hacia un pipeline de inferencia sin tocar el del espectador |
+| **LiveKit** | [`livekit/livekit`](https://github.com/livekit/livekit) | 🟢 **Apache-2.0** (11.358 B) | **22.381** | 2026-11-25 | SFU WebRTC con **egress, grabación y framework de agentes propio** | 🥇 La plataforma donde el agente AI es **participante de la sala**, no un post-proceso: co-caster en vivo |
+| **MediaMTX** | [`bluenviron/mediamtx`](https://github.com/bluenviron/mediamtx) | 🟢 **MIT** (1.062 B) | **20.766** | 2026-11-24 | Servidor/proxy de un solo binario, cero dependencias | El "ingest y reparte" de un PoC de esports en una tarde |
+| **neko** | [`m1k1o/neko`](https://github.com/m1k1o/neko) | 🟢 **Apache-2.0** (11.466 B) | **22.714** | 2026-11-18 | Escritorio/navegador en contenedor por WebRTC, **multi-espectador con control compartido** | Co-watching, demos comerciales jugables y QA remoto con agente y humano **en la misma sesión** |
+| **Wolf** | [`games-on-whales/wolf`](https://github.com/games-on-whales/wolf) | 🟢 **MIT** (1.113 B) | **2.322** | 2026-11-19 | 🥇 **Cloud gaming self-hosted**: multi-sesión con GPU en contenedor, protocolo Moonlight. Rama default **`beta`** | La única base permisiva para "jugá la demo en el browser" sin GeForce NOW. Las imágenes van en [`games-on-whales/gow`](https://github.com/games-on-whales/gow) (MIT, 746 ★) |
+| **Pixel Streaming Infrastructure** | [`EpicGamesExt/PixelStreamingInfrastructure`](https://github.com/EpicGamesExt/PixelStreamingInfrastructure) | 🟢 **MIT** (1.051 B, texto verbatim de Epic Games) | *no medible* ⚠️ | *no medible* ⚠️ | Señalización + matchmaker + frontend de Pixel Streaming de Unreal | 🥇 Para un cliente con título en Unreal: **la pieza que Globant modifica es la MIT**, mientras el engine queda bajo EULA |
+| **Restreamer** | [`datarhei/restreamer`](https://github.com/datarhei/restreamer) | 🟢 **Apache-2.0** | 5.250 | ⚠️ **2026-05-22** (6 meses) | UI completa de restreaming multi-destino | ⚠️ Semiparado. El núcleo [`datarhei/core`](https://github.com/datarhei/core) (Apache-2.0, 283 ★) **sí** vive (2026-11-24): construir sobre el núcleo, no sobre la UI |
+| **OpenDota** | [`odota/core`](https://github.com/odota/core) | 🟢 **MIT** | 1.640 | 2026-11-24 | 🥇 **La plataforma de dato de esports open source**: ingesta de replays, API pública, web. El equivalente a "Odoo" de esta capa | Modelos de predicción, resumen automático de partida, detección de momentos — **con el evento estructurado, no con píxeles** |
+| **OBS Studio** | [`obsproject/obs-studio`](https://github.com/obsproject/obs-studio) | ⚠️ **GPL-2.0** (18.092 B) | **80.061** | 2026-11-23 | El estándar de facto de captura y composición; ecosistema de plugins enorme | ⚠️ **Se integra por proceso, nunca por enlace** (Receta 56): se maneja desde afuera con [`obs-websocket`](https://github.com/obsproject/obs-websocket) (GPL-2.0, 4.400 ★) y el código del cliente queda del otro lado del socket |
+| **Sunshine + Moonlight** | [`LizardByte/Sunshine`](https://github.com/LizardByte/Sunshine) · [`moonlight-stream/moonlight-qt`](https://github.com/moonlight-stream/moonlight-qt) | ⚠️ **GPL-3.0** (35.149 / 35.141 B) | *n/m* ⚠️ / **19.758** | *n/m* ⚠️ / 2026-11-24 | El par host+cliente de streaming de juego self-hosted más usado | ⚠️ GPL-3: sirve como **producto desplegado tal cual** para el cliente; **no** como base de un producto cerrado. Si hay que modificar, **Wolf (MIT) es la base correcta** |
+| **selkies** | [`selkies-project/selkies`](https://github.com/selkies-project/selkies) | 🟡 **MPL-2.0** (16.725 B) | 2.637 | 2026-11-24 | Escritorio/app remota WebRTC para Linux, con GPU | 🥇 **La única pieza del lado píxel integrable sin abrir el producto**: el MPL es copyleft **por archivo** ⇒ se agregan archivos nuevos propietarios |
+
+### 🟥 El mapa propietario — lo que el cliente ya tiene o ya evalúa
+
+Ninguno de éstos es open source, y es contra ellos que compite la tabla de arriba.
+Se listan porque **la conversación del cliente empieza nombrándolos**:
+
+| Categoría | Jugadores propietarios | Qué les falta (la cuña de Globant) |
+|---|---|---|
+| Plataforma de transmisión | Twitch · YouTube Gaming · Kick · Trovo | El estudio **no es dueño del VOD ni del dato**; el clip vive en la plataforma y la monetización la fija ella |
+| Producción / overlay | Streamlabs · StreamElements · Melon | SaaS; el overlay no se puede cerrar con el pipeline del estudio |
+| Clipping y highlights | Medal.tv · Allstar · Overwolf · Opus Clip | 🔴 **La tier donde no hay open source adoptable** ⇒ es la que se construye (Receta 59) |
+| Cloud gaming | GeForce NOW · Xbox Cloud · Amazon Luna · Boosteroid · Parsec | Nada self-hosted ni on-prem; **Wolf (MIT) es la respuesta cuando el cliente necesita su propio datacenter o su propia demo** |
+| Transporte en vivo | Agora · Dolby.io · Millicast · Daily | Por minuto y por participante; `pion`/`LiveKit` quitan el piso de costo variable |
+| Dato de esports | Bayes Esports · GRID · Sportradar | Licencia de dato cerrada; `odota/core` + parsers MIT dan la ruta propia donde el juego lo permite |
+
+### 🔴 La frontera de licencia de esta capa, en una frase operativa
+
+**No se puede armar esta capa sólo con MIT/Apache**, y este pass no finge lo
+contrario: **el lado píxel es copyleft sin excepción permisiva** (12 repos
+medidos, 0 permisivos). Lo que sí se puede es **elegir cómo se toca**:
+
+1. **Separación por proceso** (Receta 56) — OBS/FFmpeg/Sunshine como **ejecutable
+   invocado**, no biblioteca enlazada. El copyleft viaja con un binario que ya es
+   copyleft.
+2. **MPL en vez de GPL** cuando hay que tocar píxeles desde el propio código:
+   `selkies` (MPL-2.0) es copyleft **por archivo**.
+3. **Nunca el AGPL**: `OvenMediaEngine` (AGPL-3.0, 34.453 B) dispara la obligación
+   **por uso en red** y tiene tres sustitutos permisivos con más ★.
+4. **Nunca `--enable-nonfree`** al compilar FFmpeg: el binario resultante **no se
+   puede redistribuir** (texto literal del `LICENSE.md`).
+
+
 ## 🆕 Pass 2026-11-25 (cycle 20) — plataformas reales del **camino del dinero**, y el mapa propietario contra el que compiten
 
 Esta capa tiene una asimetría que conviene decir antes de la tabla: **las

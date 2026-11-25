@@ -12,6 +12,69 @@ updated: 2026-11-25
 
 ---
 
+## 🆕 2026-11-25 — pass cycle 21
+
+**Tema del pass:** el **plano del espectador** — cómo el juego llega a quien **no**
+lo está jugando. Antes de este pass, en las 9 páginas de esta KB había **0**
+ocurrencias de `spectator`, `highlight`, `commentary`, `OBS`, `FFmpeg`, `Sunshine`,
+`Moonlight`, `selkies`, `pixel streaming` y `cloud-gaming`.
+
+### Lo nuevo de esta semana en agentes del plano del espectador
+
+| Agente / pieza | ★ | Licencia (bytes) | Último push | Rol |
+|---|---|---|---|---|
+| [`ggml-org/whisper.cpp`](https://github.com/ggml-org/whisper.cpp) | 55.496 | **MIT** | 2026-11-24 | ASR on-device del audio del casteo ⇒ el *timestamp* del evento |
+| [`openai/whisper`](https://github.com/openai/whisper) | 113.439 | **MIT** | ⚠️ 2026-08-31 | Modelo de referencia; para runtime va `whisper.cpp` |
+| [`royshil/obs-backgroundremoval`](https://github.com/royshil/obs-backgroundremoval) | 4.720 | ⚠️ **GPL-3.0** (35.141) | 2026-11-24 | AI en vivo dentro de OBS; **el plugin hereda la GPL del host** |
+| [`Aseiel/VideoHighlighter`](https://github.com/Aseiel/VideoHighlighter) | 507 | ⚠️ **AGPL-3.0** | 2026-11-24 | Highlights locales sobre Ollama; **AGPL ⇒ no se ofrece como servicio** |
+| [`zicojiao/worldcupvoice`](https://github.com/zicojiao/worldcupvoice) | 111 | **MIT** | 2026-06-25 | Único AI caster con grant usable; transporte propietario (Agora) a reemplazar |
+| [`bendawg2010/Auto-clipper`](https://github.com/bendawg2010/Auto-clipper) | 14 | **MIT** | ⚠️ 2026-04-19 | Clipper de VOD con YOLO; referencia de diseño, no dependencia |
+
+### 🔴 Tendencia medida: la tier de **AI caster** está vacía de oferta adoptable
+
+6 candidatos medidos, **4 con 0 ★**, **3 sin ningún archivo de licencia**
+(probados `LICENSE`, `LICENSE.md`, `LICENSE.txt`, `COPYING` → 404 en los cuatro
+nombres, para cada uno). El líder por ★ de la tier,
+[`showlab/livecc`](https://github.com/showlab/livecc) (485 ★), **no tiene licencia
+y lleva 13 meses sin push** (2025-10-29). Sin archivo de licencia no hay grant:
+es código mirable, no usable.
+
+Es el gap más vendible de este pass: **el relato automático hay que construirlo**
+(Receta 59), y las piezas para construirlo **sí** son MIT.
+
+### 🔴 Reglas nuevas que salen de este pass
+
+- **T76 — la ausencia en `search/repositories` no es evidencia de nada.** El canal
+  **descarta repos en silencio** cuando van en lote (pedí 10, volvieron 8, sin
+  aviso) y sólo tira `422` cuando el repo problemático va solo. Cuatro repos
+  **vivos** (`Sunshine`, `OvenMediaEngine`, `PixelStreamingInfrastructure`,
+  `selkies-gstreamer`) son invisibles para él. Hay que **diffear pedidos vs
+  devueltos** en cada lote y re-probar el hueco con `git ls-remote --symref`.
+  Esto **corrige la firma de rename del cycle 4**: *NOT_FOUND + raw 200* puede
+  significar "vivo y el canal es ciego", no "renombrado".
+- **T77 — la licencia puede no estar en ningún archivo del repo.** FFmpeg: el
+  grant lo decide el flag de `./configure` (`--enable-gpl` → GPL-2+;
+  `--enable-nonfree` → **binario no redistribuible**). 9º eje de partición de
+  grant de esta KB, y el primero que vive en el **Dockerfile del cliente**.
+- **T78 — el checksum de GPL-3.0 tiene ≥3 valores** (35.141 / 35.149 / 35.695) ⇒
+  la regla "el checksum flagea, nunca decide" ya no es sólo de Apache-2.0.
+
+### ⚠️ Lo que no se pudo medir este pass
+
+★ / `archived` / `pushed_at` de los 4 repos invisibles al canal `search`. **No se
+rellenan con cifras de la web** (una fuente daba "41K ★" para Sunshine; no se
+escribe porque no se midió). Existencia, rama default y licencia de los 4: sí
+medidas.
+
+### ⚫ Conjetura propia que se probó y falló
+
+*"El canal es ciego a esos repos porque GitHub excluye los **forks** del índice."*
+Verificable y verificada: agregar `fork:true` a la query devuelve **`422` igual**.
+Hipótesis **falsa**; la causa real sigue sin medir. Se escribe para que el próximo
+pass no gaste el intento.
+
+---
+
 ## 🆕 2026-11-25 — pass cycle 20
 
 **Tema del pass:** el **camino del dinero** — de la tienda al derecho del jugador.

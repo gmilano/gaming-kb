@@ -27,7 +27,17 @@ updated: 2026-11-25
 > esta KB donde el entregable es **transaccional**: si falla, no se ve mal, se
 > pierde dinero.
 >
-> **Último pass: 2026-11-25 (cycle 20).**
+>
+> **Desde el cycle 21**, el **plano del espectador**: cómo el juego llega a quien
+> **no** lo está jugando — captura, encode, transporte, servidor de medios, cloud
+> gaming y pixel streaming, espectador, clip automático, relato (*caster*) y
+> archivo. Es la **primera capa de esta KB donde el copyleft es el default y no la
+> excepción** (12 repos del lado píxel medidos, **cero permisivos**), y la primera
+> donde el **gate de licencia y el gate regulatorio son la misma línea de
+> pipeline**: la etiqueta de contenido sintético que exige China va embebida en el
+> archivo, y el metadato se escribe **al encodear**.
+>
+> **Último pass: 2026-11-25 (cycle 21).**
 
 ## Estructura
 

@@ -4,6 +4,65 @@ region: Global
 updated: 2026-11-25
 ---
 
+## 🆕 Lo que cambió — pass cycle 21 (2026-11-25): **la obligación legal de esta capa cae sobre el ENCODER — es decir, sobre el lado copyleft**
+
+Los cycles 10-18 siguieron la regulación del **contenido** generado; el 19, la de
+la **decisión**; el 20, la del **canal de cobro**. Este pass sigue la del
+**contenido generado que se publica a terceros**: audio sintético de casteo,
+overlay generado, clip automático. Es otra familia —transparencia y derecho de
+imagen, no competencia— y tiene una propiedad que ninguna capa anterior de esta
+KB tenía:
+
+🔴 **El control de cumplimiento es el mismo punto del pipeline que el control
+técnico: el encoder.** La etiqueta que China exige va **embebida en el archivo**
+(metadatos), y el único lugar donde se escribe metadato es donde se escribe el
+contenedor. Es decir: **la pieza que cumple la ley es FFmpeg/OBS — y es la pieza
+copyleft**. El gate de licencia (Receta 56) y el gate regulatorio (Receta 58)
+**operan sobre la misma línea de código**.
+
+| Región | Instrumento que toca el plano del espectador | Estado medido al 2026-11-25 |
+|---|---|---|
+| **North America** | **NO FAKES Act** (réplica digital de voz/imagen) + leyes estatales | ⚠️ **Federal: NO es ley.** Avanzó en Senate Judiciary (**jun-2026**, voto unánime), sin aprobación de ninguna cámara. **Lo vigente es estatal**: ELVIS Act (Tennessee) cubre réplicas de voz AI; **Nueva York exige disclosure de intérpretes sintéticos desde el 9-jun-2026** |
+| **EMEA** | **EU AI Act Art. 50** (transparencia de contenido generado) | ✅ **En vigor desde el 2-ago-2026**; el marcado del Art. 50(2) vence el **2-dic-2026 ⇒ 7 días**. Un casteo con voz sintética publicado al público es exactamente su supuesto |
+| **APAC** | 🔴 **China: Medidas de Etiquetado de Contenido Sintético + norma nacional obligatoria GB 45438-2025** | ✅ **En vigor desde el 1-sep-2025 y en ENFORCEMENT ACTIVO**: etiqueta visible **+ metadato embebido**; las plataformas deben **inspeccionar el metadato**; las tiendas de apps deben verificar la capacidad de etiquetado **antes de listar** |
+| **LATAM** | *(ningún instrumento específico de medios sintéticos medido)* | ⚠️ **Hueco informado, no silencio**: ver el apartado de LATAM. Lo más cercano es **ECA Digital (en vigor 17-mar-2026)**, que es sobre **menores**, no sobre medios sintéticos |
+
+**La lectura que se vende:** por primera vez en esta KB, **el trabajo de
+cumplimiento es el mismo en dos regiones y se hace una sola vez**. El marcado del
+Art. 50(2) de la UE y el metadato embebido de China **son el mismo paso de
+pipeline** (escribir procedencia en el contenedor al encodear). Quien lo
+construye para EMEA ya lo tiene para APAC — y es la razón por la que la Receta 58
+es una sola receta y no dos.
+
+### ⚠️ Conflicto de fuentes que este pass NO resuelve
+
+Sobre el **Digital Omnibus** y el calendario de las obligaciones de alto riesgo
+del AI Act: una fuente del sector sostiene que se **postergaron a diciembre de
+2027**, otra que **aplican desde el 2-ago-2026**. Las dos son prensa sectorial.
+**No se resuelve acá y no se elige una**: para cualquier compromiso contractual
+hay que leer el texto en EUR-Lex. Lo que **sí** está firme en las dos fuentes es
+el Art. 50 (transparencia), que es el que toca esta capa.
+
+### ⚠️ Gap de vocabulario, medido otra vez (confirma el cycle 20)
+
+Las búsquedas regionales prescritas (`AI gaming {región} 2026 adoption regulation
+players`) devolvieron **apuestas online (iGaming), no videojuegos**, en **las
+cuatro regiones**. Es el segundo pass consecutivo que lo mide, así que ya no es
+anécdota: **ese vocabulario está capturado por el sector del gambling**. Lo que
+funcionó fue buscar por **instrumento** (`labeling synthetic content`, `NO FAKES
+Act`, `right of publicity`) y por **pieza técnica**, no por industria.
+
+Lo poco aprovechable que sí salió del vocabulario prescrito, y vale como contexto
+de industria (gambling, **no** videojuegos — se marca para que no se cite mal):
+adopción de AI/ML en ~4 de cada 5 empresas del sector, pero **menos del 5 %** con
+prácticas de AI responsable integradas en la organización (KPMG), y **actividad
+regulatoria de AI concentrada en NA y Europa occidental, con cero actividad
+registrada en Asia-Pacífico** *en el perímetro del gambling* — lo cual es
+exactamente lo contrario de lo que pasa en **videojuegos y medios sintéticos**,
+donde APAC es la región más dura del mundo. **Dos perímetros, conclusiones
+opuestas**: no se pueden mezclar.
+
+
 ## 🆕 Lo que cambió — pass cycle 20 (2026-11-25): **2026 es el año en que el camino del dinero se abrió por ley en las CUATRO regiones — y la oferta open source para juegos es cero**
 
 Los cycles 10-18 siguieron la regulación del **contenido** generado. El cycle 19
@@ -1525,6 +1584,47 @@ propia oferta local**. No se reutiliza el argumento de LATAM en EMEA.
 
 ### North America
 
+#### 🆕 cycle 21 (2026-11-25) — el plano del espectador: **la voz del caster es el activo regulado, y lo federal NO es ley**
+
+Estado medido de lo que gobierna un **caster sintético** en EE.UU.:
+
+| Instrumento | Estado al 2026-11-25 | Qué cubre |
+|---|---|---|
+| **NO FAKES Act** (federal) | ⚠️ **NO es ley.** Voto unánime en Senate Judiciary (**jun-2026**), **sin** aprobación de ninguna cámara. Se menciona un posible empuje en *lame duck* | Crearía un derecho de propiedad federal sobre la **réplica digital** de voz e imagen, con notice-and-takedown |
+| **ELVIS Act** (Tennessee) | ✅ **En vigor** | Cubre **explícitamente réplicas de voz por AI**. Comentario y parodia como *fair use* donde la Primera Enmienda protege |
+| **Nueva York — intérpretes sintéticos** | ✅ **En vigor desde el 9-jun-2026** | **Disclosure obligatorio** de intérpretes sintéticos |
+| Derecho de imagen estatal (general) | ✅ Vigente en múltiples estados | El uso comercial no autorizado de una voz **reconocible** acciona reclamo aunque lo federal no exista |
+
+🔴 **El detalle que decide el diseño del producto:** las exclusiones que llevan
+estas normas —noticia, documental, biografía, **comentario**, crítica, sátira,
+parodia y usos fugaces— **parecen cubrir un caster** y no lo cubren en el caso que
+paga: **un segmento patrocinado queda afuera de la excepción de comentario**. Un
+caster AI que lee una integración de marca es **uso comercial de una voz**, con
+exposición para el anunciante *y* para la plataforma que corre el aviso.
+
+**Consecuencia de arquitectura, no de legal:** el pipeline tiene que poder
+**separar el segmento patrocinado del segmento de comentario** en el momento de
+generarlo —distinta voz, distinto registro de consentimiento, distinta marca en
+el metadato— porque la obligación cambia entre uno y otro. Eso es un requisito de
+pipeline y se construye una vez (Receta 59, paso 4).
+
+**Contexto de adopción medido (perímetro gambling, no videojuegos — ver la nota
+de vocabulario arriba):** NA concentra la mayor porción regional del mercado de
+AI-en-gaming, ~**39,8 %**; ~70 % de las empresas reportan *alguna* práctica de AI
+responsable pero **menos del 5 %** la tiene integrada en la organización (KPMG).
+Y del lado del jugador sigue firme el dato que esta KB arrastra desde el cycle 4:
+**~85 % de actitud negativa** hacia la AI generativa en juegos (Quantic Foundry,
+~2 M de jugadores).
+
+**Oportunidad placeada — NA:** el entregable no es "AI caster". Es
+**inventario de procedencia de voz + registro de consentimiento + separación
+patrocinado/comentario**, montado sobre un pipeline cuya salida ya lleva
+procedencia firmada (C2PA, ya en esta KB como MIT *o* Apache-2.0). Se vende como
+reducción de exposición frente al derecho de imagen estatal, que es lo **vigente**
+mientras lo federal no exista — y es el único argumento de esta capa que no
+depende de que el NO FAKES Act se apruebe.
+
+
 #### 🆕 cycle 20 (2026-11-25) — el canal de cobro: **la comisión está indeterminada, y eso es la oportunidad**
 
 Estado medido del litigio que fija cuánto cuesta cobrar fuera de la App Store en
@@ -2013,6 +2113,45 @@ ese requisito, porque el requisito es posterior al patrón.
 - **Composición:** Receta 26 (`compose/patterns.md`).
 
 ### EMEA
+
+#### 🆕 cycle 21 (2026-11-25) — el plano del espectador: el Art. 50(2) vence en **7 días**, y un casteo sintético es su supuesto exacto
+
+**Estado medido:** el Art. 50 del EU AI Act (transparencia) está **en vigor desde
+el 2-ago-2026**, y el **marcado del Art. 50(2) vence el 2-dic-2026 ⇒ a 7 días de
+hoy**. Esta KB ya reframeó ese sprint dos veces (Recetas 7 y 27); lo nuevo de este
+pass es **qué cae adentro que antes no se había mirado**:
+
+- **Audio de casteo sintético publicado al público** — es contenido generado por
+  máquina difundido a terceros: el supuesto central del Art. 50, no un borde.
+- **Overlay y clip generados** que se publican como pieza propia.
+- **La voz clonada de un caster real** acumula Art. 50 **y** derecho de imagen
+  del Estado miembro, que el AI Act no desplaza.
+
+A 7 días, el entregable honesto **no es un sprint de marcado**: es **inventario
+fechado + plan**. Lo que sí se puede cerrar en 7 días es el inventario (qué
+superficies del catálogo emiten contenido generado al público) y la decisión de
+apagado por defecto donde no se llega — exactamente el patrón del "interruptor de
+oferta" de la Receta 50, aplicado a la salida de medios.
+
+**Lo que no cambió y conviene no volver a litigar:** la Comisión señala a los
+**NPC con AI que empujan gasto** como práctica **prohibida** por el Art. 5 (no
+"alto riesgo"), con multas de hasta 35 M € o el 7 % del volumen global; y el
+borrador de **Digital Fairness Act** se espera como propuesta en **Q4-2026**,
+apuntando a diseño adictivo y mecánicas aleatorias, juegos incluidos.
+
+⚠️ **Conflicto de fuentes no resuelto** (ver arriba): el calendario de las
+obligaciones de **alto riesgo** post-Digital Omnibus aparece como **dic-2027** en
+una fuente sectorial y como **2-ago-2026** en otra. **No se elige una.** El Art.
+50, que es el que toca esta capa, está firme en ambas.
+
+**Oportunidad placeada — EMEA:** el marcado del Art. 50(2) y el **metadato
+embebido que exige China** son **el mismo paso de pipeline** (escribir procedencia
+en el contenedor al encodear). El entregable se construye una vez y se cobra en
+dos regiones: **Receta 58**. Para un publisher europeo con operación en China, eso
+convierte un costo de cumplimiento en una pieza reutilizable — y es el argumento
+más fuerte de este pass para EMEA, porque es el único que **baja** el costo total
+en vez de agregar un control más.
+
 
 #### 🆕 cycle 20 (2026-11-25) — el canal de cobro: la DMA ya cerró su modelo, y **una corrección al cycle 19 sobre el AI Act**
 
@@ -2617,6 +2756,58 @@ incómoda, es ninguna licencia.
 
 ### APAC
 
+#### 🆕 cycle 21 (2026-11-25) — el plano del espectador: **la única región donde la etiqueta es obligatoria, verificable por máquina y ya se está aplicando**
+
+Es el hallazgo regional más duro de este pass. China no pide "avisar": pide
+**escribir la etiqueta adentro del archivo**, y eso convierte un requisito legal
+en un requisito del **encoder**.
+
+| Instrumento | Estado medido | Qué obliga |
+|---|---|---|
+| **Medidas de Etiquetado de Contenido Sintético Generado por AI** (CAC + 3 ministerios) | ✅ **En vigor desde el 1-sep-2025** | Etiqueta **visible** *y* **metadato embebido** en el contenido generado |
+| **GB 45438-2025** (norma nacional **obligatoria**) | ✅ Vigente | Fija la **forma técnica** de la etiqueta ⇒ no es interpretable: es un formato |
+| Deberes de plataforma de distribución | ✅ Vigentes | Deben **inspeccionar el metadato** y marcar lo generado **o sospechado** de serlo, con declaración del usuario |
+| Deberes de tienda de apps | ✅ Vigentes | Deben **verificar la capacidad de etiquetado antes de listar** la app |
+| Reglas de servicios de **interacción AI antropomórfica** | ✅ **En vigor desde el 15-jul-2026** | Extienden el régimen a servicios de interacción tipo humano |
+| **Corea — AI Basic Act** | ✅ **En vigor desde el 22-ene-2026** | Notificación previa al usuario para AI generativa / de alto impacto. Extraterritorial |
+| **Vietnam — ley de AI** | ✅ **En vigor desde el 1-mar-2026** | El operador debe **notificar por adelantado** que el producto usa AI generativa |
+
+🔴 **El enforcement no es hipotético, y es la diferencia con todas las otras
+regiones de esta KB:** en casos publicados el **15-sep-2026** el CAC **ordenó dar
+de baja** un mini-programa de AI generativa por **faltarle la etiqueta explícita y
+la implícita** (además de haber omitido la evaluación de seguridad); y el
+**28-abr-2026** nombró públicamente tres productos de ByteDance por
+incumplimiento.
+
+**Las dos consecuencias de ingeniería, que es lo que esta KB puede aportar:**
+
+1. **La etiqueta implícita (metadato) se escribe al encodear** ⇒ el control vive
+   en FFmpeg/OBS, **el lado copyleft**. El gate de licencia y el gate regulatorio
+   son la misma línea de pipeline. Por eso la Receta 58 ataca los dos juntos.
+2. **"Sospechado de serlo" invierte la carga**: la plataforma marca lo que *parece*
+   generado. Un stream de juego con overlay AI **sin** metadato puede quedar
+   marcado por omisión. Firmar la procedencia deja de ser cumplimiento y pasa a
+   ser **protección del propio contenido legítimo**.
+
+⚠️ **Lo que no se pudo medir:** no encontré provisión **específica de
+videojuegos ni de live-streaming** dentro de las Medidas más allá de una
+referencia al paso de verificar que las escenas virtuales generadas lleven las
+marcas. Las fuentes son sitios de compliance comerciales con **fechas
+inconsistentes entre sí**; el texto del CAC y GB 45438-2025 **hay que leerlos en
+original** antes de cualquier compromiso contractual. Dato de escala heredado y no
+re-medido en este pass: Tencent *Game for Peace* con 110 M de usuarios acumulados
+de NPC con AI (cycle 4).
+
+**Oportunidad placeada — APAC:** es la región donde esta capa se vende **sola**,
+porque la obligación es binaria y auditable por máquina: o el archivo trae el
+metadato o no lo trae. El entregable es el **pipeline de procedencia verificable**
+(Receta 58) y la **auditoría de catálogo** contra GB 45438-2025. Y hay un segundo
+entregable que sólo existe en APAC: el **gate de publicación en tienda**, porque
+la tienda verifica la capacidad de etiquetado **antes** de listar ⇒ un título sin
+pipeline de etiquetado **no entra al mercado**, lo que lo convierte en un
+bloqueante de lanzamiento, no en un riesgo de multa.
+
+
 #### 🆕 cycle 20 (2026-11-25) — el canal de cobro: **Japón ya lo abrió, y el 90 % de los desarrolladores no lo usó**
 
 La **Mobile Software Competition Act (MSCA)** japonesa está **en vigor desde el
@@ -3176,6 +3367,57 @@ IA en gaming a **facturación**, no a eficiencia de producción.
   coreano**, igual que en EMEA.
 
 ### LATAM
+
+#### 🆕 cycle 21 (2026-11-25) — el plano del espectador: **hueco informado** en regulación de medios sintéticos, y el único argumento estructural que sí aplica
+
+⚠️ **Lo que busqué y NO encontré, dicho explícitamente para que el silencio no se
+lea como cobertura:** no hay en LATAM —medido en este pass— **ningún instrumento
+específico de etiquetado o disclosure de medios sintéticos** comparable al Art. 50
+de la UE o a las Medidas de China. Las búsquedas regionales prescritas devolvieron
+**exclusivamente apuestas online** (Brasil aplicando su marco federal, Colombia
+con el proyecto de apuestas online aprobado en general en el Senado, Argentina
+bajo la Ley 6.330 de juego responsable, México en enforcement). **Eso es iGaming,
+no videojuegos, y no se puede citar como si lo fuera.**
+
+Lo más cercano en materia aplicable a juegos sigue siendo lo que esta KB ya tiene
+del cycle 19: **ECA Digital (Brasil), en vigor desde el 17-mar-2026**, que regula
+**protección de menores** —no medios sintéticos—, más el Decreto 12.880/2026.
+
+**Lo que sí se puede placear, con la calidad de fuente marcada:**
+
+| Dato | Valor | Calidad de fuente |
+|---|---|---|
+| LATAM como % del mercado global de esports (2026) | ~**6 %** (≈ 0,19 B USD) | Consultora de mercado |
+| Brasil, mercado de esports | **52,6 M USD (2025) → ~202,9 M (2034)** | IMARC |
+| Brasil, estimación alternativa | **~45 M USD (2024) → >185 M (2033)** | trade.gov |
+| Brasil como % de LATAM | ~**53 %** del total regional | Consultora de mercado |
+| Fans activos de esports en Brasil | **>34 M** | ⚠️ **Agregador secundario, sin verificar** |
+| CBLOL 2026, split inaugural relanzado | **12,3 M de views** | ⚠️ Prensa secundaria |
+
+🔴 **Los números de esta capa en LATAM no cierran entre sí** (52,6 M vs ~45 M vs
+~90 M para Brasil, según quién publique), así que **no se elige uno**: se usan
+como orden de magnitud —**decenas de millones de USD, creciendo a dos dígitos**—
+y cualquier cifra para una propuesta se re-verifica contra el publicador original.
+Escribirlo así es el dato; escribir una cifra sola sería inventar precisión.
+
+**El argumento estructural que sí aplica, y es el único de esta capa:** esta KB
+mide desde el cycle 4 una **aceptación de AI por parte del jugador del 48,8 % en
+LATAM contra ~85 % de rechazo global**. Para el plano del espectador eso tiene una
+consecuencia concreta y no genérica: **el caster sintético y el clip automático en
+pt-BR y es-LATAM son el lugar de menor riesgo de marca del mundo para estrenar AI
+de cara al público**. No es "LATAM es más barato" —el argumento que esta KB se
+prohíbe— es **LATAM es donde el producto es mejor recibido**, y además es donde
+**no hay todavía** una obligación de etiquetado que condicione el diseño.
+
+**Oportunidad placeada — LATAM:** co-streaming y **localización de clip y casteo**
+(pt-BR / es) sobre stack permisivo (`owncast` MIT + `whisper.cpp` MIT + parser de
+replay MIT), estrenando acá la capa que en EMEA y APAC **ya nace regulada**. El
+contrapeso que hay que decirle al cliente, y que esta KB arrastra: el riesgo de
+marca por AI en juegos es real y se materializó en la región (Ubisoft, 166
+despidos + Motherbrain, 19-nov-2026, cycle 4). La recomendación es **estrenar en
+LATAM, pero con la procedencia ya firmada desde el día uno** — porque el pipeline
+de la Receta 58 no se puede retrofitear a un catálogo de clips ya publicado.
+
 
 #### 🆕 cycle 20 (2026-11-25) — el canal de cobro: Brasil lo abrió en junio, y **el ledger insignia de la región dejó de ser open source**
 

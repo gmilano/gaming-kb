@@ -11,6 +11,106 @@ updated: 2026-11-25
 
 ---
 
+## 🆕 2026-11-25 — pass cycle 21
+
+**Tema:** el **plano del espectador**. El vocabulario de búsqueda cambió de
+*instrumento de cobro* (cycle 20) a **transmisión** (`capture`, `encode`,
+`transport`, `spectator`, `pixel streaming`, `cloud gaming`, `highlight`,
+`commentary`, `replay`), y eso devolvió **33 slugs que esta KB no tenía**,
+**33 verificados vivos** por `git ls-remote --symref`.
+
+### 🔴 El hallazgo que organiza la lista: la capa se parte en el encoder
+
+| Lado | Licencias medidas | Repos |
+|---|---|---|
+| **Píxel** (captura, encode, filtro) | GPL-2.0, GPL-3.0, LGPL-2.0, LGPL-2.1, MPL-2.0 — **ninguno permisivo** | 12 |
+| **Byte** (transporte, servidor, empaquetado) | MIT, Apache-2.0, ISC, BSD-2, BSD-3, Unlicense, MPL-2.0 — **+1 AGPL-3.0** | 21 |
+
+### Repos nuevos verificados este pass, por rol
+
+**Lado píxel (copyleft — se consume por proceso, no por enlace):**
+
+| Repo | ★ | Licencia (bytes) | Último push |
+|---|---|---|---|
+| [`obsproject/obs-studio`](https://github.com/obsproject/obs-studio) | 80.061 | ⚠️ GPL-2.0 (18.092) | 2026-11-23 |
+| [`FFmpeg/FFmpeg`](https://github.com/FFmpeg/FFmpeg) | 68.102 | ⚠️ LGPL-2.1+ *por default* (26.517) | 2026-11-25 |
+| [`moonlight-stream/moonlight-qt`](https://github.com/moonlight-stream/moonlight-qt) | 19.758 | ⚠️ GPL-3.0 (35.141) | 2026-11-24 |
+| [`meetecho/janus-gateway`](https://github.com/meetecho/janus-gateway) | 9.208 | ⚠️ GPL-3.0 (35.695) | 2026-11-24 |
+| [`obsproject/obs-websocket`](https://github.com/obsproject/obs-websocket) | 4.400 | ⚠️ GPL-2.0 | 2026-11-24 |
+| [`GStreamer/gstreamer`](https://github.com/GStreamer/gstreamer) | 3.375 | ⚠️ LGPL-2.1 (26.431) | 2026-11-25 |
+| [`kcat/openal-soft`](https://github.com/kcat/openal-soft) | 2.783 | ⚠️ **LGPL-2.0** (23.330) | 2026-11-25 |
+| [`selkies-project/selkies`](https://github.com/selkies-project/selkies) | 2.637 | 🟡 MPL-2.0 (16.725) | 2026-11-24 |
+| [`obsproject/obs-browser`](https://github.com/obsproject/obs-browser) | 916 | ⚠️ GPL-2.0 | 2026-11-17 |
+| [`moonlight-stream/moonlight-common-c`](https://github.com/moonlight-stream/moonlight-common-c) | 588 | ⚠️ GPL-3.0 | 2026-11-22 |
+| [`LizardByte/Sunshine`](https://github.com/LizardByte/Sunshine) | *no medible* | ⚠️ GPL-3.0 (35.149) | *no medible* |
+
+**Lado byte (permisivo — construible):**
+
+| Repo | ★ | Licencia (bytes) | Último push |
+|---|---|---|---|
+| [`yt-dlp/yt-dlp`](https://github.com/yt-dlp/yt-dlp) | 210.483 | 🟢 Unlicense | 2026-11-24 |
+| [`ossrs/srs`](https://github.com/ossrs/srs) | 29.454 | 🟢 MIT (1.086) | 2026-11-23 |
+| [`m1k1o/neko`](https://github.com/m1k1o/neko) | 22.714 | 🟢 Apache-2.0 (**11.466**) | 2026-11-18 |
+| [`livekit/livekit`](https://github.com/livekit/livekit) | 22.381 | 🟢 Apache-2.0 (11.358) | 2026-11-25 |
+| [`bluenviron/mediamtx`](https://github.com/bluenviron/mediamtx) | 20.766 | 🟢 MIT (1.062) | 2026-11-24 |
+| [`pion/webrtc`](https://github.com/pion/webrtc) | 16.922 | 🟢 MIT (1.093) | 2026-11-24 |
+| [`coturn/coturn`](https://github.com/coturn/coturn) | 14.590 | 🟢 BSD-3-Clause (1.622) | 2026-11-23 |
+| [`streamlink/streamlink`](https://github.com/streamlink/streamlink) | 11.998 | 🟢 BSD-2-Clause | 2026-11-24 |
+| [`owncast/owncast`](https://github.com/owncast/owncast) | 11.697 | 🟢 MIT (1.073) | 2026-11-25 |
+| [`versatica/mediasoup`](https://github.com/versatica/mediasoup) | 7.426 | 🟢 ISC (806) | 2026-11-24 |
+| [`aiortc/aiortc`](https://github.com/aiortc/aiortc) | 5.132 | 🟢 BSD-3-Clause | 2026-11-24 |
+| [`datarhei/restreamer`](https://github.com/datarhei/restreamer) | 5.250 | 🟢 Apache-2.0 | ⚠️ 2026-05-22 |
+| [`Haivision/srt`](https://github.com/Haivision/srt) | 3.640 | 🟡 MPL-2.0 (16.726) | 2026-11-19 |
+| [`Glimesh/broadcast-box`](https://github.com/Glimesh/broadcast-box) | 2.338 | 🟢 MIT (1.064) | 2026-11-24 |
+| [`games-on-whales/wolf`](https://github.com/games-on-whales/wolf) | 2.322 | 🟢 MIT (1.113) | 2026-11-19 |
+| [`games-on-whales/gow`](https://github.com/games-on-whales/gow) | 746 | 🟢 MIT | 2026-11-07 |
+| [`pion/mediadevices`](https://github.com/pion/mediadevices) | 649 | 🟢 MIT | 2026-11-23 |
+| [`datarhei/core`](https://github.com/datarhei/core) | 283 | 🟢 Apache-2.0 | 2026-11-24 |
+| [`datarhei/gosrt`](https://github.com/datarhei/gosrt) | 208 | 🟢 MIT | 2026-11-20 |
+| [`Eyevinn/whip`](https://github.com/Eyevinn/whip) | 150 | 🟢 Apache-2.0 | ⚠️ 2026-06-09 |
+| [`EpicGamesExt/PixelStreamingInfrastructure`](https://github.com/EpicGamesExt/PixelStreamingInfrastructure) | *no medible* | 🟢 **MIT** (1.051, texto verbatim de Epic) | *no medible* |
+
+**Replay y dato de partida (el evento que dispara el clip) — todos permisivos:**
+
+| Repo | ★ | Licencia | Último push |
+|---|---|---|---|
+| [`odota/core`](https://github.com/odota/core) | 1.640 | 🟢 MIT | 2026-11-24 |
+| [`markus-wa/demoinfocs-golang`](https://github.com/markus-wa/demoinfocs-golang) | 1.077 | 🟢 MIT | 2026-11-23 |
+| [`skadistats/clarity`](https://github.com/skadistats/clarity) | 775 | 🟢 BSD-3-Clause | 2026-10-29 |
+| [`LaihoE/demoparser`](https://github.com/LaihoE/demoparser) | 746 | 🟢 MIT | 2026-11-24 |
+| [`pnxenopoulos/awpy`](https://github.com/pnxenopoulos/awpy) | 640 | 🟢 MIT | 2026-11-22 |
+
+### 🔴 Tres trampas de método medidas este pass
+
+1. **La rama default no es adivinable y leer la equivocada "borra" la licencia.**
+   Medidas: `ossrs/srs` → **`develop`**, `owncast/owncast` → **`develop`**,
+   `versatica/mediasoup` → **`v3`**, `games-on-whales/wolf` → **`beta`**. Un
+   `raw` sobre la rama equivocada devuelve **14 bytes** (`404: Not Found`).
+2. **El canal `search` descarta repos en silencio en lote** (pedí 10, volvieron 8)
+   y sólo tira `422` cuando el repo problemático va solo ⇒ **diffear pedidos vs
+   devueltos siempre**. 4 repos vivos invisibles. Regla T76.
+3. **`NOASSERTION` se invirtió respecto del cycle 19.** Acá: 5 casos → BSD-3
+   (`coturn`, texto envuelto en `/* */` de C, que derrota al clasificador),
+   LGPL-2.1 (`GStreamer`), LGPL-2.1+ (`FFmpeg`), elección-de-licencias
+   (`miniaudio`), LGPL-2.0 (`openal-soft`) ⇒ **3 de 5 copyleft**, cuando en el
+   cycle 19 fue 4 de 5 permisivo. La heurística depende de la capa.
+
+### 🔴 Repo a dejar afuera, y el motivo
+
+[`AirenSoft/OvenMediaEngine`](https://github.com/AirenSoft/OvenMediaEngine) —
+**AGPL-3.0** (34.453 B, leída hoy): único no permisivo del lado byte, y por ser
+**servidor** la obligación se dispara **por uso en red**. Sustitutos medidos:
+`srs` (MIT), `mediamtx` (MIT), `livekit` (Apache-2.0).
+
+### ⚠️ Lo que no se pudo medir
+
+★ / `archived` / `pushed_at` de los 4 repos ciegos al canal `search`. No se
+rellenan con cifras de la web. · `locaal-ai/obs-backgroundremoval` vive y su
+`LICENSE` es **byte-idéntico** (35.141) al de `royshil/…`: migración de
+organización con **los dos slugs vivos**, sin poder decir cuál es el canónico.
+
+---
+
 ## 🆕 2026-11-25 — pass cycle 20
 
 **Tema:** el **camino del dinero**. El vocabulario de búsqueda cambió de *decisión*
